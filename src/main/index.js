@@ -26,6 +26,8 @@ function createWindow() {
     width: 1000,
     webPreferences: {
       nodeIntegration: true,
+      webSecurity: false,
+      enableRemoteModule: true
     },
   })
 

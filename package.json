@@ -1,9 +1,9 @@
 {
-  "name": "electron-vue",
-  "version": "0.0.1",
-  "author": "example",
-  "description": "An electron-vue project",
-  "license": null,
+  "name": "analysis-system",
+  "version": "1.0.1",
+  "author": "Panda",
+  "description": "An analysis-system project",
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -18,7 +18,7 @@
   },
   "build": {
     "productName": "electron-vue",
-    "appId": "com.example.yourapp",
+    "appId": "com.ff.panda",
     "directories": {
       "output": "build"
     },
@@ -51,7 +51,11 @@
     }
   },
   "dependencies": {
+    "animate.css": "^4.1.0",
     "axios": "^0.19.2",
+    "element-ui": "^2.13.2",
+    "officegen": "^0.6.4",
+    "pg": "^8.2.1",
     "vue": "^2.6.11",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.1.6",
@@ -74,7 +78,7 @@
     "css-loader": "^3.4.2",
     "del": "^5.1.0",
     "devtron": "^1.4.0",
-    "electron": "^8.1.1",
+    "electron": "^9.0.5",
     "electron-builder": "^22.4.1",
     "electron-debug": "^3.0.1",
     "electron-devtools-installer": "^2.2.4",
