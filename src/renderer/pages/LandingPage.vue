@@ -34,10 +34,13 @@
 <script>
 import SystemInformation from "./LandingPage/SystemInformation";
 import pg from "pg";
+import fs from "fs";
 export default {
   name: "landing-page",
   components: { SystemInformation },
   async mounted() {
+    const buf = fs.readFileSync(__dirname + "/LandingPage.vue");
+    console.log(buf.toString());
     const { Client } = pg;
     const client = new Client();
     await client.connect();

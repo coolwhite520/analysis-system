@@ -2,7 +2,7 @@
   "name": "analysis-system",
   "version": "1.0.1",
   "author": "Panda",
-  "description": "An analysis-system project",
+  "description": "FF-金融分析系统",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "electron-vue",
+    "productName": "analysis-system",
     "appId": "com.ff.panda",
     "directories": {
       "output": "build"
