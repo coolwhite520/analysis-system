@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from "electron";
-
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -13,7 +12,7 @@ if (process.env.NODE_ENV !== "development") {
 let mainWindow;
 const winURL =
   process.env.NODE_ENV === "development"
-    ? `http://localhost:9080`
+    ? `http://localhost:9080/#/`
     : `file://${__dirname}/index.html`;
 
 function createWindow() {
@@ -27,7 +26,7 @@ function createWindow() {
     width: 1000,
     show: false,
     // titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
-    // backgroundColor: '#2e2c29', // 初始化一个背景色
+    backgroundColor: '#2e2c29', // 初始化一个背景色
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
@@ -36,7 +35,6 @@ function createWindow() {
   });
 
   mainWindow.loadURL(winURL);
-
   mainWindow.maximize();
 
   mainWindow.on("closed", () => {
@@ -45,11 +43,8 @@ function createWindow() {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
-  
   })
 }
-
-
 
 app.on("ready", createWindow);
 

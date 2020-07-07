@@ -7,12 +7,17 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "landing-page",
-      component: require("@/pages/LandingPage").default,
+      name: "mainPage",
+      component: function (resolve) {
+        require(['@/pages/mainPage'], resolve)
+      }
     },
     {
-      path: "*",
-      redirect: "/",
+      path: "/mini",
+      name: "landing-page",
+      component: function (resolve) {
+        require(['@/pages/LandingPage'], resolve)
+      }
     },
   ],
 });

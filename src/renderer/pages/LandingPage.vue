@@ -32,23 +32,23 @@
 </template>
 
 <script>
-import SystemInformation from "./LandingPage/SystemInformation";
+import SystemInformation from "@/pages/LandingPage/SystemInformation";
 import pg from "pg";
 import fs from "fs";
 export default {
   name: "landing-page",
   components: { SystemInformation },
   async mounted() {
-    const buf = fs.readFileSync(__dirname + "/LandingPage.vue");
-    console.log(buf.toString());
-    const { Client } = pg;
-    const client = new Client();
-    await client.connect();
-    const res = await client.query("SELECT $1::text as message", [
-      "Hello world!"
-    ]);
-    console.log(res.rows[0].message); // Hello world!
-    await client.end();
+    // const buf = fs.readFileSync(__dirname + "/LandingPage.vue");
+    // console.log(buf.toString());
+    // const { Client } = pg;
+    // const client = new Client();
+    // await client.connect();
+    // const res = await client.query("SELECT $1::text as message", [
+    //   "Hello world!"
+    // ]);
+    // console.log(res.rows[0].message); // Hello world!
+    // await client.end();
   },
   methods: {
     open(link) {
