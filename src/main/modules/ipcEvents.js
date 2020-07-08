@@ -2,7 +2,6 @@ import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 
 export default function() {
   ipcMain.on("move-to-zero", () => {
-    global.mainWindow.maximize();
     let bounds = global.mainWindow.getBounds();
     bounds.x = 0;
     bounds.y = 0;

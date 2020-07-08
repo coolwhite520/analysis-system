@@ -45,6 +45,7 @@ export default {
   height: 100px;
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   -webkit-app-region: drag;
+  -webkit-user-select: none;
 }
 
 .logo {

@@ -21,13 +21,12 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    minHeight: 600,
-    minWidth: 1000,
     useContentSize: true,
     title: require("../../package.json").description,
+    resizable: process.platform === "darwin" ? true : false,
     show: false,
     frame: false,
-    backgroundColor: "#2e2c29", // 初始化一个背景色
+    // backgroundColor: "#2e2c29", // 初始化一个背景色
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
