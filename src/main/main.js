@@ -21,12 +21,11 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    minHeight: 600,
+    minWidth: 1000,
     useContentSize: true,
     title: require("../../package.json").description,
-    width: 1000,
     show: false,
-    // titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
     frame: false,
     backgroundColor: "#2e2c29", // 初始化一个背景色
     webPreferences: {
@@ -44,7 +43,6 @@ function createWindow() {
   });
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
-    mainWindow.resizable = false;
     global.mainWindow = mainWindow;
     // 初始化进程之间事件监听
     initIpcEvent();

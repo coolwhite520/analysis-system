@@ -24,7 +24,7 @@
 export default {
   methods: {
     handleDbClick() {
-      this.$electron.ipcRenderer.send("move-to-origin");
+      this.$electron.ipcRenderer.send("move-to-zero");
     },
     handleClickGotoHome() {
       console.log("click");
