@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import initIpcEvent from "./modules/ipcEvents";
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -26,7 +27,8 @@ function createWindow() {
     width: 1000,
     show: false,
     // titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
-    backgroundColor: '#2e2c29', // 初始化一个背景色
+    frame: false,
+    backgroundColor: "#2e2c29", // 初始化一个背景色
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
@@ -40,12 +42,20 @@ function createWindow() {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
-  })
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+    mainWindow.resizable = false;
+    global.mainWindow = mainWindow;
+    // 初始化进程之间事件监听
+    initIpcEvent();
+  });
 }
-
+app.on("activate", () => {
+  let wins = BrowserWindow.getAllWindows();
+  for (let i = 0; i < wins.length; i++) {
+    wins[i].show();
+  }
+});
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {

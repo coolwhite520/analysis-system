@@ -1,16 +1,21 @@
 <template>
   <div id="app">
+    <title-bar></title-bar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import TitleBar from "@/pages/TitleBar";
 export default {
-  name: "App"
+  name: "App",
+  components: {
+    "title-bar": TitleBar
+  }
 };
 </script>
 
-<style scoped>
+<style>
 /* CSS */
 * {
   margin: 0;
