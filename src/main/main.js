@@ -43,6 +43,7 @@ function createWindow() {
   });
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
+    mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
     // 初始化进程之间事件监听
     initIpcEvent();
