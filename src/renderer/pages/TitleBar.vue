@@ -28,6 +28,10 @@ export default {
     },
     handleClickGotoHome() {
       console.log("click");
+      this.$store.commit(
+        "HomePageSwitch/SET_VIEW_NAME",
+        "show-exist-case-view"
+      );
     },
     handleClickMin() {
       this.$electron.ipcRenderer.send("window-min");
@@ -61,9 +65,9 @@ export default {
 }
 .opterationBtn {
   display: block;
-  font-size: 20px;
+  font-size: 15px;
   text-align: right;
-  margin-top: 15px;
+  margin-top: 10px;
   margin-right: 10px;
   color: gray;
   -webkit-app-region: no-drag;
