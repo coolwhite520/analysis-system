@@ -58,6 +58,7 @@ export default {
   width: 100%;
   left: 0px;
   top: 0px;
+  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
 }
 
 .logo {

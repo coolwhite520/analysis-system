@@ -36,48 +36,6 @@ const state = {
       state: "over",
       dateTime: "2019023434",
     },
-    {
-      id: "17",
-      name: "纵火",
-      state: "over",
-      dateTime: "2019023434",
-    },
-    {
-      id: "15",
-      name: "纵火",
-      state: "over",
-      dateTime: "2019023434",
-    },
-    {
-      id: "16",
-      name: "纵火",
-      state: "over",
-      dateTime: "2019023434",
-    },
-    {
-      id: "17",
-      name: "纵火案",
-      state: "over",
-      dateTime: "2019023434",
-    },
-    {
-      id: "15",
-      name: "纵火",
-      state: "over",
-      dateTime: "2019023434",
-    },
-    {
-      id: "16",
-      name: "纵火",
-      state: "over",
-      dateTime: "2019023434",
-    },
-    {
-      id: "17",
-      name: "纵火",
-      state: "over",
-      dateTime: "2019023434",
-    },
   ],
 };
 
