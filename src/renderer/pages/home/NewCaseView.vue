@@ -166,6 +166,10 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.$store.commit(
+        "HomePageSwitch/SET_VIEW_NAME",
+        "show-exist-case-view"
+      );
     }
   }
 };

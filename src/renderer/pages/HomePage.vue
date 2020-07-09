@@ -1,15 +1,19 @@
 <template>
   <div style="height:500px;  -webkit-user-select: none;">
-    <el-row style="margin-top: 20px;margin-bottom: 40px;">
+    <el-row style="margin-top: 40px;margin-bottom: 40px;">
       <el-col :span="6">&nbsp;</el-col>
       <el-col :span="12" style="text-align: center;">
-        <el-button style="width:30%" @click="handleClickNewCase">新增案件</el-button>
-        <el-button style="width:30%">导入案件</el-button>
-        <el-button style="width:30%">导出案件</el-button>
+        <el-button class="iconfont" style="width:30%" @click="handleClickNewCase">&#xe6a3; 新增案件</el-button>
+        <el-button class="iconfont" style="width:30%">&#xe61a; 导入案件</el-button>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="4">
-        <el-input placeholder="输入案件名称进行检索" prefix-icon="el-icon-search" v-model="inputAnjianName"></el-input>
+        <el-input
+          v-show="currentViewName !== 'new-case-view'"
+          placeholder="输入案件名称进行检索"
+          prefix-icon="el-icon-search"
+          v-model="inputAnjianName"
+        ></el-input>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
     </el-row>
