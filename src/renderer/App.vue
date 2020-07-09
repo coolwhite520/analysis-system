@@ -24,4 +24,8 @@ export default {
   margin: 0;
   padding: 0;
 }
+.sysBtnStyle {
+  background-color: #1b2735;
+  color: white;
+}
 </style>

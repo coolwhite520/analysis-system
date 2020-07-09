@@ -10,11 +10,14 @@
         </div>
       </el-col>
       <el-col class="colum" :span="4">
-        <span class="opterationBtn iconfont">
-          <span id="goHome" @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
-          <span id="goHome" @click="handleClickMin" class="min">&#xe60c;</span>
-          <span id="goHome" @click="handleClickClose" class="close">&#xe634;</span>
-        </span>
+        <div>
+          <span class="opterationBtn iconfont">
+            <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
+            <span @click="handleClickMin" class="min">&#xe60c;</span>
+            <span @click="handleClickClose" class="close">&#xe634;</span>
+          </span>
+        </div>
+        <div style="float:right;margin-top:20px;font-size:10px;margin-right:10px;">当前版本号：{{"1.0.1"}}</div>
       </el-col>
     </el-row>
   </div>
@@ -50,6 +53,11 @@ export default {
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   -webkit-app-region: drag;
   -webkit-user-select: none;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  left: 0px;
+  top: 0px;
 }
 
 .logo {
@@ -69,7 +77,7 @@ export default {
   text-align: right;
   margin-top: 10px;
   margin-right: 10px;
-  color: gray;
+  color: white;
   -webkit-app-region: no-drag;
 }
 .gohome {
@@ -83,12 +91,14 @@ export default {
 }
 
 .gohome:hover {
-  color: #fff;
+  cursor: pointer;
 }
 .min:hover {
-  color: #fff;
+  color: green;
+  cursor: pointer;
 }
 .close:hover {
-  color: #fff;
+  color: red;
+  cursor: pointer;
 }
 </style>

@@ -7,25 +7,40 @@
         :key="caseItem.id"
         style="margin-bottom:20px;"
       >
-        <div class="iconfont" style="color: #606266;font-size:30px;margin-bottom:-30px;">&#xe65e;</div>
-        <el-card class="cardStyle">
-          <div @click="handleClickCasr(caseItem.id)">
-            <div>
-              <div>
-                <b>编号：{{caseItem.id}}</b>
-              </div>
-              <span class="time">{{caseItem.dateTime}}</span>
-              <span class="location">{{"北京市西城区"}}</span>
-            </div>
+        <div class="iconfont" style="color: #ddd;font-size:30px;margin-bottom:-30px;">&#xe65e;</div>
+        <el-card @click.native="handleClickCase(caseItem.id)" class="cardStyle">
+          <el-row>
+            <b>编号：{{caseItem.id}}</b>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <div class="time">{{caseItem.dateTime}}</div>
+            </el-col>
+            <el-col :span="12">
+              <div class="location">{{"北京市西城区"}}</div>
+            </el-col>
+          </el-row>
+          <el-row>
             <h2 class="caseName">{{ caseItem.name }}</h2>
-            <div>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
               <div
                 class="state"
                 :style="{ color: caseItem.state === 'new' ? 'green' : '#CDAD00' }"
               >状态：{{caseItem.state === 'new'? "新建": "已完结"}}</div>
-            </div>
-          </div>
-          <el-button type="text" class="button" @click="handleClickAnalysis">分析</el-button>
+            </el-col>
+            <el-col :span="12">
+              <div>
+                <el-button
+                  class="button"
+                  icon="el-icon-search"
+                  type="text"
+                  @click="handleClickAnalysis()"
+                >分析</el-button>
+              </div>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
     </el-row>
@@ -37,17 +52,19 @@ export default {
   data() {
     return {
       currentDate: new Date(),
-      columCount: 4 //每行显示几个
+      columCount: 3 //每行显示几个
     };
   },
   computed: {
     ...mapState("cases", ["existCaseList"])
   },
   methods: {
-    handleClickCasr(caseID) {
+    handleClickCase(caseID) {
       console.log(caseID);
+      this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },
-    handleClickAnalysis() {
+    handleClickAnalysis(event) {
+      window.event.stopPropagation();
       console.log("clickAnalysis");
     }
   }
@@ -56,21 +73,21 @@ export default {
 
 <style scoped>
 .cardStyle {
-  border: 2px solid #dddfe5;
+  border: 2px solid #1b2735;
   border-radius: 15px;
-  color: #606266;
+  /* color: #606266; */
   /* background: radial-gradient(ellipse at bottom, #1b2735 0%, #9fb6cd 100%); */
   /* background-color: #9fb6cd; */
   /* color: white; */
 }
 .cardStyle:hover {
-  border: 2px solid #1b2735;
   box-shadow: #1b2735 10px 10px 30px 5px;
 }
 .time {
   font-size: 13px;
 }
 .location {
+  font-size: 12px;
   float: right;
 }
 .caseName {
@@ -79,8 +96,8 @@ export default {
   margin: 10px;
 }
 .state {
-  margin-top: 10px;
-  font-size: 13px;
+  font-size: 12px;
+  margin-top: 12px;
 }
 .button {
   float: right;

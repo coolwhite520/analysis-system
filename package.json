@@ -51,7 +51,6 @@
     }
   },
   "dependencies": {
-    "animate.css": "^4.1.0",
     "axios": "^0.19.2",
     "element-ui": "^2.13.2",
     "officegen": "^0.6.4",

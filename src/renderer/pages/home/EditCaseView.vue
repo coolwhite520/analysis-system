@@ -93,8 +93,14 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-        <el-button @click="resetForm('ruleForm')">取消</el-button>
+        <el-button
+          class="cardStyle"
+          type="primary"
+          round
+          style="background-color: #1b2735;color: white;"
+          @click="submitForm('ruleForm')"
+        >保存</el-button>
+        <el-button @click="resetForm('ruleForm')" round>取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -166,6 +172,10 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.$store.commit(
+        "HomePageSwitch/SET_VIEW_NAME",
+        "show-exist-case-view"
+      );
     }
   }
 };
@@ -177,5 +187,8 @@ export default {
   border-radius: 15px;
   padding: 20px;
   box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
+}
+.cardStyle:hover {
+  box-shadow: #1b2735 10px 10px 30px 5px;
 }
 </style>
