@@ -56,7 +56,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("cases", ["existCaseList"])
+    ...mapState("ExistCases", ["existCaseList"])
   },
   methods: {
     handleClickCase(caseID) {
