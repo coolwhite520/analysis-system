@@ -1,5 +1,5 @@
 const state = {
-  currentViewName: "show-exist-case-view", //"case-detail-view", //"show-exist-case-view",
+  currentViewName: "new-case-view", //"case-detail-view", //"show-exist-case-view",
 };
 
 const mutations = {

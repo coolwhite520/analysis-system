@@ -3,32 +3,32 @@
     <el-row :gutter="40">
       <el-col
         :span="24/columCount"
-        v-for="(caseItem) in existCaseList"
-        :key="caseItem.id"
+        v-for="(caseItem) in existCasesFilter"
+        :key="caseItem.ajid"
         style="margin-bottom:20px;"
       >
         <div class="iconfont" style="color: #ddd;font-size:30px;margin-bottom:-30px;">&#xe65e;</div>
-        <el-card @click.native="handleClickCase(caseItem.id)" class="cardStyle">
+        <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
           <el-row>
-            <b>编号：{{caseItem.id}}</b>
+            <b>编号：{{caseItem.ajbh}}</b>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <div class="time">{{caseItem.dateTime}}</div>
+              <div class="time">{{caseItem.cjsj}}</div>
             </el-col>
             <el-col :span="12">
-              <div class="location">{{"北京市西城区"}}</div>
+              <div class="location">{{caseItem.asjfsddxzqmc}}</div>
             </el-col>
           </el-row>
           <el-row>
-            <h2 class="caseName">{{ caseItem.name }}</h2>
+            <div class="caseName">{{ caseItem.ajmc }}</div>
+          </el-row>
+          <el-row>
+            <p style="text-align:center;">[{{caseItem.ajlbmc}}]</p>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <div
-                class="state"
-                :style="{ color: caseItem.state === 'new' ? 'green' : '#CDAD00' }"
-              >状态：{{caseItem.state === 'new'? "新建": "已完结"}}</div>
+              <div class="state">状态：{{caseItem.zcjdmc}}</div>
             </el-col>
             <el-col :span="12">
               <div>
@@ -47,7 +47,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -56,17 +56,22 @@ export default {
     };
   },
   computed: {
-    ...mapState("ExistCases", ["existCaseList"])
+    ...mapGetters("Cases", ["existCasesFilter"])
   },
   methods: {
-    handleClickCase(caseID) {
-      console.log(caseID);
+    handleClickCase(caseDetail) {
+      console.log(caseDetail);
+      // 把数据提交
+      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseDetail);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },
     handleClickAnalysis(event) {
       window.event.stopPropagation();
       console.log("clickAnalysis");
     }
+  },
+  mounted() {
+    this.$store.dispatch("Cases/getExistCaseAsync");
   }
 };
 </script>
@@ -75,11 +80,10 @@ export default {
 .cardStyle {
   border: 2px solid #1b2735;
   border-radius: 15px;
-  /* color: #606266; */
   /* background: radial-gradient(ellipse at bottom, #1b2735 0%, #9fb6cd 100%); */
-  /* background-color: #9fb6cd; */
-  /* color: white; */
+  color: #808080;
 }
+
 .cardStyle:hover {
   box-shadow: #1b2735 10px 10px 30px 5px;
 }
@@ -89,12 +93,22 @@ export default {
 .location {
   font-size: 12px;
   float: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .caseName {
-  color: #1b2735;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+
   text-align: center;
   margin: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .state {
   font-size: 12px;
   margin-top: 12px;

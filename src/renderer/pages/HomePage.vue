@@ -63,6 +63,11 @@ export default {
       inputAnjianName: ""
     };
   },
+  watch: {
+    inputAnjianName(newValue, oldValue) {
+      this.$store.commit("Cases/SET_INPUT_VALUE", newValue);
+    }
+  },
   computed: {
     ...mapState("HomePageSwitch", ["currentViewName"])
   },

@@ -14,6 +14,11 @@ export default {
   components: {
     "title-bar": TitleBar,
     "home-page": HomePage
+  },
+  mounted() {
+    this.$store.dispatch("PublicList/getAJLBList");
+    this.$store.dispatch("PublicList/getZCJDMClist");
+    this.$store.dispatch("PublicList/getProvincelist");
   }
 };
 </script>

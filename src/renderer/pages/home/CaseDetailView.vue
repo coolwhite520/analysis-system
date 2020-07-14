@@ -32,42 +32,38 @@
       <el-divider></el-divider>
       <el-row>
         <el-col :span="12">
-          <p>案件名称：</p>
+          <p>案件名称：{{caseDetail.ajmc}}</p>
         </el-col>
         <el-col :span="12">
-          <p>案件编号：</p>
+          <p>案件编号：{{caseDetail.ajbh}}</p>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="12">
-          <p>案件类型：</p>
+          <p>案件类型：{{caseDetail.ajlbmc}}</p>
         </el-col>
-        <el-col :span="12">
-          <p>案件类型：</p>
-        </el-col>
+        <el-col :span="12">&nbsp;</el-col>
       </el-row>
-
       <el-row>
         <el-col :span="12">
-          <p>案件状态：</p>
+          <p>发生时间：{{caseDetail.jjsj}}</p>
         </el-col>
         <el-col :span="12">
-          <p>立案时间：</p>
+          <p>所属地区：{{caseDetail.asjfsddxzqmc}}</p>
         </el-col>
       </el-row>
-
       <el-row>
         <el-col :span="12">
-          <p>发生时间：</p>
+          <p>立案时间：{{caseDetail.cjsj}}</p>
         </el-col>
         <el-col :span="12">
-          <p>所属地区：</p>
+          <p>案件状态：{{caseDetail.zcjdmc}}</p>
         </el-col>
       </el-row>
 
-      <p>简要案情：</p>
-      <p>综述案情：</p>
+      <p>简要案情：{{caseDetail.jyaq}}</p>
+      <p>综述案情：{{caseDetail.zhaq}}</p>
     </div>
     <el-divider></el-divider>
     <div class="dataInfo">
@@ -146,7 +142,11 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState("CaseDetail", ["caseDetail"])
+  },
   methods: {
     handleClickEdit() {
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "edit-case-view");

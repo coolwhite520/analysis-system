@@ -1,10 +1,8 @@
-const db = require("./DataBase");
-const location = require("./Location")(db);
-const cases = require("./Cases")(db);
-const schema = require("./Schema")(db);
+import location from "./Location";
+import cases from "./Cases";
 
 (async () => {
-  // await schema.DropSchema("icap_1");
+  // await cases.DropCaseByID(1);
   await cases.CreateNewCase(
     "11111",
     "22222",
@@ -25,10 +23,8 @@ const schema = require("./Schema")(db);
     1
   );
 
-  let row = await schema.SwitchSchema("icap_base");
-  console.log(row);
-  let res = await location.QueryProvince();
-  console.log(res);
+  // let res = await location.QueryProvince();
+  // console.log(res);
   // let citys = await location.QueryCityByProvinceID(res[5].id);
   // console.log(citys);
   // let states = await cases.QueryCaseState();

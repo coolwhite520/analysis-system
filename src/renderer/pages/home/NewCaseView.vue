@@ -1,5 +1,5 @@
 <template>
-  <div class="newcaseForm">
+  <div class="newcaseForm" v-loading="loading">
     <div style="text-align:center;margin-bottom:20px;">
       <h2>新增案件</h2>
     </div>
@@ -10,21 +10,30 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="案件类型" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择案件类型">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
+      <el-row>
+        <el-col :span="10">
+          <el-form-item label="案件类型" prop="ajlbArr">
+            <el-cascader
+              @change="handleChangeAjlb(ruleForm.ajlbArr)"
+              style="width: 100%;"
+              filterable
+              :show-all-levels="false"
+              v-model="ruleForm.ajlbArr"
+              :options="ajlbListWrapper"
+              :props="{ expandTrigger: 'hover' }"
+            ></el-cascader>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="案件编号" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
+          <el-form-item label="案件编号" prop="ajbh">
+            <el-input v-model="ruleForm.ajbh"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11">
-          <el-form-item label="案件名称" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
+          <el-form-item label="案件名称" prop="ajmc">
+            <el-input v-model="ruleForm.ajmc"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -32,11 +41,13 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="发生日期" required>
-            <el-form-item prop="date1">
+            <el-form-item prop="jjsj">
               <el-date-picker
+                :editable="false"
                 type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.date1"
+                placeholder="选择案件发生的时间日期"
+                value-format="yyyy-MM-dd"
+                v-model="ruleForm.jjsj"
                 style="width: 100%;"
               ></el-date-picker>
             </el-form-item>
@@ -44,11 +55,13 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="立案日期" required>
-            <el-form-item prop="date2">
+            <el-form-item prop="cjsj">
               <el-date-picker
+                :editable="false"
+                value-format="yyyy-MM-dd"
                 type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.date2"
+                placeholder="选择立案日期"
+                v-model="ruleForm.cjsj"
                 style="width: 100%;"
               ></el-date-picker>
             </el-form-item>
@@ -56,40 +69,58 @@
         </el-col>
       </el-row>
 
-      <el-form-item label="案件状态" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择案件类型">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="案件状态" prop="zcjddm">
+        <el-select v-model="ruleForm.zcjddm" placeholder="请选择案件状态" @change="handleChangeState">
+          <el-option
+            v-for="item of zcjdmc_list"
+            :key="item.id"
+            :label="item.item_name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="所属地区" prop="region">
-        <el-col :span="8">
-          <el-select v-model="ruleForm.region" placeholder="请选择案件类型">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="所属地区">
+        <el-col :span="5">
+          <el-select
+            v-model="ruleForm.province"
+            placeholder="请选择省份"
+            @change="handleChangeProvince(ruleForm.province)"
+          >
+            <el-option
+              v-for="province of province_list"
+              :key="province.id"
+              :label="province.name"
+              :value="province.id"
+            ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="8">
-          <el-select v-model="ruleForm.region" placeholder="请选择案件类型">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-col :span="5">
+          <el-select
+            v-model="ruleForm.city"
+            placeholder="请选择城市"
+            @change="handleChangeCity(ruleForm.city)"
+          >
+            <el-option v-for="city of city_list" :key="city.id" :label="city.name" :value="city.id"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="8">
-          <el-select v-model="ruleForm.region" placeholder="请选择案件类型">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-col :span="5">
+          <el-select
+            v-model="ruleForm.asjfsddxzqhdm"
+            placeholder="请选择区、镇"
+            @change="handleChangeTown(ruleForm.asjfsddxzqhdm)"
+          >
+            <el-option v-for="town of town_list" :key="town.id" :label="town.name" :value="town.id"></el-option>
           </el-select>
         </el-col>
       </el-form-item>
 
-      <el-form-item label="简述案情" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+      <el-form-item label="简述案情" prop="jyaq">
+        <el-input type="textarea" v-model="ruleForm.jyaq"></el-input>
       </el-form-item>
 
-      <el-form-item label="综述案情" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+      <el-form-item label="综述案情" prop="zhaq">
+        <el-input type="textarea" v-model="ruleForm.zhaq"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -107,63 +138,154 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapState("PublicList", ["ajlb_list", "zcjdmc_list", "province_list"]),
+    ...mapGetters("PublicList", ["ajlbListWrapper"]),
+    ...mapState("NewCase", ["city_list", "town_list", "createState"])
+  },
+  async mounted() {
+    // console.log(new Date().Format("yyyy-MM-dd"));
+    //await this.$store.dispatch("NewCase/makeNewAjbh");
+    //this.ruleForm.ajbh = this.ajbh;
+  },
   data() {
     return {
+      ajlb: 0,
+      loading: false,
+      ajlbmc: "",
+      zcjdmc: "",
+      asjfsddxzqmc: "",
       ruleForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        ajlbArr: [], // element 返回的是一个数组类型
+        ajbh: "",
+        ajmc: "",
+        cjsj: "",
+        jjsj: "",
+        zcjddm: "",
+        jyaq: "",
+        zhaq: "",
+        city: "",
+        asjfsddxzqhdm: ""
       },
       rules: {
-        name: [
-          { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ajlbArr: [
+          { required: true, message: "请选择案件类别", trigger: "change" }
         ],
-        region: [
-          { required: true, message: "请选择活动区域", trigger: "change" }
+        ajbh: [
+          { required: true, message: "请输入案件编号", trigger: "blur" },
+          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
         ],
-        date1: [
+        ajmc: [
+          { required: true, message: "请输入案件名称", trigger: "blur" },
+          { min: 2, max: 12, message: "长度在 2 到 12 个字符", trigger: "blur" }
+        ],
+        jjsj: [
           {
-            type: "date",
+            type: "string",
             required: true,
-            message: "请选择日期",
+            message: "请选择案件发生日期",
             trigger: "change"
           }
         ],
-        date2: [
+        cjsj: [
           {
-            type: "date",
+            type: "string",
             required: true,
-            message: "请选择时间",
+            message: "选择立案日期",
             trigger: "change"
           }
         ],
-        type: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个活动性质",
-            trigger: "change"
-          }
+        zcjddm: [
+          { required: true, message: "请选择案件状态", trigger: "change" }
         ],
-        resource: [
-          { required: true, message: "请选择活动资源", trigger: "change" }
+
+        jyaq: [
+          { required: true, message: "请填写案情简要说明", trigger: "blur" }
         ],
-        desc: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
+        zhaq: [{ required: true, message: "请填写综述案情", trigger: "blur" }]
       }
     };
   },
+  watch: {
+    createState(newState, oldState) {
+      console.log(newState, oldState);
+      if (newState === "success") {
+        this.loading = false;
+        this.$store.commit(
+          "HomePageSwitch/SET_VIEW_NAME",
+          "show-exist-case-view"
+        );
+      }
+    }
+  },
   methods: {
+    handleChangeProvince(province_id) {
+      this.$store.dispatch("NewCase/getCitylist", province_id);
+      this.ruleForm.city = "";
+      this.ruleForm.asjfsddxzqhdm = "";
+      console.log(this.ruleForm.province);
+    },
+    handleChangeCity(city_id) {
+      this.$store.dispatch("NewCase/getTownlist", city_id);
+      this.ruleForm.asjfsddxzqhdm = "";
+      console.log(this.ruleForm.city);
+    },
+    handleChangeTown(asjfsddxzqhdm) {
+      console.log(asjfsddxzqhdm);
+      for (let item of this.town_list) {
+        if (asjfsddxzqhdm === item.id) {
+          this.asjfsddxzqmc = item.name;
+          break;
+        }
+      }
+    },
+    handleChangeAjlb(ajlbArr) {
+      this.ajlb = ajlbArr[ajlbArr.length - 1];
+      for (let item of this.ajlb_list) {
+        if (item.chargeid === this.ajlb) {
+          this.ajlbmc = item.chargename;
+          break;
+        }
+      }
+      console.log(this.ajlb, this.ajlbmc);
+    },
+    handleChangeState() {
+      for (let item of this.zcjdmc_list) {
+        if (item.id === this.ruleForm.zcjddm) {
+          this.zcjdmc = item.item_name;
+          break;
+        }
+      }
+      console.log(this.ruleForm.zcjddm, this.zcjdmc);
+    },
     submitForm(formName) {
+      let _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          let obj = {
+            ajbh: _this.ruleForm.ajbh,
+            ajmc: _this.ruleForm.ajmc,
+            ajlb: _this.ajlb,
+            ajlbmc: _this.ajlbmc,
+            zcjddm: _this.ruleForm.zcjddm,
+            zcjdmc: _this.zcjdmc,
+            cjsj: _this.ruleForm.cjsj,
+            jjsj: _this.ruleForm.jjsj,
+            xgsj: new Date().Format("yyyy-MM-dd"),
+            asjfsddxzqhdm: _this.ruleForm.asjfsddxzqhdm,
+            asjfsddxzqmc: _this.asjfsddxzqmc,
+            jyaq: _this.ruleForm.jyaq,
+            zhaq: _this.ruleForm.zhaq,
+            cjr: "00000000",
+            sfsc: 0,
+            sfbdwkj: 1,
+            sjl: 1
+          };
+          _this.$store.commit("NewCase/SET_CREATE_STATE", "failed");
+          _this.loading = true;
+          _this.$store.dispatch("NewCase/createNewCase", obj);
         } else {
           console.log("error submit!!");
           return false;
