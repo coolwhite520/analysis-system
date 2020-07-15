@@ -80,7 +80,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="所属地区">
+      <el-form-item label="所属地区" prop="asjfsddxzqhdm">
         <el-col :span="5">
           <el-select
             v-model="ruleForm.province"
@@ -181,6 +181,7 @@ export default {
     this.asjfsddxzqmc = this.caseDetail.asjfsddxzqmc;
     this.ajlb = parseInt(this.caseDetail.ajlb);
     this.ajlbmc = this.caseDetail.ajlbmc;
+    this.zcjdmc = this.caseDetail.zcjdmc;
   },
   data() {
     return {
@@ -205,6 +206,9 @@ export default {
       rules: {
         ajlbArr: [
           { required: true, message: "请选择案件类别", trigger: "change" }
+        ],
+        asjfsddxzqhdm: [
+          { required: true, message: "请选择地理位置", trigger: "change" }
         ],
         ajbh: [
           { required: true, message: "请输入案件编号", trigger: "blur" },
@@ -250,6 +254,18 @@ export default {
           "HomePageSwitch/SET_VIEW_NAME",
           "show-exist-case-view"
         );
+        this.$store.commit("EditCase/SET_SAVE_STATE", "failed");
+        this.$notify({
+          title: "成功",
+          message: `编辑案件[${this.caseDetail.ajmc}]并保存成功!`,
+          type: "success"
+        });
+      } else if (newState === "failed") {
+        this.loading = false;
+        this.$notify.error({
+          title: "错误",
+          message: `编辑案件[${this.caseDetail.ajmc}]失败!`
+        });
       }
     }
   },
@@ -318,7 +334,6 @@ export default {
             sfbdwkj: 1,
             sjl: 1
           };
-          _this.$store.commit("EditCase/SET_SAVE_STATE", "failed");
           _this.loading = true;
           console.log(obj);
           _this.$store.dispatch("EditCase/saveCase", obj);

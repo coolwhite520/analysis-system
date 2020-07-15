@@ -18,6 +18,7 @@ const state = {
   sfbdwkj: "",
   sjlx: "",
   caseDetail: {},
+  deleteState: "",
 };
 const mutations = {
   SET_AJBH(state, ajbh) {
@@ -71,12 +72,25 @@ const mutations = {
   SET_SJLX(state, sjlx) {
     state.sjlx = sjlx;
   },
+
   SET_CASE_DETAIL(state, caseDetail) {
     state.caseDetail = caseDetail;
   },
+  SET_PARENTAJLB(state, parentAjlb) {
+    state.parentAjlb = parentAjlb;
+  },
+  SET_DELETE_STATE(state, delState) {
+    state.deleteState = delState;
+  },
 };
 
-const actions = {};
+const actions = {
+  async deleteCase({ commit }, ajid) {
+    let res = await cases.DropCaseByID(ajid);
+    if (res) commit("SET_DELETE_STATE", "success");
+    else commit("SET_DELETE_STATE", "failed");
+  },
+};
 
 export default {
   state,

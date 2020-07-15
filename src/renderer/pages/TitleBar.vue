@@ -35,6 +35,7 @@ export default {
         "HomePageSwitch/SET_VIEW_NAME",
         "show-exist-case-view"
       );
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "home-page");
     },
     handleClickMin() {
       this.$electron.ipcRenderer.send("window-min");

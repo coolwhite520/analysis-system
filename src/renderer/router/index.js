@@ -8,16 +8,16 @@ export default new Router({
     {
       path: "/",
       name: "mainPage",
-      component: function (resolve) {
-        require(['@/pages/mainPage'], resolve)
-      }
+      component: function(resolve) {
+        require(["@/pages/mainPage"], resolve);
+      },
     },
     {
-      path: "/mini",
-      name: "landing-page",
-      component: function (resolve) {
-        require(['@/pages/LandingPage'], resolve)
-      }
+      path: "/StandardCollection",
+      name: "StandardCollection",
+      component: function(resolve) {
+        require(["@/pages/dialog/StandardCollection"], resolve);
+      },
     },
   ],
 });

@@ -1,5 +1,6 @@
+// 案件页面内容的切换
 const state = {
-  currentViewName: "new-case-view", //"case-detail-view", //"show-exist-case-view",
+  currentViewName: "show-exist-case-view", //"new-case-view", //"case-detail-view", //"show-exist-case-view",
 };
 
 const mutations = {

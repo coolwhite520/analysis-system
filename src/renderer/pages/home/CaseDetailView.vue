@@ -1,5 +1,5 @@
 <template>
-  <div class="detailInfo">
+  <div class="detailInfo" v-loading="loading">
     <div class="baseInfo">
       <div class="title">
         <h2 style="float: left;">基本信息</h2>
@@ -25,6 +25,7 @@
             icon="el-icon-delete"
             size="mini"
             style="background-color: #1b2735;color: white;"
+            @click="handleClickDelCase"
           >删除</el-button>
         </el-button-group>
       </div>
@@ -32,38 +33,65 @@
       <el-divider></el-divider>
       <el-row>
         <el-col :span="12">
-          <p>案件名称：{{caseDetail.ajmc}}</p>
+          <p>
+            案件名称：
+            <span class="caseContent">{{caseDetail.ajmc}}</span>
+          </p>
         </el-col>
         <el-col :span="12">
-          <p>案件编号：{{caseDetail.ajbh}}</p>
+          <p>
+            案件编号：
+            <span class="caseContent">{{caseDetail.ajbh}}</span>
+          </p>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="12">
-          <p>案件类型：{{caseDetail.ajlbmc}}</p>
+          <p>
+            案件类型：
+            <span class="caseContent">{{caseDetail.ajlbmc}}</span>
+          </p>
         </el-col>
         <el-col :span="12">&nbsp;</el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <p>发生时间：{{caseDetail.jjsj}}</p>
+          <p>
+            发生时间：
+            <span class="caseContent">{{caseDetail.jjsj}}</span>
+          </p>
         </el-col>
         <el-col :span="12">
-          <p>所属地区：{{caseDetail.asjfsddxzqmc}}</p>
+          <p>
+            所属地区：
+            <span class="caseContent">{{caseDetail.asjfsddxzqmc}}</span>
+          </p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <p>立案时间：{{caseDetail.cjsj}}</p>
+          <p>
+            立案时间：
+            <span class="caseContent">{{caseDetail.cjsj}}</span>
+          </p>
         </el-col>
         <el-col :span="12">
-          <p>案件状态：{{caseDetail.zcjdmc}}</p>
+          <p>
+            案件状态：
+            <span class="caseContent">{{caseDetail.zcjdmc}}</span>
+          </p>
         </el-col>
       </el-row>
 
-      <p>简要案情：{{caseDetail.jyaq}}</p>
-      <p>综述案情：{{caseDetail.zhaq}}</p>
+      <p>
+        简要案情：
+        <span class="caseContent">{{caseDetail.jyaq}}</span>
+      </p>
+      <p>
+        综述案情：
+        <span class="caseContent">{{caseDetail.zhaq}}</span>
+      </p>
     </div>
     <el-divider></el-divider>
     <div class="dataInfo">
@@ -96,7 +124,7 @@
         <span>案件数据：</span>
         <span>共采集{{"0"}}次</span>
         <span>
-          <el-button type="text" size="mini">采集记录</el-button>
+          <el-button type="text" size="mini" @click="handleClickCollection">采集记录</el-button>
         </span>
       </div>
       <p>
@@ -142,14 +170,88 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
+  mounted() {
+    console.log(this.caseDetail);
+  },
+  data() {
+    return {
+      loading: false
+    };
+  },
   computed: {
-    ...mapState("CaseDetail", ["caseDetail"])
+    ...mapState("CaseDetail", ["caseDetail", "deleteState"])
+  },
+  watch: {
+    deleteState(newValue, oldValue) {
+      if (newValue === "success") {
+        this.loading = false;
+        this.$store.commit(
+          "HomePageSwitch/SET_VIEW_NAME",
+          "show-exist-case-view"
+        );
+        this.$store.commit("CaseDetail/SET_DELETE_STATE", "failed");
+        this.$notify({
+          title: "成功",
+          message: `删除案件[${this.caseDetail.ajmc}]成功!`,
+          type: "success"
+        });
+      } else if (newValue === "failed") {
+        this.loading = false;
+        this.$notify.error({
+          title: "错误",
+          message: `删除案件[${this.caseDetail.ajmc}]失败!`
+        });
+      }
+    }
   },
   methods: {
+    handleClickCollection(){
+      
+    },
     handleClickEdit() {
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "edit-case-view");
+    },
+    async handleClickDelCase() {
+      let result = await this.$electron.remote.dialog.showMessageBox(null, {
+        type: "warning",
+        title: "关闭",
+        message: `是否要删除当前案件[${this.caseDetail.ajmc}]？`,
+        buttons: ["确定", "取消"],
+        defaultId: 0
+      });
+      console.log(result);
+      if (result.response === 0) {
+        this.loading = true;
+        this.$store.dispatch(
+          "CaseDetail/deleteCase",
+          parseInt(this.caseDetail.ajid)
+        );
+      } else {
+        this.$message({
+          type: "info",
+          message: "已取消删除"
+        });
+      }
+      // this.$confirm("此操作将永久删除该案件, 是否继续?", "提示", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(() => {
+      //     this.loading = true;
+      //     this.$store.dispatch(
+      //       "CaseDetail/deleteCase",
+      //       parseInt(this.caseDetail.ajid)
+      //     );
+      //   })
+      //   .catch(() => {
+      //     this.$message({
+      //       type: "info",
+      //       message: "已取消删除"
+      //     });
+      //   });
     },
     handleClickGoHome() {
       this.$store.commit(
@@ -174,5 +276,8 @@ export default {
 }
 .button:hover {
   box-shadow: #1b2735 10px 10px 30px 5px;
+}
+.caseContent {
+  color: gray;
 }
 </style>

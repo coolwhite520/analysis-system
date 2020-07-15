@@ -80,7 +80,12 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="所属地区">
+      <!-- <el-row>
+        <el-col :span="5"></el-col>
+        <el-col :span="5"></el-col>
+        <el-col :span="5"></el-col>
+      </el-row>-->
+      <el-form-item label="所属地区" prop="asjfsddxzqhdm">
         <el-col :span="5">
           <el-select
             v-model="ruleForm.province"
@@ -173,6 +178,9 @@ export default {
         ajlbArr: [
           { required: true, message: "请选择案件类别", trigger: "change" }
         ],
+        asjfsddxzqhdm: [
+          { required: true, message: "请选择地理位置", trigger: "change" }
+        ],
         ajbh: [
           { required: true, message: "请输入案件编号", trigger: "blur" },
           { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
@@ -217,6 +225,18 @@ export default {
           "HomePageSwitch/SET_VIEW_NAME",
           "show-exist-case-view"
         );
+        this.$store.commit("NewCase/SET_CREATE_STATE", "failed");
+        this.$notify({
+          title: "成功",
+          message: `新建案件[${this.ruleForm.ajmc}]成功!`,
+          type: "success"
+        });
+      } else if (newState === "failed") {
+        this.loading = false;
+        this.$notify.error({
+          title: "错误",
+          message: `新建案件[${this.ruleForm.ajmc}]失败!`
+        });
       }
     }
   },
@@ -283,7 +303,6 @@ export default {
             sfbdwkj: 1,
             sjl: 1
           };
-          _this.$store.commit("NewCase/SET_CREATE_STATE", "failed");
           _this.loading = true;
           _this.$store.dispatch("NewCase/createNewCase", obj);
         } else {

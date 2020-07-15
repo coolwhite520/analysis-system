@@ -5,7 +5,7 @@ const state = {
   ajmc: "",
   city_list: [],
   town_list: [],
-  saveState: "failed",
+  saveState: "",
   parent_ajid: 0,
 };
 const mutations = {
@@ -92,6 +92,7 @@ const actions = {
       sjlx
     );
     if (res) commit("SET_SAVE_STATE", "success");
+    else commit("SET_SAVE_STATE", "failed");
   },
 };
 
