@@ -1,20 +1,20 @@
 <template >
-  <div class="all-slider">
-    <div
-      style="text-align:center;
-        background-color: #f5f7fa;
-        padding-top:10px;
-        padding-bottom:10px;
-        font-size:15px;
-        border-bottom:1px solid #e5e7ec;"
-    >
-      <span class="iconfont" style="font-size:20px;">&#xe60f;</span> 资金交易明细模型库
-    </div>
+  <div class="all-slider" :style="{ height: mainViewHeight + 'px'}">
+    <el-row class="title">
+      <el-col :span="22">
+        <div>
+          <span class="iconfont">&#xe60f;</span> 资金交易明细模型库
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <span @click="handleClickClose" class="close iconfont">&#xe634;</span>
+      </el-col>
+    </el-row>
     <div class="capital-right-slider">
-      <el-menu default-active="1-1" class="el-menu-vertical-demo" @select="handleSelect">
+      <el-menu class="el-menu-vertical-demo" @select="handleSelect" :default-openeds="openeds">
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-user-solid"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">异常交易行为发现模型</span>
           </template>
 
@@ -26,7 +26,7 @@
 
         <el-submenu index="2">
           <template slot="title">
-            <i class="iconfont" style="margin-left:4px;margin-right:6px;">&#xe66a;</i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">团伙交易行为发现模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="2-1">大额交易团伙账户发现</el-menu-item>
@@ -35,7 +35,7 @@
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">待调单账户分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="3-1">主要人员未掉单对手账户</el-menu-item>
@@ -47,7 +47,7 @@
 
         <el-submenu index="4">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">关联交易分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="4-1">交易账户关联对手账户人数</el-menu-item>
@@ -58,7 +58,7 @@
 
         <el-submenu index="5">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">交易行为特征分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="5-1">交易地区分布</el-menu-item>
@@ -73,7 +73,7 @@
 
         <el-submenu index="6">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">资金穿透模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="6-1">资金链路查找</el-menu-item>
@@ -83,7 +83,7 @@
 
         <el-submenu index="7">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">基于IP团伙分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="7-1">IP关联账户数统计</el-menu-item>
@@ -95,7 +95,7 @@
 
         <el-submenu index="8">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">基于MAC团伙分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="8-1">MAC关联账户数统计</el-menu-item>
@@ -107,7 +107,7 @@
 
         <el-submenu index="9">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">亲密度分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="9-1">亲密度分析</el-menu-item>
@@ -115,7 +115,7 @@
 
         <el-submenu index="10">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">资金用途分析模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="10-1">资金用途分析</el-menu-item>
@@ -123,7 +123,7 @@
 
         <el-submenu index="11">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="iconfont">&#xe61c;</i>
             <span slot="title">统计查询模型</span>
           </template>
           <el-menu-item class="menu-item iconfont" index="10-1">资金透视分析</el-menu-item>
@@ -152,13 +152,19 @@ export default {
   //   }
   // },
   computed: {
-    ...mapState("MainPageSwitch", ["showRightSliderView"])
+    ...mapState("MainPageSwitch", ["showRightSliderView"]),
+    ...mapState("AppPageSwitch", ["mainViewHeight"])
   },
   data() {
-    return {};
+    return {
+      openeds: ["1"]
+    };
   },
   methods: {
-    handleSelect(key, keyPath) {}
+    handleSelect(key, keyPath) {},
+    handleClickClose() {
+      this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", false);
+    }
   }
 };
 </script>
@@ -171,9 +177,24 @@ export default {
 .capital-right-slider {
   width: 100%;
   overflow-x: scroll; /*横向滚动*/
-  height: 600px;
+  height: 100%;
+}
+.title {
+  text-align: center;
+  background-color: #f5f7fa;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 15px;
+  border-bottom: 1px solid #e5e7ec;
 }
 .menu-item {
   font-size: 12px;
+}
+.close {
+  font-size: 10px;
+}
+.close:hover {
+  color: gray;
+  cursor: pointer;
 }
 </style>

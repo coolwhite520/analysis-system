@@ -45,6 +45,8 @@ function createWindow() {
     mainWindow.show();
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
+    global.bounds = global.mainWindow.getBounds();
+
     // 初始化进程之间事件监听
     initIpcEvent();
   });

@@ -1,6 +1,8 @@
 <template>
   <div class="main-page">
-    <tab-bar></tab-bar>
+    <el-row>
+      <tab-bar v-show="showTabBarView"></tab-bar>
+    </el-row>
     <!-- <el-button type="text" @click="handleClickOpenNewWin">open new win</el-button> -->
     <el-row>
       <el-col :span="3">
@@ -19,6 +21,9 @@
         </transition>
       </el-col>
     </el-row>
+    <el-row>
+      <div class="state-bar">&nbsp;</div>
+    </el-row>
   </div>
 </template>
 
@@ -29,14 +34,18 @@ import DataCenter from "@/pages/main/LeftSlider/DataCenter";
 import MainCenterView from "@/pages/main/MainViews/MainCenterView";
 import RightSlider from "@/pages/main/RightSlider/CapitalModelLib";
 export default {
+  mounted() {},
   computed: {
-    ...mapState("MainPageSwitch", ["showRightSliderView"])
+    ...mapState("MainPageSwitch", ["showRightSliderView", "showTabBarView"]),
+    ...mapState("AppPageSwitch", ["mainViewHeight"])
   },
   data() {
     return {
+      height: 0,
       dialogVisible: false
     };
   },
+
   components: {
     "tab-bar": TabBar,
     "data-center": DataCenter,
@@ -77,5 +86,15 @@ export default {
 <style scoped>
 .main-page {
   -webkit-user-select: none;
+}
+.state-bar {
+  height: 20px;
+  background: #1b2735;
+  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  left: 0px;
+  bottom: 0px;
 }
 </style>

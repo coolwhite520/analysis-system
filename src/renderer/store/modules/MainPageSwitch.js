@@ -2,6 +2,7 @@
 const state = {
   currentViewName: "", //"new-case-view", //"case-detail-view", //"show-exist-case-view",
   showRightSliderView: false,
+  showTabBarView: true,
 };
 
 const mutations = {
@@ -10,6 +11,9 @@ const mutations = {
   },
   SET_SHOWRIGHTSLIDERVIEW(state, showRightSliderView) {
     state.showRightSliderView = showRightSliderView;
+  },
+  SET_SHOWTABBARVIEW(state, showTabBarView) {
+    state.showTabBarView = showTabBarView;
   },
 };
 

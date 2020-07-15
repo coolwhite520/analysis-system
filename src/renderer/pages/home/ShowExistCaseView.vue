@@ -56,7 +56,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("Cases", ["existCasesFilter"])
+    ...mapGetters("Cases", ["existCasesFilter"]),
+    ...mapState("AppPageSwitch", ["currentViewName"])
   },
   methods: {
     handleClickCase(caseDetail) {
@@ -68,6 +69,7 @@ export default {
     handleClickAnalysis(event) {
       window.event.stopPropagation();
       console.log("clickAnalysis");
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
     }
   },
   mounted() {

@@ -18,14 +18,43 @@
           </span>
         </div>
         <div style="float:right;margin-top:20px;font-size:10px;margin-right:10px;">当前版本号：{{"1.0.1"}}</div>
+        <div style="clear:both;"></div>
+        <div v-show="currentViewName==='main-page'" style="float:right;margin-right:10px;">
+          <el-button
+            style="color:white;"
+            type="text"
+            @click="handleClickShowTabBar"
+            class="iconfont"
+          >{{showTabBarView?"&#xe6da;":'&#xe6dd;'}}</el-button>
+        </div>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState("MainPageSwitch", ["showTabBarView"]),
+    ...mapState("AppPageSwitch", ["currentViewName"])
+  },
   methods: {
+    handleClickShowTabBar() {
+      if (this.showTabBarView) {
+        this.$store.commit("MainPageSwitch/SET_SHOWTABBARVIEW", false);
+        let bounds = this.$electron.remote.getGlobal("bounds");
+        console.log(bounds);
+        let height = bounds.height - 100 - 143 - 20 - 25 + 143; // titelbar tabbar footbar lineheight
+        this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", height);
+      } else {
+        this.$store.commit("MainPageSwitch/SET_SHOWTABBARVIEW", true);
+        let bounds = this.$electron.remote.getGlobal("bounds");
+        console.log(bounds);
+        let height = bounds.height - 100 - 143 - 20 - 25; // titelbar tabbar footbar lineheight
+        this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", height);
+      }
+    },
     handleDbClick() {
       this.$electron.ipcRenderer.send("move-to-zero");
     },

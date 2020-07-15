@@ -1,6 +1,6 @@
 <template>
   <div class="view-style">
-    <el-tabs v-model="editableTabsValue" type="border-card" editable @edit="handleTabsEdit">
+    <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit">
       <el-tab-pane
         :key="item.name"
         v-for="(item) in editableTabs"
