@@ -1,5 +1,5 @@
 <template >
-  <div class="all-slider" :style="{ height: mainViewHeight + 'px'}">
+  <div class="all-slider" :style="{ height: contentViewHeight + 'px'}">
     <el-row class="title">
       <el-col :span="22">
         <div>
@@ -10,7 +10,7 @@
         <span @click="handleClickClose" class="close iconfont">&#xe634;</span>
       </el-col>
     </el-row>
-    <div class="capital-right-slider">
+    <div class="capital-right-slider" :style="{height: (contentViewHeight - 40*2) + 'px'}">
       <el-menu class="el-menu-vertical-demo" @select="handleSelect" :default-openeds="openeds">
         <el-submenu index="1">
           <template slot="title">
@@ -130,6 +130,13 @@
         </el-submenu>
       </el-menu>
     </div>
+    <el-row class="foot">
+      <el-col :span="24">
+        <div>
+          <span class="iconfont">&nbsp;</span>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -153,7 +160,7 @@ export default {
   // },
   computed: {
     ...mapState("MainPageSwitch", ["showRightSliderView"]),
-    ...mapState("AppPageSwitch", ["mainViewHeight"])
+    ...mapState("AppPageSwitch", ["contentViewHeight"])
   },
   data() {
     return {
@@ -180,6 +187,17 @@ export default {
   height: 100%;
 }
 .title {
+  height: 40px;
+  text-align: center;
+  background-color: #1a222e;
+  color: white;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 15px;
+  border-bottom: 1px solid #e5e7ec;
+}
+.foot {
+  height: 40px;
   text-align: center;
   background-color: #f5f7fa;
   padding-top: 10px;

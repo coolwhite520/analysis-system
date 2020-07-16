@@ -1,6 +1,12 @@
 <template>
   <div class="view-style">
-    <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit">
+    <el-tabs
+      class="el-tabs"
+      v-model="editableTabsValue"
+      type="border-card"
+      editable
+      @edit="handleTabsEdit"
+    >
       <el-tab-pane
         :key="item.name"
         v-for="(item) in editableTabs"
@@ -11,7 +17,11 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState("AppPageSwitch", ["mainViewHeight"])
+  },
   data() {
     return {
       editableTabsValue: "2",
@@ -63,6 +73,9 @@ export default {
 };
 </script>
 <style scoped>
-.view-style {
+.el-tabs {
+  overflow-x: scroll; /*横向滚动*/
+  width: 100%;
+  height: 100%;
 }
 </style>

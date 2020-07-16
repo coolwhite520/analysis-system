@@ -1,5 +1,5 @@
 <template>
-  <div style="height:143px;">
+  <div class="tab-bar">
     <el-row>
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="数据" name="first">
@@ -37,4 +37,8 @@ export default {
 </script>
 
 <style scoped>
+.tab-bar {
+  height: 143px;
+  box-sizing: border-box;
+}
 </style>

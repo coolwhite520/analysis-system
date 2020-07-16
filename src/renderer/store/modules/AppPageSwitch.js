@@ -2,6 +2,8 @@
 const state = {
   currentViewName: "main-page", //"new-case-view", //"case-detail-view", //"show-exist-case-view",
   mainViewHeight: 0,
+  contentViewHeight: 0,
+  isCollapseLeftBar: false,
 };
 
 const mutations = {
@@ -10,6 +12,12 @@ const mutations = {
   },
   SET_MAIN_VIEW_HEIGHT(state, mainViewHeight) {
     state.mainViewHeight = mainViewHeight;
+  },
+  SET_CONTENT_VIEW_HEIGHT(state, contentViewHeight) {
+    state.contentViewHeight = contentViewHeight;
+  },
+  SET_ISCOLLAPSELEFTBAR(state, isCollapseLeftBar) {
+    state.isCollapseLeftBar = isCollapseLeftBar;
   },
 };
 

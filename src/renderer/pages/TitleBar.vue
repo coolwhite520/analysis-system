@@ -21,7 +21,7 @@
         <div style="clear:both;"></div>
         <div v-show="currentViewName==='main-page'" style="float:right;margin-right:10px;">
           <el-button
-            style="color:white;"
+            style="color:white;padding:0;"
             type="text"
             @click="handleClickShowTabBar"
             class="iconfont"
@@ -35,24 +35,32 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  mounted() {
+    // let bounds = this.$electron.remote.getGlobal("bounds");
+    // console.log(bounds);
+    // let height = bounds.height - 100 - 143 - 20 - 25; // titelbar tabbar footbar lineheight
+    // this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", height);
+  },
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView"]),
-    ...mapState("AppPageSwitch", ["currentViewName"])
+    ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"])
   },
   methods: {
     handleClickShowTabBar() {
       if (this.showTabBarView) {
+        let newContentViewHeight = this.contentViewHeight + 143; // titelbar tabbar footbar lineheight
+        this.$store.commit(
+          "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
+          newContentViewHeight
+        );
         this.$store.commit("MainPageSwitch/SET_SHOWTABBARVIEW", false);
-        let bounds = this.$electron.remote.getGlobal("bounds");
-        console.log(bounds);
-        let height = bounds.height - 100 - 143 - 20 - 25 + 143; // titelbar tabbar footbar lineheight
-        this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", height);
       } else {
+        let newContentViewHeight = this.contentViewHeight - 143;
+        this.$store.commit(
+          "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
+          newContentViewHeight
+        );
         this.$store.commit("MainPageSwitch/SET_SHOWTABBARVIEW", true);
-        let bounds = this.$electron.remote.getGlobal("bounds");
-        console.log(bounds);
-        let height = bounds.height - 100 - 143 - 20 - 25; // titelbar tabbar footbar lineheight
-        this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", height);
       }
     },
     handleDbClick() {

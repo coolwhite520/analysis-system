@@ -1,5 +1,5 @@
 <template>
-  <div style="-webkit-user-select: none;margin-top:140px;" ref="wrapper">
+  <div style="-webkit-user-select: none;margin-top:40px;" ref="wrapper">
     <div
       style="margin-top: 40px; margin-bottom: 40px;"
       v-show="currentViewName === 'show-exist-case-view'"

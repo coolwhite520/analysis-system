@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 import initIpcEvent from "./modules/ipcEvents";
 /**
  * Set `__static` path to static files in production
@@ -20,6 +20,8 @@ function createWindow() {
   /**
    * Initial window options
    */
+  global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
+
   mainWindow = new BrowserWindow({
     useContentSize: true,
     title: require("../../package.json").description,
@@ -45,8 +47,6 @@ function createWindow() {
     mainWindow.show();
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
-    global.bounds = global.mainWindow.getBounds();
-
     // 初始化进程之间事件监听
     initIpcEvent();
   });
