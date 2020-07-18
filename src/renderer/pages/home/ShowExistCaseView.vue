@@ -103,7 +103,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   border-radius: 10px;
-
+  color: #1b2735;
   text-align: center;
   margin: 10px;
   white-space: nowrap;

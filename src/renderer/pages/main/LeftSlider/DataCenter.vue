@@ -147,7 +147,6 @@ export default {
 .menu-item {
   font-size: 12px;
   text-align: left;
-  margin-left: 20px;
 }
 .titleBar {
   height: 40px;

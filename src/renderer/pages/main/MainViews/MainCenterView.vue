@@ -1,5 +1,5 @@
 <template>
-  <div class="view-style">
+  <div class="view-style" :style="{ height: contentViewHeight + 'px'}">
     <el-tabs
       class="el-tabs"
       v-model="editableTabsValue"
@@ -12,32 +12,37 @@
         v-for="(item) in editableTabs"
         :label="item.title"
         :name="item.name"
-      >{{item.content}}</el-tab-pane>
+      >
+        <keep-alive>
+          <component :is="item.componentName"></component>
+        </keep-alive>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
+import NoDataView from "./DataCollection/NoDataView";
+import StandardDataCollection from "./DataCollection/StandardDataCollection";
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState("AppPageSwitch", ["mainViewHeight"])
+    ...mapState("AppPageSwitch", ["contentViewHeight"])
+  },
+  components: {
+    "no-data-view": NoDataView,
+    "standard-collection": StandardDataCollection
   },
   data() {
     return {
-      editableTabsValue: "2",
+      editableTabsValue: "1",
       editableTabs: [
         {
-          title: "Tab 1",
+          title: "标准采集",
           name: "1",
-          content: "Tab 1 content"
-        },
-        {
-          title: "Tab 2",
-          name: "2",
-          content: "Tab 2 content"
+          componentName: "standard-collection"
         }
       ],
-      tabIndex: 2
+      tabIndex: 3
     };
   },
   methods: {
@@ -47,7 +52,7 @@ export default {
         this.editableTabs.push({
           title: "New Tab",
           name: newTabName,
-          content: "New Tab content"
+          componentName: "no-data-view"
         });
         this.editableTabsValue = newTabName;
       }
@@ -64,7 +69,6 @@ export default {
             }
           });
         }
-
         this.editableTabsValue = activeName;
         this.editableTabs = tabs.filter(tab => tab.name !== targetName);
       }
