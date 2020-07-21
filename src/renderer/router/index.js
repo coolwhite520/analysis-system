@@ -12,12 +12,5 @@ export default new Router({
         require(["@/pages/mainPage"], resolve);
       },
     },
-    {
-      path: "/StandardCollection",
-      name: "StandardCollection",
-      component: function(resolve) {
-        require(["@/pages/dialog/StandardCollection"], resolve);
-      },
-    },
   ],
 });

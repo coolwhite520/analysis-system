@@ -1,6 +1,6 @@
 // app 主页面的切换
 const state = {
-  currentViewName: "main-page", //"new-case-view", //"case-detail-view", //"show-exist-case-view",
+  currentViewName: "home-page",
   mainViewHeight: 0,
   contentViewHeight: 0,
   isCollapseLeftBar: false,

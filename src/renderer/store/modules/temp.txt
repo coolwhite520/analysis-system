@@ -1,0 +1,128 @@
+import db from "../../db/db";
+import cases from "../../db/Cases";
+const state = {
+  PersonBaseInfoCount: 0, // 人员
+  PersonCompanyCount: 0, // 单位
+  PersonOpenAccountCount: 0, // 开
+  PersonCapitalTransactionDetailsCount: 0, // 资金交
+  PersonAlipayLoginIPCount: 0, // 支付宝登
+  PersonAlipayCapitalRecordCount: 0, // 支付宝
+  PersonAlipayCapitalDetailCount: 0, // 支付宝账
+  PersonAlipayBaseInfoCount: 0, // 支付宝基
+  PersonCftOpenAccountCount: 0, // 财付通开
+  PersonCft_ZjxxCount: 0, // 财付通资
+  PersonTaxRecordsCount: 0, // 进销项
+  PersonTaxRegisterRecordsCount: 0, // 税务登
+  PersonPhoneRecordsCount: 0, //
+  PersonPhoneBookCount: 0, // 手
+  PersonPhoneMessageCount: 0, // 手机
+  PersonPhoneChatsCount: 0, // 即时
+  PersonJstxhyCount: 0, // 即时
+  PersonlogisticsInfoCount: 0, // 物流信息
+  PersonJassCount: 0, // JASS交易商户数据
+};
+
+const mutations = {
+  SET_PersonBaseInfoCount(state, PersonBaseInfoCount) {
+    state.PersonBaseInfoCount = PersonBaseInfoCount;
+  },
+  SET_PersonCompanyCount(state, PersonCompanyCount) {
+    state.PersonCompanyCount = PersonCompanyCount;
+  },
+  SET_PersonOpenAccountCount(state, PersonOpenAccountCount) {
+    state.PersonOpenAccountCount = PersonOpenAccountCount;
+  },
+  SET_PersonCapitalTransactionDetailsCount(
+    state,
+    PersonCapitalTransactionDetailsCount
+  ) {
+    state.PersonCapitalTransactionDetailsCount = PersonCapitalTransactionDetailsCount;
+  },
+  SET_PersonAlipayLoginIPCount(state, PersonAlipayLoginIPCount) {
+    state.PersonAlipayLoginIPCount = PersonAlipayLoginIPCount;
+  },
+  SET_PersonAlipayCapitalRecordCount(state, PersonAlipayCapitalRecordCount) {
+    state.PersonAlipayCapitalRecordCount = PersonAlipayCapitalRecordCount;
+  },
+  SET_PersonAlipayCapitalDetailCount(state, PersonAlipayCapitalDetailCount) {
+    state.PersonAlipayCapitalDetailCount = PersonAlipayCapitalDetailCount;
+  },
+  SET_PersonAlipayBaseInfoCount(state, PersonAlipayBaseInfoCount) {
+    state.PersonAlipayBaseInfoCount = PersonAlipayBaseInfoCount;
+  },
+  SET_PersonCftOpenAccountCount(state, PersonCftOpenAccountCount) {
+    state.PersonCftOpenAccountCount = PersonCftOpenAccountCount;
+  },
+  SET_PersonCft_ZjxxCount(state, PersonCft_ZjxxCount) {
+    state.PersonCft_ZjxxCount = PersonCft_ZjxxCount;
+  },
+  SET_PersonTaxRecordsCount(state, PersonTaxRecordsCount) {
+    state.PersonTaxRecordsCount = PersonTaxRecordsCount;
+  },
+  SET_PersonTaxRegisterRecordsCount(state, PersonTaxRegisterRecordsCount) {
+    state.PersonTaxRegisterRecordsCount = PersonTaxRegisterRecordsCount;
+  },
+  SET_PersonPhoneRecordsCount(state, PersonPhoneRecordsCount) {
+    state.PersonPhoneRecordsCount = PersonPhoneRecordsCount;
+  },
+  SET_PersonPhoneBookCount(state, PersonPhoneBookCount) {
+    state.PersonPhoneBookCount = PersonPhoneBookCount;
+  },
+  SET_PersonPhoneMessageCount(state, PersonPhoneMessageCount) {
+    state.PersonPhoneMessageCount = PersonPhoneMessageCount;
+  },
+  SET_PersonPhoneChatsCount(state, PersonPhoneChatsCount) {
+    state.PersonPhoneChatsCount = PersonPhoneChatsCount;
+  },
+  SET_PersonJstxhyCount(state, PersonJstxhyCount) {
+    state.PersonJstxhyCount = PersonJstxhyCount;
+  },
+  SET_PersonlogisticsInfoCount(state, PersonlogisticsInfoCount) {
+    state.PersonlogisticsInfoCount = PersonlogisticsInfoCount;
+  },
+  SET_PersonJassCount(state, PersonJassCount) {
+    state.PersonJassCount = PersonJassCount;
+  },
+};
+const actions = {
+  async queryPersonAllDetail({ commit }, ajid) {
+    // let count = await cases.QueryPersonBaseInfoCount(ajid);
+    // if (count) commit("SET_PersonBaseInfoCount", count);
+    // count = await cases.QueryPersonCompanyCount(ajid);
+    // if (count) commit("SET_PersonCompanyCount", count);
+    // count = await cases.QueryPersonOpenAccountCount(ajid);
+    // if (count) commit("SET_PersonOpenAccountCount", count);
+    // count = await cases.QueryPersonCapitalTransactionDetailsCount(ajid);
+    // if (count) commit("SET_PersonCapitalTransactionDetailsCount", count);
+    // count = await cases.QueryPersonAlipayLoginIPCount(ajid);
+    // if (count) commit("SET_PersonAlipayLoginIPCount", count);
+    // count = await cases.QueryPersonAlipayCapitalRecordCount(ajid);
+    // if (count) commit("SET_PersonAlipayCapitalRecordCount", count);
+    // count = await cases.QueryPersonAlipayCapitalDetailCount(ajid);
+    // if (count) commit("SET_PersonAlipayCapitalDetailCount", count);
+    // count = await cases.QueryPersonAlipayBaseInfoCount(ajid);
+    // if (count) commit("SET_PersonAlipayBaseInfoCount", count);
+    // count = await cases.QueryPersonCftOpenAccountCount(ajid);
+    // if (count) commit("SET_PersonCftOpenAccountCount", count);
+    // count = await cases.QueryPersonCft_ZjxxCount(ajid);
+    // if (count) commit("SET_PersonCft_ZjxxCount", count);
+    // count = await cases.QueryPersonTaxRecordsCount(ajid);
+    // if (count) commit("SET_PersonTaxRecordsCount", count);
+    // count = await cases.QueryPersonTaxRegisterRecordsCount(ajid);
+    // if (count) commit("SET_PersonTaxRegisterRecordsCount", count);
+    // count = await cases.QueryPersonPhoneRecordsCount(ajid);
+    // if (count) commit("SET_PersonPhoneRecordsCount", count);
+    // count = await cases.QueryPersonPhoneBookCount(ajid);
+    // if (count) commit("SET_PersonPhoneBookCount", count);
+    // count = await cases.QueryPersonPhoneMessageCount(ajid);
+    // if (count) commit("SET_PersonPhoneMessageCount", count);
+    // count = await cases.QueryPersonPhoneChatsCount(ajid);
+    // if (count) commit("SET_PersonPhoneChatsCount", count);
+    // count = await cases.QueryPersonJstxhyCount(ajid);
+    // if (count) commit("SET_PersonJstxhyCount", count);
+    // count = await cases.QueryPersonlogisticsInfoCount(ajid);
+    // if (count) commit("SET_PersonlogisticsInfoCount", count);
+    // count = await cases.QueryPersonJassCount(ajid);
+    // if (count) commit("SET_PersonJassCount", count);
+  },
+};

@@ -99,23 +99,14 @@
         <h2 style="float: left;">案件数据</h2>
         <el-button-group style="float: right; ">
           <el-button
+            v-for="item in renderButtonGroupList"
+            :key="item.tid"
             round
             type="primary"
             size="mini"
             style="background-color: #1b2735;color: white;"
-          >人员基本信息</el-button>
-          <el-button
-            round
-            type="primary"
-            size="mini"
-            style="background-color: #1b2735;color: white;"
-          >单位基本信息</el-button>
-          <el-button
-            round
-            type="primary"
-            size="mini"
-            style="background-color: #1b2735;color: white;"
-          >开户信息</el-button>
+            @click="handleClickBtnGroup(item.tablename)"
+          >{{item.title}}</el-button>
         </el-button-group>
       </div>
       <div style="clear:both;"></div>
@@ -134,12 +125,12 @@
         </span>
       </p>
       <p>
-        待调单任务：
+        待调单任务：{{awaitTaskCount}} 个
         <span>
           <el-button type="text" size="mini">查看待调单任务</el-button>
         </span>
       </p>
-      <p>实体数量：</p>
+      <p>实体数量：{{entityCount}} 个</p>
       <el-divider></el-divider>
       <el-row>
         <el-col :span="8">&nbsp;</el-col>
@@ -172,8 +163,24 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  mounted() {
+  async mounted() {
     console.log(this.caseDetail);
+    await this.$store.dispatch(
+      "CaseDetail/queryEntityCount",
+      this.caseDetail.ajid
+    );
+    await this.$store.dispatch(
+      "CaseDetail/queryBatchCount",
+      this.caseDetail.ajid
+    );
+    await this.$store.dispatch(
+      "CaseDetail/queryAwaitTaskCount",
+      this.caseDetail.ajid
+    );
+    await this.$store.dispatch(
+      "CaseDetail/queryCaseDataDetail",
+      this.caseDetail.ajid
+    );
   },
   data() {
     return {
@@ -181,7 +188,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("CaseDetail", ["caseDetail", "deleteState"])
+    ...mapState("CaseDetail", [
+      "caseDetail",
+      "deleteState",
+      "entityCount",
+      "batchCount",
+      "awaitTaskCount"
+    ]),
+    ...mapGetters("CaseDetail", ["renderButtonGroupList"])
   },
   watch: {
     deleteState(newValue, oldValue) {
@@ -207,9 +221,7 @@ export default {
     }
   },
   methods: {
-    handleClickCollection(){
-      
-    },
+    handleClickCollection() {},
     handleClickEdit() {
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "edit-case-view");
     },

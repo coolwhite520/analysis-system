@@ -22,15 +22,13 @@
 </template>
 <script>
 import NoDataView from "./DataCollection/NoDataView";
-import StandardDataCollection from "./DataCollection/StandardDataCollection";
 import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"])
   },
   components: {
-    "no-data-view": NoDataView,
-    "standard-collection": StandardDataCollection
+    "no-data-view": NoDataView
   },
   data() {
     return {
@@ -39,7 +37,7 @@ export default {
         {
           title: "标准采集",
           name: "1",
-          componentName: "standard-collection"
+          componentName: "no-data-view"
         }
       ],
       tabIndex: 3

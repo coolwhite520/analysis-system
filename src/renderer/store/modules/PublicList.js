@@ -1,3 +1,4 @@
+// 初始化就需要执行的公共函数
 import cases from "../../db/Cases";
 import location from "../../db/Location";
 const state = {

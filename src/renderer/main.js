@@ -5,10 +5,12 @@ import App from "./App";
 import router from "./router";
 import store from "./store";
 import ElementUI from "element-ui";
+
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/css/iconfont.css";
 import "./assets/css/animate.css";
 import "echarts";
+import "./utils/dialog";
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;

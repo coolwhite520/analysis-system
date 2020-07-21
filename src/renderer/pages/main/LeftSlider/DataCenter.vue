@@ -19,71 +19,25 @@
       :collapse="isCollapseLeftBar"
       @select="handleSelect"
     >
-      <el-submenu index="1">
+      <el-submenu
+        v-for="(item,i) in renderTreeControlList"
+        :index="item.tid"
+        :key="item.tid"
+        :currentTid="item.tid"
+      >
         <template slot="title">
-          <i class="iconfont">&#xe638;</i>
-          <span slot="title">主体信息</span>
+          <i class="iconfont" v-html="iconsList[i].icon"></i>
+          <span slot="title">{{item.title}}</span>
         </template>
-
-        <el-menu-item class="menu-item" index="1-1">人员基本信息</el-menu-item>
-        <el-menu-item class="menu-item" index="1-2">单位基本信息</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="iconfont">&#xe61b;</i>
-          <span slot="title">资金数据</span>
-        </template>
-        <el-menu-item class="menu-item" index="2-1">开户信息</el-menu-item>
-        <el-menu-item class="menu-item" index="2-2">资金交易明细</el-menu-item>
-      </el-submenu>
-      <el-submenu index="3">
-        <template slot="title">
-          <i class="iconfont">&#xe70f;</i>
-          <span slot="title">支付数据</span>
-        </template>
-        <el-menu-item class="menu-item" index="3-1">支付宝登陆IP</el-menu-item>
-        <el-menu-item class="menu-item" index="3-2">支付宝交易记录</el-menu-item>
-        <el-menu-item class="menu-item" index="3-3">支付宝账户明细</el-menu-item>
-        <el-menu-item class="menu-item" index="3-4">支付宝基本信息</el-menu-item>
-        <el-menu-item class="menu-item" index="3-5">财付通开户信息</el-menu-item>
-        <el-menu-item class="menu-item" index="3-2">支付宝交易记录</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="4">
-        <template slot="title">
-          <i class="iconfont">&#xe65f;</i>
-          <span slot="title">税务数据</span>
-        </template>
-        <el-menu-item class="menu-item" index="4-1">进销税务明细</el-menu-item>
-        <el-menu-item class="menu-item" index="4-2">税务登记数据</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="5">
-        <template slot="title">
-          <i class="iconfont">&#xe608;</i>
-          <span slot="title">通讯数据</span>
-        </template>
-        <el-menu-item class="menu-item" index="5-1">通话记录</el-menu-item>
-        <el-menu-item class="menu-item" index="5-2">手机通讯录</el-menu-item>
-        <el-menu-item class="menu-item" index="5-3">手机短信息</el-menu-item>
-        <el-menu-item class="menu-item" index="5-4">即时聊天记录</el-menu-item>
-        <el-menu-item class="menu-item" index="5-5">即时通讯好友</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="6">
-        <template slot="title">
-          <i class="iconfont">&#xe615;</i>
-          <span slot="title">物流信息</span>
-        </template>
-        <el-menu-item class="menu-item" index="6-1">物流信息</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="7">
-        <template slot="title">
-          <span slot="title">JASS数据</span>
-        </template>
-        <el-menu-item class="menu-item" index="7-1">JASS交易商户数据</el-menu-item>
+        <el-menu-item
+          v-for="child in item.childrenArr"
+          :key="child.tid"
+          class="menu-item"
+          :index="child.tid"
+        >
+          {{child.title}}
+          <span style="color: gray;">&nbsp;{{child.count}}条</span>
+        </el-menu-item>
       </el-submenu>
     </el-menu>
     <div class="footbar">
@@ -100,14 +54,48 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
+  mounted() {
+    console.log(this.openeds);
+  },
   computed: {
-    ...mapState("AppPageSwitch", ["contentViewHeight", "isCollapseLeftBar"])
+    ...mapState("AppPageSwitch", ["contentViewHeight", "isCollapseLeftBar"]),
+    ...mapState("Models", ["existModelsDetailList"]),
+    ...mapGetters("CaseDetail", ["renderTreeControlList", "openeds"])
   },
   data() {
     return {
-      openeds: ["1", "2", "3", "4", "5", "6", "7"]
+      iconsList: [
+        {
+          tid: "-100",
+          icon: "&#xe638;"
+        },
+        {
+          tid: "0",
+          icon: "&#xe61b;"
+        },
+        {
+          tid: "5",
+          icon: "&#xe70f;"
+        },
+        {
+          tid: "13",
+          icon: "&#xe65f;"
+        },
+        {
+          tid: "17",
+          icon: "&#xe608;"
+        },
+        {
+          tid: "25",
+          icon: "&#xe615;"
+        },
+        {
+          tid: "50",
+          icon: "&#xe602;"
+        }
+      ]
     };
   },
   methods: {
@@ -117,10 +105,10 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-
-      if (key === "2-2") {
+    async handleSelect(parentid, tid) {
+      console.log(parentid, tid);
+      await this.$store.dispatch("Models/getExistModelsList", tid[1]);
+      if (this.existModelsDetailList.length > 0) {
         this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", true);
       } else {
         this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", false);

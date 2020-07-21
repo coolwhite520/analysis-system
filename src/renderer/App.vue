@@ -53,6 +53,9 @@ export default {
 ::-webkit-scrollbar {
   display: none;
 }
+:focus {
+  outline: 0;
+}
 .state-bar {
   height: 20px;
   background: #1b2735;

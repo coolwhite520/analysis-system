@@ -3,7 +3,7 @@
     <el-row class="title">
       <el-col :span="22">
         <div>
-          <span class="iconfont">&#xe60f;</span> 资金交易明细模型库
+          <span class="iconfont">&#xe60f;</span> 模型库
         </div>
       </el-col>
       <el-col :span="2">
@@ -12,121 +12,35 @@
     </el-row>
     <div class="capital-right-slider" :style="{height: (contentViewHeight - 40*2) + 'px'}">
       <el-menu class="el-menu-vertical-demo" @select="handleSelect" :default-openeds="openeds">
-        <el-submenu index="1">
+        <el-submenu
+          v-for="father of renderModelsTreeList"
+          :key="father.mid"
+          :index="String(father.mid)"
+        >
           <template slot="title">
             <i class="iconfont">&#xe61c;</i>
-            <span slot="title">异常交易行为发现模型</span>
+            <span slot="title">{{father.modelname}}</span>
           </template>
 
-          <el-menu-item class="menu-item iconfont" index="1-1">大额交易行为账户发现</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="1-2">过度账户发现</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="1-3">重点对手账户发现</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="1-4">重点对手户名发现</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">团伙交易行为发现模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="2-1">大额交易团伙账户发现</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="2-2">过渡团伙账户发现</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="2-3">重点交易对手团伙发现</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">待调单账户分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="3-1">主要人员未掉单对手账户</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="3-2">大额交易对手未调单账户</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="3-3">大额获利对手未调单账户</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="3-4">主要关联对手未调单账户</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="3-5">即出即进对手未调单账户</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="4">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">关联交易分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="4-1">交易账户关联对手账户人数</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="4-2">交易户名关联对手账户人数</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="4-3">对手账户关联对手账户人数</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="4-4">对手户名关联对手账户人数</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="5">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">交易行为特征分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="5-1">交易地区分布</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-2">交易金额特征</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-3">交易金额区间规律</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-4">交易方式规律</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-5">交易时段分析</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-6">交易时间规律</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-7">交易日期规律</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="5-7">调集人员交易进出情况</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="6">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">资金穿透模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="6-1">资金链路查找</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="6-2">资金环路查找</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="6-3">两端路径查找</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="7">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">基于IP团伙分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="7-1">IP关联账户数统计</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="7-2">IP关联账户详情分析</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="7-3">同IP关联账户分析</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="7-4">账户关联IP数统计</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="7-5">账户关联IP详情分析</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="8">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">基于MAC团伙分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="8-1">MAC关联账户数统计</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="8-2">MAC关联账户详情分析</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="8-3">同MAC关联账户分析</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="8-4">账户关联MAC数统计</el-menu-item>
-          <el-menu-item class="menu-item iconfont" index="8-5">账户关联MAC详情分析</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="9">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">亲密度分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="9-1">亲密度分析</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="10">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">资金用途分析模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="10-1">资金用途分析</el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="11">
-          <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
-            <span slot="title">统计查询模型</span>
-          </template>
-          <el-menu-item class="menu-item iconfont" index="10-1">资金透视分析</el-menu-item>
+          <el-menu-item
+            v-for="child of father.childrenList"
+            :key="child.mid"
+            :index="String(child.mid)"
+            class="menu-item iconfont"
+          >
+            <el-tooltip
+              :disabled="child.describe===null"
+              class="item"
+              effect="dark"
+              :content="child.describe"
+              placement="top"
+              :enterable="false"
+              :open-delay="1000"
+              :hide-after="10000"
+            >
+              <div>{{child.modelname}}</div>
+            </el-tooltip>
+          </el-menu-item>
         </el-submenu>
       </el-menu>
     </div>
@@ -141,26 +55,12 @@
 </template>
 
 <script >
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
-  // directives: {
-  //   drag(el, bindings) {
-  //     el.onmousedown = function(e) {
-  //       var disx = e.pageX - el.offsetLeft;
-  //       var disy = e.pageY - el.offsetTop;
-  //       document.onmousemove = function(e) {
-  //         el.style.left = e.pageX - disx + "px";
-  //         el.style.top = e.pageY - disx + "px";
-  //       };
-  //       document.onmouseup = function() {
-  //         document.onmousemove = document.onmouseup = null;
-  //       };
-  //     };
-  //   }
-  // },
   computed: {
     ...mapState("MainPageSwitch", ["showRightSliderView"]),
-    ...mapState("AppPageSwitch", ["contentViewHeight"])
+    ...mapState("AppPageSwitch", ["contentViewHeight"]),
+    ...mapGetters("Models", ["renderModelsTreeList"])
   },
   data() {
     return {
@@ -168,7 +68,9 @@ export default {
     };
   },
   methods: {
-    handleSelect(key, keyPath) {},
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath);
+    },
     handleClickClose() {
       this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", false);
     }
@@ -180,6 +82,7 @@ export default {
 .all-slider {
   /* position: relative; */
   box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
+  -webkit-user-select: none;
 }
 .capital-right-slider {
   width: 100%;

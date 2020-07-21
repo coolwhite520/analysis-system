@@ -36,7 +36,7 @@
                   class="button"
                   icon="el-icon-search"
                   type="text"
-                  @click="handleClickAnalysis()"
+                  @click="handleClickAnalysis(caseItem.ajid)"
                 >分析</el-button>
               </div>
             </el-col>
@@ -66,9 +66,10 @@ export default {
       this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseDetail);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },
-    handleClickAnalysis(event) {
+    async handleClickAnalysis(ajid) {
       window.event.stopPropagation();
       console.log("clickAnalysis");
+      await this.$store.dispatch("CaseDetail/queryCaseDataDetail", ajid);
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
     }
   },
