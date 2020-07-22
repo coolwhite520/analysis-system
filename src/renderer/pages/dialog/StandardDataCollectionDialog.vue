@@ -8,19 +8,54 @@
       :visible.sync="standardDataVisible"
       width="80%"
       :before-close="handleClose"
+      :modal="false"
     >
-      <el-row>
-        <el-col :span="21">
-          <h3>数据导入管理</h3>
-        </el-col>
-        <el-col :span="1" style="float: right; margin-right:20px;">
+      <div v-loading="loading">
+        <el-row>
+          <el-button-group>
+            <el-button
+              size="mini"
+              v-for="item of buttonGroupList"
+              :key="item.id"
+              @click="handleClickImportData(item.pdm)"
+            >
+              <span class="mybutton iconfont" v-html="item.icon"></span>
+              <span>{{item.mc}}</span>
+            </el-button>
+          </el-button-group>
+          <!-- <el-col :span="1">
           <div>
-            <el-button type="text">模版下载</el-button>
+            <el-button size="mini">模版下载</el-button>
           </div>
-        </el-col>
-      </el-row>
-
-      <el-row>
+          </el-col>-->
+        </el-row>
+        <!-- <div style="height: 200px;">
+      <test-table></test-table>
+        </div>-->
+        <div style="margin-top:20px;">
+          <el-table :data="tableDataSheets" height="200" border style="width: 100%" size="mini">
+            <el-table-column type="selection"></el-table-column>
+            <el-table-column prop="orderno" label="序号" width="60" fixed></el-table-column>
+            <el-table-column prop="excel" label="工作簿（文件名）" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="sheet" label="工作表（sheet）" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="match" label="匹配目标表" show-overflow-tooltip></el-table-column>
+          </el-table>
+        </div>
+        <div style="margin-top:20px;">
+          <el-table :data="tableDataInstances" height="200" border style="width: 100%" size="mini">
+            <el-table-column prop="orderno" label="序号" width="60" fixed></el-table-column>
+            <el-table-column prop="filecol" label="文件字段" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="instance1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="instance2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="dbcol" label="数据库字段" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="operation" label="操作" show-overflow-tooltip></el-table-column>
+          </el-table>
+        </div>
+        <div style="margin-top:20px;text-align: center;">
+          <el-button>数据导入</el-button>
+        </div>
+      </div>
+      <!-- <el-row>
         批次选择：
         <el-select v-model="value" placeholder="请选择导入批次" size="mini">
           <el-option
@@ -30,81 +65,34 @@
             :value="item.value"
           ></el-option>
         </el-select>
-      </el-row>
-      <el-row style="margin-top:20px;">
-        <el-button-group>
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe618;</span> 银行数据
-          </el-button>
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe613;</span> 反洗钱数据
-          </el-button>
-
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe70f;</span> 第三方支付数据
-          </el-button>
-
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe65f;</span>税务数据
-          </el-button>
-
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe608;</span> 话单数据
-          </el-button>
-
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe61e;</span> 社交数据
-          </el-button>
-
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe615;</span> 物流数据
-          </el-button>
-
-          <el-button size="mini">
-            <span class="mybutton iconfont">&#xe602;</span> JASS数据
-          </el-button>
-        </el-button-group>
-      </el-row>
-      <!-- <div style="height: 200px;">
-      <test-table></test-table>
-      </div>-->
-      <div style="margin-top:20px;">
-        <el-table :data="tableData" height="200" border style="width: 100%" size="mini">
-          <el-table-column type="selection"></el-table-column>
-          <el-table-column prop="orderno" label="序号" width="60" fixed></el-table-column>
-          <el-table-column prop="excel" label="工作簿（文件名）" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="sheet" label="工作表（sheet）" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="match" label="匹配目标表" show-overflow-tooltip></el-table-column>
-        </el-table>
-      </div>
-      <div style="margin-top:20px;">
-        <el-table :data="tableData" height="200" border style="width: 100%" size="mini">
-          <el-table-column prop="orderno" label="序号" width="60" fixed></el-table-column>
-          <el-table-column prop="filecol" label="文件字段" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="instance1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="instance2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="dbcol" label="数据库字段" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="operation" label="操作" show-overflow-tooltip></el-table-column>
-        </el-table>
-      </div>
-      <div style="margin-top:20px;text-align: center;">
-        <el-button>数据导入</el-button>
-      </div>
+      </el-row>-->
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import path from "path";
+import { BrowserWindow } from "electron";
 export default {
+  mounted() {},
   computed: {
-    ...mapState("DialogPopWnd", ["standardDataVisible"])
+    ...mapState("DialogPopWnd", ["standardDataVisible"]),
+    ...mapState("DataCollection", ["buttonGroupList", "csvList"])
+  },
+  watch: {
+    csvList(newValue, oldValue) {
+      this.loading = false;
+      console.log(newValue);
+    }
   },
   data() {
     return {
+      loading: false,
       value: 0,
       options: [],
-      tableData: []
+      tableDataSheets: [],
+      tableDataInstances: []
     };
   },
   components: {},
@@ -112,6 +100,53 @@ export default {
     handleClose() {
       this.currentStepIndex = 1;
       this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
+    },
+    async handleClickImportData(pdm) {
+      console.log(pdm);
+      let mainWindow = this.$electron.remote.getGlobal("mainWindow");
+      let filePathList = await this.$electron.remote.dialog.showOpenDialogSync(
+        mainWindow,
+        {
+          title: "数据导入",
+          buttonLabel: "打开",
+          filters: [
+            { name: "Files", extensions: ["txt", "csv", "xls", "xlsx"] }
+          ],
+          properties: ["openFile", "multiSelections"]
+        }
+      );
+      console.log(filePathList);
+      if (typeof filePathList !== "undefined") {
+        this.loading = true;
+        for (let filePathName of filePathList) {
+          let ext = path.extname(filePathName);
+          switch (ext) {
+            case ".txt":
+              {
+              }
+              break;
+            case ".csv":
+              {
+                console.log(filePathName);
+                this.$store.dispatch(
+                  "DataCollection/readCsvFile",
+                  filePathName
+                );
+              }
+              break;
+            case ".xls":
+              {
+              }
+              break;
+            case ".xlsx":
+              {
+              }
+              break;
+          }
+        }
+        console.log("over");
+        // this.loading = false;
+      }
     }
   }
 };

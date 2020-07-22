@@ -8,6 +8,7 @@
       :visible.sync="autoDataVisible"
       width="60%"
       :before-close="handleClose"
+      :modal="false"
     >
       <div>
         <el-steps :active="currentStepIndex" finish-status="success">
@@ -25,7 +26,7 @@
               :disabled="currentStepIndex!==1"
               @click="handleClickSelectFile"
             >选择文件</el-button>
-            <span style="font-size:10px;">支持格式：文件夹、rar、zip、txt、csv、xls、xlsx</span>
+            <span style="font-size:10px;">支持格式：txt、csv、xls、xlsx</span>
           </div>
         </el-col>
         <el-col :span="8">

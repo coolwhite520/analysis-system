@@ -246,24 +246,6 @@ export default {
           message: "已取消删除"
         });
       }
-      // this.$confirm("此操作将永久删除该案件, 是否继续?", "提示", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(() => {
-      //     this.loading = true;
-      //     this.$store.dispatch(
-      //       "CaseDetail/deleteCase",
-      //       parseInt(this.caseDetail.ajid)
-      //     );
-      //   })
-      //   .catch(() => {
-      //     this.$message({
-      //       type: "info",
-      //       message: "已取消删除"
-      //     });
-      //   });
     },
     handleClickGoHome() {
       this.$store.commit(

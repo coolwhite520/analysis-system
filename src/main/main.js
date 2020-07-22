@@ -1,5 +1,6 @@
 import { app, BrowserWindow, screen } from "electron";
 import initIpcEvent from "./modules/ipcEvents";
+import createCalculateWindow from "./calculate";
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -47,6 +48,7 @@ function createWindow() {
     mainWindow.show();
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
+    global.calculateWindow = createCalculateWindow(BrowserWindow);
     // 初始化进程之间事件监听
     initIpcEvent();
   });
