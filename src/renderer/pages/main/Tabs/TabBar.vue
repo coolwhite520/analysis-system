@@ -16,8 +16,8 @@
 </template>
 
 <script >
-import TabData from "./Tabs/TabData";
-import TabVisible from "./Tabs/TabVisible";
+import TabData from "./child/TabData";
+import TabVisible from "./child/TabVisible";
 export default {
   data() {
     return {

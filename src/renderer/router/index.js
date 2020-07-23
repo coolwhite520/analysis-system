@@ -7,9 +7,16 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "mainPage",
+      name: "AnalysisView",
       component: function(resolve) {
-        require(["@/pages/mainPage"], resolve);
+        require(["@/pages/AnalysisView"], resolve);
+      },
+    },
+    {
+      path: "/mini",
+      name: "mini",
+      component: function(resolve) {
+        require(["@/pages/mini/MiniView"], resolve);
       },
     },
   ],

@@ -52,10 +52,10 @@
 
 <script>
 import { mapState } from "vuex";
-import ShowExistCaseView from "@/pages/home/ShowExistCaseView";
-import NewCaseView from "@/pages/home/NewCaseView";
-import CaseDetailView from "@/pages/home/CaseDetailView";
-import EditCaseView from "@/pages/home/EditCaseView";
+import ShowExistCaseView from "./child/ShowExistCaseView";
+import NewCaseView from "./child/NewCaseView";
+import CaseDetailView from "./child/CaseDetailView";
+import EditCaseView from "./child/EditCaseView";
 
 export default {
   data() {

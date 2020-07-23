@@ -1,6 +1,8 @@
 import { app, BrowserWindow, screen } from "electron";
 import initIpcEvent from "./modules/ipcEvents";
-import createCalculateWindow from "./calculate";
+import createMiniWindow from "./modules/window/miniWindow";
+
+const isDevelopment = process.env.NODE_ENV !== "production";
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -48,16 +50,29 @@ function createWindow() {
     mainWindow.show();
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
-    global.calculateWindow = createCalculateWindow(BrowserWindow);
+    global.miniWindow = createMiniWindow(BrowserWindow);
+    // if (isDevelopment) {
+    //   // 安装vue-devtools
+    //   let extensions = BrowserWindow.getDevToolsExtensions();
+    //   if (!extensions["Vue.js devtools"]) {
+    //     BrowserWindow.addDevToolsExtension(
+    //       path.resolve(__dirname, "./../../src/main/vue-devtools")
+    //     );
+    //   }
+    //   // 打开调试窗口
+    //   // mainWindow.webContents.openDevTools()
+    // }
+    // mainWindow.webContents.openDevTools();
     // 初始化进程之间事件监听
     initIpcEvent();
   });
 }
 app.on("activate", () => {
-  let wins = BrowserWindow.getAllWindows();
-  for (let i = 0; i < wins.length; i++) {
-    wins[i].show();
-  }
+  // let wins = BrowserWindow.getAllWindows();
+  // for (let i = 0; i < wins.length; i++) {
+  //   wins[i].show();
+  // }
+  global.mainWindow.show();
 });
 app.on("ready", createWindow);
 

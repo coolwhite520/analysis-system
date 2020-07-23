@@ -26,7 +26,7 @@
 
 <script>
 import { mapState } from "vuex";
-import TabBar from "@/pages/main/TabBar";
+import TabBar from "@/pages/main/Tabs/TabBar";
 import DataCenter from "@/pages/main/LeftSlider/DataCenter";
 import MainCenterView from "@/pages/main/MainViews/MainCenterView";
 import RightSlider from "@/pages/main/RightSlider/CapitalModelLib";

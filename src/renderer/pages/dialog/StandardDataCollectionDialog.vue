@@ -32,27 +32,43 @@
         <!-- <div style="height: 200px;">
       <test-table></test-table>
         </div>-->
-        <div style="margin-top:20px;">
-          <el-table :data="tableDataSheets" height="200" border style="width: 100%" size="mini">
+        <div style="margin-top:20px;" v-show="renderDataList.length > 0">
+          <el-table
+            ref="multipleTable"
+            :data="renderDataList"
+            height="200"
+            border
+            style="width: 100%"
+            size="mini"
+            @selection-change="handleSelectionChange"
+            highlight-current-row
+            @current-change="handleCurrentChange"
+          >
             <el-table-column type="selection"></el-table-column>
-            <el-table-column prop="orderno" label="序号" width="60" fixed></el-table-column>
-            <el-table-column prop="excel" label="工作簿（文件名）" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="sheet" label="工作表（sheet）" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="orderno" label="序号" width="60" fixed type="index"></el-table-column>
+            <el-table-column prop="fileName" label="工作簿（文件名）" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="sheetName" label="工作表（sheet）" show-overflow-tooltip></el-table-column>
             <el-table-column prop="match" label="匹配目标表" show-overflow-tooltip></el-table-column>
           </el-table>
         </div>
-        <div style="margin-top:20px;">
-          <el-table :data="tableDataInstances" height="200" border style="width: 100%" size="mini">
-            <el-table-column prop="orderno" label="序号" width="60" fixed></el-table-column>
-            <el-table-column prop="filecol" label="文件字段" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="instance1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="instance2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
+        <div style="margin-top:20px;" v-if="currentRow">
+          <el-table
+            :data="currentRow ? currentRow.dataList : []"
+            height="200"
+            border
+            style="width: 100%"
+            size="mini"
+          >
+            <el-table-column prop="id" label="序号" width="60" type="index" fixed></el-table-column>
+            <el-table-column prop="field_name" label="文件字段" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ins1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ins2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
             <el-table-column prop="dbcol" label="数据库字段" show-overflow-tooltip></el-table-column>
             <el-table-column prop="operation" label="操作" show-overflow-tooltip></el-table-column>
           </el-table>
-        </div>
-        <div style="margin-top:20px;text-align: center;">
-          <el-button>数据导入</el-button>
+          <div style="margin-top:20px;text-align: center;">
+            <el-button>数据导入</el-button>
+          </div>
         </div>
       </div>
       <!-- <el-row>
@@ -71,28 +87,36 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import path from "path";
 import { BrowserWindow } from "electron";
 export default {
-  mounted() {},
+  mounted() {
+    let _this = this;
+    this.$electron.ipcRenderer.on("read-csv-file-over", (event, data) => {
+      _this.$store.commit("DataCollection/ADD_CSV_DATA_TO_LIST", data);
+    });
+  },
   computed: {
     ...mapState("DialogPopWnd", ["standardDataVisible"]),
-    ...mapState("DataCollection", ["buttonGroupList", "csvList"])
+    ...mapState("DataCollection", ["buttonGroupList", "exampleDataList"]),
+    ...mapGetters("DataCollection", ["renderDataList"]),
   },
   watch: {
-    csvList(newValue, oldValue) {
+    renderDataList(newValue, oldValue) {
       this.loading = false;
-      console.log(newValue);
-    }
+      this.$refs.multipleTable.setCurrentRow(newValue[0]);
+      // this.$refs.multipleTable.toggleRowSelection(
+      //   newValue[newValue.length - 1]
+      // );
+      // console.log(newValue[newValue.length - 1]);
+    },
   },
   data() {
     return {
       loading: false,
       value: 0,
-      options: [],
-      tableDataSheets: [],
-      tableDataInstances: []
+      currentRow: null,
     };
   },
   components: {},
@@ -100,6 +124,16 @@ export default {
     handleClose() {
       this.currentStepIndex = 1;
       this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
+      this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
+      // this.$electron.ipcRenderer.removeAllListeners("read-csv-file-over");
+    },
+    handleSelectionChange(val) {
+      console.log(val);
+      this.multipleSelection = val;
+    },
+    handleCurrentChange(val) {
+      console.log(val);
+      this.currentRow = val;
     },
     async handleClickImportData(pdm) {
       console.log(pdm);
@@ -110,9 +144,9 @@ export default {
           title: "数据导入",
           buttonLabel: "打开",
           filters: [
-            { name: "Files", extensions: ["txt", "csv", "xls", "xlsx"] }
+            { name: "Files", extensions: ["txt", "csv", "xls", "xlsx"] },
           ],
-          properties: ["openFile", "multiSelections"]
+          properties: ["openFile", "multiSelections"],
         }
       );
       console.log(filePathList);
@@ -128,10 +162,7 @@ export default {
             case ".csv":
               {
                 console.log(filePathName);
-                this.$store.dispatch(
-                  "DataCollection/readCsvFile",
-                  filePathName
-                );
+                this.$electron.ipcRenderer.send("read-csv-file", filePathName);
               }
               break;
             case ".xls":
@@ -147,8 +178,8 @@ export default {
         console.log("over");
         // this.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
