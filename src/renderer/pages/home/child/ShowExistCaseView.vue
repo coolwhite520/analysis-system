@@ -36,7 +36,7 @@
                   class="button"
                   icon="el-icon-search"
                   type="text"
-                  @click="handleClickAnalysis(caseItem.ajid)"
+                  @click="handleClickAnalysis(caseItem)"
                 >分析</el-button>
               </div>
             </el-col>
@@ -52,12 +52,12 @@ export default {
   data() {
     return {
       currentDate: new Date(),
-      columCount: 3 //每行显示几个
+      columCount: 3, //每行显示几个
     };
   },
   computed: {
     ...mapGetters("Cases", ["existCasesFilter"]),
-    ...mapState("AppPageSwitch", ["currentViewName"])
+    ...mapState("AppPageSwitch", ["currentViewName"]),
   },
   methods: {
     handleClickCase(caseDetail) {
@@ -66,16 +66,20 @@ export default {
       this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseDetail);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },
-    async handleClickAnalysis(ajid) {
+    async handleClickAnalysis(caseDetail) {
       window.event.stopPropagation();
-      console.log("clickAnalysis");
-      await this.$store.dispatch("CaseDetail/queryCaseDataDetail", ajid);
+      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseDetail);
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        caseDetail.ajid
+      );
+      await this.$store.dispatch("CaseDetail/queryBatchCount", caseDetail.ajid);
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
-    }
+    },
   },
   mounted() {
     this.$store.dispatch("Cases/getExistCaseAsync");
-  }
+  },
 };
 </script>
 

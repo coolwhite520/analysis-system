@@ -145,21 +145,30 @@
 <script >
 import StandardDataCollectionDialog from "@/pages/dialog/StandardDataCollectionDialog";
 import AutoDataCollectionDialog from "@/pages/dialog/AutoDataCollectionDialog";
+import { mapState } from "vuex";
 export default {
   components: {
     "standard-dialog": StandardDataCollectionDialog,
-    "auto-dialog": AutoDataCollectionDialog
+    "auto-dialog": AutoDataCollectionDialog,
+  },
+  computed: {
+    ...mapState("CaseDetail", ["caseDetail"]),
   },
   methods: {
-    handleCommandDataCollection(command) {
+    async handleCommandDataCollection(command) {
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseDetail.ajid
+      );
+      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
       if (command === "a") {
         console.log(command);
         this.$store.commit("DialogPopWnd/SET_AUTODATAVISIBAL", true);
       } else if (command === "b") {
         this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

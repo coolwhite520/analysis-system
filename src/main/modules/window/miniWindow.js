@@ -8,15 +8,15 @@ const miniWinURL =
 
 const createMiniWindow = function(BrowserWindow) {
   let obj = {
-    height: 0,
-    width: 0,
+    height: 100,
+    width: 100,
     minWidth: 0,
     show: true,
     frame: true,
     fullscreenable: false,
     skipTaskbar: true,
     resizable: true,
-    transparent: process.platform !== "linux",
+    // transparent: process.platform !== "linux",
     alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,

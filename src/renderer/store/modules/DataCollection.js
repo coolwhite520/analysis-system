@@ -1,97 +1,144 @@
 // 数据采集相关
-
 import { ipcRenderer } from "electron";
-import { registerMap } from "echarts";
+import dataImport from "../../db/DataImport";
+
 const state = {
-  buttonGroupList: [
-    {
-      id: 1,
-      pdm: "1020",
-      mc: "银行数据",
-      icon: "&#xe618;",
-    },
-    {
-      id: 2,
-      pdm: "1110",
-      mc: "反洗钱数据",
-      icon: "&#xe613;",
-    },
-    {
-      id: 3,
-      pdm: "1090",
-      mc: "第三方数据",
-      icon: "&#xe70f;",
-    },
-    {
-      id: 4,
-      pdm: "1030",
-      mc: "税务数据",
-      icon: "&#xe65f;",
-    },
-    {
-      id: 5,
-      pdm: "1040",
-      mc: "话单数据",
-      icon: "&#xe608;",
-    },
-    {
-      id: 6,
-      pdm: "1060",
-      mc: "社交通讯数据",
-      icon: "&#xe61e;",
-    },
-    {
-      id: 7,
-      pdm: "1080",
-      mc: "物流数据",
-      icon: "&#xe615;",
-    },
-    {
-      id: 8,
-      pdm: "1070",
-      mc: "JASS数据",
-      icon: "&#xe602;",
-    },
-  ],
+  buttonGroupList: require("../../json/buttonGroup.json"),
   exampleDataList: [], //实例数组
 };
 const mutations = {
+  // 添加数据到整体数组中
   ADD_CSV_DATA_TO_LIST(state, data) {
     console.log("push:", data);
     state.exampleDataList.push(data);
   },
+  // 清空数据数组
   CLEAR_CSV_DATA_LIST(state) {
     state.exampleDataList = [];
   },
-};
+  // 根据传递的索引修改最佳匹配的模版
+  MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, bestMatchTemplate }) {
+    state.exampleDataList[index].bestMatchTemplate = bestMatchTemplate;
+  },
+  // 通过传递索引、对应的template对应的列名、日志list重新修改匹配的列名称
+  MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA(
+    state,
+    { index, dbColsName, logMatchList }
+  ) {
+    state.exampleDataList[index].templateToFieldNames = dbColsName;
+    for (let item of state.exampleDataList[index].dataList) {
+      let { fileColName } = item;
 
-const getters = {
-  renderDataList: (state) => {
-    let renderList = [];
-    for (let fileData of state.exampleDataList) {
-      let index = 0;
-      let fileDataObj = {};
-      let dataList = [];
-      for (let colName of fileData.colsName) {
-        let obj = {
-          field_name: colName,
-          ins1: fileData.ins1.length > 0 ? fileData.ins1[index] : "",
-          ins2: fileData.ins2.length > 0 ? fileData.ins2[index] : "",
-        };
-        index++;
+      let bestArray = state.exampleDataList[index].templateToFieldNames.filter(
+        (ele) => {
+          return ele.fieldcname === fileColName;
+        }
+      );
+      item.matchedFieldName =
+        bestArray.length > 0 ? bestArray[0].fieldename : "";
 
-        dataList.push(obj);
+      // 如果没有直接匹配上，那么和log表再次进行匹配。
+      if (item.matchedFieldName === "") {
+        bestArray = logMatchList.filter((ele) => {
+          return ele.columnname === fileColName;
+        });
+        if (bestArray.length > 0) {
+          bestArray = dbColsName.filter((ele) => {
+            return ele.fieldcname === bestArray[0].fieldname;
+          });
+          item.matchedFieldName =
+            bestArray.length > 0 ? bestArray[0].fieldename : "";
+        } else {
+          item.matchedFieldName = "";
+        }
       }
-      fileDataObj.fileName = fileData.fileName;
-      fileDataObj.sheetName = fileData.sheetName;
-      fileDataObj.dataList = dataList;
-      renderList.push(fileDataObj);
     }
-    return renderList;
+  },
+  // 根据传递的参数修改匹配的列名称
+  MODIFY_CSV_MATCHEDFIELD_NAME_DATA(
+    state,
+    { index, matchedFieldName, currentRow }
+  ) {
+    let currentItemRow = currentRow.dataList[index];
+    currentItemRow.matchedFieldName = matchedFieldName;
+
+    let resultSameArr = [];
+    for (let item of currentRow.dataList) {
+      for (let item2 of currentRow.dataList) {
+        if (
+          item !== item2 &&
+          item.matchedFieldName === item2.matchedFieldName &&
+          item.matchedFieldName !== "" &&
+          item2.matchedFieldName !== ""
+        ) {
+          resultSameArr.push(item);
+          resultSameArr.push(item2);
+        }
+      }
+    }
+    for (let item of currentRow.dataList) {
+      item.sameMatchedRow = false;
+    }
+    for (let item of resultSameArr) {
+      item.sameMatchedRow = true;
+    }
+  },
+  // 设置某条数据是否可以修改数据类型
+  MODIFY_DATATYPE_ENABLEMODIFY(state, { enableModify, row }) {
+    row.enableModify = enableModify;
+  },
+
+  // 修改数据类型显示的名称
+  MODIFY_DATA_TYPENAME(state, { value, rowIndex }) {
+    state.exampleDataList[rowIndex].mc = value;
+  },
+  // 修改匹配的模版列表
+  MODIFY_MATCHTEMPLATE(state, { index, matchTemplates }) {
+    state.exampleDataList[index].matchTemplates = matchTemplates;
   },
 };
 
-const actions = {};
+const getters = {};
+
+const actions = {
+  async changeMatchList({ commit }, { index, bestMatchTemplate }) {
+    commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", { index, bestMatchTemplate });
+    let dbColsName = await dataImport.QueryColsNameByMbdm(bestMatchTemplate);
+    // 查询log表获取数据
+    let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
+      bestMatchTemplate
+    );
+
+    commit("MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA", {
+      index,
+      dbColsName,
+      logMatchList,
+    });
+  },
+  async modifyDataType({ commit, state }, { value, rowIndex }) {
+    commit("MODIFY_DATA_TYPENAME", { value, rowIndex });
+    let matchTemplates = await dataImport.QueryMatchTableListByPdm(value);
+    commit("MODIFY_MATCHTEMPLATE", { index: rowIndex, matchTemplates });
+    let bestMatchTemplate = await dataImport.QueryBestMatchMbdm(
+      value,
+      state.exampleDataList[rowIndex].fileColsName
+    );
+    commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", {
+      index: rowIndex,
+      bestMatchTemplate,
+    });
+    let dbColsName = await dataImport.QueryColsNameByMbdm(bestMatchTemplate);
+    // 查询log表获取数据
+    let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
+      bestMatchTemplate
+    );
+    commit("MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA", {
+      index: rowIndex,
+      dbColsName,
+      logMatchList,
+    });
+  },
+};
 
 export default {
   state,

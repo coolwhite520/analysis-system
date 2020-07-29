@@ -5,63 +5,74 @@ const { resolve } = path;
 
 export default {
   // 读取所有的行
-  parseFileAllLineSync: async function(filePathName) {
+  parseFileAllSync: async function(filePathName, fileColsName, fileInsertCols) {
     return new Promise(function(resolve, reject) {
-      try {
-        let content = fs.readFileSync(filePathName, "utf-8");
-        content = content.trimRight();
-        let records;
-        parse(content, {
-          columns: true,
-          skip_empty_lines: true,
-        })
-          .on("readable", function() {
-            let record;
-            while ((record = this.read())) {
-              records.push(record);
-            }
-          })
-          .on("end", function() {
-            resolve(records);
-          });
-      } catch (e) {
-        console.log(e);
-        reject(null);
+      let indexList = [];
+      for (let i = 0; i < fileColsName.length; i++) {
+        let bfind = fileInsertCols.find((el) => {
+          return el === fileColsName[i];
+        });
+        if (bfind) indexList.push(i);
       }
+      console.log(fileColsName, fileInsertCols, indexList);
+      let content = fs.readFileSync(filePathName, "utf-8");
+      content = content.trimRight();
+      let records = [];
+      parse(content, {
+        // columns: true,
+        from_line: 2,
+        ltrim: true,
+        rtrim: true,
+        skip_empty_lines: true,
+        skip_lines_with_error: true,
+      })
+        .on("readable", function() {
+          let record;
+          while ((record = this.read())) {
+            let temp = [];
+            for (let index of indexList) {
+              temp.push(record[index]);
+            }
+            records.push(temp);
+          }
+        })
+        .on("end", function() {
+          resolve(records);
+        });
     });
   },
   // 根据需要进行读取 ，通过参数linecount进行控制行数
   parseFileExampleSync: async function(filePathName) {
     return new Promise(function(resolve, reject) {
-      try {
-        let content = fs.readFileSync(filePathName, "utf-8");
-        content = content.trimRight();
-        let records = [];
-        parse(content, {
-          to: 3,
-          // columns: true,
-          skip_empty_lines: true,
+      let content = fs.readFileSync(filePathName, "utf-8");
+      content = content.trimRight();
+      let records = [];
+      parse(content, {
+        to: 3,
+        // columns: true,
+        ltrim: true,
+        rtrim: true,
+        skip_empty_lines: true,
+        skip_lines_with_error: true,
+      })
+        .on("readable", function() {
+          let record;
+          while ((record = this.read())) {
+            records.push(record);
+          }
         })
-          .on("readable", function() {
-            let record;
-            while ((record = this.read())) {
-              records.push(record);
-            }
-          })
-          .on("end", function() {
-            let result = {
-              fileName: path.basename(filePathName),
-              sheetName: path.basename(filePathName),
-              colsName: records.length > 0 ? records[0] : [],
-              ins1: records.length > 0 ? records[1] : [],
-              ins2: records.length > 1 ? records[2] : [],
-            };
-            resolve(result);
-          });
-      } catch (e) {
-        console.log(e);
-        reject(null);
-      }
+        .on("end", function() {
+          let arr = [];
+          let result = {
+            fileName: path.basename(filePathName),
+            sheetName: path.basename(filePathName),
+            fileColsName: records.length > 0 ? records[0] : [],
+            ins1: records.length > 1 ? records[1] : [],
+            ins2: records.length > 2 ? records[2] : [],
+          };
+          arr.push(result);
+          resolve(arr);
+        });
     });
   },
   // 获取所有的行数

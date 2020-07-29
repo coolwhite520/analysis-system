@@ -178,13 +178,13 @@ export default {
       this.caseDetail.ajid
     );
     await this.$store.dispatch(
-      "CaseDetail/queryCaseDataDetail",
+      "CaseDetail/queryCaseDataCenter",
       this.caseDetail.ajid
     );
   },
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
@@ -193,9 +193,9 @@ export default {
       "deleteState",
       "entityCount",
       "batchCount",
-      "awaitTaskCount"
+      "awaitTaskCount",
     ]),
-    ...mapGetters("CaseDetail", ["renderButtonGroupList"])
+    ...mapGetters("CaseDetail", ["renderButtonGroupList"]),
   },
   watch: {
     deleteState(newValue, oldValue) {
@@ -209,16 +209,16 @@ export default {
         this.$notify({
           title: "成功",
           message: `删除案件[${this.caseDetail.ajmc}]成功!`,
-          type: "success"
+          type: "success",
         });
       } else if (newValue === "failed") {
         this.loading = false;
         this.$notify.error({
           title: "错误",
-          message: `删除案件[${this.caseDetail.ajmc}]失败!`
+          message: `删除案件[${this.caseDetail.ajmc}]失败!`,
         });
       }
-    }
+    },
   },
   methods: {
     handleClickCollection() {},
@@ -231,7 +231,7 @@ export default {
         title: "关闭",
         message: `是否要删除当前案件[${this.caseDetail.ajmc}]？`,
         buttons: ["确定", "取消"],
-        defaultId: 0
+        defaultId: 0,
       });
       console.log(result);
       if (result.response === 0) {
@@ -243,7 +243,7 @@ export default {
       } else {
         this.$message({
           type: "info",
-          message: "已取消删除"
+          message: "已取消删除",
         });
       }
     },
@@ -252,8 +252,8 @@ export default {
         "HomePageSwitch/SET_VIEW_NAME",
         "show-exist-case-view"
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

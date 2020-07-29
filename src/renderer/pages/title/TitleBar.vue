@@ -17,7 +17,9 @@
             <span @click="handleClickClose" class="close">&#xe634;</span>
           </span>
         </div>
-        <div style="float:right;margin-top:20px;font-size:10px;margin-right:10px;">当前版本号：{{"1.0.1"}}</div>
+        <div
+          style="float:right;margin-top:20px;font-size:10px;margin-right:10px;"
+        >当前版本号：{{softVersion}}</div>
         <div style="clear:both;"></div>
         <div v-show="currentViewName==='main-page'" style="float:right;margin-right:10px;">
           <el-button
@@ -35,6 +37,11 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  data() {
+    return {
+      softVersion: this.$electron.remote.getGlobal("softVersion"),
+    };
+  },
   mounted() {
     // let bounds = this.$electron.remote.getGlobal("bounds");
     // console.log(bounds);
@@ -43,7 +50,7 @@ export default {
   },
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView"]),
-    ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"])
+    ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"]),
   },
   methods: {
     handleClickShowTabBar() {
@@ -79,8 +86,8 @@ export default {
     },
     handleClickClose() {
       this.$electron.ipcRenderer.send("window-close");
-    }
-  }
+    },
+  },
 };
 </script>
 

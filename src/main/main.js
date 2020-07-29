@@ -13,6 +13,8 @@ if (process.env.NODE_ENV !== "development") {
     .replace(/\\/g, "\\\\");
 }
 
+global.softVersion = "1.0.0.1";
+
 let mainWindow;
 const winURL =
   process.env.NODE_ENV === "development"

@@ -2,12 +2,19 @@ import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 
 export default function() {
   // 通过主进称中转消息到calculate渲染进程
-  ipcMain.on("read-csv-file", (e, args) => {
-    global.miniWindow.webContents.send("read-csv-file", args);
+  ipcMain.on("read-example-file", (e, args) => {
+    global.miniWindow.webContents.send("read-example-file", args);
   });
 
-  ipcMain.on("read-csv-file-over", (e, args) => {
-    global.mainWindow.webContents.send("read-csv-file-over", args);
+  ipcMain.on("read-example-file-over", (e, args) => {
+    global.mainWindow.webContents.send("read-example-file-over", args);
+  });
+
+  ipcMain.on("read-all-file", (e, args) => {
+    global.miniWindow.webContents.send("read-all-file", args);
+  });
+  ipcMain.on("read-all-file-over", (e, args) => {
+    global.mainWindow.webContents.send("read-all-file-over", args);
   });
 
   ipcMain.on("move-to-zero", () => {

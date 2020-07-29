@@ -1,7 +1,8 @@
 import db from "../../db/db";
 import cases from "../../db/Cases";
+import { stat } from "fs";
 const state = {
-  caseDetail: {},
+  caseDetail: {}, //  st_case表对应的字段对象
   deleteState: "",
   entityCount: 0, //实体数量
   batchCount: 0, // 批次数量
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_BATCHCOUNT(state, batchCount) {
     state.batchCount = batchCount;
+  },
+  ADD_BATCHTOUNT(state) {
+    state.batchCount++;
   },
   SET_AWAITTASK(state, awaitTask) {
     state.awaitTaskCount = awaitTask;
@@ -83,7 +87,7 @@ const actions = {
     let res = await cases.QueryAwaitTaskCount(ajid);
     if (res) commit("SET_AWAITTASK", res);
   },
-  async queryCaseDataDetail({ commit }, ajid) {
+  async queryCaseDataCenter({ commit }, ajid) {
     let list = await cases.QueryDataCenterTableInfo(ajid);
     console.log(list);
     if (list) commit("SET_DATACENTERLIST", list);
