@@ -92,7 +92,7 @@ export default {
     console.log(res);
     return res.rows[0].count;
   },
-
+  // 数据导入的时候创建临时表
   createTempTable: async function(ajid, tablecname, mbdm, fields) {
     try {
       let like = `${tablecname}_${mbdm}`;
@@ -114,5 +114,14 @@ export default {
       return false;
     }
   },
-  importData: async function() {},
+  // 插入一条数据
+  importOneRowData: async function(createdTableName, fields, data) {
+    try {
+      let sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
+      const res = await db.query(sql);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  },
 };

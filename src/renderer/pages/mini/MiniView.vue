@@ -175,7 +175,9 @@ export default {
             fields = publicFields.concat(fields).concat(externFields);
             break;
         }
-
+        fields = fields.map((value) => {
+          return value.toLowerCase();
+        });
         //插入到批次表中
         let success = await dataImport.insertBatch(
           ajid,
@@ -227,14 +229,7 @@ export default {
           bestMatchTemplate,
           fields
         );
-        // let publicFields = [
-        //           "batch",
-        //           "sjlylx",
-        //           "crrq",
-        //           "ajid",
-        //           "sjlyid",
-        //           "rownum",
-        //         ];
+        console.log(new Date().Format("yyyy-MM-dd hh:mm:ss"));
         for (let i = 0; i < resultList.length; i++) {
           let item = resultList[i];
           let rownum = i + 1;
@@ -250,10 +245,9 @@ export default {
           let newData = item.map((el) => {
             return `\'${el}\'`;
           });
-          let sql = `insert into ${createdTableName}(${fields}) VALUES(${newData})`;
-          console.log(sql);
-          break;
+          await dataImport.importOneRowData(createdTableName, fields, newData);
         }
+        console.log(new Date().Format("yyyy-MM-dd hh:mm:ss"));
       }
     },
   },
