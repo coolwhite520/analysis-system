@@ -1,7 +1,7 @@
 // 数据采集相关
 import { ipcRenderer } from "electron";
 import dataImport from "../../db/DataImport";
-
+import Vue from "vue";
 const state = {
   buttonGroupList: require("../../json/buttonGroup.json"),
   exampleDataList: [], //实例数组
@@ -36,7 +36,6 @@ const mutations = {
       );
       item.matchedFieldName =
         bestArray.length > 0 ? bestArray[0].fieldename : "";
-
       // 如果没有直接匹配上，那么和log表再次进行匹配。
       if (item.matchedFieldName === "") {
         bestArray = logMatchList.filter((ele) => {
@@ -96,6 +95,56 @@ const mutations = {
   MODIFY_MATCHTEMPLATE(state, { index, matchTemplates }) {
     state.exampleDataList[index].matchTemplates = matchTemplates;
   },
+
+  // 设置导入的实例数组
+  RET_SET_EXAMPLEDATALIST(state, list) {
+    state.exampleDataList = list;
+  },
+
+  SET_TABLENAME(state, { sheetIndex, tableName }) {
+    state.exampleDataList[sheetIndex].tableName = tableName;
+  },
+
+  // 设置每个页面的总条数
+  SET_ROWSUM(state, { sheetIndex, rowSum }) {
+    state.exampleDataList[sheetIndex].rowSum = rowSum;
+  },
+  // 修改展示的数据
+  MODIFY_SHOW_DATA_LIMIT(state, { sheetIndex, rows }) {
+    let currentRow = state.exampleDataList[sheetIndex];
+    let fields = [];
+    let headers = [];
+    for (let item of currentRow.dataList) {
+      if (item.matchedFieldName !== "") {
+        fields.push(item.matchedFieldName.toLowerCase());
+        headers.push({
+          cname: item.fileColName,
+          ename: item.matchedFieldName.toLowerCase(),
+        });
+      }
+    }
+
+    let filterRows = [];
+    for (let row of rows) {
+      let newRow = {};
+      for (let k in row) {
+        let tempList = fields.filter((fieldName) => {
+          return fieldName === k;
+        });
+        if (tempList.length > 0) {
+          newRow[k] = row[k];
+        }
+      }
+      filterRows.push(newRow);
+    }
+    state.exampleDataList[sheetIndex].headers = headers;
+    state.exampleDataList[sheetIndex].showRows = filterRows;
+    Vue.set(
+      state.exampleDataList,
+      sheetIndex,
+      state.exampleDataList[sheetIndex]
+    );
+  },
 };
 
 const getters = {};
@@ -137,6 +186,20 @@ const actions = {
       dbColsName,
       logMatchList,
     });
+  },
+  async QueryTableData(
+    { commit },
+    { sheetIndex, ajid, tableName, index, limit }
+  ) {
+    let rows = await dataImport.queryDataFromTable(
+      ajid,
+      tableName,
+      index,
+      limit
+    );
+    let rowSum = await dataImport.queryRowsum(ajid, tableName);
+    commit("SET_ROWSUM", { sheetIndex, rowSum });
+    commit("MODIFY_SHOW_DATA_LIMIT", { sheetIndex, rows });
   },
 };
 

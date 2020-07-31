@@ -138,8 +138,12 @@ import path from "path";
 import { BrowserWindow } from "electron";
 export default {
   mounted() {
+    console.log("immouted.......&&&********&&&&&&&&&&&&&&&&&&&&&&&&");
     let _this = this;
     this.$electron.ipcRenderer.on("read-example-file-over", (event, data) => {
+      console.log(
+        "read-example-file-over.......&&&********&&&&&&&&&&&&&&&&&&&&&&&&"
+      );
       _this.parseFileCount--;
       if (!data.success) {
         const h = this.$createElement;
@@ -169,7 +173,6 @@ export default {
   },
   data() {
     return {
-      showView: "begin",
       loading: false,
       value: "",
       currentRow: null, // 其实是一个指针，指向了exampleDataList中的某条数据
@@ -233,7 +236,12 @@ export default {
               break;
           }
         }
-        this.showView = "process";
+        this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "process-import");
+        // 以被选择的数据作为新的vuex数据
+        this.$store.commit(
+          "DataCollection/RET_SET_EXAMPLEDATALIST",
+          this.multipleSelection
+        );
         this.$electron.ipcRenderer.send(
           "read-all-file",
           this.multipleSelection
@@ -281,12 +289,6 @@ export default {
     handleCurrentChange(val) {
       console.log("handleCurrentChange:", val);
       this.currentRow = val;
-    },
-    handleClose() {
-      this.currentStepIndex = 1;
-      this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
-      this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
-      // this.$electron.ipcRenderer.removeAllListeners("read-csv-file-over");
     },
     // multipleSelection 代表当前选中的行数据
     handleSelectionChange(val) {

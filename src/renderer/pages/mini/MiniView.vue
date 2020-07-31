@@ -6,6 +6,7 @@ import csvReader from "@/utils/reader/csvReader";
 import xlsReader from "@/utils/reader/xlsReader";
 import dataImport from "../../db/DataImport";
 import DataTypeList from "@/json/buttonGroup.json";
+const UUID = require("uuid");
 import path from "path";
 export default {
   data() {
@@ -14,8 +15,150 @@ export default {
     };
   },
   methods: {
+    async getValueOfMbdm(ryid, fileName, mbdm, extField) {
+      let value = "";
+      switch (mbdm) {
+        case "150001": //"gas_tax_records_source":
+          {
+            if (extField.toLowerCase() === "ryid") {
+              value = ryid;
+            } else if (extField.toLowerCase() === "swmxid") {
+              // 税务
+              value = UUID.v1();
+            } else if (extField.toLowerCase() === "swlx") {
+              value = "0"; // 税务类型，进项税0，销项税1
+            } else if (extField.toLowerCase() === "fplx") {
+              value = "0"; //发票类型  普通0，专项1
+            }
+          }
+          break;
+        case "220001": //"gas_phone_call_info":
+          {
+            if (extField.toLowerCase() === "thjlid") {
+              value = UUID.v1();
+            } else if (extField.toLowerCase() === "ddfzsxm") {
+              value = fileName;
+            }
+          }
+          break;
+        case "61000021": //"gas_account_info": 平台导出账户信息
+          {
+            if (extField.toLowerCase() === "ryid") {
+              value = ryid;
+            }
+          }
+          break;
+        case "61000020": //"gas_person": 平台导出人员信息
+          {
+            if (extField.toLowerCase() === "ryid") {
+              value = ryid;
+            } else if (extField.toLowerCase() === "zzlxmc") {
+              value = "z1";
+            } else if (extField.toLowerCase() === "sjlx") {
+              // 默认个人99
+              // 数据类型(DM) 嫌疑人1
+              // 被调查人2
+              // 证人3
+              // 受害人4
+              // 律师5
+              // 报案人6
+              // 嫌疑单位7
+              // 受害单位8
+              // 从业人员9
+              // 易感人员10
+              // 洗钱企业11
+              // 传销企业12
+              // 传销人员13
+              // 非法集资人员14
+              // 非法集资企业15
+              // 假发票人员16
+              // 侵犯知识产权17
+              // 洗钱人员18
+              // 银行卡19
+              // 其他20
+              // 法人23
+              // 查控单位98查控人员99
+              value = "99";
+            }
+          }
+          break;
+        case "130002": //"gas_bank_records_source": // 交易明细
+          {
+            if (extField.toLowerCase() === "yhjymxid") {
+              // 交易记录
+              value = UUID.v1(); //银行交易明细id,UUID
+            } else if (extField.toLowerCase() === "jyyhmc") {
+              value = ""; //银行交易名称 空
+            } else if (extField.toLowerCase() === "sfddbs") {
+              value = ""; //是否调单标志
+            }
+          }
+          break;
+        case "10100001011": //"gas_tax_swdj":
+          {
+            if (extField.toLowerCase() === "ryid") {
+              value = ryid;
+            } else if (extField.toLowerCase() === "id") {
+              //企业税务登记
+              value = UUID.v1();
+            }
+          }
+          break;
+        case "145001": //"gas_im_msg":  微信通讯记录
+          {
+            if (extField.toLowerCase() === "sjlx") {
+              // 0：QQ 1：微信 2：MailBox 3:微博 4:其它
+              value = "1";
+            }
+          }
+          break;
+        case "110002": //"gas_bank_records_source": // 通用模版
+          {
+            //ryid,yhjymxid,sfddbs
+            if (extField.toLowerCase() === "ryid") {
+              // 交易记录
+              value = ryid;
+            } else if (extField.toLowerCase() === "yhjymxid") {
+              value = UUID.v1();
+            } else if (extField.toLowerCase() === "sfddbs") {
+              value = "";
+            }
+          }
+          break;
+        case "160001": //"gas_account_info": 开户信息
+          {
+            if (extField.toLowerCase() === "ryid") {
+              // 交易记录
+              value = ryid;
+            }
+          }
+          break;
+        case "130001": //gas_account_info 账户信息列表
+          {
+            if (extField.toLowerCase() === "ryid") {
+              // 交易记录
+              value = ryid;
+            }
+          }
+          break;
+        case "130003": //gas_person 身份信息列表
+          {
+            //ryid,zzlx,zzlxmc,sjlx
+            if (extField.toLowerCase() === "ryid") {
+              value = ryid;
+            } else if (extField.toLowerCase() === "zzlx") {
+              value = "dz1";
+            } else if (extField.toLowerCase() === "zzlxmc") {
+              value = "dz1"; //时为居民身份证；zzlx=dz1时为企业法人营业执照
+            } else if (extField.toLowerCase() === "sjlx") {
+              value = "98";
+            }
+          }
+          break;
+      }
+      return value;
+    },
     async readExampleFile(e, args) {
-      console.log("panda:", args);
       const { filePathName, pdm, caseDetail, batchCount } = args;
       let data = {};
       let resultList = [];
@@ -124,7 +267,9 @@ export default {
     },
     async readAllFile(e, args) {
       console.log(args);
-      for (let data of args) {
+      let ryid = UUID.v1();
+      for (let sheetIndex = 0; sheetIndex < args.length; sheetIndex++) {
+        let data = args[sheetIndex];
         let {
           filePathName,
           fileColsName,
@@ -142,6 +287,10 @@ export default {
           return value.mbdm === bestMatchTemplate;
         });
         let tablecname = tabletemp[0].tablecname;
+        let externFields =
+          tabletemp[0].extern_field !== ""
+            ? tabletemp[0].extern_field.split(",")
+            : [];
         let mbmc = tabletemp[0].mbmc;
         // 统计选中的列名称
         let fields = [];
@@ -160,26 +309,12 @@ export default {
           "sjlyid",
           "rownum",
         ];
-        let externFields = [];
-        switch (tablecname) {
-          case "gas_bank_records_source":
-            // ["Yhjymxid", "Sfddbs"]
-            fields = publicFields.concat(fields).concat(externFields);
-            break;
-          case "gas_account_info":
-            // ["ryid"]
-            fields = publicFields.concat(fields).concat(externFields);
-            break;
-          case "gas_person":
-            // ["Zzlx", "zzlxmc", "Ryid", "Sjlx"]
-            fields = publicFields.concat(fields).concat(externFields);
-            break;
-        }
+        fields = publicFields.concat(fields).concat(externFields);
         fields = fields.map((value) => {
           return value.toLowerCase();
         });
-        //插入到批次表中
-        let success = await dataImport.insertBatch(
+        //插入到批次表中 会生成一个新的sjlyid自增
+        let sjlyid = await dataImport.insertBatch(
           ajid,
           ajmc,
           fileExt,
@@ -193,6 +328,10 @@ export default {
           this.softVersion
         );
 
+        this.$electron.ipcRenderer.send("read-one-file-begin", {
+          fileName,
+          sheetName,
+        });
         // 解析数据并插入到库中
         let resultList = [];
         switch (fileExt) {
@@ -221,7 +360,6 @@ export default {
             }
             break;
         }
-        console.log(resultList);
         // 创建temp表存储数据
         let createdTableName = await dataImport.createTempTable(
           ajid,
@@ -229,26 +367,56 @@ export default {
           bestMatchTemplate,
           fields
         );
-        console.log(new Date().Format("yyyy-MM-dd hh:mm:ss"));
+        console.log("begin:", new Date().Format("yyyy-MM-dd hh:mm:ss"));
         for (let i = 0; i < resultList.length; i++) {
           let item = resultList[i];
           let rownum = i + 1;
+          // 给公共字段进行赋值
           let publicData = [
             `${batchCount}`,
             `采集录入`,
             `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
             `${ajid}`,
-            `sjlyid`,
+            `${sjlyid}`, // st_data_source 自增的数据
             `${rownum}`,
           ];
-          item = publicData.concat(item);
+          // 分配扩展字段的值
+          let externData = [];
+          for (let extField of externFields) {
+            let value = await this.getValueOfMbdm(
+              ryid,
+              fileName,
+              bestMatchTemplate,
+              extField
+            );
+            externData.push(value);
+          }
+          item = publicData.concat(item).concat(externData);
           let newData = item.map((el) => {
             return `\'${el}\'`;
           });
-          await dataImport.importOneRowData(createdTableName, fields, newData);
+          let successInsert = await dataImport.importOneRowData(
+            createdTableName,
+            fields,
+            newData
+          );
+          if (successInsert) {
+            let percentage = parseInt(parseFloat(i / resultList.length) * 100);
+            this.$electron.ipcRenderer.send("read-one-file-proccess", {
+              fileName,
+              sheetName,
+              percentage,
+            });
+          }
         }
-        console.log(new Date().Format("yyyy-MM-dd hh:mm:ss"));
+        this.$electron.ipcRenderer.send("read-one-file-over", {
+          fileName,
+          sheetName,
+          sheetIndex,
+          tableName: createdTableName,
+        });
       }
+      this.$electron.ipcRenderer.send("read-all-file-over", {});
     },
   },
   mounted() {

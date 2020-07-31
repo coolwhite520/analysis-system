@@ -58,6 +58,7 @@
     "node-xlsx": "^0.15.0",
     "officegen": "^0.6.4",
     "pg": "^8.2.1",
+    "uuid": "^8.3.0",
     "vue": "^2.6.11",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.1.6",

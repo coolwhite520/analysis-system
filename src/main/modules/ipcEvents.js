@@ -9,10 +9,23 @@ export default function() {
   ipcMain.on("read-example-file-over", (e, args) => {
     global.mainWindow.webContents.send("read-example-file-over", args);
   });
-
+  // 发送读取开始的消息到mini窗口
   ipcMain.on("read-all-file", (e, args) => {
     global.miniWindow.webContents.send("read-all-file", args);
   });
+  // mini窗口发送开始
+  ipcMain.on("read-one-file-begin", (e, args) => {
+    global.mainWindow.webContents.send("read-one-file-begin", args);
+  });
+  // mini窗口发送进度条数据
+  ipcMain.on("read-one-file-proccess", (e, args) => {
+    global.mainWindow.webContents.send("read-one-file-proccess", args);
+  });
+  // mini窗口发送开始
+  ipcMain.on("read-one-file-over", (e, args) => {
+    global.mainWindow.webContents.send("read-one-file-over", args);
+  });
+  // mini窗口发送读取完成的消息
   ipcMain.on("read-all-file-over", (e, args) => {
     global.mainWindow.webContents.send("read-all-file-over", args);
   });

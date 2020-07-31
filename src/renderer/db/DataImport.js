@@ -72,11 +72,11 @@ export default {
       "sheetname", "name", "mbmc", "tablecname", "versionsnum") VALUES 
       ('', '00000000', '${now}', ${ajid}, '', '${ajmc}', '${fileExt}', '${filename}',
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
-       '小智', '${mbmc}', '${tablecname}', '${softVersion}');`;
+       '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
       console.log(sql);
       const res = await db.query(sql);
-      console.log(res);
-      return true;
+      console.log(res.rows);
+      return res.rows[0].sjlyid;
     } catch (e) {
       return false;
     }
@@ -95,6 +95,9 @@ export default {
   // 数据导入的时候创建临时表
   createTempTable: async function(ajid, tablecname, mbdm, fields) {
     try {
+      if (tablecname.endsWith("_source")) {
+        tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
+      }
       let like = `${tablecname}_${mbdm}`;
       let valueName = (await this.showLikeTempTableCount(ajid, like)) + 1;
       let createTableName = `${like}_${valueName}_temp`;
@@ -122,6 +125,34 @@ export default {
       return true;
     } catch (e) {
       return false;
+    }
+  },
+  // 查询temp表中的数据
+  queryDataFromTable: async function(ajid, tableName, beginIndex, limit) {
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `select * from ${tableName} limit ${limit} OFFSET ${beginIndex}`;
+      console.log(sql);
+      const res = await db.query(sql);
+      console.log(res.rows);
+      return res.rows;
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
+  },
+  // 查询条目数量
+  queryRowsum: async function(ajid, tableName) {
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `select count(*)::int count from ${tableName}`;
+      console.log(sql);
+      const res = await db.query(sql);
+      console.log(res.rows);
+      return res.rows[0].count;
+    } catch (e) {
+      console.log(e);
+      return 0;
     }
   },
 };
