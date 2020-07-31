@@ -24,6 +24,12 @@ export default {
       customColor: "#f56c6c",
     };
   },
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners("read-one-file-begin");
+    this.$electron.ipcRenderer.removeAllListeners("read-one-file-proccess");
+    this.$electron.ipcRenderer.removeAllListeners("read-one-file-over");
+    this.$electron.ipcRenderer.removeAllListeners("read-all-file-over");
+  },
   mounted() {
     // 监听进度条的变化
     let _this = this;

@@ -77,56 +77,56 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div style="margin-top:20px;" v-if="currentRow">
-      <div>
-        <span style="font-size:16px;">
-          <b>数据文件实例表</b>
-        </span>
-        <span style="font-size:12px;">{{currentRow.fileName}}\{{currentRow.sheetName}}</span>
-      </div>
-      <el-table
-        stripe
-        :data="currentRow ? currentRow.dataList : []"
-        height="200"
-        border
-        style="width: 100%"
-        size="mini"
-      >
-        <el-table-column label="序号" width="60" type="index" fixed></el-table-column>
-        <el-table-column prop="fileColName" label="文件字段" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="ins1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="ins2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
-        <el-table-column label="数据库字段" show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-select
-              :value="scope.row.matchedFieldName"
-              placeholder
-              size="mini"
-              filterable
-              @change=" ((val)=>{handleChangeMatchColName(val, scope.$index, scope.row)})"
-            >
-              <el-option
-                v-for="item in currentRow.templateToFieldNames"
-                :key="item.id"
-                :label="item.fieldcname"
-                :value="item.fieldename"
-                :disabled="item.disabled"
-              ></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column prop="operation" label="操作/提示" show-overflow-tooltip>
-          <template slot-scope="scope">
-            <div v-show="scope.row.matchedFieldName.toLowerCase()==='jdbz'">
-              <el-button size="mini" type="text">进出设置</el-button>
-            </div>
-            <div v-show="scope.row.sameMatchedRow" style="color:#d07d76">重复的字段选取</div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div style="margin-top:20px;text-align: center;">
-        <el-button @click="handleClickSubmit">数据导入</el-button>
+      <div style="margin-top:20px;" v-if="currentRow">
+        <div>
+          <span style="font-size:16px;">
+            <b>数据文件实例表</b>
+          </span>
+          <span style="font-size:12px;">{{currentRow.fileName}}\{{currentRow.sheetName}}</span>
+        </div>
+        <el-table
+          stripe
+          :data="currentRow ? currentRow.dataList : []"
+          height="200"
+          border
+          style="width: 100%"
+          size="mini"
+        >
+          <el-table-column label="序号" width="60" type="index" fixed></el-table-column>
+          <el-table-column prop="fileColName" label="文件字段" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="ins1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="ins2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
+          <el-table-column label="数据库字段" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-select
+                :value="scope.row.matchedFieldName"
+                placeholder
+                size="mini"
+                filterable
+                @change=" ((val)=>{handleChangeMatchColName(val, scope.$index, scope.row)})"
+              >
+                <el-option
+                  v-for="item in currentRow.templateToFieldNames"
+                  :key="item.id"
+                  :label="item.fieldcname"
+                  :value="item.fieldename"
+                  :disabled="item.disabled"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="operation" label="操作/提示" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <div v-show="scope.row.matchedFieldName.toLowerCase()==='jdbz'">
+                <el-button size="mini" type="text">进出设置</el-button>
+              </div>
+              <div v-show="scope.row.sameMatchedRow" style="color:#d07d76">重复的字段选取</div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div style="margin-top:20px;text-align: center;">
+          <el-button @click="handleClickSubmit">数据导入</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -138,34 +138,38 @@ import path from "path";
 import { BrowserWindow } from "electron";
 export default {
   mounted() {
-    console.log("immouted.......&&&********&&&&&&&&&&&&&&&&&&&&&&&&");
     let _this = this;
-    this.$electron.ipcRenderer.on("read-example-file-over", (event, data) => {
-      console.log(
-        "read-example-file-over.......&&&********&&&&&&&&&&&&&&&&&&&&&&&&"
-      );
-      _this.parseFileCount--;
-      if (!data.success) {
-        const h = this.$createElement;
-        let message = `文件：[${data.filePathName}] 解析错误信息：${data.errormsg}`;
-        _this.$notify({
-          title: "解析文件出错",
-          message: h("i", { style: "color: teal" }, `${message}`),
-        });
-      } else {
-        _this.$store.commit("DataCollection/ADD_CSV_DATA_TO_LIST", data);
-        _this.$refs.multipleTable.toggleRowSelection(data, true);
-      }
-
-      if (_this.parseFileCount === 0) {
-        _this.loading = false;
-        if (_this.exampleDataList.length > 0) {
-          _this.currentRow =
-            _this.exampleDataList[_this.exampleDataList.length - 1];
-          _this.$refs.multipleTable.setCurrentRow(_this.currentRow);
+    this.$electron.ipcRenderer.on(
+      "read-one-example-sheet-over",
+      (event, data) => {
+        console.log("read-one-example-sheet-over******************");
+        if (!data.success) {
+          const h = _this.$createElement;
+          let message = `文件：[${data.filePathName}] 解析错误信息：${data.errormsg}`;
+          _this.$notify({
+            title: "解析文件出错",
+            message: h("i", { style: "color: teal" }, `${message}`),
+          });
+        } else {
+          _this.$store.commit("DataCollection/ADD_CSV_DATA_TO_LIST", data);
         }
       }
-    });
+    );
+    this.$electron.ipcRenderer.on(
+      "read-all-example-file-over",
+      (event, data) => {
+        _this.loading = false;
+        _this.currentRow =
+          _this.exampleDataList[_this.exampleDataList.length - 1];
+        _this.$refs.multipleTable.toggleAllSelection();
+      }
+    );
+  },
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners(
+      "read-one-example-sheet-over"
+    );
+    this.$electron.ipcRenderer.removeAllListeners("read-all-example-file-over");
   },
   computed: {
     ...mapState("DataCollection", ["buttonGroupList", "exampleDataList"]),
@@ -177,12 +181,14 @@ export default {
       value: "",
       currentRow: null, // 其实是一个指针，指向了exampleDataList中的某条数据
       parseFileCount: 0,
+      multipleSelection: [],
     };
   },
   components: {},
   methods: {
     handleClickSubmit() {
       if (this.multipleSelection.length > 0) {
+        console.log("this.multipleSelection", this.multipleSelection.length);
         for (let data of this.multipleSelection) {
           if (data.bestMatchTemplate === "") {
             this.$notify.error({
@@ -315,17 +321,12 @@ export default {
       this.parseFileCount = filePathList.length;
       if (typeof filePathList !== "undefined") {
         this.loading = true;
-
-        for (let filePathName of filePathList) {
-          console.log(filePathName);
-          this.$electron.ipcRenderer.send("read-example-file", {
-            caseDetail: this.caseDetail,
-            batchCount: this.batchCount,
-            filePathName,
-            pdm,
-          });
-        }
-        console.log("over");
+        this.$electron.ipcRenderer.send("read-all-example-file", {
+          caseDetail: this.caseDetail,
+          batchCount: this.batchCount,
+          filePathList,
+          pdm,
+        });
       }
     },
   },

@@ -14,7 +14,7 @@ const mutations = {
   },
   // 清空数据数组
   CLEAR_CSV_DATA_LIST(state) {
-    state.exampleDataList = [];
+    state.exampleDataList.splice(0);
   },
   // 根据传递的索引修改最佳匹配的模版
   MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, bestMatchTemplate }) {
@@ -108,6 +108,7 @@ const mutations = {
   // 设置每个页面的总条数
   SET_ROWSUM(state, { sheetIndex, rowSum }) {
     state.exampleDataList[sheetIndex].rowSum = rowSum;
+    Vue.set(state.exampleDataList[sheetIndex], rowSum, rowSum);
   },
   // 修改展示的数据
   MODIFY_SHOW_DATA_LIMIT(state, { sheetIndex, rows }) {

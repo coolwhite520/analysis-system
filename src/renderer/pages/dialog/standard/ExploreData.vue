@@ -7,7 +7,15 @@
         :label="item.sheetName"
         :name="String(index)"
       >
-        <el-table :data="item.showRows" size="mini" stripe style="width: 100%" border height="500">
+        <el-table
+          :data="item.showRows"
+          size="mini"
+          stripe
+          style="width: 100%"
+          border
+          height="500"
+          :show-overflow-tooltip="true"
+        >
           <el-table-column type="index" width="50" fixed label="编号"></el-table-column>
           <el-table-column
             v-for="(header, index) in item.headers"
