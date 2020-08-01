@@ -243,15 +243,35 @@ export default {
           }
         }
         this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "process-import");
+        // 数据加工和处理，给每个sheet生成headers、matchedFields
+        let newExampleList = [];
+        for (let sheetData of this.multipleSelection) {
+          let headers = []; // 表头，选中的字段列表,
+          let matchedFields = [];
+          for (let item of sheetData.dataList) {
+            if (item.matchedFieldName !== "") {
+              let temp = sheetData.templateToFieldNames.filter((e) => {
+                return (
+                  item.matchedFieldName.toLowerCase() ===
+                  e.fieldename.toLowerCase()
+                );
+              });
+              if (temp.length > 0) {
+                headers.push(temp[0]);
+                matchedFields.push(item.matchedFieldName);
+              }
+            }
+          }
+          sheetData.headers = headers;
+          sheetData.matchedFields = matchedFields;
+          newExampleList.push(sheetData);
+        }
         // 以被选择的数据作为新的vuex数据
         this.$store.commit(
           "DataCollection/RET_SET_EXAMPLEDATALIST",
-          this.multipleSelection
+          newExampleList
         );
-        this.$electron.ipcRenderer.send(
-          "read-all-file",
-          this.multipleSelection
-        );
+        this.$electron.ipcRenderer.send("read-all-file", newExampleList);
       } else {
         this.$notify.error({
           title: "错误",

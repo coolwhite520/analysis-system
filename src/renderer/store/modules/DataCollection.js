@@ -52,6 +52,27 @@ const mutations = {
         }
       }
     }
+    // 查找相同的列,标示出来
+    let resultSameArr = [];
+    for (let item of state.exampleDataList[index].dataList) {
+      for (let item2 of state.exampleDataList[index].dataList) {
+        if (
+          item !== item2 &&
+          item.matchedFieldName === item2.matchedFieldName &&
+          item.matchedFieldName !== "" &&
+          item2.matchedFieldName !== ""
+        ) {
+          resultSameArr.push(item);
+          resultSameArr.push(item2);
+        }
+      }
+    }
+    for (let item of state.exampleDataList[index].dataList) {
+      item.sameMatchedRow = false;
+    }
+    for (let item of resultSameArr) {
+      item.sameMatchedRow = true;
+    }
   },
   // 根据传递的参数修改匹配的列名称
   MODIFY_CSV_MATCHEDFIELD_NAME_DATA(
@@ -112,39 +133,7 @@ const mutations = {
   },
   // 修改展示的数据
   MODIFY_SHOW_DATA_LIMIT(state, { sheetIndex, rows }) {
-    let currentRow = state.exampleDataList[sheetIndex];
-    let fields = [];
-    let headers = [];
-    for (let item of currentRow.dataList) {
-      if (item.matchedFieldName !== "") {
-        fields.push(item.matchedFieldName.toLowerCase());
-        headers.push({
-          cname: item.fileColName,
-          ename: item.matchedFieldName.toLowerCase(),
-        });
-      }
-    }
-
-    let filterRows = [];
-    for (let row of rows) {
-      let newRow = {};
-      for (let k in row) {
-        let tempList = fields.filter((fieldName) => {
-          return fieldName === k;
-        });
-        if (tempList.length > 0) {
-          newRow[k] = row[k];
-        }
-      }
-      filterRows.push(newRow);
-    }
-    state.exampleDataList[sheetIndex].headers = headers;
-    state.exampleDataList[sheetIndex].showRows = filterRows;
-    Vue.set(
-      state.exampleDataList,
-      sheetIndex,
-      state.exampleDataList[sheetIndex]
-    );
+    Vue.set(state.exampleDataList[sheetIndex], "showRows", rows);
   },
 };
 
@@ -189,12 +178,13 @@ const actions = {
     });
   },
   async QueryTableData(
-    { commit },
-    { sheetIndex, ajid, tableName, index, limit }
+    { commit, state },
+    { sheetIndex, ajid, tableName, matchedFields, index, limit }
   ) {
     let rows = await dataImport.queryDataFromTable(
       ajid,
       tableName,
+      matchedFields,
       index,
       limit
     );

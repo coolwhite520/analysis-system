@@ -1,6 +1,6 @@
 // 控制那些对话框的弹出与否
 const state = {
-  standardViewSwitch: "begin-import", // 标准采集的页面切换state
+  standardViewSwitch: "begin-import", //"begin-import", // 标准采集的页面切换state
   standardDataVisible: false, // 标准采集
   autoDataVisible: false, //智能采集
 };

@@ -210,6 +210,20 @@ export default {
               pdm,
               fileColsName
             );
+            // 获取tablecname
+            let tabletemp = data.matchTemplates.filter((value) => {
+              return value.mbdm === bestMatchTemplate;
+            });
+            let tablecname = tabletemp[0].tablecname;
+
+            let externFields = tabletemp[0].extern_field
+              ? tabletemp[0].extern_field.split(",")
+              : [];
+            let mbmc = tabletemp[0].mbmc;
+
+            data.tablecname = tablecname;
+            data.mbmc = mbmc;
+            data.externFields = externFields;
             data.bestMatchTemplate = bestMatchTemplate;
             // 最佳匹配的模版对应的字段名称
             let templateToFieldNames = await dataImport.QueryColsNameByMbdm(
@@ -252,6 +266,29 @@ export default {
               }
               dataList.push(obj);
             }
+
+            // 查找相同的列
+            let resultSameArr = [];
+            for (let item of dataList) {
+              for (let item2 of dataList) {
+                if (
+                  item !== item2 &&
+                  item.matchedFieldName === item2.matchedFieldName &&
+                  item.matchedFieldName !== "" &&
+                  item2.matchedFieldName !== ""
+                ) {
+                  resultSameArr.push(item);
+                  resultSameArr.push(item2);
+                }
+              }
+            }
+            for (let item of dataList) {
+              item.sameMatchedRow = false;
+            }
+            for (let item of resultSameArr) {
+              item.sameMatchedRow = true;
+            }
+
             data.dataList = dataList;
             data.success = true;
             this.$electron.ipcRenderer.send(
@@ -280,6 +317,9 @@ export default {
           fileColsName,
           batchCount,
           bestMatchTemplate,
+          tablecname,
+          mbmc,
+          externFields,
           caseDetail,
           fileName,
           sheetName,
@@ -287,16 +327,7 @@ export default {
         let { ajid, ajmc } = caseDetail;
         let filepath = path.dirname(data.filePathName);
         let fileExt = path.extname(fileName).slice(1);
-        // 获取tablecname
-        let tabletemp = data.matchTemplates.filter((value) => {
-          return value.mbdm === bestMatchTemplate;
-        });
-        let tablecname = tabletemp[0].tablecname;
-        let externFields =
-          tabletemp[0].extern_field !== ""
-            ? tabletemp[0].extern_field.split(",")
-            : [];
-        let mbmc = tabletemp[0].mbmc;
+
         // 统计选中的列名称
         let fields = [];
         let fileInsertCols = [];

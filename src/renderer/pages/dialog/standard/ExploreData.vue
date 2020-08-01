@@ -4,76 +4,42 @@
       <el-tab-pane
         v-for="(item, index) of exampleDataList"
         :key="index"
-        :label="item.sheetName"
+        :label="item.fileName+'-'+item.sheetName+'-'+item.mbmc"
         :name="String(index)"
       >
-        <el-table
-          :data="item.showRows"
-          size="mini"
-          stripe
-          style="width: 100%"
-          border
-          height="500"
-          :show-overflow-tooltip="true"
-        >
-          <el-table-column type="index" width="50" fixed label="编号"></el-table-column>
-          <el-table-column
-            v-for="(header, index) in item.headers"
-            :label="header.cname"
-            :key="index"
-          >
-            <template slot-scope="scope">{{ scope.row[header.ename]}}</template>
-          </el-table-column>
-        </el-table>
-        <div style="float:right;margin-top:20px;">
-          <el-pagination
-            background
-            layout="prev, pager, next"
-            :page-size="pageSize"
-            :total="item.rowSum"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
-        </div>
+        <explore-view :sheetItem="item" :activeName="index"></explore-view>
+        <el-row style="text-align:center;">
+          <div>
+            <el-button size="small" type="primary" @click="handleClickImportAll">一键导入所有数据</el-button>
+          </div>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import exploreView from "./explore/ExploreView";
 export default {
   async mounted() {
     this.activeName = "0";
   },
+  components: {
+    "explore-view": exploreView,
+  },
   data() {
     return {
-      pageSize: 30,
-      activeName: "",
+      activeName: "0",
     };
   },
   computed: {
-    ...mapState("CaseDetail", ["caseDetail"]),
     ...mapState("DataCollection", ["exampleDataList"]),
   },
   methods: {
     handleClickTab(index) {
       console.log(index);
     },
-    async handleCurrentChange(val) {
-      let _this = this;
-      console.log(`当前页: ${val}`);
-      let index = parseInt(this.activeName);
-      let item = this.exampleDataList[index];
-      let tableName = item.tableName;
-      let ajid = this.caseDetail.ajid;
-      let offset = (val - 1) * _this.pageSize;
-      await this.$store.dispatch("DataCollection/QueryTableData", {
-        ajid,
-        sheetIndex: index,
-        tableName,
-        index: offset,
-        limit: _this.pageSize,
-      });
-    },
+    handleClickImportAll() {},
   },
 };
 </script>

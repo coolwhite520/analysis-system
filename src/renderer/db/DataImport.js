@@ -128,10 +128,16 @@ export default {
     }
   },
   // 查询temp表中的数据
-  queryDataFromTable: async function(ajid, tableName, beginIndex, limit) {
+  queryDataFromTable: async function(
+    ajid,
+    tableName,
+    matchedFields,
+    beginIndex,
+    limit
+  ) {
     try {
       await cases.SwitchCase(ajid);
-      let sql = `select * from ${tableName} limit ${limit} OFFSET ${beginIndex}`;
+      let sql = `select ${matchedFields} from ${tableName} limit ${limit} OFFSET ${beginIndex}`;
       console.log(sql);
       const res = await db.query(sql);
       console.log(res.rows);
@@ -153,6 +159,123 @@ export default {
     } catch (e) {
       console.log(e);
       return 0;
+    }
+  },
+  // 查询字段是否是数类型
+  QueryFieldNotNumberCount: async function(ajid, tableName, fieldName) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `SELECT COUNT(*)::int count from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
+      console.log(sql);
+      const res = await db.query(sql);
+      console.log(res.rows);
+      return { count: res.rows[0].count, success };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
+  },
+
+  // 查询不是数的条目
+  QueryFieldNotNumberRows: async function(ajid, tableName, fieldName) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `SELECT * from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
+      console.log(sql);
+      const res = await db.query(sql);
+      return { rows: res.rows, success };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
+  },
+
+  // 查询非空 字段类型(1,字符串,2,小数,3整数,,4,日期,5,通话时长) ,没有实现，感觉这个没用by：bai
+  QueryFieldNullCount: async function(ajid, tableName) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
+  },
+  // 查询字段的长度是否超过了设定的长度
+  QueryFieldExceedLengthCount: async function(
+    ajid,
+    tableName,
+    fieldName,
+    fieldLength
+  ) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `SELECT COUNT(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
+      console.log(sql);
+      const res = await db.query(sql);
+      console.log(res.rows);
+      return { count: res.rows[0].count, success };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
+  },
+
+  // 查询字段的长度不合法的条目
+  QueryFieldExceedLengthRows: async function(
+    ajid,
+    tableName,
+    fieldName,
+    fieldLength
+  ) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `SELECT * from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
+      console.log(sql);
+      const res = await db.query(sql);
+      return { rows: res.rows, success };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
+  },
+  // 查询字段非日期的数量
+  QueryFieldNotDateCount: async function(ajid, tableName, fieldName) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `SELECT COUNT(*)::int count from ${tableName} 
+      WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
+      and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !=''; `;
+      console.log(sql);
+      const res = await db.query(sql);
+      console.log(res.rows);
+      return { count: res.rows[0].count, success };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
+  },
+
+  // 查询字段非日期的条目
+  QueryFieldNotDateRows: async function(ajid, tableName, fieldName) {
+    let success = true;
+    try {
+      await cases.SwitchCase(ajid);
+      let sql = `SELECT * from ${tableName} 
+      WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
+      and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !=''; `;
+      console.log(sql);
+      const res = await db.query(sql);
+      return { rows: res.rows, success };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
     }
   },
 };

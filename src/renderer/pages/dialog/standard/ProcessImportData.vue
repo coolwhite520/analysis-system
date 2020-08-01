@@ -69,10 +69,12 @@ export default {
         let item = _this.exampleDataList[index];
         let tableName = item.tableName;
         let ajid = item.caseDetail.ajid;
+        let matchedFields = item.matchedFields;
         await this.$store.dispatch("DataCollection/QueryTableData", {
           ajid,
           sheetIndex: index,
           tableName,
+          matchedFields,
           index: 0,
           limit: 30,
         });
