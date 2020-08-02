@@ -128,12 +128,12 @@ const mutations = {
 
   // 设置每个页面的总条数
   SET_ROWSUM(state, { sheetIndex, rowSum }) {
-    state.exampleDataList[sheetIndex].rowSum = rowSum;
-    Vue.set(state.exampleDataList[sheetIndex], rowSum, rowSum);
+    Vue.set(state.exampleDataList[sheetIndex], "rowSum", rowSum);
   },
   // 修改展示的数据
-  MODIFY_SHOW_DATA_LIMIT(state, { sheetIndex, rows }) {
+  MODIFY_SHOW_DATA_LIMIT(state, { sheetIndex, rows, errorFields }) {
     Vue.set(state.exampleDataList[sheetIndex], "showRows", rows);
+    Vue.set(state.exampleDataList[sheetIndex], "errorFields", errorFields);
   },
 };
 
@@ -177,20 +177,41 @@ const actions = {
       logMatchList,
     });
   },
+  // sheetIndex（数据list对应的索引） ajid tableName， matchedFields，index（查询的索引） ， limit（查询的数量）
   async QueryTableData(
     { commit, state },
-    { sheetIndex, ajid, tableName, matchedFields, index, limit }
-  ) {
-    let rows = await dataImport.queryDataFromTable(
+    {
+      sheetIndex,
       ajid,
       tableName,
       matchedFields,
       index,
-      limit
+      limit,
+      filterList,
+      headers,
+    }
+  ) {
+    let result = await dataImport.queryDataFromTable(
+      ajid,
+      tableName,
+      matchedFields,
+      index,
+      limit,
+      filterList,
+      headers
     );
-    let rowSum = await dataImport.queryRowsum(ajid, tableName);
-    commit("SET_ROWSUM", { sheetIndex, rowSum });
-    commit("MODIFY_SHOW_DATA_LIMIT", { sheetIndex, rows });
+    if (result.success) {
+      let rowSum = await dataImport.queryRowsum(ajid, tableName);
+      commit("SET_ROWSUM", {
+        sheetIndex,
+        rowSum: filterList.length > 0 ? result.rows.length : rowSum,
+      });
+      commit("MODIFY_SHOW_DATA_LIMIT", {
+        sheetIndex,
+        rows: result.rows,
+        errorFields: result.errorFields,
+      });
+    }
   },
 };
 

@@ -125,7 +125,7 @@
           </el-table-column>
         </el-table>
         <div style="margin-top:20px;text-align: center;">
-          <el-button @click="handleClickSubmit">数据导入</el-button>
+          <el-button @click="handleClickSubmit" type="primary">数据临时导入</el-button>
         </div>
       </div>
     </div>
@@ -247,6 +247,10 @@ export default {
         let newExampleList = [];
         for (let sheetData of this.multipleSelection) {
           let headers = []; // 表头，选中的字段列表,
+          // 把行号添加进来，进行展示便于操作数据
+          headers.push({
+            fieldcname: "行号",
+          });
           let matchedFields = [];
           for (let item of sheetData.dataList) {
             if (item.matchedFieldName !== "") {

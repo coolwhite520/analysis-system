@@ -133,18 +133,159 @@ export default {
     tableName,
     matchedFields,
     beginIndex,
-    limit
+    limit,
+    filterList,
+    headers // 包含字段的所有属性
   ) {
+    // 展示的时候需要行号， 所以查询的时候需要添加到select中
+    matchedFields = ["rownum"].concat(matchedFields);
+    let newRows = [];
+    let errorFields = [];
     try {
       await cases.SwitchCase(ajid);
-      let sql = `select ${matchedFields} from ${tableName} limit ${limit} OFFSET ${beginIndex}`;
-      console.log(sql);
-      const res = await db.query(sql);
-      console.log(res.rows);
-      return res.rows;
+      let sql = `select ${matchedFields} from ${tableName}`;
+      if (filterList.length === 0) {
+        sql = sql + ` limit ${limit} OFFSET ${beginIndex}`;
+        console.log(sql);
+        const res = await db.query(sql);
+        let rows = res.rows;
+        for (let row of rows) {
+          let newRow = [];
+          for (let k in row) {
+            let value = row[k];
+            let key = k;
+            let error = false; //这个地方需要判定
+            let cell = { key, value, error };
+            newRow.push(cell);
+          }
+          newRows.push(newRow);
+        }
+      } else {
+        for (let item of headers) {
+          if (
+            filterList.find((el) => {
+              return el === "exceedLen";
+            }) &&
+            item.fieldtype === 1
+          ) {
+            let temp = await this.QueryFieldExceedLengthRows(
+              ajid,
+              tableName,
+              matchedFields,
+              item.fieldename,
+              item.fieldlength
+            );
+            if (temp.success && temp.rows.length > 0) {
+              let rownums = [];
+              for (let row of temp.rows) {
+                let newRow = [];
+                rownums.push(row["rownum"]);
+                for (let k in row) {
+                  let value = row[k];
+                  let key = k;
+                  let error =
+                    key.toLowerCase() === item.fieldename.toLowerCase()
+                      ? true
+                      : false; //这个地方需要判定
+
+                  let cell = { key, value, error };
+                  newRow.push(cell);
+                }
+                newRows.push(newRow);
+              }
+              errorFields.push({
+                filterName: "exceedLen",
+                fieldcname: item.fieldcname,
+                fieldlength: item.fieldlength,
+                fieldename: item.fieldename.toLowerCase(),
+                rownums,
+              });
+            }
+          }
+          if (
+            filterList.find((el) => {
+              return el === "notNum";
+            }) &&
+            (item.fieldtype === 2 || item.fieldtype === 3)
+          ) {
+            let temp = await this.QueryFieldNotNumberRows(
+              ajid,
+              tableName,
+              matchedFields,
+              item.fieldename
+            );
+            if (temp.success && temp.rows.length > 0) {
+              let rownums = [];
+              for (let row of temp.rows) {
+                let newRow = [];
+                rownums.push(row["rownum"]);
+                for (let k in row) {
+                  let value = row[k];
+                  let key = k;
+                  let error =
+                    key.toLowerCase() === item.fieldename.toLowerCase()
+                      ? true
+                      : false; //这个地方需要判定
+
+                  let cell = { key, value, error };
+                  newRow.push(cell);
+                }
+                newRows.push(newRow);
+              }
+              errorFields.push({
+                filterName: "notNum",
+                fieldcname: item.fieldcname,
+                fieldename: item.fieldename.toLowerCase(),
+                rownums,
+              });
+            }
+          }
+          if (
+            (filterList.find((el) => {
+              return el === "notDate";
+            }) &&
+              item.fieldtype === 4) ||
+            item.fieldtype === 6
+          ) {
+            let temp = await this.QueryFieldNotDateRows(
+              ajid,
+              tableName,
+              matchedFields,
+              item.fieldename
+            );
+            if (temp.success && temp.rows.length > 0) {
+              let rownums = [];
+              for (let row of temp.rows) {
+                rownums.push(row["rownum"]);
+                let newRow = [];
+                for (let k in row) {
+                  let value = row[k];
+                  let key = k;
+                  let error =
+                    key.toLowerCase() === item.fieldename.toLowerCase()
+                      ? true
+                      : false; //这个地方需要判定
+
+                  let cell = { key, value, error };
+                  newRow.push(cell);
+                }
+                newRows.push(newRow);
+              }
+              errorFields.push({
+                filterName: "notDate",
+                fieldcname: item.fieldcname,
+                fieldename: item.fieldename.toLowerCase(),
+                rownums,
+              });
+            }
+          }
+        }
+      }
+      //格式化数据
+      return { rows: newRows, success: true, errorFields };
     } catch (e) {
       console.log(e);
-      return [];
+      return { success: false, msg: e.message };
     }
   },
   // 查询条目数量
@@ -161,28 +302,18 @@ export default {
       return 0;
     }
   },
-  // 查询字段是否是数类型
-  QueryFieldNotNumberCount: async function(ajid, tableName, fieldName) {
-    let success = true;
-    try {
-      await cases.SwitchCase(ajid);
-      let sql = `SELECT COUNT(*)::int count from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
-      console.log(sql);
-      const res = await db.query(sql);
-      console.log(res.rows);
-      return { count: res.rows[0].count, success };
-    } catch (e) {
-      console.log(e);
-      return { success: false, msg: e.message };
-    }
-  },
 
   // 查询不是数的条目
-  QueryFieldNotNumberRows: async function(ajid, tableName, fieldName) {
+  QueryFieldNotNumberRows: async function(
+    ajid,
+    tableName,
+    matchedFields,
+    fieldName
+  ) {
     let success = true;
     try {
       await cases.SwitchCase(ajid);
-      let sql = `SELECT * from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
+      let sql = `SELECT ${matchedFields} from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
       console.log(sql);
       const res = await db.query(sql);
       return { rows: res.rows, success };
@@ -191,49 +322,18 @@ export default {
       return { success: false, msg: e.message };
     }
   },
-
-  // 查询非空 字段类型(1,字符串,2,小数,3整数,,4,日期,5,通话时长) ,没有实现，感觉这个没用by：bai
-  QueryFieldNullCount: async function(ajid, tableName) {
-    let success = true;
-    try {
-      await cases.SwitchCase(ajid);
-    } catch (e) {
-      console.log(e);
-      return { success: false, msg: e.message };
-    }
-  },
-  // 查询字段的长度是否超过了设定的长度
-  QueryFieldExceedLengthCount: async function(
-    ajid,
-    tableName,
-    fieldName,
-    fieldLength
-  ) {
-    let success = true;
-    try {
-      await cases.SwitchCase(ajid);
-      let sql = `SELECT COUNT(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
-      console.log(sql);
-      const res = await db.query(sql);
-      console.log(res.rows);
-      return { count: res.rows[0].count, success };
-    } catch (e) {
-      console.log(e);
-      return { success: false, msg: e.message };
-    }
-  },
-
   // 查询字段的长度不合法的条目
   QueryFieldExceedLengthRows: async function(
     ajid,
     tableName,
+    matchedFields,
     fieldName,
     fieldLength
   ) {
     let success = true;
     try {
       await cases.SwitchCase(ajid);
-      let sql = `SELECT * from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
+      let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
       console.log(sql);
       const res = await db.query(sql);
       return { rows: res.rows, success };
@@ -242,31 +342,17 @@ export default {
       return { success: false, msg: e.message };
     }
   },
-  // 查询字段非日期的数量
-  QueryFieldNotDateCount: async function(ajid, tableName, fieldName) {
-    let success = true;
-    try {
-      await cases.SwitchCase(ajid);
-      let sql = `SELECT COUNT(*)::int count from ${tableName} 
-      WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
-      and TRIM(both '  ' FROM ${fieldName}) is not null
-      and TRIM(both '  ' FROM ${fieldName}) !=''; `;
-      console.log(sql);
-      const res = await db.query(sql);
-      console.log(res.rows);
-      return { count: res.rows[0].count, success };
-    } catch (e) {
-      console.log(e);
-      return { success: false, msg: e.message };
-    }
-  },
-
   // 查询字段非日期的条目
-  QueryFieldNotDateRows: async function(ajid, tableName, fieldName) {
+  QueryFieldNotDateRows: async function(
+    ajid,
+    tableName,
+    matchedFields,
+    fieldName
+  ) {
     let success = true;
     try {
       await cases.SwitchCase(ajid);
-      let sql = `SELECT * from ${tableName} 
+      let sql = `SELECT ${matchedFields} from ${tableName} 
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !=''; `;

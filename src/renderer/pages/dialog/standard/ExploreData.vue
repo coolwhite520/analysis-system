@@ -8,11 +8,6 @@
         :name="String(index)"
       >
         <explore-view :sheetItem="item" :activeName="index"></explore-view>
-        <el-row style="text-align:center;">
-          <div>
-            <el-button size="small" type="primary" @click="handleClickImportAll">一键导入所有数据</el-button>
-          </div>
-        </el-row>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -39,7 +34,6 @@ export default {
     handleClickTab(index) {
       console.log(index);
     },
-    handleClickImportAll() {},
   },
 };
 </script>

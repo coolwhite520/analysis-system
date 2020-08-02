@@ -70,11 +70,14 @@ export default {
         let tableName = item.tableName;
         let ajid = item.caseDetail.ajid;
         let matchedFields = item.matchedFields;
+        let headers = item.headers;
         await this.$store.dispatch("DataCollection/QueryTableData", {
           ajid,
           sheetIndex: index,
           tableName,
           matchedFields,
+          filterList: [],
+          headers,
           index: 0,
           limit: 30,
         });

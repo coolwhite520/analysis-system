@@ -345,6 +345,7 @@ export default {
           "sjlyid",
           "rownum",
         ];
+        data.publicFields = publicFields;
         fields = publicFields.concat(fields).concat(externFields);
         fields = fields.map((value) => {
           return value.toLowerCase();

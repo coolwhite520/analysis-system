@@ -1,39 +1,16 @@
 <template>
   <div>
-    <el-row></el-row>
+    <el-row>
+      <div style="float:right;">
+        <el-button
+          size="small"
+          type="primary"
+          @click="handleClickCheckData"
+        >&nbsp;&nbsp;一键智能数据检查&nbsp;&nbsp;</el-button>
+      </div>
+    </el-row>
     <el-row style="margin-top:10px;">
-      <el-col :span="3">
-        <div>
-          <h3>数据清理规则</h3>
-        </div>
-        <div style="margin-top:10px;margin-bottom:10px;">
-          <el-tree
-            ref="tree"
-            :props="defaultProps"
-            :data="treeData"
-            node-key="id"
-            default-expand-all
-            :default-checked-keys="['notNum', 'exceedLen', 'notDate']"
-            show-checkbox
-          ></el-tree>
-        </div>
-        <div style="margin-top:10px;margin-bottom:100px;">
-          <el-button
-            size="small"
-            type="primary"
-            @click="handleClickCheckData"
-          >&nbsp;&nbsp;数据检查&nbsp;&nbsp;</el-button>
-        </div>
-        <!-- <div style="position:absolute;left:0;bottom:0;">
-          <div style="margin-top:10px;margin-bottom:10px;">
-            <el-button size="small" type="primary" @click="handleClickBatchModify">批量处理</el-button>
-          </div>
-          <div style="margin-top:10px;margin-bottom:10px;">
-            <el-button size="small" type="primary" @click="handleClickBatchDelete">批量删除</el-button>
-          </div>
-        </div>-->
-      </el-col>
-      <el-col :span="21">
+      <el-col :span="24">
         <el-table
           :cell-style="{padding:'0px'}"
           style="width: 100%;"
@@ -41,9 +18,9 @@
           size="mini"
           stripe
           border
-          height="450"
+          height="300"
         >
-          <el-table-column type="index" width="50" fixed label="编号"></el-table-column>
+          <!-- <el-table-column type="index" width="50" fixed label="编号"></el-table-column> -->
           <el-table-column
             show-overflow-tooltip
             v-for="(header, index) in sheetItem.headers"
@@ -52,8 +29,8 @@
           >
             <template slot-scope="scope">
               <div
-                :style="{color: scope.row[header.fieldename.toLowerCase()].error?'red': 'black'}"
-              >{{ scope.row[header.fieldename.toLowerCase()]}}</div>
+                :style="{color: scope.row[index].error?'red': 'gray'}"
+              >{{ scope.row[index].value}}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -73,6 +50,61 @@
         </el-row>
       </el-col>
     </el-row>
+    <el-row v-show="bClickBtnCheck&&sheetItem.showRows.length > 0">
+      <div style="font-size:12px;">
+        <span style="color:red;">存在错误数据列：</span>
+        <el-button-group>
+          <el-button
+            v-for="item in sheetItem.errorFields"
+            :key="item.fieldename"
+            round
+            type="primary"
+            size="mini"
+            @click="handleClickBtnGroup(item)"
+          >{{item.fieldcname}}</el-button>
+        </el-button-group>&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
+        <el-button type="danger" size="mini">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
+      </div>
+    </el-row>
+    <el-row style="text-align:center;" v-show="bClickBtnCheck&&sheetItem.showRows.length===0">
+      <div>
+        <el-button size="small" type="primary" @click="handleClickImportCurrentData">导入当前数据</el-button>
+      </div>
+    </el-row>
+
+    <el-dialog
+      width="30%"
+      :title="innerDlgTitle"
+      :close-on-click-modal="false"
+      class="standard-data-dialog"
+      :visible.sync="innerVisible"
+      v-dialogDrag
+      top="30vh"
+      append-to-body
+      :modal="false"
+    >
+      <div v-if=" currentErrorField.filterName === 'exceedLen'">
+        <div>
+          <div style="font-size: 13px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+          <el-input size="mini" v-model="input" placeholder="请输入内容"></el-input>
+        </div>
+      </div>
+      <div v-else-if=" currentErrorField.filterName === 'notNum'">
+        <div>
+          <div style="font-size: 13px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+          <el-input size="mini" type="number" v-model="input" placeholder="请输入数字"></el-input>
+        </div>
+      </div>
+      <div v-else-if=" currentErrorField.filterName === 'notDate'">
+        <div>
+          <div style="font-size: 13px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+          <el-input size="mini" type="datetime" v-model="input" placeholder="请输入内容"></el-input>
+        </div>
+      </div>
+      <el-row style="margin-top:20px;text-align:center;">
+        <el-button type="primary" size="small">提交修改</el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -82,194 +114,82 @@ export default {
   props: ["sheetItem", "activeName"],
   data() {
     return {
+      input: "",
+      currentErrorField: {},
+      innerVisible: false,
+      innerDlgTitle: "",
+      bClickBtnCheck: false,
       pageSize: 30,
-      checkedNumber: true,
-      checkedLength: true,
-      checkedNull: false, // 不显示，感觉没用
-      checkedDate: true,
-      defaultProps: {
-        children: "children",
-        label: "label",
-      },
-      treeData: [
-        { id: "exceedLen", label: "字符过长", children: [] },
-        { id: "notNum", label: "非数值", children: [] },
-        { id: "notDate", label: "非日期格式", children: [] },
-      ],
+      filterList: ["exceedLen", "notNum", "notDate"],
     };
   },
   computed: {
     ...mapState("CaseDetail", ["caseDetail"]),
     ...mapState("DataCollection", ["exampleDataList"]),
   },
+  mounted() {},
   methods: {
+    handleClickImportCurrentData() {},
+    handleCheckChange(node, Checked, childrenChecked) {
+      console.log(node, Checked, childrenChecked);
+    },
     handleNodeClick(data) {
       console.log(data);
     },
     // 数据检查 1,字符串,2,小数,3整数,,4,日期,5,通话时长(没有用)
     async handleClickCheckData() {
-      for (let index = 0; index < this.treeData.length; index++) {
-        this.treeData[index].children = [];
-      }
+      this.bClickBtnCheck = true; // 标记是否点击了当前页面的检测按钮
       const { ajid } = this.caseDetail;
       const { headers, tableName } = this.sheetItem;
-
-      let checkedKeys = this.$refs.tree.getCheckedKeys();
-      let errorRows = [];
-
-      for (let item of headers) {
-        if (
-          checkedKeys.find((el) => {
-            return el === "exceedLen";
-          })
-        ) {
-          if (item.fieldtype === 1) {
-            // 检查字符串长度
-            let obj = await dataImport.QueryFieldExceedLengthCount(
-              ajid,
-              tableName,
-              item.fieldename,
-              item.fieldlength
-            );
-            console.log("QueryFieldExceedLengthCount", obj);
-            if (obj.success && obj.count > 0) {
-              if (
-                this.treeData[0].children.findIndex((el) => {
-                  return el.id === item.fieldename;
-                }) === -1
-              ) {
-                this.treeData[0].children.push({
-                  id: item.fieldename,
-                  label: item.fieldcname,
-                });
-                checkedKeys.push(item.fieldename);
-                let temp = await dataImport.QueryFieldExceedLengthRows(
-                  ajid,
-                  tableName,
-                  item.fieldename,
-                  item.fieldlength
-                );
-                if (temp.success) errorRows = errorRows.concat(temp.rows);
-              }
-            } else if (!obj.success) {
-              this.$notify.error({
-                title: "错误",
-                message: obj.msg,
-              });
-            }
-          }
-        }
-        if (
-          checkedKeys.find((el) => {
-            return el === "notNum";
-          })
-        ) {
-          if (item.fieldtype === 2 || item.fieldtype === 3) {
-            let obj = await dataImport.QueryFieldNotNumberCount(
-              ajid,
-              tableName,
-              item.fieldename
-            );
-            console.log("QueryFieldIsNumber", obj);
-            if (obj.success && obj.count > 0) {
-              if (
-                this.treeData[1].children.findIndex((el) => {
-                  return el.id === item.fieldename;
-                }) === -1
-              ) {
-                this.treeData[1].children.push({
-                  id: item.fieldename,
-                  label: item.fieldcname,
-                });
-                checkedKeys.push(item.fieldename);
-                let temp = await dataImport.QueryFieldNotNumberRows(
-                  ajid,
-                  tableName,
-                  item.fieldename
-                );
-                if (temp.success) errorRows = errorRows.concat(temp.rows);
-              }
-            } else if (!obj.success) {
-              this.$notify.error({
-                title: "错误",
-                message: obj.msg,
-              });
-            }
-          }
-        }
-        if (
-          checkedKeys.find((el) => {
-            return el === "notDate";
-          })
-        ) {
-          if (item.fieldtype === 4 || item.fieldtype === 6) {
-            let obj = await dataImport.QueryFieldNotDateCount(
-              ajid,
-              tableName,
-              item.fieldename
-            );
-            console.log("QueryFieldNotDateCount", obj);
-            if (obj.success && obj.count > 0) {
-              if (
-                this.treeData[2].children.findIndex((el) => {
-                  return el.id === item.fieldename;
-                }) === -1
-              ) {
-                this.treeData[2].children.push({
-                  id: item.fieldename,
-                  label: item.fieldcname,
-                });
-                checkedKeys.push(item.fieldename);
-                let temp = await dataImport.QueryFieldNotDateRows(
-                  ajid,
-                  tableName,
-                  item.fieldename
-                );
-                if (temp.success) errorRows = errorRows.concat(temp.rows);
-              }
-            } else if (!obj.success) {
-              this.$notify.error({
-                title: "错误",
-                message: obj.msg,
-              });
-            }
-          }
-        }
-        if (this.checkedNull) {
-        }
-      }
-      console.log(errorRows);
-      if (errorRows.length > 0) {
-        await this.$store.commit("DataCollection/MODIFY_SHOW_DATA_LIMIT", {
-          sheetIndex: this.activeName,
-          rows: errorRows,
-        });
-      }
-
-      this.$refs.tree.setCheckedKeys(checkedKeys);
-      console.log(checkedKeys);
+      await this.$store.dispatch("DataCollection/QueryTableData", {
+        ajid,
+        sheetIndex: this.activeName,
+        tableName,
+        matchedFields: this.sheetItem.matchedFields,
+        index: 0,
+        filterList: this.filterList,
+        limit: this.pageSize,
+        headers,
+      });
     },
-    // 数据批量修改
-    handleClickBatchModify() {},
-    // 数据批量删除
-    handleClickBatchDelete() {},
+    handleClickBtnGroup(item) {
+      console.log(item);
+      this.innerVisible = true;
+      this.currentErrorField = item;
+      this.innerDlgTitle = item.fieldcname;
+      switch (item.filterName) {
+        case "exceedLen":
+          this.innerDlgTitle += ` - 长度超过了${item.fieldlength}位的限制长度`;
+          break;
+        case "notNum":
+          this.innerDlgTitle += " - 当前列的数据不是数字类型";
+          break;
+        case "notDate":
+          this.innerDlgTitle += " - 当前列的数据不是日期类型";
+          break;
+      }
+    },
     handleClickTab(index) {
       console.log(index);
     },
+    // 需要根据查询过滤条件进行
     async handleCurrentChange(val) {
-      let _this = this;
       console.log(`当前页: ${val}`);
       let tableName = this.sheetItem.tableName;
       let ajid = this.caseDetail.ajid;
-      let offset = (val - 1) * _this.pageSize;
+      let offset = (val - 1) * this.pageSize;
       let matchedFields = this.sheetItem.matchedFields;
+      let filterList = this.bClickBtnCheck ? this.filterList : [];
+      let headers = this.sheetItem.headers;
       await this.$store.dispatch("DataCollection/QueryTableData", {
         ajid,
         sheetIndex: this.activeName,
         tableName,
         matchedFields,
         index: offset,
-        limit: _this.pageSize,
+        filterList,
+        limit: this.pageSize,
+        headers,
       });
     },
   },
