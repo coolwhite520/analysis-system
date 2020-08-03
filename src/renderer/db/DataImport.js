@@ -394,4 +394,42 @@ export default {
       return { success: false, msg: e.message };
     }
   },
+  // 从临时表导入到真实表，需要考虑数据类型啊。。。。
+  importDataFromTempTableToRealTable: async function(
+    ajid,
+    tempTableName,
+    tableName,
+    mbdm,
+    publicFields,
+    matchedFields,
+    externFields,
+    callback
+  ) {
+    try {
+      // 先查询所有数据
+      await cases.SwitchDefaultCase();
+      // 查询字段的数据类型
+
+      let sqlFieldType = `select  DISTINCT fieldename, fieldtype::int from st_data_template_field 
+      where mbdm='${mbdm}' and fieldename in (${matchedFields.map((el) => {
+        return `'${el}'`;
+      })});`;
+      let res = await db.query(sqlFieldType);
+
+      let fields = [];
+      if (tempTableName.startsWith("gas_bank_records")) {
+        fields = ["ajid", "sjlyid", "yhjymxid"].concat(matchedFields);
+      }
+      await cases.SwitchCase(ajid);
+      let sql = `select ${fields} from ${tempTableName}`;
+      console.log(sql);
+      res = await db.query(sql);
+      for (let row of res.rows) {
+        let values = [];
+        for (let k in row) {
+        }
+        let insertSql = `insert into ${tableName} (${fields}) values ()`;
+      }
+    } catch (e) {}
+  },
 };

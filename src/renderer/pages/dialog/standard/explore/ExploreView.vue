@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div
+    v-loading="isDataLoading"
+    :element-loading-text="loadingText"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <el-row>
       <div style="float:right;">
         <el-button
@@ -50,7 +55,7 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row v-show="bClickBtnCheck&&sheetItem.showRows.length > 0">
+    <el-row v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length > 0">
       <div style="font-size:12px;">
         <span style="color:red;">存在错误数据列：</span>
         <el-button-group>
@@ -66,9 +71,16 @@
         <el-button type="danger" size="mini" @click="handleClickDeleteAllErrorRows">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
       </div>
     </el-row>
-    <el-row style="text-align:center;" v-show="bClickBtnCheck&&sheetItem.showRows.length===0">
+    <el-row
+      v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length===0"
+      style="text-align:center;"
+    >
+      <div style="font-size:10px;color: green;margin-bottom:5px;">当前数据已经没有错误，可以进行导入操作了，请点击下面的按钮。</div>
       <div>
         <el-button size="small" type="primary" @click="handleClickImportCurrentData">导入当前数据</el-button>
+      </div>
+      <div v-show="currentPercentage > 0">
+        <el-progress :percentage="currentPercentage"></el-progress>
       </div>
     </el-row>
 
@@ -132,6 +144,9 @@ export default {
   props: ["sheetItem", "activeName"],
   data() {
     return {
+      loadingText: "正在进行数据检测，请稍后...",
+      currentPercentage: 0,
+      isDataLoading: false,
       input: "",
       currentErrorField: {},
       innerVisible: false,
@@ -157,27 +172,27 @@ export default {
           tableName,
           errorField.rownums
         );
-        if (result.success) {
-          await this.$store.dispatch("DataCollection/QueryTableData", {
-            ajid,
-            sheetIndex: this.activeName,
-            tableName,
-            matchedFields: this.sheetItem.matchedFields,
-            index: 0,
-            filterList: this.filterList,
-            limit: this.pageSize,
-            headers,
-          });
-          this.innerVisible = false;
-        } else {
+        if (!result.success) {
           findError = true;
           this.$notify.error({
             title: "错误",
             message: `数据删除错误, ${result.msg}`,
           });
+          break;
         }
       }
       if (!findError) {
+        await this.$store.dispatch("DataCollection/QueryTableData", {
+          ajid,
+          sheetIndex: this.activeName,
+          tableName,
+          matchedFields: this.sheetItem.matchedFields,
+          index: 0,
+          filterList: this.filterList,
+          limit: this.pageSize,
+          headers,
+        });
+        this.innerVisible = false;
         this.$notify({
           title: "成功",
           message: `数据删除成功！`,
@@ -226,7 +241,10 @@ export default {
         });
       }
     },
-    handleClickImportCurrentData() {},
+    handleClickImportCurrentData() {
+      this.loadingText = "正在进行数据导入，请稍后...";
+      this.isDataLoading = true;
+    },
     handleCheckChange(node, Checked, childrenChecked) {
       console.log(node, Checked, childrenChecked);
     },
@@ -235,6 +253,7 @@ export default {
     },
     // 数据检查 1,字符串,2,小数,3整数,,4,日期,5,通话时长(没有用)
     async handleClickCheckData() {
+      this.isDataLoading = true;
       this.bClickBtnCheck = true; // 标记是否点击了当前页面的检测按钮
       const { ajid } = this.caseDetail;
       const { headers, tableName } = this.sheetItem;
@@ -248,6 +267,7 @@ export default {
         limit: this.pageSize,
         headers,
       });
+      this.isDataLoading = false;
     },
     handleClickBtnGroup(item) {
       console.log(item);
