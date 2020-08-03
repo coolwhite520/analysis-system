@@ -364,4 +364,34 @@ export default {
       return { success: false, msg: e.message };
     }
   },
+  // 更新错误的数据
+  updateErrorRows: async function(ajid, tableName, field, newValue, rownums) {
+    try {
+      await cases.SwitchCase(ajid);
+      rownums = rownums.map((el) => {
+        return `'${el}'`;
+      });
+      let sql = `update ${tableName} set ${field} = '${newValue}' where rownum in (${rownums})`;
+      console.log(sql);
+      const res = await db.query(sql);
+      return { success: true };
+    } catch (e) {
+      return { success: false, msg: e.message };
+    }
+  },
+  // delete错误的数据
+  deleteErrorRows: async function(ajid, tableName, rownums) {
+    try {
+      await cases.SwitchCase(ajid);
+      rownums = rownums.map((el) => {
+        return `'${el}'`;
+      });
+      let sql = `delete from ${tableName} where rownum in (${rownums})`;
+      console.log(sql);
+      const res = await db.query(sql);
+      return { success: true };
+    } catch (e) {
+      return { success: false, msg: e.message };
+    }
+  },
 };

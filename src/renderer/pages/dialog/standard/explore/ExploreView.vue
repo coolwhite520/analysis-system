@@ -63,7 +63,7 @@
             @click="handleClickBtnGroup(item)"
           >{{item.fieldcname}}</el-button>
         </el-button-group>&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
-        <el-button type="danger" size="mini">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
+        <el-button type="danger" size="mini" @click="handleClickDeleteAllErrorRows">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
       </div>
     </el-row>
     <el-row style="text-align:center;" v-show="bClickBtnCheck&&sheetItem.showRows.length===0">
@@ -83,26 +83,44 @@
       append-to-body
       :modal="false"
     >
-      <div v-if=" currentErrorField.filterName === 'exceedLen'">
-        <div>
-          <div style="font-size: 13px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-          <el-input size="mini" v-model="input" placeholder="请输入内容"></el-input>
-        </div>
-      </div>
-      <div v-else-if=" currentErrorField.filterName === 'notNum'">
-        <div>
-          <div style="font-size: 13px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-          <el-input size="mini" type="number" v-model="input" placeholder="请输入数字"></el-input>
-        </div>
-      </div>
-      <div v-else-if=" currentErrorField.filterName === 'notDate'">
-        <div>
-          <div style="font-size: 13px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-          <el-input size="mini" type="datetime" v-model="input" placeholder="请输入内容"></el-input>
-        </div>
-      </div>
-      <el-row style="margin-top:20px;text-align:center;">
-        <el-button type="primary" size="small">提交修改</el-button>
+      <el-row>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="22">
+          <div v-if=" currentErrorField.filterName === 'exceedLen'">
+            <div>
+              <div style="margin-bottom:10px;">长度超过了{{item.fieldlength}}位的限制长度`</div>
+              <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+              <el-input size="mini" v-model="input" placeholder="请输入内容"></el-input>
+            </div>
+          </div>
+          <div v-else-if=" currentErrorField.filterName === 'notNum'">
+            <div>
+              <div style="margin-bottom:10px;">当前列的数据不是数字类型</div>
+              <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+              <el-input size="mini" type="number" v-model="input" placeholder="请输入数字"></el-input>
+            </div>
+          </div>
+          <div v-else-if=" currentErrorField.filterName === 'notDate'">
+            <div>
+              <div style="margin-bottom:10px;">当前列的数据不是日期类型</div>
+              <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+              <!-- <el-input size="mini" type="datetime" v-model="input" placeholder="请输入内容"></el-input>
+              -->
+              <el-date-picker
+                :editable="false"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="date"
+                placeholder="选择立案日期"
+                v-model="input"
+                style="width: 100%;"
+              ></el-date-picker>
+            </div>
+          </div>
+          <el-row style="margin-top:20px;text-align:center;">
+            <el-button type="primary" @click="handleClickSubmitModify">提交修改</el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
       </el-row>
     </el-dialog>
   </div>
@@ -129,6 +147,85 @@ export default {
   },
   mounted() {},
   methods: {
+    async handleClickDeleteAllErrorRows() {
+      const { ajid } = this.caseDetail;
+      const { headers, tableName, errorFields } = this.sheetItem;
+      let findError = false;
+      for (let errorField of errorFields) {
+        let result = await dataImport.deleteErrorRows(
+          ajid,
+          tableName,
+          errorField.rownums
+        );
+        if (result.success) {
+          await this.$store.dispatch("DataCollection/QueryTableData", {
+            ajid,
+            sheetIndex: this.activeName,
+            tableName,
+            matchedFields: this.sheetItem.matchedFields,
+            index: 0,
+            filterList: this.filterList,
+            limit: this.pageSize,
+            headers,
+          });
+          this.innerVisible = false;
+        } else {
+          findError = true;
+          this.$notify.error({
+            title: "错误",
+            message: `数据删除错误, ${result.msg}`,
+          });
+        }
+      }
+      if (!findError) {
+        this.$notify({
+          title: "成功",
+          message: `数据删除成功！`,
+          type: "success",
+        });
+      }
+    },
+    async handleClickSubmitModify() {
+      if (this.input.length > 0) {
+        const { ajid } = this.caseDetail;
+        const { headers, tableName } = this.sheetItem;
+        let result = await dataImport.updateErrorRows(
+          ajid,
+          tableName,
+          this.currentErrorField.fieldename,
+          this.input,
+          this.currentErrorField.rownums
+        );
+        if (result.success) {
+          this.$notify({
+            title: "成功",
+            message: `数据更新成功！`,
+            type: "success",
+          });
+          await this.$store.dispatch("DataCollection/QueryTableData", {
+            ajid,
+            sheetIndex: this.activeName,
+            tableName,
+            matchedFields: this.sheetItem.matchedFields,
+            index: 0,
+            filterList: this.filterList,
+            limit: this.pageSize,
+            headers,
+          });
+          this.innerVisible = false;
+        } else {
+          this.$notify.error({
+            title: "错误",
+            message: `数据更新错误, ${result.msg}`,
+          });
+        }
+      } else {
+        this.$notify.error({
+          title: "错误",
+          message: `输入框为空，请输入。`,
+        });
+      }
+    },
     handleClickImportCurrentData() {},
     handleCheckChange(node, Checked, childrenChecked) {
       console.log(node, Checked, childrenChecked);
@@ -154,20 +251,10 @@ export default {
     },
     handleClickBtnGroup(item) {
       console.log(item);
+      this.input = "";
       this.innerVisible = true;
       this.currentErrorField = item;
       this.innerDlgTitle = item.fieldcname;
-      switch (item.filterName) {
-        case "exceedLen":
-          this.innerDlgTitle += ` - 长度超过了${item.fieldlength}位的限制长度`;
-          break;
-        case "notNum":
-          this.innerDlgTitle += " - 当前列的数据不是数字类型";
-          break;
-        case "notDate":
-          this.innerDlgTitle += " - 当前列的数据不是日期类型";
-          break;
-      }
     },
     handleClickTab(index) {
       console.log(index);
