@@ -16,6 +16,10 @@ const mutations = {
   CLEAR_CSV_DATA_LIST(state) {
     state.exampleDataList.splice(0);
   },
+  // 删除某条数据
+  DELETE_DATA_LIST_BY_INDEX(state, index) {
+    state.exampleDataList.splice(index, 1);
+  },
   // 根据传递的索引修改最佳匹配的模版
   MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, bestMatchTemplate }) {
     state.exampleDataList[index].bestMatchTemplate = bestMatchTemplate;

@@ -1,140 +1,145 @@
 <template>
-  <div
-    v-loading="isDataLoading"
-    :element-loading-text="loadingText"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-  >
-    <el-row>
-      <div style="float:right;">
-        <el-button
-          size="small"
-          type="primary"
-          @click="handleClickCheckData"
-        >&nbsp;&nbsp;一键智能数据检查&nbsp;&nbsp;</el-button>
-      </div>
-    </el-row>
-    <el-row style="margin-top:10px;">
-      <el-col :span="24">
-        <el-table
-          :cell-style="{padding:'0px'}"
-          style="width: 100%;"
-          :data="sheetItem.showRows"
-          size="mini"
-          stripe
-          border
-          height="300"
-        >
-          <!-- <el-table-column type="index" width="50" fixed label="编号"></el-table-column> -->
-          <el-table-column
-            show-overflow-tooltip
-            v-for="(header, index) in sheetItem.headers"
-            :label="header.fieldcname"
-            :key="index"
-          >
-            <template slot-scope="scope">
-              <div
-                :style="{color: scope.row[index].error?'red': 'gray'}"
-              >{{ scope.row[index].value}}</div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-row>
-          <div
-            style="float:left;margin-top:10px;font-size:10px;"
-          >每页显示{{pageSize}}条，当前页面条目数量：{{sheetItem.showRows.length}}条</div>
-          <div style="float:right;margin-top:10px;">
-            <el-pagination
-              small
-              layout="prev, pager, next"
-              :page-size="pageSize"
-              :total="sheetItem.rowSum"
-              @current-change="handleCurrentChange"
-            ></el-pagination>
-          </div>
-        </el-row>
-      </el-col>
-    </el-row>
-    <el-row v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length > 0">
-      <div style="font-size:12px;">
-        <span style="color:red;">存在错误数据列：</span>
-        <el-button-group>
-          <el-button
-            v-for="item in sheetItem.errorFields"
-            :key="item.fieldename"
-            round
-            type="primary"
-            size="mini"
-            @click="handleClickBtnGroup(item)"
-          >{{item.fieldcname}}</el-button>
-        </el-button-group>&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
-        <el-button type="danger" size="mini" @click="handleClickDeleteAllErrorRows">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
-      </div>
-    </el-row>
-    <el-row
-      v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length===0"
-      style="text-align:center;"
+  <div>
+    <div
+      v-loading="isDataLoading"
+      :element-loading-text="loadingText"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
     >
-      <div style="font-size:10px;color: green;margin-bottom:5px;">当前数据已经没有错误，可以进行导入操作了，请点击下面的按钮。</div>
-      <div>
-        <el-button size="small" type="primary" @click="handleClickImportCurrentData">导入当前数据</el-button>
-      </div>
+      <el-row>
+        <div style="float:right;">
+          <el-button
+            size="small"
+            type="primary"
+            @click="handleClickCheckData"
+          >&nbsp;&nbsp;一键智能数据检查&nbsp;&nbsp;</el-button>
+        </div>
+      </el-row>
+      <el-row style="margin-top:10px;">
+        <el-col :span="24">
+          <el-table
+            :cell-style="{padding:'0px'}"
+            style="width: 100%;"
+            :data="sheetItem.showRows"
+            size="mini"
+            stripe
+            border
+            height="300"
+          >
+            <!-- <el-table-column type="index" width="50" fixed label="编号"></el-table-column> -->
+            <el-table-column
+              show-overflow-tooltip
+              v-for="(header, index) in sheetItem.headers"
+              :label="header.fieldcname"
+              :key="index"
+            >
+              <template slot-scope="scope">
+                <div
+                  :style="{color: scope.row[index].error?'red': 'gray'}"
+                >{{ scope.row[index].value}}</div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-row>
+            <div
+              style="float:left;margin-top:10px;font-size:10px;"
+            >每页显示{{pageSize}}条，当前页面条目数量：{{sheetItem.showRows.length}}条</div>
+            <div style="float:right;margin-top:10px;">
+              <el-pagination
+                small
+                layout="prev, pager, next"
+                :page-size="pageSize"
+                :total="sheetItem.rowSum"
+                @current-change="handleCurrentChange"
+              ></el-pagination>
+            </div>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length > 0">
+        <div style="font-size:12px;">
+          <span style="color:red;">存在错误数据列：</span>
+          <el-button-group>
+            <el-button
+              v-for="item in sheetItem.errorFields"
+              :key="item.fieldename"
+              round
+              type="primary"
+              size="mini"
+              @click="handleClickBtnGroup(item)"
+            >{{item.fieldcname}}</el-button>
+          </el-button-group>&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
+          <el-button type="danger" size="mini" @click="handleClickDeleteAllErrorRows">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
+        </div>
+      </el-row>
+      <el-row
+        v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length===0"
+        style="text-align:center;"
+      >
+        <div style="font-size:10px;color: green;margin-bottom:5px;">当前数据已经没有错误，可以进行导入操作了，请点击下面的按钮。</div>
+        <div>
+          <el-button size="small" type="primary" @click="handleClickImportCurrentData">导入当前数据</el-button>
+        </div>
+      </el-row>
+    </div>
+    <el-row>
       <div v-show="currentPercentage > 0">
         <el-progress :percentage="currentPercentage"></el-progress>
       </div>
     </el-row>
-
-    <el-dialog
-      width="30%"
-      :title="innerDlgTitle"
-      :close-on-click-modal="false"
-      class="standard-data-dialog"
-      :visible.sync="innerVisible"
-      v-dialogDrag
-      top="30vh"
-      append-to-body
-      :modal="false"
-    >
-      <el-row>
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22">
-          <div v-if=" currentErrorField.filterName === 'exceedLen'">
-            <div>
-              <div style="margin-bottom:10px;">长度超过了{{item.fieldlength}}位的限制长度`</div>
-              <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-              <el-input size="mini" v-model="input" placeholder="请输入内容"></el-input>
+    <div>
+      <el-dialog
+        width="30%"
+        :title="innerDlgTitle"
+        :close-on-click-modal="false"
+        class="standard-data-dialog"
+        :visible.sync="innerVisible"
+        v-dialogDrag
+        top="30vh"
+        append-to-body
+        :modal="false"
+      >
+        <el-row>
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="22">
+            <div v-if=" currentErrorField.filterName === 'exceedLen'">
+              <div>
+                <div style="margin-bottom:10px;">长度超过了{{item.fieldlength}}位的限制长度`</div>
+                <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+                <el-input size="mini" v-model="input" placeholder="请输入内容"></el-input>
+              </div>
             </div>
-          </div>
-          <div v-else-if=" currentErrorField.filterName === 'notNum'">
-            <div>
-              <div style="margin-bottom:10px;">当前列的数据不是数字类型</div>
-              <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-              <el-input size="mini" type="number" v-model="input" placeholder="请输入数字"></el-input>
+            <div v-else-if=" currentErrorField.filterName === 'notNum'">
+              <div>
+                <div style="margin-bottom:10px;">当前列的数据不是数字类型</div>
+                <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+                <el-input size="mini" type="number" v-model="input" placeholder="请输入数字"></el-input>
+              </div>
             </div>
-          </div>
-          <div v-else-if=" currentErrorField.filterName === 'notDate'">
-            <div>
-              <div style="margin-bottom:10px;">当前列的数据不是日期类型</div>
-              <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-              <!-- <el-input size="mini" type="datetime" v-model="input" placeholder="请输入内容"></el-input>
-              -->
-              <el-date-picker
-                :editable="false"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="date"
-                placeholder="选择立案日期"
-                v-model="input"
-                style="width: 100%;"
-              ></el-date-picker>
+            <div v-else-if=" currentErrorField.filterName === 'notDate'">
+              <div>
+                <div style="margin-bottom:10px;">当前列的数据不是日期类型</div>
+                <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+                <!-- <el-input size="mini" type="datetime" v-model="input" placeholder="请输入内容"></el-input>
+                -->
+                <el-date-picker
+                  :editable="false"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  type="date"
+                  placeholder="选择立案日期"
+                  v-model="input"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </div>
             </div>
-          </div>
-          <el-row style="margin-top:20px;text-align:center;">
-            <el-button type="primary" @click="handleClickSubmitModify">提交修改</el-button>
-          </el-row>
-        </el-col>
-        <el-col :span="1">&nbsp;</el-col>
-      </el-row>
-    </el-dialog>
+            <el-row style="margin-top:20px;text-align:center;">
+              <el-button type="primary" @click="handleClickSubmitModify">提交修改</el-button>
+            </el-row>
+          </el-col>
+          <el-col :span="1">&nbsp;</el-col>
+        </el-row>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -241,9 +246,66 @@ export default {
         });
       }
     },
-    handleClickImportCurrentData() {
+    async handleClickImportCurrentData() {
+      let _this = this;
       this.loadingText = "正在进行数据导入，请稍后...";
       this.isDataLoading = true;
+      const { ajid } = this.caseDetail;
+      let {
+        headers,
+        tableName,
+        tablecname,
+        bestMatchTemplate,
+        matchedFields,
+        publicFields,
+        externFields,
+      } = this.sheetItem;
+      if (tablecname.endsWith("_source")) {
+        tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
+      }
+      await dataImport.importDataFromTempTableToRealTable(
+        ajid,
+        tableName,
+        tablecname,
+        bestMatchTemplate,
+        publicFields,
+        matchedFields,
+        externFields,
+        async ({ sumRow, index }) => {
+          console.log({ sumRow, index });
+          _this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
+          console.log(_this.currentPercentage);
+
+          if (_this.currentPercentage === 100) {
+            _this.bClickBtnCheck = false;
+            _this.currentPercentage = 0;
+            _this.isDataLoading = false;
+            // 导入成功，清理examplelist
+            _this.$notify({
+              title: "成功",
+              message: `数据插入成功`,
+              type: "success",
+            });
+            await _this.$store.commit(
+              "DataCollection/DELETE_DATA_LIST_BY_INDEX",
+              _this.activeName
+            );
+            await _this.$store.dispatch("CaseDetail/queryCaseDataCenter", ajid);
+
+            if (_this.exampleDataList.length === 0) {
+              _this.$store.commit(
+                "DialogPopWnd/SET_STANDARDDATAVISIBLE",
+                false
+              );
+              _this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
+              _this.$store.commit(
+                "DialogPopWnd/SET_STANDARDVIEW",
+                "begin-import"
+              );
+            }
+          }
+        }
+      );
     },
     handleCheckChange(node, Checked, childrenChecked) {
       console.log(node, Checked, childrenChecked);

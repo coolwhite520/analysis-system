@@ -221,6 +221,15 @@ export default {
               : [];
             let mbmc = tabletemp[0].mbmc;
 
+            let publicFields = [
+              "batch",
+              "sjlylx",
+              "crrq",
+              "ajid",
+              "sjlyid",
+              "rownum",
+            ];
+            data.publicFields = publicFields;
             data.tablecname = tablecname;
             data.mbmc = mbmc;
             data.externFields = externFields;
@@ -319,6 +328,7 @@ export default {
           bestMatchTemplate,
           tablecname,
           mbmc,
+          publicFields,
           externFields,
           caseDetail,
           fileName,
@@ -337,15 +347,6 @@ export default {
             fileInsertCols.push(item.fileColName);
           }
         }
-        let publicFields = [
-          "batch",
-          "sjlylx",
-          "crrq",
-          "ajid",
-          "sjlyid",
-          "rownum",
-        ];
-        data.publicFields = publicFields;
         fields = publicFields.concat(fields).concat(externFields);
         fields = fields.map((value) => {
           return value.toLowerCase();
