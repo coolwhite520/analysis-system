@@ -164,6 +164,7 @@ export default {
   computed: {
     ...mapState("CaseDetail", ["caseDetail"]),
     ...mapState("DataCollection", ["exampleDataList"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   mounted() {},
   methods: {
@@ -280,12 +281,7 @@ export default {
             _this.bClickBtnCheck = false;
             _this.currentPercentage = 0;
             _this.isDataLoading = false;
-            // 导入成功，清理examplelist
-            _this.$notify({
-              title: "成功",
-              message: `数据插入成功`,
-              type: "success",
-            });
+
             await _this.$store.commit(
               "DataCollection/DELETE_DATA_LIST_BY_INDEX",
               _this.activeName
@@ -303,6 +299,24 @@ export default {
                 "begin-import"
               );
             }
+            // 更新当前的展示列表中的数据
+            for (let tableData of this.tableDataList) {
+              let { tid, tablecname, dispatchName } = tableData;
+              // 根据tableName获取表的数据
+              await _this.$store.dispatch(dispatchName, {
+                ajid,
+                tid,
+                tablecname,
+                offset: 0,
+                count: 30,
+              });
+            }
+            // 导入成功，清理examplelist
+            _this.$notify({
+              title: "成功",
+              message: `数据插入成功`,
+              type: "success",
+            });
           }
         }
       );

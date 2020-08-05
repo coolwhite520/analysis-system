@@ -31,16 +31,27 @@ export default {
   // ,账号开户银行,账号开户日期,账号开户名称,银行账号,通信地址,联系电话,开户人证件类型,开户人证件号码,开户人国籍,开户联系方式,代理人电话,代理人,,
   QueryBestMatchMbdm: async function(pdm, fileField) {
     await cases.SwitchDefaultCase();
-    let sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
-      st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
-      st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
-    (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
-      (upper(B.tablename)=upper(A.tablecname)  or upper(B.tablename||'_source')=upper(A.tablecname) ) 
-       where pdm='${pdm}'
-       AND tablecname is not null AND tablecname != '' and ishide='0' and     
-      ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
-       ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc   
-`;
+    let sql = "";
+    if (pdm.length > 0) {
+      sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
+        st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
+        st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
+      (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
+        (upper(B.tablename)=upper(A.tablecname)  or upper(B.tablename||'_source')=upper(A.tablecname) ) 
+         where pdm='${pdm}'
+         AND tablecname is not null AND tablecname != '' and ishide='0' and     
+        ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
+         ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
+    } else {
+      sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
+        st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
+        st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
+      (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
+        (upper(B.tablename)=upper(A.tablecname)  or upper(B.tablename||'_source')=upper(A.tablecname) ) 
+         where tablecname is not null AND tablecname != '' and ishide='0' and     
+        ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
+         ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
+    }
     console.log(sql);
     const res = await db.query(sql);
     console.log(res);

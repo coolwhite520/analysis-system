@@ -62,40 +62,42 @@ export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight", "isCollapseLeftBar"]),
     ...mapState("Models", ["existModelsDetailList"]),
-    ...mapGetters("CaseDetail", ["renderTreeControlList", "openeds"])
+    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapGetters("CaseDetail", ["renderTreeControlList", "openeds"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   data() {
     return {
       iconsList: [
         {
           tid: "-100",
-          icon: "&#xe638;"
+          icon: "&#xe638;",
         },
         {
           tid: "0",
-          icon: "&#xe61b;"
+          icon: "&#xe61b;",
         },
         {
           tid: "5",
-          icon: "&#xe70f;"
+          icon: "&#xe70f;",
         },
         {
           tid: "13",
-          icon: "&#xe65f;"
+          icon: "&#xe65f;",
         },
         {
           tid: "17",
-          icon: "&#xe608;"
+          icon: "&#xe608;",
         },
         {
           tid: "25",
-          icon: "&#xe615;"
+          icon: "&#xe615;",
         },
         {
           tid: "50",
-          icon: "&#xe602;"
-        }
-      ]
+          icon: "&#xe602;",
+        },
+      ],
     };
   },
   methods: {
@@ -105,13 +107,99 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-    async handleSelect(parentid, tid) {
-      console.log(parentid, tid);
-      await this.$store.dispatch("Models/getExistModelsList", tid[1]);
+    async handleSelect(parentid, tableTid) {
+      console.log(parentid, tableTid);
+      // 获取右侧的模型数据
+      let tid = tableTid[1];
+      await this.$store.dispatch("Models/getExistModelsList", tid);
       if (this.existModelsDetailList.length > 0) {
         this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", true);
       } else {
         this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", false);
+      }
+      // 获取表结构数据
+      // 根据tid获取表名称
+      let tablecname = "";
+      let tableename = "";
+      for (let item of this.renderTreeControlList) {
+        for (let childItem of item.childrenArr) {
+          if (childItem.tid === tid) {
+            tablecname = childItem.title;
+            tableename = childItem.tablename;
+            break;
+          }
+        }
+      }
+      // 判断是否已经展示了这个页面，如果已经展示了，那么需要进行active
+      for (let tableData of this.tableDataList) {
+        if (tableData.tid === tid) {
+          this.$store.commit("ShowTable/SET_ACTIVEINDEX", tid);
+          return;
+        }
+      }
+      let { ajid } = this.caseDetail;
+      // 根据tableName获取表的数据
+      switch (tid) {
+        case "1": //个人
+          await this.$store.dispatch("ShowTable/showPersonTable", {
+            ajid,
+            tid,
+            tablecname,
+            tableename,
+            offset: 0,
+            count: 30,
+          });
+          break;
+        case "2": // 单位
+          await this.$store.dispatch("ShowTable/showPerson2Table", {
+            ajid,
+            tid,
+            tablecname,
+            tableename,
+            offset: 0,
+            count: 30,
+          });
+          break;
+        case "3":
+          await this.$store.dispatch("ShowTable/showAccountTable", {
+            ajid,
+            tid,
+            tablecname,
+            tableename,
+            offset: 0,
+            count: 30,
+          });
+          break;
+        case "4":
+          await this.$store.dispatch("ShowTable/showBankTable", {
+            ajid,
+            tid,
+            tablecname,
+            tableename,
+            offset: 0,
+            count: 30,
+          });
+          break;
+        case "14":
+          await this.$store.dispatch("ShowTable/showTaxTable", {
+            ajid,
+            tid,
+            tablecname,
+            tableename,
+            offset: 0,
+            count: 30,
+          });
+          break;
+        default:
+          await this.$store.dispatch("ShowTable/showOtherTable", {
+            ajid,
+            tid,
+            tablecname,
+            tableename,
+            offset: 0,
+            count: 30,
+          });
+          break;
       }
     },
     handleClickOpenCollapse() {
@@ -120,8 +208,8 @@ export default {
       } else {
         this.$store.commit("AppPageSwitch/SET_ISCOLLAPSELEFTBAR", true);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

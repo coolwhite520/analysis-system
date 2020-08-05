@@ -2,19 +2,19 @@
   <div class="view-style" :style="{ height: contentViewHeight + 'px'}">
     <el-tabs
       class="el-tabs"
-      v-model="editableTabsValue"
+      v-model="activeIndex"
       type="border-card"
-      editable
-      @edit="handleTabsEdit"
+      closable
+      @tab-remove="removeTab"
     >
       <el-tab-pane
-        :key="item.name"
-        v-for="(item) in editableTabs"
+        :key="item.tid"
+        v-for="(item) in tableDataList"
         :label="item.title"
-        :name="item.name"
+        :name="item.tid"
       >
         <keep-alive>
-          <component :is="item.componentName"></component>
+          <component :is="item.componentName" :tableData="item"></component>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -22,56 +22,47 @@
 </template>
 <script>
 import NoDataView from "./DataCollection/NoDataView";
+import TableDataView from "./DataCollection/TableDataView";
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState("AppPageSwitch", ["contentViewHeight"])
+    ...mapState("AppPageSwitch", ["contentViewHeight"]),
+    ...mapState("ShowTable", ["tableDataList", "activeIndex"]),
+    activeIndex: {
+      get: function () {
+        return this.$store.state.ShowTable.activeIndex;
+      },
+      set: function (newValue) {
+        this.$store.commit("ShowTable/SET_ACTIVEINDEX", newValue);
+      },
+    },
   },
   components: {
-    "no-data-view": NoDataView
+    "no-data-view": NoDataView,
+    "table-data-view": TableDataView,
   },
+  mounted() {},
   data() {
     return {
-      editableTabsValue: "1",
-      editableTabs: [
-        {
-          title: "标准采集",
-          name: "1",
-          componentName: "no-data-view"
-        }
-      ],
-      tabIndex: 3
+      // editableTabs: [
+      //   {
+      //     title: "标准采集",
+      //     tid: "9999",
+      //     componentName: "no-data-view",
+      //   },
+      // ],
+      // tabIndex: 3,
     };
   },
   methods: {
-    handleTabsEdit(targetName, action) {
-      if (action === "add") {
-        let newTabName = ++this.tabIndex + "";
-        this.editableTabs.push({
-          title: "New Tab",
-          name: newTabName,
-          componentName: "no-data-view"
-        });
-        this.editableTabsValue = newTabName;
-      }
-      if (action === "remove") {
-        let tabs = this.editableTabs;
-        let activeName = this.editableTabsValue;
-        if (activeName === targetName) {
-          tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-              let nextTab = tabs[index + 1] || tabs[index - 1];
-              if (nextTab) {
-                activeName = nextTab.name;
-              }
-            }
-          });
-        }
-        this.editableTabsValue = activeName;
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-      }
-    }
-  }
+    removeTab(targetName) {
+      console.log(targetName, this.activeIndex);
+      this.$store.commit(
+        "ShowTable/REMOVE_TABLE_DATA_FROM_LIST",
+        String(targetName)
+      );
+    },
+  },
 };
 </script>
 <style scoped>

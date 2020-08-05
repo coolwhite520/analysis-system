@@ -21,24 +21,24 @@ import TabVisible from "./child/TabVisible";
 export default {
   data() {
     return {
-      activeName: "first"
+      activeName: "first",
     };
   },
   components: {
     "tab-data": TabData,
-    "tab-visible": TabVisible
+    "tab-visible": TabVisible,
   },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .tab-bar {
-  height: 143px;
+  height: 120px;
   box-sizing: border-box;
 }
 </style>

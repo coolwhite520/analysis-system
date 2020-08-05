@@ -240,6 +240,7 @@ export default {
           "CaseDetail/deleteCase",
           parseInt(this.caseDetail.ajid)
         );
+        this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
       } else {
         this.$message({
           type: "info",

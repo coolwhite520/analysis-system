@@ -1,5 +1,5 @@
 <template>
-  <div>hahah</div>
+  <div></div>
 </template>
 <script>
 import csvReader from "@/utils/reader/csvReader";

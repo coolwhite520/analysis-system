@@ -392,5 +392,5 @@ export default {
     return res.rows.length > 0 ? res.rows[0].model_mids : "";
   },
 
-  // 根据模型库获取
+  // 根据模型库获取标名称
 };

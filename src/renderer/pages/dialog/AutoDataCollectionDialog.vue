@@ -74,15 +74,19 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  mounted() {
+    let _this = this;
+  },
+
   computed: {
-    ...mapState("DialogPopWnd", ["autoDataVisible"])
+    ...mapState("DialogPopWnd", ["autoDataVisible"]),
   },
   data() {
     return {
       currentStepIndex: 1,
       value: 0,
       options: [],
-      tableData: []
+      tableData: [],
     };
   },
   components: {},
@@ -91,7 +95,31 @@ export default {
       this.currentStepIndex = 1;
       this.$store.commit("DialogPopWnd/SET_AUTODATAVISIBAL", false);
     },
-    handleClickSelectFile() {
+    async handleClickSelectFile() {
+      let mainWindow = this.$electron.remote.getGlobal("mainWindow");
+      let filePathList = await this.$electron.remote.dialog.showOpenDialogSync(
+        mainWindow,
+        {
+          title: "数据导入",
+          buttonLabel: "打开",
+          filters: [
+            { name: "Files", extensions: ["txt", "csv", "xls", "xlsx"] },
+          ],
+          properties: ["openFile", "multiSelections"],
+        }
+      );
+      console.log(filePathList);
+      if (typeof filePathList === "undefined") return;
+      this.parseFileCount = filePathList.length;
+      if (typeof filePathList !== "undefined") {
+        this.loading = true;
+        this.$electron.ipcRenderer.send("read-all-example-file", {
+          caseDetail: this.caseDetail,
+          batchCount: this.batchCount,
+          filePathList,
+          pdm: "",
+        });
+      }
       this.currentStepIndex++;
     },
     handleClickAnalysis() {
@@ -99,8 +127,8 @@ export default {
     },
     handleClickImportFile() {
       this.currentStepIndex = 1;
-    }
-  }
+    },
+  },
 };
 </script>
 
