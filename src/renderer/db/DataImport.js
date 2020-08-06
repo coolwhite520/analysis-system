@@ -52,11 +52,19 @@ export default {
         ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
          ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
     }
+    let mbdm = "";
     console.log(sql);
     const res = await db.query(sql);
     console.log(res);
     if (res.rows.length > 0) {
-      return res.rows[0].mbdm;
+      mbdm = res.rows[0].mbdm;
+      if (pdm === "") {
+        sql = `select pdm from st_data_template where mbdm='${mbdm}'`;
+        console.log(sql);
+        let ret = await db.query(sql);
+        pdm = ret.rows[0].pdm;
+      }
+      return { mbdm, pdm };
     }
     return "";
   },

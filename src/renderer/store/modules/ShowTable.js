@@ -35,13 +35,37 @@ const mutations = {
       }
     }
   },
-  REMOVE_TABLE_DATA_FROM_LIST(state, tid) {
+  REMOVE_TABLE_DATA_FROM_LIST(state, { tid }) {
+    let rightTid = "";
+    let leftTid = "";
     for (let index = 0; index < state.tableDataList.length; index++) {
+      leftTid = state.tableDataList[index - 1]
+        ? state.tableDataList[index - 1].tid
+        : "";
+      rightTid = state.tableDataList[index + 1]
+        ? state.tableDataList[index + 1].tid
+        : "";
+
       let tableData = state.tableDataList[index];
       if (tableData.tid === tid) {
         console.log("REMOVE_TABLE_DATA_FROM_LIST");
         state.tableDataList.splice(index, 1);
-        return;
+        break;
+      }
+    }
+    if (state.activeIndex === tid) {
+      // 判断是否有右边的表格
+      if (rightTid !== "") state.activeIndex = rightTid;
+      else if (leftTid !== "") state.activeIndex = leftTid;
+    }
+  },
+
+  REMOVE_TABLE_DATAS_FROM_LIST(state, { tids }) {
+    for (let index = state.tableDataList.length - 1; index >= 0; index--) {
+      let tableData = state.tableDataList[index];
+      let tid = tableData.tid;
+      if (tids.includes(tid)) {
+        state.tableDataList.splice(index, 1);
       }
     }
   },
@@ -246,6 +270,34 @@ const actions = {
         componentName: "table-data-view",
         data,
         dispatchName: "ShowTable/showBankTable",
+      });
+    }
+    commit("SET_ACTIVEINDEX", tid);
+  },
+
+  async showModelTable(
+    { commit, state },
+    { ajid, offset, tid, tablecname, count }
+  ) {
+    let data = await showTable.QueryModelTable(ajid, tid, offset, count);
+    console.log(data);
+    // 判断是否add，还是update
+    let bFind = false;
+    for (let tableData of state.tableDataList) {
+      if (tableData.tid === tid) {
+        bFind = true;
+        break;
+      }
+    }
+    if (bFind) {
+      commit("UPDATE_TABLE_DATA", { tid, data });
+    } else {
+      commit("ADD_TABLE_DATA_TO_LIST", {
+        title: tablecname,
+        tid: tid,
+        componentName: "table-data-view",
+        data,
+        dispatchName: "ShowTable/showModelTable",
       });
     }
     commit("SET_ACTIVEINDEX", tid);

@@ -1,6 +1,7 @@
 <template>
   <div v-loading="loading">
     <el-row style="text-align:center;">
+      <span style="font-size:13px;">标准导入：</span>
       <el-button-group>
         <el-button
           size="mini"
@@ -12,6 +13,15 @@
           <span>{{item.mc}}</span>
         </el-button>
       </el-button-group>
+    </el-row>
+    <el-row style="text-align:center;margin-top:20px;">
+      <span style="font-size:13px;">自动导入：</span>
+      <el-tooltip effect="dark" content="可以自动分析文件字段并进行自动匹配" placement="top">
+        <el-button size="mini" @click="handleClickImportData('')">
+          <span class="mybutton iconfont">&#xe620;</span>
+          <span>智能文件导入</span>
+        </el-button>
+      </el-tooltip>
     </el-row>
     <div style="margin-top:20px;" v-show="exampleDataList.length > 0">
       <span style="font-size:16px;">

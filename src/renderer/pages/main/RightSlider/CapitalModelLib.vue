@@ -58,23 +58,50 @@
 import { mapState, mapGetters } from "vuex";
 export default {
   computed: {
+    ...mapState("CaseDetail", ["caseDetail"]),
     ...mapState("MainPageSwitch", ["showRightSliderView"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
-    ...mapGetters("Models", ["renderModelsTreeList"])
+    ...mapGetters("Models", ["renderModelsTreeList"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   data() {
     return {
-      openeds: ["1"]
+      openeds: ["1"],
     };
   },
   methods: {
-    handleSelect(key, keyPath) {
+    async handleSelect(key, keyPath) {
       console.log(key, keyPath);
+      let { ajid } = this.caseDetail;
+      let tid = keyPath[1];
+      let modelname = "";
+      for (let item of this.renderModelsTreeList) {
+        for (let childitem of item.childrenList) {
+          if (tid === String(childitem.mid)) {
+            modelname = childitem.modelname;
+            break;
+          }
+        }
+      }
+      // 判断是否已经展示了这个页面，如果已经展示了，那么需要进行active
+      for (let tableData of this.tableDataList) {
+        if (tableData.tid === tid) {
+          this.$store.commit("ShowTable/SET_ACTIVEINDEX", tid);
+          return;
+        }
+      }
+      await this.$store.dispatch("ShowTable/showModelTable", {
+        ajid,
+        offset: 0,
+        tid,
+        tablecname: modelname,
+        count: 30,
+      });
     },
     handleClickClose() {
       this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", false);
-    }
-  }
+    },
+  },
 };
 </script>
 

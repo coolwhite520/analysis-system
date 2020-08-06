@@ -1,11 +1,12 @@
 import db from "./db";
 import cases from "./Cases";
+import model from "./Models";
 export default {
   // 根据tid获取显示的列名称list
   QueryTableShowCFields: async function(tid) {
     try {
       await cases.SwitchDefaultCase();
-      let sql = `SELECT cname as fieldcname, cfield as fieldename FROM icap_base.layout_table_column
+      let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename FROM icap_base.layout_table_column
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
       console.log(sql);
@@ -437,5 +438,15 @@ WHERE
       console.log(e);
       return { success: false, msg: e.message };
     }
+  },
+  // 执行模型并获取结果集
+  QueryModelTable: async function(ajid, tid, offset, count) {
+    try {
+      await cases.SwitchCase(ajid);
+      let { rows } = await this.QueryTableShowCFields(tid);
+      let headers = rows;
+      await model.excuteModel(ajid, tid);
+      return { success: true, headers, rows: [] };
+    } catch (e) {}
   },
 };

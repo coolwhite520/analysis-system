@@ -83,7 +83,7 @@
       </el-row>
     </div>
     <el-row>
-      <div v-show="currentPercentage > 0">
+      <div v-show="currentPercentage > 0" style="margin-top:20px;">
         <el-progress :percentage="currentPercentage"></el-progress>
       </div>
     </el-row>

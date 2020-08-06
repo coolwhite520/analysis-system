@@ -52,21 +52,20 @@
       </el-row>
 
       <el-table
-        :data="tableData"
+        :data="exampleDataList"
         height="100%"
         border
         style="width: 100%;margin-top: 20px;"
         size="mini"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="序号" width="60"></el-table-column>
-        <el-table-column prop="name" label="文件来源"></el-table-column>
-        <el-table-column prop="address" label="文件名称"></el-table-column>
-        <el-table-column prop="address" label="文件类型"></el-table-column>
-        <el-table-column prop="address" label="状态"></el-table-column>
+        <el-table-column prop="id" label="序号" width="60" type="index"></el-table-column>
+        <el-table-column prop="fileName" label="文件名称"></el-table-column>
+        <el-table-column prop="sheetName" label="表格名称"></el-table-column>
+        <el-table-column prop="mc" label="匹配状态"></el-table-column>
       </el-table>
 
-      <el-progress :text-inside="true" :stroke-width="26" :percentage="70"></el-progress>
+      <el-progress style="margin-top:20px;" :stroke-width="26" :percentage="currentPercentage"></el-progress>
     </el-dialog>
   </div>
 </template>
@@ -80,9 +79,11 @@ export default {
 
   computed: {
     ...mapState("DialogPopWnd", ["autoDataVisible"]),
+    ...mapState("DataCollection", ["exampleDataList"]),
   },
   data() {
     return {
+      currentPercentage: 0,
       currentStepIndex: 1,
       value: 0,
       options: [],

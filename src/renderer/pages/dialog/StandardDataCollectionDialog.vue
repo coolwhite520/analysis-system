@@ -6,7 +6,7 @@
       class="standard-data-dialog"
       :title="title"
       :visible.sync="standardDataVisible"
-      width="80%"
+      width="60%"
       :before-close="handleClose"
       :modal="false"
     >

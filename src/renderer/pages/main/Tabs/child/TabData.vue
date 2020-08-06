@@ -2,7 +2,12 @@
   <div class="TabData">
     <el-row>
       <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
-        <el-dropdown trigger="click" @command="handleCommandDataCollection">
+        <el-button type="text" class="ctrl-button" @click="handleClickDataCollection">
+          <span class="iconfont selfIcont">&#xe6a1;</span>
+          <br />
+          <span class="title-content">数据采集</span>
+        </el-button>
+        <!-- <el-dropdown trigger="click" @command="handleCommandDataCollection">
           <span class="el-dropdown-link">
             <span class="iconfont selfIcont" style="color:#0d233e">&#xe6a1;</span>
             <br />
@@ -14,7 +19,7 @@
             <el-dropdown-item command="a" class="title-content">智能采集</el-dropdown-item>
             <el-dropdown-item command="b" class="title-content">标准采集</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown>-->
       </el-col>
       <el-col :span="1" class="el-col">
         <el-button type="text" class="ctrl-button">
@@ -150,6 +155,14 @@ export default {
     ...mapState("CaseDetail", ["caseDetail"]),
   },
   methods: {
+    async handleClickDataCollection() {
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseDetail.ajid
+      );
+      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+      this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
+    },
     async handleCommandDataCollection(command) {
       await this.$store.dispatch(
         "CaseDetail/queryBatchCount",

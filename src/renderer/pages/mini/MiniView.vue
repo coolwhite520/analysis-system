@@ -159,7 +159,7 @@ export default {
       return value;
     },
     async readExampleFile(e, args) {
-      const { filePathList, pdm, caseDetail, batchCount } = args;
+      let { filePathList, pdm, caseDetail, batchCount } = args;
       let data = {};
       let resultList = [];
       for (let filePathName of filePathList) {
@@ -185,6 +185,20 @@ export default {
           }
           for (let result of resultList) {
             let { fileName, sheetName, fileColsName, ins1, ins2 } = result;
+            // 文件的所有列名称去掉空格
+            fileColsName.forEach((element, index) => {
+              fileColsName[index] = element.trim();
+            });
+            data.fileColsName = fileColsName;
+            let queryResult = await dataImport.QueryBestMatchMbdm(
+              pdm,
+              fileColsName
+            );
+            let bestMatchTemplate = queryResult.mbdm;
+            // 说明是自动匹配
+            if (pdm === "") {
+              pdm = queryResult.pdm;
+            }
             data.mc = DataTypeList.find((ele) => {
               return ele.pdm === pdm;
             }).mc;
@@ -195,21 +209,16 @@ export default {
             data.filePathName = filePathName;
             data.caseDetail = caseDetail;
             data.batchCount = batchCount;
-            // 文件的所有列名称去掉空格
-            fileColsName.forEach((element, index) => {
-              fileColsName[index] = element.trim();
-            });
 
-            data.fileColsName = fileColsName;
             // 根据点击的按钮获取对应的模版表
             let matchTemplates = await dataImport.QueryMatchTableListByPdm(pdm);
             data.matchTemplates = matchTemplates;
 
-            // 最佳匹配的模版（表）
-            let bestMatchTemplate = await dataImport.QueryBestMatchMbdm(
-              pdm,
-              fileColsName
-            );
+            // // 最佳匹配的模版（表）
+            // let bestMatchTemplate = await dataImport.QueryBestMatchMbdm(
+            //   pdm,
+            //   fileColsName
+            // );
             // 获取tablecname
             let tabletemp = data.matchTemplates.filter((value) => {
               return value.mbdm === bestMatchTemplate;
