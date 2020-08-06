@@ -440,12 +440,12 @@ WHERE
     }
   },
   // 执行模型并获取结果集
-  QueryModelTable: async function(ajid, tid, offset, count) {
+  QueryModelTable: async function(ajid, tid, pgsql, offset, count) {
     try {
       await cases.SwitchCase(ajid);
       let { rows } = await this.QueryTableShowCFields(tid);
       let headers = rows;
-      await model.excuteModel(ajid, tid);
+
       return { success: true, headers, rows: [] };
     } catch (e) {}
   },

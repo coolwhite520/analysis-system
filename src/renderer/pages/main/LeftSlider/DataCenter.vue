@@ -227,7 +227,8 @@ export default {
 .titleBar {
   height: 40px;
   text-align: center;
-  background-color: #1c222e;
+  /* background-color: #384e6e; */
+  background: radial-gradient(ellipse at bottom, #384e6e 0%, #1b2735 100%);
   color: white;
   padding-top: 10px;
   padding-bottom: 10px;

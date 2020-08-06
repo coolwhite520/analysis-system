@@ -104,7 +104,7 @@
       <el-divider></el-divider>
       <div>
         <span>案件数据：</span>
-        <span>共采集{{"0"}}次</span>
+        <span class="caseContent">共采集{{"0"}}次</span>
         <span>
           <el-button type="text" size="mini" @click="handleClickCollection">采集记录</el-button>
         </span>
@@ -116,12 +116,16 @@
         </span>
       </p>
       <p>
-        待调单任务：{{awaitTaskCount}} 个
+        待调单任务：
+        <span class="caseContent">{{awaitTaskCount}} 个</span>
         <span>
           <el-button type="text" size="mini">查看待调单任务</el-button>
         </span>
       </p>
-      <p>实体数量：{{entityCount}} 个</p>
+      <p>
+        实体数量：
+        <span class="caseContent">{{entityCount}} 个</span>
+      </p>
       <el-divider></el-divider>
       <el-row>
         <el-col :span="8">&nbsp;</el-col>
@@ -242,7 +246,7 @@ export default {
 <style scoped>
 .detailInfo {
   font-size: 15px;
-  border: 2px solid #dddfe5;
+  /* border: 2px solid #dddfe5; */
   border-radius: 15px;
   padding: 20px;
   box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
@@ -253,5 +257,6 @@ export default {
 
 .caseContent {
   color: gray;
+  font-size: 13px;
 }
 </style>

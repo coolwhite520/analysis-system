@@ -36,7 +36,7 @@
     <el-tabs
       class="el-tabs"
       v-model="activeIndex"
-      type="border-card"
+      type="card"
       closable
       @tab-remove="removeTab"
       @contextmenu.prevent.native="openContextMenu($event)"
@@ -47,6 +47,7 @@
         :label="item.title"
         :name="item.tid"
       >
+        <span slot="label" style="font-size:10px;">{{item.title}}</span>
         <keep-alive>
           <component :is="item.componentName" :tableData="item"></component>
         </keep-alive>

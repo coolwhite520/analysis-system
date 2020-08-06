@@ -10,7 +10,8 @@
         <div class="iconfont" style="color: #ddd;font-size:30px;margin-bottom:-30px;">&#xe65e;</div>
         <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
           <el-row>
-            <b style="color:#1B2735">编号：{{caseItem.ajbh}}</b>
+            编号：
+            <b style="color:#384e6e;font-size:12px;">{{caseItem.ajbh}}</b>
           </el-row>
           <el-row>
             <el-col :span="12">
@@ -85,13 +86,13 @@ export default {
 
 <style scoped>
 .cardStyle {
-  border: 2px solid #1b2735;
+  border: 2px solid #384e6e;
   border-radius: 15px;
   color: #808080;
 }
 
 .cardStyle:hover {
-  box-shadow: #1b2735 10px 10px 30px 5px;
+  box-shadow: #384e6e 10px 10px 30px 5px;
 }
 .time {
   font-size: 13px;
@@ -104,10 +105,10 @@ export default {
   text-overflow: ellipsis;
 }
 .caseName {
-  color: #1b2735;
-  font-size: 18px;
+  color: #384e6e;
+  font-size: 20px;
   font-weight: bold;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   text-align: center;
   margin: 10px;
   white-space: nowrap;

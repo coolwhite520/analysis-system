@@ -80,6 +80,7 @@ export default {
         "show-exist-case-view"
       );
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "home-page");
+      this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
     },
     handleClickMin() {
       this.$electron.ipcRenderer.send("window-min");
@@ -93,9 +94,11 @@ export default {
 
 <style scoped>
 .titleBar {
+  /* 384e6e */
+  /* #1b2735 这个是深色 */
   color: #fff;
   height: 100px;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
   -webkit-app-region: drag;
   -webkit-user-select: none;
   position: fixed;

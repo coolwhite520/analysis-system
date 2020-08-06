@@ -128,10 +128,14 @@
         <el-input type="textarea" v-model="ruleForm.zhaq"></el-input>
       </el-form-item>
 
-      <el-form-item>
-        <el-button type="primary" round @click="submitForm('ruleForm')">立即创建</el-button>
-        <el-button @click="resetForm('ruleForm')" round>取消</el-button>
-      </el-form-item>
+      <el-row>
+        <el-col :span="8">&nbsp;</el-col>
+        <el-col style="text-align:center;">
+          <el-button type="primary" round @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button @click="resetForm('ruleForm')" round>&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</el-button>
+        </el-col>
+        <el-col :span="8">&nbsp;</el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -328,7 +332,8 @@ export default {
 
 <style scoped>
 .newcaseForm {
-  border: 2px solid #dddfe5;
+  color: #384e6e;
+  /* border: 2px solid #dddfe5; */
   border-radius: 15px;
   padding: 20px;
   box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5);

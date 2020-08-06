@@ -7,19 +7,6 @@
           <br />
           <span class="title-content">数据采集</span>
         </el-button>
-        <!-- <el-dropdown trigger="click" @command="handleCommandDataCollection">
-          <span class="el-dropdown-link">
-            <span class="iconfont selfIcont" style="color:#0d233e">&#xe6a1;</span>
-            <br />
-            <span class="title-content" style="color:#0d233e">数据采集</span>
-            <br />
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="a" class="title-content">智能采集</el-dropdown-item>
-            <el-dropdown-item command="b" class="title-content">标准采集</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>-->
       </el-col>
       <el-col :span="1" class="el-col">
         <el-button type="text" class="ctrl-button">
@@ -190,7 +177,8 @@ export default {
   text-align: center;
 }
 .selfIcont {
-  font-size: 30px;
+  font-size: 18px;
+  color: rgb(24, 84, 95);
 }
 .title-content {
   font-size: 10px;

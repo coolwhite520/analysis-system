@@ -59,12 +59,13 @@ export default {
     async handleCurrentChange(val) {
       let { ajid } = this.caseDetail;
       let offset = (val - 1) * this.pageSize;
-      let { tid, tablecname, dispatchName } = this.tableData;
+      let { tid, tablecname, dispatchName, pgsql } = this.tableData;
       console.log(this.tableData);
       // 根据tableName获取表的数据
       await this.$store.dispatch(dispatchName, {
         ajid,
         tid,
+        pgsql,
         tablecname,
         offset: offset,
         count: this.pageSize,

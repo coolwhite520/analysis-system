@@ -6,7 +6,7 @@
       class="standard-data-dialog"
       :title="title"
       :visible.sync="standardDataVisible"
-      width="60%"
+      width="65%"
       :before-close="handleClose"
       :modal="false"
     >
@@ -46,7 +46,27 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
+.standard-data-dialog .el-dialog {
+  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
+  border: 1px solid gray;
+}
+.standard-data-dialog .el-dialog__header {
+  background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
+}
+.standard-data-dialog .el-dialog__title {
+  color: white;
+}
+.auto-data-dialog .el-dialog {
+  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
+  border: 1px solid gray;
+}
+.auto-data-dialog .el-dialog__header {
+  background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
+}
+.auto-data-dialog .el-dialog__title {
+  color: white;
+}
 </style>
 
 

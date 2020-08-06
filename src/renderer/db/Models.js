@@ -29,9 +29,4 @@ export default {
       return null;
     }
   },
-
-  excuteModel: async function(ajid, tid) {
-    try {
-    } catch (e) {}
-  },
 };

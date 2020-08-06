@@ -17,7 +17,7 @@
           enter-active-class="animated slideInRight"
           leave-active-class="animated slideOutRight"
         >
-          <right-slider v-show="showRightSliderView"></right-slider>
+          <right-slider v-if="showRightSliderView"></right-slider>
         </transition>
       </el-col>
     </el-row>

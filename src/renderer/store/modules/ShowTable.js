@@ -35,6 +35,18 @@ const mutations = {
       }
     }
   },
+
+  SET_PGSQL(state, { tid, pgsql }) {
+    for (let index = 0; index < state.tableDataList.length; index++) {
+      let tableData = state.tableDataList[index];
+      if (tableData.tid === tid) {
+        state.tableDataList[index].pgsql = pgsql;
+        Vue.set(state.tableDataList[index], "pgsql", pgsql);
+        return;
+      }
+    }
+  },
+
   REMOVE_TABLE_DATA_FROM_LIST(state, { tid }) {
     let rightTid = "";
     let leftTid = "";
@@ -277,14 +289,14 @@ const actions = {
 
   async showModelTable(
     { commit, state },
-    { ajid, offset, tid, tablecname, count }
+    { ajid, offset, tid, tablecname, pgsql, count }
   ) {
-    let data = await showTable.QueryModelTable(ajid, tid, offset, count);
+    let data = await showTable.QueryModelTable(ajid, tid, pgsql, offset, count);
     console.log(data);
     // 判断是否add，还是update
     let bFind = false;
     for (let tableData of state.tableDataList) {
-      if (tableData.tid === tid) {
+      if (tableData.tid === tid && tableData.pgsql === pgsql) {
         bFind = true;
         break;
       }
@@ -300,6 +312,7 @@ const actions = {
         dispatchName: "ShowTable/showModelTable",
       });
     }
+    commit("SET_PGSQL", { tid, pgsql });
     commit("SET_ACTIVEINDEX", tid);
   },
 };
