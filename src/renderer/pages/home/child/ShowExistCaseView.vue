@@ -10,7 +10,7 @@
         <div class="iconfont" style="color: #ddd;font-size:30px;margin-bottom:-30px;">&#xe65e;</div>
         <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
           <el-row>
-            <b>编号：{{caseItem.ajbh}}</b>
+            <b style="color:#1B2735">编号：{{caseItem.ajbh}}</b>
           </el-row>
           <el-row>
             <el-col :span="12">
@@ -87,7 +87,6 @@ export default {
 .cardStyle {
   border: 2px solid #1b2735;
   border-radius: 15px;
-  /* background: radial-gradient(ellipse at bottom, #1b2735 0%, #9fb6cd 100%); */
   color: #808080;
 }
 
@@ -105,10 +104,10 @@ export default {
   text-overflow: ellipsis;
 }
 .caseName {
+  color: #1b2735;
   font-size: 18px;
   font-weight: bold;
   border-radius: 10px;
-  color: #1b2735;
   text-align: center;
   margin: 10px;
   white-space: nowrap;

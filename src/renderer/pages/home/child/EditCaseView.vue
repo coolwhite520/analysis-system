@@ -124,13 +124,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button
-          class="cardStyle"
-          type="primary"
-          round
-          style="background-color: #1b2735;color: white;"
-          @click="submitForm('ruleForm')"
-        >保存</el-button>
+        <el-button type="primary" round @click="submitForm('ruleForm')">保存</el-button>
         <el-button @click="resetForm('ruleForm')" round>取消</el-button>
       </el-form-item>
     </el-form>
@@ -147,9 +141,9 @@ export default {
       "city_list",
       "town_list",
       "parent_ajid",
-      "saveState"
+      "saveState",
     ]),
-    ...mapState("CaseDetail", ["caseDetail"])
+    ...mapState("CaseDetail", ["caseDetail"]),
   },
   async mounted() {
     await this.$store.dispatch(
@@ -201,48 +195,58 @@ export default {
         zhaq: "",
         province: 0,
         city: 0,
-        asjfsddxzqhdm: 0
+        asjfsddxzqhdm: 0,
       },
       rules: {
         ajlbArr: [
-          { required: true, message: "请选择案件类别", trigger: "change" }
+          { required: true, message: "请选择案件类别", trigger: "change" },
         ],
         asjfsddxzqhdm: [
-          { required: true, message: "请选择地理位置", trigger: "change" }
+          { required: true, message: "请选择地理位置", trigger: "change" },
         ],
         ajbh: [
           { required: true, message: "请输入案件编号", trigger: "blur" },
-          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+          {
+            min: 6,
+            max: 12,
+            message: "长度在 6 到 12 个字符",
+            trigger: "blur",
+          },
         ],
         ajmc: [
           { required: true, message: "请输入案件名称", trigger: "blur" },
-          { min: 2, max: 12, message: "长度在 2 到 12 个字符", trigger: "blur" }
+          {
+            min: 2,
+            max: 12,
+            message: "长度在 2 到 12 个字符",
+            trigger: "blur",
+          },
         ],
         jjsj: [
           {
             type: "string",
             required: true,
             message: "请选择案件发生日期",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         cjsj: [
           {
             type: "string",
             required: true,
             message: "选择立案日期",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         zcjddm: [
-          { required: true, message: "请选择案件状态", trigger: "change" }
+          { required: true, message: "请选择案件状态", trigger: "change" },
         ],
 
         jyaq: [
-          { required: true, message: "请填写案情简要说明", trigger: "blur" }
+          { required: true, message: "请填写案情简要说明", trigger: "blur" },
         ],
-        zhaq: [{ required: true, message: "请填写综述案情", trigger: "blur" }]
-      }
+        zhaq: [{ required: true, message: "请填写综述案情", trigger: "blur" }],
+      },
     };
   },
   watch: {
@@ -258,16 +262,16 @@ export default {
         this.$notify({
           title: "成功",
           message: `编辑案件[${this.caseDetail.ajmc}]并保存成功!`,
-          type: "success"
+          type: "success",
         });
       } else if (newState === "failed") {
         this.loading = false;
         this.$notify.error({
           title: "错误",
-          message: `编辑案件[${this.caseDetail.ajmc}]失败!`
+          message: `编辑案件[${this.caseDetail.ajmc}]失败!`,
         });
       }
-    }
+    },
   },
   methods: {
     handleChangeProvince(province_id) {
@@ -312,7 +316,7 @@ export default {
     },
     submitForm(formName) {
       let _this = this;
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           let obj = {
             ajid: parseInt(_this.caseDetail.ajid),
@@ -332,7 +336,7 @@ export default {
             cjr: "00000000",
             sfsc: 0,
             sfbdwkj: 1,
-            sjl: 1
+            sjl: 1,
           };
           _this.loading = true;
           console.log(obj);
@@ -349,8 +353,8 @@ export default {
         "HomePageSwitch/SET_VIEW_NAME",
         "show-exist-case-view"
       );
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -360,8 +364,5 @@ export default {
   border-radius: 15px;
   padding: 20px;
   box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
-}
-.cardStyle:hover {
-  box-shadow: #1b2735 10px 10px 30px 5px;
 }
 </style>

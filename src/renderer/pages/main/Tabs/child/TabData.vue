@@ -2,16 +2,11 @@
   <div class="TabData">
     <el-row>
       <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
-        <!-- <el-button type="text" @click="handleClickStandardData">
-          <span class="iconfont selfIcont">&#xe6a1;</span>
-          <br />
-          <span class="title-content">数据采集</span>
-        </el-button>-->
         <el-dropdown trigger="click" @command="handleCommandDataCollection">
           <span class="el-dropdown-link">
-            <span class="iconfont selfIcont">&#xe6a1;</span>
+            <span class="iconfont selfIcont" style="color:#0d233e">&#xe6a1;</span>
             <br />
-            <span class="title-content">数据采集</span>
+            <span class="title-content" style="color:#0d233e">数据采集</span>
             <br />
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
@@ -183,11 +178,9 @@ export default {
 }
 .selfIcont {
   font-size: 30px;
-  color: #1b2735;
 }
 .title-content {
   font-size: 10px;
-  color: #1b2735;
 }
 .ctrl-button {
   padding-top: 4px;

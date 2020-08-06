@@ -8,14 +8,16 @@
         <el-col :span="6">&nbsp;</el-col>
         <el-col :span="12" style="text-align: center;">
           <el-button
-            style="width:30%; background-color: #1b2735;color: white;"
-            class="iconfont sysBtnStyle"
+            style="width:30%;"
+            class="iconfont"
+            type="primary"
             @click="handleClickNewCase"
             round
           >&#xe6a3; 新增案件</el-button>
           <el-button
-            class="iconfont sysBtnStyle"
-            style="width:30%;background-color: #1b2735;color: white;"
+            style="width:30%;"
+            class="iconfont"
+            type="primary"
             @click="handleClickImportCase"
             round
           >&#xe61a; 导入案件</el-button>
@@ -60,22 +62,22 @@ import EditCaseView from "./child/EditCaseView";
 export default {
   data() {
     return {
-      inputAnjianName: ""
+      inputAnjianName: "",
     };
   },
   watch: {
     inputAnjianName(newValue, oldValue) {
       this.$store.commit("Cases/SET_INPUT_VALUE", newValue);
-    }
+    },
   },
   computed: {
-    ...mapState("HomePageSwitch", ["currentViewName"])
+    ...mapState("HomePageSwitch", ["currentViewName"]),
   },
   components: {
     "new-case-view": NewCaseView,
     "show-exist-case-view": ShowExistCaseView,
     "case-detail-view": CaseDetailView,
-    "edit-case-view": EditCaseView
+    "edit-case-view": EditCaseView,
   },
   methods: {
     handleClickNewCase() {
@@ -90,19 +92,19 @@ export default {
           filters: [
             {
               name: "Custom File Type",
-              extensions: ["cvs", "txt", "xls", "xlsx"]
-            }
-          ]
+              extensions: ["cvs", "txt", "xls", "xlsx"],
+            },
+          ],
         })
-        .then(result => {
+        .then((result) => {
           console.log(result.canceled);
           console.log(result.filePaths);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

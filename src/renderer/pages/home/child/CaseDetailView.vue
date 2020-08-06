@@ -9,22 +9,14 @@
             type="primary"
             icon="el-icon-edit"
             size="mini"
-            style="background-color: #1b2735;color: white;"
             @click="handleClickEdit"
           >编辑</el-button>
-          <el-button
-            round
-            type="primary"
-            icon="el-icon-share"
-            size="mini"
-            style="background-color: #1b2735;color: white;"
-          >导出</el-button>
+          <el-button round type="primary" icon="el-icon-share" size="mini">导出</el-button>
           <el-button
             round
             type="primary"
             icon="el-icon-delete"
             size="mini"
-            style="background-color: #1b2735;color: white;"
             @click="handleClickDelCase"
           >删除</el-button>
         </el-button-group>
@@ -104,7 +96,6 @@
             round
             type="primary"
             size="mini"
-            style="background-color: #1b2735;color: white;"
             @click="handleClickBtnGroup(item.tablename)"
           >{{item.title}}</el-button>
         </el-button-group>
@@ -137,18 +128,8 @@
         <el-col :span="8">
           <div>
             <div style="text-align:center;">
-              <el-button
-                class="button"
-                type="primary"
-                style="background-color: #1b2735;color: white;"
-                round
-              >开始分析</el-button>
-              <el-button
-                round
-                class="button"
-                type="primary"
-                style="background-color: #1b2735;color: white;"
-              >分析报告</el-button>
+              <el-button class="button" type="primary" round>开始分析</el-button>
+              <el-button round class="button" type="primary">分析报告</el-button>
             </div>
           </div>
         </el-col>
@@ -269,9 +250,7 @@ export default {
 .baseInfo {
   margin-bottom: 60px;
 }
-.button:hover {
-  box-shadow: #1b2735 10px 10px 30px 5px;
-}
+
 .caseContent {
   color: gray;
 }

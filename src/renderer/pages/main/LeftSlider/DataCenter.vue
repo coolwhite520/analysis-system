@@ -6,7 +6,7 @@
     </el-radio-group>-->
     <div class="titleBar">
       <b>
-        <span class="iconfont" style="font-size:20px;">&#xe612;</span>
+        <span class="iconfont" style="font-size:18px;">&#xe612;</span>
         <span v-show="!isCollapseLeftBar">数据中心</span>
       </b>
     </div>
@@ -47,7 +47,7 @@
           @click="handleClickOpenCollapse"
           size="medium"
           type="text"
-          style="color:#1a222e;"
+          style="color:#0d233e"
         >{{ isCollapseLeftBar ? '&#xe626;':'&#xe668;'}}</el-button>
       </div>
     </div>
@@ -227,7 +227,7 @@ export default {
 .titleBar {
   height: 40px;
   text-align: center;
-  background-color: #1a222e;
+  background-color: #1c222e;
   color: white;
   padding-top: 10px;
   padding-bottom: 10px;
