@@ -2,9 +2,7 @@
   <div>
     <title-bar></title-bar>
     <div style="height:100px;"></div>
-    <keep-alive>
-      <component :is="currentViewName"></component>
-    </keep-alive>
+    <component :is="currentViewName"></component>
     <div style="height:20px;"></div>
     <div class="state-bar">&nbsp;</div>
   </div>
@@ -20,11 +18,11 @@ export default {
   components: {
     "title-bar": TitleBar,
     "home-page": HomePage,
-    "main-page": MainPage
+    "main-page": MainPage,
   },
   computed: {
-    ...mapState("AppPageSwitch", ["currentViewName"])
-  }
+    ...mapState("AppPageSwitch", ["currentViewName"]),
+  },
 };
 </script>
 

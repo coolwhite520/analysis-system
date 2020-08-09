@@ -62,7 +62,7 @@ import aes from "@/utils/aes";
 export default {
   mounted() {},
   computed: {
-    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("MainPageSwitch", ["showRightSliderView", "showChildModel"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapGetters("Models", ["renderModelsTreeList"]),
@@ -82,17 +82,19 @@ export default {
       this.position = this.$refs.fatherModel.getBoundingClientRect();
       this.$store.commit("MainPageSwitch/SHOW_CHILD_MODEL");
       console.log(key, keyPath);
-      let { ajid } = this.caseDetail;
+      let { ajid } = this.caseBase;
       let tid = keyPath[1];
       let modelname = "";
       let pgsqlTemplate = "";
       let model = {};
+      let orderby = "";
       for (let item of this.renderModelsTreeList) {
         for (let childitem of item.childrenList) {
           if (tid === String(childitem.mid)) {
             modelname = childitem.modelname;
             pgsqlTemplate = childitem.gpsqltemplate;
             model = childitem;
+            orderby = childitem.orderby ? childitem.orderby : "";
             break;
           }
         }
@@ -124,6 +126,7 @@ export default {
         offset: 0,
         tid,
         pgsql,
+        orderby,
         tablecname: modelname,
         count: 30,
       });

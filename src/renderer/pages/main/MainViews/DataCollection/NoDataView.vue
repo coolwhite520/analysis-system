@@ -7,11 +7,11 @@
           <el-button
             class="iconfont"
             type="text"
-            style="font-size:100px;color:#181e29;"
+            style="font-size:100px;"
             @click="handleClickImportData"
           >
             &#xe6a1;
-            <div style="text-align:center; font-size:20px;color:#181e29;">当前案件无数据，请进行数据采集</div>
+            <div style="text-align:center; font-size:20px;">当前案件无数据，请进行数据采集</div>
           </el-button>
         </div>
       </el-col>
@@ -23,7 +23,7 @@
 export default {
   methods: {
     handleClickImportData() {
-      this.$store.commit("DialogPopWnd/SET_AUTODATAVISIBAL", true);
+      this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
   },
 };

@@ -68,7 +68,7 @@ export default {
       for (let index = 0; index < _this.exampleDataList.length; index++) {
         let item = _this.exampleDataList[index];
         let tableName = item.tableName;
-        let ajid = item.caseDetail.ajid;
+        let ajid = item.caseBase.ajid;
         let matchedFields = item.matchedFields;
         let headers = item.headers;
         await this.$store.dispatch("DataCollection/QueryTableData", {

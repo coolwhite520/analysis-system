@@ -341,6 +341,7 @@ export default {
        ) 
        select* from n as lt 
        LEFT JOIN icap_base.layout_menu_model AS lm  ON lt.tid =lm.menu_tid and lm.product_code='200' ORDER BY tid,title`;
+    let dataSum = 0;
     const res = await db.query(sql);
     let list = [];
     for (let item of res.rows) {
@@ -363,6 +364,9 @@ export default {
           sql = `select count(1)::int count from ${item.tablename} where 1=1`;
         }
         const res = await db.query(sql);
+        if (res.rows.length > 0) {
+          dataSum += res.rows[0].count;
+        }
         obj = {
           parentid: item.parentid,
           count: res.rows[0].count,
@@ -380,7 +384,7 @@ export default {
       }
       list.push(obj);
     }
-    return list;
+    return { list, dataSum };
   },
 
   // 查询当前tid对应的模型库model_mids , product_code（不同产品进行区分模型）

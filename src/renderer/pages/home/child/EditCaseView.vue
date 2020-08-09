@@ -149,25 +149,25 @@ export default {
       "parent_ajid",
       "saveState",
     ]),
-    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapState("CaseDetail", ["caseBase"]),
   },
   async mounted() {
     await this.$store.dispatch(
       "EditCase/getParentAjidByAjid",
-      this.caseDetail.ajlb
+      this.caseBase.ajlb
     );
     this.ruleForm.ajlbArr = [];
     if (this.parent_ajid !== 0) {
       this.ruleForm.ajlbArr.push(this.parent_ajid);
     }
-    this.ruleForm.ajlbArr.push(parseInt(this.caseDetail.ajlb));
-    this.ruleForm.ajbh = this.caseDetail.ajbh;
-    this.ruleForm.ajmc = this.caseDetail.ajmc;
-    this.ruleForm.jjsj = this.caseDetail.jjsj;
-    this.ruleForm.cjsj = this.caseDetail.cjsj;
+    this.ruleForm.ajlbArr.push(parseInt(this.caseBase.ajlb));
+    this.ruleForm.ajbh = this.caseBase.ajbh;
+    this.ruleForm.ajmc = this.caseBase.ajmc;
+    this.ruleForm.jjsj = this.caseBase.jjsj;
+    this.ruleForm.cjsj = this.caseBase.cjsj;
 
-    this.ruleForm.zcjddm = parseInt(this.caseDetail.zcjddm);
-    let townInt = parseInt(this.caseDetail.asjfsddxzqhdm);
+    this.ruleForm.zcjddm = parseInt(this.caseBase.zcjddm);
+    let townInt = parseInt(this.caseBase.asjfsddxzqhdm);
     let cityInt = parseInt(townInt / 100) * 100;
     let provinceInt = parseInt(cityInt / 10000) * 10000;
     this.ruleForm.province = provinceInt;
@@ -176,12 +176,12 @@ export default {
     await this.$store.dispatch("EditCase/getTownlist", cityInt);
     this.ruleForm.asjfsddxzqhdm = townInt;
 
-    this.ruleForm.jyaq = this.caseDetail.jyaq;
-    this.ruleForm.zhaq = this.caseDetail.zhaq;
-    this.asjfsddxzqmc = this.caseDetail.asjfsddxzqmc;
-    this.ajlb = parseInt(this.caseDetail.ajlb);
-    this.ajlbmc = this.caseDetail.ajlbmc;
-    this.zcjdmc = this.caseDetail.zcjdmc;
+    this.ruleForm.jyaq = this.caseBase.jyaq;
+    this.ruleForm.zhaq = this.caseBase.zhaq;
+    this.asjfsddxzqmc = this.caseBase.asjfsddxzqmc;
+    this.ajlb = parseInt(this.caseBase.ajlb);
+    this.ajlbmc = this.caseBase.ajlbmc;
+    this.zcjdmc = this.caseBase.zcjdmc;
   },
   data() {
     return {
@@ -267,14 +267,14 @@ export default {
         this.$store.commit("EditCase/SET_SAVE_STATE", "failed");
         this.$notify({
           title: "成功",
-          message: `编辑案件[${this.caseDetail.ajmc}]并保存成功!`,
+          message: `编辑案件[${this.caseBase.ajmc}]并保存成功!`,
           type: "success",
         });
       } else if (newState === "failed") {
         this.loading = false;
         this.$notify.error({
           title: "错误",
-          message: `编辑案件[${this.caseDetail.ajmc}]失败!`,
+          message: `编辑案件[${this.caseBase.ajmc}]失败!`,
         });
       }
     },
@@ -325,7 +325,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let obj = {
-            ajid: parseInt(_this.caseDetail.ajid),
+            ajid: parseInt(_this.caseBase.ajid),
             ajbh: _this.ruleForm.ajbh,
             ajmc: _this.ruleForm.ajmc,
             ajlb: _this.ajlb,

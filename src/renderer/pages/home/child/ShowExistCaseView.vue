@@ -61,20 +61,20 @@ export default {
     ...mapState("AppPageSwitch", ["currentViewName"]),
   },
   methods: {
-    handleClickCase(caseDetail) {
-      console.log(caseDetail);
+    handleClickCase(caseBase) {
+      console.log(caseBase);
       // 把数据提交
-      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseDetail);
+      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },
-    async handleClickAnalysis(caseDetail) {
+    async handleClickAnalysis(caseBase) {
       window.event.stopPropagation();
-      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseDetail);
+      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       await this.$store.dispatch(
         "CaseDetail/queryCaseDataCenter",
-        caseDetail.ajid
+        caseBase.ajid
       );
-      await this.$store.dispatch("CaseDetail/queryBatchCount", caseDetail.ajid);
+      await this.$store.dispatch("CaseDetail/queryBatchCount", caseBase.ajid);
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
     },
   },

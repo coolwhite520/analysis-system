@@ -159,7 +159,7 @@ export default {
       return value;
     },
     async readExampleFile(e, args) {
-      let { filePathList, pdm, caseDetail, batchCount } = args;
+      let { filePathList, pdm, caseBase, batchCount } = args;
       let data = {};
       let resultList = [];
       for (let filePathName of filePathList) {
@@ -207,7 +207,7 @@ export default {
             data.sheetName = sheetName;
             data.fileName = fileName;
             data.filePathName = filePathName;
-            data.caseDetail = caseDetail;
+            data.caseBase = caseBase;
             data.batchCount = batchCount;
 
             // 根据点击的按钮获取对应的模版表
@@ -339,11 +339,11 @@ export default {
           mbmc,
           publicFields,
           externFields,
-          caseDetail,
+          caseBase,
           fileName,
           sheetName,
         } = data;
-        let { ajid, ajmc } = caseDetail;
+        let { ajid, ajmc } = caseBase;
         let filepath = path.dirname(data.filePathName);
         let fileExt = path.extname(fileName).slice(1);
 
@@ -467,6 +467,7 @@ export default {
     },
   },
   mounted() {
+    console.log("miniview mounted...............");
     this.softVersion = this.$electron.remote.getGlobal("softVersion");
     this.$electron.ipcRenderer.on("read-all-file", this.readAllFile);
     this.$electron.ipcRenderer.on(

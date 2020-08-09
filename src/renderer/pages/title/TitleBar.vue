@@ -73,8 +73,22 @@ export default {
     handleDbClick() {
       this.$electron.ipcRenderer.send("move-to-zero");
     },
-    handleClickGotoHome() {
+    async handleClickGotoHome() {
       console.log("click");
+      // 判断当前页面
+      if (this.currentViewName === "main-page") {
+        let result = await this.$electron.remote.dialog.showMessageBox(null, {
+          type: "warning",
+          title: "注意",
+          message: `返回主页面将丢失当前的操作数据，您确定这样做吗？`,
+          buttons: ["确定", "取消"],
+          defaultId: 0,
+        });
+        console.log(result);
+        if (result.response !== 0) {
+          return;
+        }
+      }
       this.$store.commit(
         "HomePageSwitch/SET_VIEW_NAME",
         "show-exist-case-view"

@@ -1228,9 +1228,9 @@ export default {
             obj.fieldtype === 4 ||
             obj.fieldtype === 6
           ) {
-            values.push(`'${row[k]}'`);
+            values.push(`'${row[k].trimEnd()}'`);
           } else {
-            let temValue = row[k] ? row[k] : 0;
+            let temValue = row[k].trimEnd() ? row[k].trimEnd() : 0;
             values.push(`${temValue}`);
           }
         }

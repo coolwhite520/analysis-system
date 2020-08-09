@@ -8,17 +8,26 @@
       height="600"
       stripe
       border
+      @sort-change="sortChange"
     >
       <el-table-column fixed type="index" width="50" label="编号"></el-table-column>
       <el-table-column
-        v-for="(header, index) in tableData.data.headers"
+        v-for="(header) in tableData.data.headers"
         :label="header.fieldcname"
-        :key="index"
+        :key="header.cid"
         show-overflow-tooltip
-        sortable
+        :prop="header.fieldename"
+        sortable="custom"
       >
         <template slot-scope="scope">
-          <div>{{ scope.row[index].value}}</div>
+          <div v-if="header.showrightbtn_type">
+            <el-button
+              type="text"
+              size="mini"
+              style="color:#2e69b7"
+            >{{ scope.row[header.fieldename].value }}</el-button>
+          </div>
+          <div v-else>{{ scope.row[header.fieldename].value }}</div>
         </template>
       </el-table-column>
     </el-table>
@@ -46,7 +55,7 @@ export default {
     console.log(this.tableData);
   },
   computed: {
-    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
   },
   props: ["tableData"],
@@ -56,8 +65,30 @@ export default {
     };
   },
   methods: {
+    sortChange(column) {
+      console.log(column);
+      //获取字段名称和排序类型
+      let fieldName = column.prop;
+      let sortingType = column.order;
+      let newTableData = JSON.parse(JSON.stringify(this.tableData));
+      if (sortingType == "descending") {
+        newTableData.data.rows = newTableData.data.rows.sort((a, b) => {
+          console.log(a[fieldName], b[fieldName]);
+          return b[fieldName].value > a[fieldName].value;
+        });
+      } else {
+        newTableData.data.rows = newTableData.data.rows.sort((a, b) => {
+          return a[fieldName].value > b[fieldName].value;
+        });
+      }
+      console.log(newTableData.data.rows);
+      this.$store.commit("ShowTable/UPDATE_TABLE_DATA", {
+        tid: this.tableData.tid,
+        data: newTableData,
+      });
+    },
     async handleCurrentChange(val) {
-      let { ajid } = this.caseDetail;
+      let { ajid } = this.caseBase;
       let offset = (val - 1) * this.pageSize;
       let { tid, tablecname, dispatchName, pgsql } = this.tableData;
       console.log(this.tableData);

@@ -62,7 +62,7 @@ export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight", "isCollapseLeftBar"]),
     ...mapState("Models", ["existModelsDetailList"]),
-    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapState("CaseDetail", ["caseBase"]),
     ...mapGetters("CaseDetail", ["renderTreeControlList", "openeds"]),
     ...mapState("ShowTable", ["tableDataList"]),
   },
@@ -137,7 +137,7 @@ export default {
           return;
         }
       }
-      let { ajid } = this.caseDetail;
+      let { ajid } = this.caseBase;
       // 根据tableName获取表的数据
       switch (tid) {
         case "1": //个人

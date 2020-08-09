@@ -115,7 +115,7 @@ export default {
       if (typeof filePathList !== "undefined") {
         this.loading = true;
         this.$electron.ipcRenderer.send("read-all-example-file", {
-          caseDetail: this.caseDetail,
+          caseBase: this.caseBase,
           batchCount: this.batchCount,
           filePathList,
           pdm: "",
@@ -134,15 +134,5 @@ export default {
 </script>
 
 <style>
-.auto-data-dialog .el-dialog {
-  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
-  border: 1px solid gray;
-}
-.auto-data-dialog .el-dialog__header {
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-}
-.auto-data-dialog .el-dialog__title {
-  color: white;
-}
 </style>
 

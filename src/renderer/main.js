@@ -18,6 +18,23 @@ Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
+//去除字符串尾部空格或指定字符
+String.prototype.trimEnd = function(c) {
+  if (c == null || c == "") {
+    let str = this;
+    let rg = /s/;
+    let i = str.length;
+    while (rg.test(str.charAt(--i)));
+    return str.slice(0, i + 1);
+  } else {
+    let str = this;
+    let rg = new RegExp(c);
+    let i = str.length;
+    while (rg.test(str.charAt(--i)));
+    return str.slice(0, i + 1);
+  }
+};
+
 Date.prototype.Format = function(fmt) {
   //author: meizz
   var o = {

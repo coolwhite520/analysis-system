@@ -124,8 +124,9 @@
       </el-col>
     </el-row>
     <!-- 智能采集 -->
-    <auto-dialog></auto-dialog>
+    <!-- <auto-dialog></auto-dialog> -->
     <!-- 标准采集 -->
+
     <standard-dialog></standard-dialog>
   </div>
 </template>
@@ -136,33 +137,34 @@ import { mapState } from "vuex";
 export default {
   components: {
     "standard-dialog": StandardDataCollectionDialog,
-    "auto-dialog": AutoDataCollectionDialog,
+    // "auto-dialog": AutoDataCollectionDialog,
   },
   computed: {
-    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapState("CaseDetail", ["caseBase"]),
+    ...mapState("DialogPopWnd", ["standardDataVisible"]),
   },
   methods: {
     async handleClickDataCollection() {
       await this.$store.dispatch(
         "CaseDetail/queryBatchCount",
-        this.caseDetail.ajid
+        this.caseBase.ajid
       );
       await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
-      this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
+      await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
-    async handleCommandDataCollection(command) {
-      await this.$store.dispatch(
-        "CaseDetail/queryBatchCount",
-        this.caseDetail.ajid
-      );
-      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
-      if (command === "a") {
-        console.log(command);
-        this.$store.commit("DialogPopWnd/SET_AUTODATAVISIBAL", true);
-      } else if (command === "b") {
-        this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
-      }
-    },
+    // async handleCommandDataCollection(command) {
+    //   await this.$store.dispatch(
+    //     "CaseDetail/queryBatchCount",
+    //     this.caseBase.ajid
+    //   );
+    //   await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+    //   if (command === "a") {
+    //     console.log(command);
+    //     this.$store.commit("DialogPopWnd/SET_AUTODATAVISIBAL", true);
+    //   } else if (command === "b") {
+    //     this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
+    //   }
+    // },
   },
 };
 </script>

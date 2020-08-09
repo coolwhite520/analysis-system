@@ -1,7 +1,7 @@
 <template>
   <div class="view-style" :style="{ height: contentViewHeight + 'px'}">
     <ul
-      v-show="contextMenuVisible"
+      v-if="contextMenuVisible"
       :style="{position: 'fixed' ,left:left+'px',top:top+'px'}"
       class="contextmenu"
     >
@@ -36,7 +36,7 @@
     <el-tabs
       class="el-tabs"
       v-model="activeIndex"
-      type="card"
+      type="border-card"
       closable
       @tab-remove="removeTab"
       @contextmenu.prevent.native="openContextMenu($event)"
@@ -47,10 +47,10 @@
         :label="item.title"
         :name="item.tid"
       >
-        <span slot="label" style="font-size:10px;">{{item.title}}</span>
-        <keep-alive>
-          <component :is="item.componentName" :tableData="item"></component>
-        </keep-alive>
+        <!-- <span slot="label" style="font-size:10px;">{{item.title}}</span> -->
+        <!-- <keep-alive> -->
+        <component :is="item.componentName" :tableData="item"></component>
+        <!-- </keep-alive> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -61,6 +61,7 @@ import TableDataView from "./DataCollection/TableDataView";
 import { mapState } from "vuex";
 export default {
   computed: {
+    ...mapState("CaseDetail", ["caseBase", "dataSum"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", ["tableDataList", "activeIndex"]),
     activeIndex: {
@@ -85,7 +86,24 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    if (this.dataSum === 0) {
+      this.$store.dispatch("ShowTable/showNoDataPage", {
+        ajid: this.caseBase.ajid,
+        tid: "99999",
+        tablecname: "数据采集",
+      });
+    } else {
+      this.$store.dispatch("ShowTable/showPersonTable", {
+        ajid: this.caseBase.ajid,
+        tid: "1",
+        tablecname: "人员基本信息",
+        tableename: "gas_person",
+        offset: 0,
+        count: 30,
+      });
+    }
+  },
   data() {
     return {
       left: 0,
@@ -108,9 +126,9 @@ export default {
   },
   methods: {
     openContextMenu(e) {
-      console.log(e.clientX, e.clientY);
-      //console.log(e.srcElement);
+      console.log(e.srcElement);
       if (e.srcElement.id) {
+        console.log(e.clientX, e.clientY);
         let currentContextTabId = e.srcElement.id.split("-")[1];
         console.log({ currentContextTabId });
         this.contextMenuVisible = true;

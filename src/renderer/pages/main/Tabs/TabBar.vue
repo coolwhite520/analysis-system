@@ -6,7 +6,7 @@
           <tab-data></tab-data>
         </el-tab-pane>
         <el-tab-pane label="可视化" name="second">
-          <tab-visible></tab-visible>
+          <!-- <tab-visible></tab-visible> -->
         </el-tab-pane>
         <el-tab-pane label="分析报告" name="third">角色管理</el-tab-pane>
         <el-tab-pane label="关于" name="fourth">定时任务补偿</el-tab-pane>

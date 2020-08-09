@@ -1,12 +1,36 @@
-import db from "./db";
+import db, { emit } from "./db";
 import cases from "./Cases";
 import model from "./Models";
+import sqlFormat from "./SqlFormat";
+
+function getSameFieldArray(arr1, arr2) {
+  var arr = [];
+  if (arr1.length > arr2.length) {
+    for (var i in arr1) {
+      if (arr2.indexOf(arr1[i]) != "-1") {
+        if (arr.indexOf(arr1[i]) == "-1") {
+          arr.push(arr1[i]);
+        }
+      }
+    }
+  } else {
+    for (var i in arr2) {
+      if (arr1.indexOf(arr2[i]) != "-1") {
+        if (arr.indexOf(arr2[i]) == "-1") {
+          arr.push(arr2[i]);
+        }
+      }
+    }
+  }
+  return arr;
+}
+
 export default {
   // 根据tid获取显示的列名称list
   QueryTableShowCFields: async function(tid) {
     try {
       await cases.SwitchDefaultCase();
-      let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename FROM icap_base.layout_table_column
+      let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type FROM icap_base.layout_table_column
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
       console.log(sql);
@@ -77,17 +101,17 @@ export default {
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
-        let newRow = [];
+        let newRow = {};
         for (let k in row) {
           if (showFields.includes(k)) {
             let value = row[k];
-            let key = k;
-            let cell = { key, value, error: false };
-            newRow.push(cell);
+            let cell = { value, error: false };
+            newRow[k] = cell;
           }
         }
         retRows.push(newRow);
       }
+
       // 查询结果集的总量
       sql = `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='01' OR ZZLX='z1') AND ajid = ${ajid} `;
       console.log(sql);
@@ -160,16 +184,15 @@ export default {
       LIMIT ${count} OFFSET ${offset}`;
       console.log(sql);
       let result = await db.query(sql);
-      // 数据过滤
+
       let retRows = [];
       for (let row of result.rows) {
-        let newRow = [];
+        let newRow = {};
         for (let k in row) {
           if (showFields.includes(k)) {
             let value = row[k];
-            let key = k;
-            let cell = { key, value, error: false };
-            newRow.push(cell);
+            let cell = { value, error: false };
+            newRow[k] = cell;
           }
         }
         retRows.push(newRow);
@@ -218,13 +241,12 @@ export default {
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
-        let newRow = [];
+        let newRow = {};
         for (let k in row) {
           if (showFields.includes(k)) {
             let value = row[k];
-            let key = k;
-            let cell = { key, value, error: false };
-            newRow.push(cell);
+            let cell = { value, error: false };
+            newRow[k] = cell;
           }
         }
         retRows.push(newRow);
@@ -297,17 +319,17 @@ export default {
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
-        let newRow = [];
+        let newRow = {};
         for (let k in row) {
           if (showFields.includes(k)) {
             let value = row[k];
-            let key = k;
-            let cell = { key, value, error: false };
-            newRow.push(cell);
+            let cell = { value, error: false };
+            newRow[k] = cell;
           }
         }
         retRows.push(newRow);
       }
+
       // 查询结果集的总量
       sql = `
       SELECT COUNT
@@ -365,17 +387,17 @@ WHERE
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
-        let newRow = [];
+        let newRow = {};
         for (let k in row) {
           if (showFields.includes(k)) {
             let value = row[k];
-            let key = k;
-            let cell = { key, value, error: false };
-            newRow.push(cell);
+            let cell = { value, error: false };
+            newRow[k] = cell;
           }
         }
         retRows.push(newRow);
       }
+
       // 查询结果集的总量
       sql = `select count(1)::int count from gas_tax_records where 1=1 `;
       console.log(sql);
@@ -413,17 +435,17 @@ WHERE
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
-        let newRow = [];
+        let newRow = {};
         for (let k in row) {
           if (showFields.includes(k)) {
             let value = row[k];
-            let key = k;
-            let cell = { key, value, error: false };
-            newRow.push(cell);
+            let cell = { value, error: false };
+            newRow[k] = cell;
           }
         }
         retRows.push(newRow);
       }
+
       // 查询结果集的总量
       sql = `select count(1)::int count from ${tablename} where 1=1 `;
       console.log(sql);
@@ -440,13 +462,65 @@ WHERE
     }
   },
   // 执行模型并获取结果集
-  QueryModelTable: async function(ajid, tid, pgsql, offset, count) {
+  QueryModelTable: async function(ajid, tid, pgsql, orderby, offset, count) {
     try {
-      await cases.SwitchCase(ajid);
       let { rows } = await this.QueryTableShowCFields(tid);
       let headers = rows;
+      let showFields = [];
+      for (let item of headers) {
+        showFields.push(item.fieldename.toLowerCase());
+      }
+      let sql = sqlFormat.FormatSqlStr(
+        pgsql,
+        "",
+        sqlFormat.CaseAnalyseFiltrateModel,
+        ajid
+      );
+      // let countSql = `select count(${sql})::int count`;
+      // sql += ` ${orderby} LIMIT ${count} OFFSET ${offset};`;
+      // sql += `  LIMIT ${count} OFFSET ${offset};`;
+      console.log(sql);
+      await cases.SwitchCase(ajid);
+      let result = await db.query(sql);
+      // 数据过滤
+      let resultFields = [];
+      if (result.rows.length > 0) {
+        for (let k in result.rows[0]) {
+          resultFields.push(k.toLowerCase());
+        }
+      }
+      // 根据展示列和结果列的数组获取相同的元素数组作为headers
+      showFields = getSameFieldArray(showFields, resultFields);
+      let newHeaders = [];
+      for (let header of headers) {
+        if (showFields.includes(header.fieldename.toLowerCase())) {
+          newHeaders.push(header);
+        }
+      }
+      console.log({ newHeaders, showFields, resultFields });
+      let retRows = [];
+      let sum = result.rows.length;
 
-      return { success: true, headers, rows: [] };
-    } catch (e) {}
+      for (let index = offset; index < offset + count; index++) {
+        if (sum < index + 1) {
+          break;
+        }
+        let row = result.rows[index];
+        let newRow = {};
+        for (let k in row) {
+          if (showFields.includes(k)) {
+            let value = row[k];
+            let cell = { value, error: false, link: false };
+            newRow[k] = cell;
+          }
+        }
+        retRows.push(newRow);
+      }
+
+      return { success: true, headers: newHeaders, rows: retRows, sum };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: e.message };
+    }
   },
 };

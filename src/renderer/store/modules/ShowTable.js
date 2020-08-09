@@ -20,7 +20,8 @@ const mutations = {
       let tableData = state.tableDataList[index];
       if (tableData.tid === tid) {
         console.log("UPDATE_TABLE_DATA", data);
-        Vue.set(state.tableDataList[index], "data", data);
+        // Vue.set(state.tableDataList[index], "data", data);
+        state.tableDataList.splice(index, 1, data);
         return;
       }
     }
@@ -84,6 +85,28 @@ const mutations = {
 };
 
 const actions = {
+  async showNoDataPage({ commit }, { tid, tablecname }) {
+    let bFind = false;
+    for (let tableData of state.tableDataList) {
+      if (tableData.tid === tid) {
+        bFind = true;
+        break;
+      }
+    }
+    let data = [];
+    if (bFind) {
+      commit("UPDATE_TABLE_DATA", { tid, data });
+    } else {
+      commit("ADD_TABLE_DATA_TO_LIST", {
+        title: tablecname,
+        tid: tid,
+        componentName: "no-data-view",
+        data,
+        dispatchName: "ShowTable/showNoDataPage",
+      });
+    }
+    commit("SET_ACTIVEINDEX", tid);
+  },
   async showPersonTable(
     { commit },
     { ajid, offset, tid, tablecname, tableename, count }
@@ -289,9 +312,16 @@ const actions = {
 
   async showModelTable(
     { commit, state },
-    { ajid, offset, tid, tablecname, pgsql, count }
+    { ajid, offset, tid, tablecname, pgsql, orderby, count }
   ) {
-    let data = await showTable.QueryModelTable(ajid, tid, pgsql, offset, count);
+    let data = await showTable.QueryModelTable(
+      ajid,
+      tid,
+      pgsql,
+      orderby,
+      offset,
+      count
+    );
     console.log(data);
     // 判断是否add，还是update
     let bFind = false;

@@ -27,13 +27,13 @@
         <el-col :span="12">
           <p>
             案件名称：
-            <span class="caseContent">{{caseDetail.ajmc}}</span>
+            <span class="caseContent">{{caseBase.ajmc}}</span>
           </p>
         </el-col>
         <el-col :span="12">
           <p>
             案件编号：
-            <span class="caseContent">{{caseDetail.ajbh}}</span>
+            <span class="caseContent">{{caseBase.ajbh}}</span>
           </p>
         </el-col>
       </el-row>
@@ -42,7 +42,7 @@
         <el-col :span="12">
           <p>
             案件类型：
-            <span class="caseContent">{{caseDetail.ajlbmc}}</span>
+            <span class="caseContent">{{caseBase.ajlbmc}}</span>
           </p>
         </el-col>
         <el-col :span="12">&nbsp;</el-col>
@@ -51,13 +51,13 @@
         <el-col :span="12">
           <p>
             发生时间：
-            <span class="caseContent">{{caseDetail.jjsj}}</span>
+            <span class="caseContent">{{caseBase.jjsj}}</span>
           </p>
         </el-col>
         <el-col :span="12">
           <p>
             所属地区：
-            <span class="caseContent">{{caseDetail.asjfsddxzqmc}}</span>
+            <span class="caseContent">{{caseBase.asjfsddxzqmc}}</span>
           </p>
         </el-col>
       </el-row>
@@ -65,24 +65,24 @@
         <el-col :span="12">
           <p>
             立案时间：
-            <span class="caseContent">{{caseDetail.cjsj}}</span>
+            <span class="caseContent">{{caseBase.cjsj}}</span>
           </p>
         </el-col>
         <el-col :span="12">
           <p>
             案件状态：
-            <span class="caseContent">{{caseDetail.zcjdmc}}</span>
+            <span class="caseContent">{{caseBase.zcjdmc}}</span>
           </p>
         </el-col>
       </el-row>
 
       <p>
         简要案情：
-        <span class="caseContent">{{caseDetail.jyaq}}</span>
+        <span class="caseContent">{{caseBase.jyaq}}</span>
       </p>
       <p>
         综述案情：
-        <span class="caseContent">{{caseDetail.zhaq}}</span>
+        <span class="caseContent">{{caseBase.zhaq}}</span>
       </p>
     </div>
     <el-divider></el-divider>
@@ -104,13 +104,14 @@
       <el-divider></el-divider>
       <div>
         <span>案件数据：</span>
-        <span class="caseContent">共采集{{"0"}}次</span>
+        <span class="caseContent">共采集&nbsp;{{batchCount}}&nbsp;批次</span>
         <span>
           <el-button type="text" size="mini" @click="handleClickCollection">采集记录</el-button>
         </span>
       </div>
       <p>
-        数据总量：
+        <span>数据总量：</span>
+        <span class="caseContent">共&nbsp;{{dataSum}}&nbsp;条</span>
         <span>
           <el-button type="text" size="mini">离线采集</el-button>
         </span>
@@ -149,22 +150,22 @@
 import { mapState, mapGetters } from "vuex";
 export default {
   async mounted() {
-    console.log(this.caseDetail);
+    console.log(this.caseBase);
     await this.$store.dispatch(
       "CaseDetail/queryEntityCount",
-      this.caseDetail.ajid
+      this.caseBase.ajid
     );
     await this.$store.dispatch(
       "CaseDetail/queryBatchCount",
-      this.caseDetail.ajid
+      this.caseBase.ajid
     );
     await this.$store.dispatch(
       "CaseDetail/queryAwaitTaskCount",
-      this.caseDetail.ajid
+      this.caseBase.ajid
     );
     await this.$store.dispatch(
       "CaseDetail/queryCaseDataCenter",
-      this.caseDetail.ajid
+      this.caseBase.ajid
     );
   },
   data() {
@@ -174,10 +175,11 @@ export default {
   },
   computed: {
     ...mapState("CaseDetail", [
-      "caseDetail",
+      "caseBase",
       "deleteState",
       "entityCount",
       "batchCount",
+      "dataSum",
       "awaitTaskCount",
     ]),
     ...mapGetters("CaseDetail", ["renderButtonGroupList"]),
@@ -193,14 +195,14 @@ export default {
         this.$store.commit("CaseDetail/SET_DELETE_STATE", "failed");
         this.$notify({
           title: "成功",
-          message: `删除案件[${this.caseDetail.ajmc}]成功!`,
+          message: `删除案件[${this.caseBase.ajmc}]成功!`,
           type: "success",
         });
       } else if (newValue === "failed") {
         this.loading = false;
         this.$notify.error({
           title: "错误",
-          message: `删除案件[${this.caseDetail.ajmc}]失败!`,
+          message: `删除案件[${this.caseBase.ajmc}]失败!`,
         });
       }
     },
@@ -214,7 +216,7 @@ export default {
       let result = await this.$electron.remote.dialog.showMessageBox(null, {
         type: "warning",
         title: "关闭",
-        message: `是否要删除当前案件[${this.caseDetail.ajmc}]？`,
+        message: `是否要删除当前案件[${this.caseBase.ajmc}]？`,
         buttons: ["确定", "取消"],
         defaultId: 0,
       });
@@ -223,8 +225,9 @@ export default {
         this.loading = true;
         this.$store.dispatch(
           "CaseDetail/deleteCase",
-          parseInt(this.caseDetail.ajid)
+          parseInt(this.caseBase.ajid)
         );
+        this.$store.commit("CaseDetail/RESET_ALL_DATA");
         this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
       } else {
         this.$message({

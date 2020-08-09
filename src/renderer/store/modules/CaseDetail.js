@@ -2,17 +2,18 @@ import db from "../../db/db";
 import cases from "../../db/Cases";
 import { stat } from "fs";
 const state = {
-  caseDetail: {}, //  st_case表对应的字段对象
+  caseBase: {}, //  st_case表对应的字段对象
   deleteState: "",
   entityCount: 0, //实体数量
   batchCount: 0, // 批次数量
+  dataSum: 0, // 数据总量
   awaitTaskCount: 0, // 待调单数量
   dataCenterList: [], // 数据中心tree列表数据
   openeds: [], // 数据中心默认打开的节点
 };
 const mutations = {
-  SET_CASE_DETAIL(state, caseDetail) {
-    state.caseDetail = caseDetail;
+  SET_CASE_DETAIL(state, caseBase) {
+    state.caseBase = caseBase;
   },
   SET_PARENTAJLB(state, parentAjlb) {
     state.parentAjlb = parentAjlb;
@@ -34,6 +35,19 @@ const mutations = {
   },
   SET_DATACENTERLIST(state, list) {
     state.dataCenterList = list;
+  },
+  SET_DATA_SUM(state, dataSum) {
+    state.dataSum = dataSum;
+  },
+  RESET_ALL_DATA(state) {
+    state.caseBase = {}; //  st_case表对应的字段对象
+    state.deleteState = "";
+    state.entityCount = 0; //实体数量
+    state.batchCount = 0; // 批次数量
+    state.awaitTaskCount = 0; // 待调单数量
+    state.dataCenterList = []; // 数据中心tree列表数据
+    state.openeds = []; // 数据中心默认打开的节点
+    state.dataSum = 0;
   },
 };
 
@@ -88,9 +102,10 @@ const actions = {
     if (res) commit("SET_AWAITTASK", res);
   },
   async queryCaseDataCenter({ commit }, ajid) {
-    let list = await cases.QueryDataCenterTableInfo(ajid);
+    let { list, dataSum } = await cases.QueryDataCenterTableInfo(ajid);
     console.log(list);
     if (list) commit("SET_DATACENTERLIST", list);
+    commit("SET_DATA_SUM", dataSum);
   },
 };
 

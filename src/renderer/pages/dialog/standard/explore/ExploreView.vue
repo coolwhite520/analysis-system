@@ -162,14 +162,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("CaseDetail", ["caseDetail"]),
+    ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("DataCollection", ["exampleDataList"]),
     ...mapState("ShowTable", ["tableDataList"]),
   },
   mounted() {},
   methods: {
     async handleClickDeleteAllErrorRows() {
-      const { ajid } = this.caseDetail;
+      const { ajid } = this.caseBase;
       const { headers, tableName, errorFields } = this.sheetItem;
       let findError = false;
       for (let errorField of errorFields) {
@@ -208,7 +208,7 @@ export default {
     },
     async handleClickSubmitModify() {
       if (this.input.length > 0) {
-        const { ajid } = this.caseDetail;
+        const { ajid } = this.caseBase;
         const { headers, tableName } = this.sheetItem;
         let result = await dataImport.updateErrorRows(
           ajid,
@@ -251,7 +251,7 @@ export default {
       let _this = this;
       this.loadingText = "正在进行数据导入，请稍后...";
       this.isDataLoading = true;
-      const { ajid } = this.caseDetail;
+      const { ajid } = this.caseBase;
       let {
         headers,
         tableName,
@@ -331,7 +331,7 @@ export default {
     async handleClickCheckData() {
       this.isDataLoading = true;
       this.bClickBtnCheck = true; // 标记是否点击了当前页面的检测按钮
-      const { ajid } = this.caseDetail;
+      const { ajid } = this.caseBase;
       const { headers, tableName } = this.sheetItem;
       await this.$store.dispatch("DataCollection/QueryTableData", {
         ajid,
@@ -359,7 +359,7 @@ export default {
     async handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       let tableName = this.sheetItem.tableName;
-      let ajid = this.caseDetail.ajid;
+      let ajid = this.caseBase.ajid;
       let offset = (val - 1) * this.pageSize;
       let matchedFields = this.sheetItem.matchedFields;
       let filterList = this.bClickBtnCheck ? this.filterList : [];
