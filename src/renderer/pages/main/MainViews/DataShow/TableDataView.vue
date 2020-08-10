@@ -25,6 +25,7 @@
               type="text"
               size="mini"
               style="color:#2e69b7"
+              @click="handleClickTableCellLink(scope.row, header.fieldename, header.link_mid, scope.row[header.fieldename].value)"
             >{{ scope.row[header.fieldename].value }}</el-button>
           </div>
           <div v-else>{{ scope.row[header.fieldename].value }}</div>
@@ -71,34 +72,65 @@ export default {
       let fieldName = column.prop;
       let sortingType = column.order;
       let newTableData = JSON.parse(JSON.stringify(this.tableData));
-      if (sortingType == "descending") {
-        newTableData.data.rows = newTableData.data.rows.sort((a, b) => {
-          console.log(a[fieldName], b[fieldName]);
-          return b[fieldName].value > a[fieldName].value;
-        });
-      } else {
-        newTableData.data.rows = newTableData.data.rows.sort((a, b) => {
-          return a[fieldName].value > b[fieldName].value;
-        });
+      function compare(property, sortingType) {
+        return function (a, b) {
+          var value1 = a[property].value;
+          var value2 = b[property].value;
+          // 如果是中文
+          if (
+            /^[\u4e00-\u9fa5]+$/i.test(value1) &&
+            /^[\u4e00-\u9fa5]+$/i.test(value2)
+          ) {
+            return sortingType === "descending"
+              ? value1.localeCompare(value2)
+              : value2.localeCompare(value1);
+          }
+          return sortingType === "descending"
+            ? value1 - value2
+            : value2 - value1;
+        };
       }
-      console.log(newTableData.data.rows);
+
+      newTableData.data.rows = newTableData.data.rows.sort(
+        compare(fieldName, sortingType)
+      );
+
+      for (let row of newTableData.data.rows) {
+        console.log(row[fieldName].value);
+      }
       this.$store.commit("ShowTable/UPDATE_TABLE_DATA", {
         tid: this.tableData.tid,
-        data: newTableData,
+        data: newTableData.data,
       });
+    },
+    async handleClickTableCellLink(row, fieldename, linkMid, value) {
+      console.log(row, fieldename, linkMid, value);
     },
     async handleCurrentChange(val) {
       let { ajid } = this.caseBase;
       let offset = (val - 1) * this.pageSize;
-      let { tid, tablecname, dispatchName, pgsql } = this.tableData;
+      let {
+        tid,
+        tablecname,
+        dispatchName,
+        pgsql,
+        orderby,
+        showType,
+        mpids,
+        params,
+      } = this.tableData;
       console.log(this.tableData);
       // 根据tableName获取表的数据
       await this.$store.dispatch(dispatchName, {
         ajid,
         tid,
         pgsql,
+        orderby,
         tablecname,
+        showType,
         offset: offset,
+        params,
+        mpids,
         count: this.pageSize,
       });
     },

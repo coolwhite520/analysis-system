@@ -1,84 +1,3 @@
-function getNowFormatDate(type = 0) {
-  let date = new Date();
-  let seperator1 = "-";
-  let seperator2 = ":";
-  let month = date.getMonth() + 1;
-  let strDate = date.getDate();
-  if (month >= 1 && month <= 9) {
-    month = "0" + month;
-  }
-  if (strDate >= 0 && strDate <= 9) {
-    strDate = "0" + strDate;
-  }
-  if (type == 1) {
-    return (
-      date.getFullYear() +
-      seperator1 +
-      month +
-      seperator1 +
-      strDate +
-      " " +
-      date.getHours() +
-      seperator2 +
-      date.getMinutes() +
-      seperator2 +
-      date.getSeconds()
-    );
-  }
-  return date.getFullYear() + seperator1 + month + seperator1 + strDate;
-}
-//团伙选项 //界面显示ThName，其余选项用于替换模板参数
-const ThType = [
-  {
-    Index: 1,
-    ThId: "JYMCGROUP",
-    ThName: "按主体名称划分",
-    DsThId: "JYDFMCGROUP",
-    ThMemberCntId: "JYMCGROUPMEMBERCOUNT",
-    DsThMemberCntId: "JYDFMCGROUPMEMBERCOUNT",
-  },
-  {
-    Index: 2,
-    ThId: "JYZJHMGROUP",
-    ThName: "按证照号码划分",
-    DsThId: "JYDFZJHMGROUP",
-    ThMemberCntId: "JYZJHMGROUPMEMBERCOUNT",
-    DsThMemberCntId: "JYDFZJHMGROUPMEMBERCOUNT",
-  },
-  {
-    Index: 3,
-    ThId: "CXKHGROUP",
-    ThName: "按账卡号划分",
-    DsThId: "JYDFZKHGROUP",
-    ThMemberCntId: "CXKHGROUPMEMBERCOUNT",
-    DsThMemberCntId: "JYDFZKHGROUPMEMBERCOUNT",
-  },
-];
-//设置默认统计维度
-let defaultSelectDataTable = [
-  {
-    CFIELD: "CXZH",
-    CNAME: "交易账号",
-    DATA_TYPE: 0, //VARCHAR
-    SHOWABLE: "Y",
-    COLUMN_TYPE: 0, //NONE
-  },
-  {
-    CFIELD: "JYDFZKH",
-    CNAME: "对手账号",
-    DATA_TYPE: 0,
-    SHOWABLE: "Y",
-    COLUMN_TYPE: 0,
-  },
-  {
-    CFIELD: "JDBZ",
-    CNAME: "借贷标志",
-    DATA_TYPE: 0,
-    SHOWABLE: "Y",
-    COLUMN_TYPE: 0,
-  },
-];
-
 function GetBankDetailTableSql(TableName) {
   return "".concat(
     "(SELECT *, (CASE WHEN CXKHGROUPNAME IS NULL THEN CXKH ELSE CXKHGROUPNAME END) AS CXKHGROUP,  (CASE WHEN JYDFZKHGROUPNAME IS NULL THEN JYDFZKH ELSE JYDFZKHGROUPNAME END) AS JYDFZKHGROUP,  (CASE WHEN JYZJHMGROUPNAME IS NULL THEN JYZJHM ELSE JYZJHMGROUPNAME END) AS JYZJHMGROUP,  (CASE WHEN JYDFZJHMGROUPNAME IS NULL THEN JYDFZJHM ELSE JYDFZJHMGROUPNAME END) AS JYDFZJHMGROUP,  (CASE WHEN JYMCGROUPNAME IS NULL THEN JYMC ELSE JYMCGROUPNAME END) AS JYMCGROUP,  (CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END) AS JYDFMCGROUP  FROM( (SELECT * FROM ",
@@ -124,7 +43,7 @@ function GetJYQJstr(string_0, int_0) {
     return text;
   }
   let array = string_0.split(",");
-  for (let i = 0; i < array.Length; i++) {
+  for (let i = 0; i < array.length; i++) {
     if (i == 0) {
       if (int_0 == 1) {
         text = text.concat(
@@ -143,7 +62,7 @@ function GetJYQJstr(string_0, int_0) {
           " \n"
         );
       }
-    } else if (i == array.Length - 1) {
+    } else if (i == array.length - 1) {
       if (int_0 == 1) {
         text = text + "ELSE   '" + array[i] + "万以上' END \n";
       } else {
@@ -176,88 +95,7 @@ function GetJYQJstr(string_0, int_0) {
   return text;
 }
 
-//去除字符串尾部空格或指定字符
-String.prototype.trimEnd = function(c) {
-  if (c == null || c == "") {
-    let str = this;
-    let rg = /s/;
-    let i = str.length;
-    while (rg.test(str.charAt(--i)));
-    return str.slice(0, i + 1);
-  } else {
-    let str = this;
-    let rg = new RegExp(c);
-    let i = str.length;
-    while (rg.test(str.charAt(--i)));
-    return str.slice(0, i + 1);
-  }
-};
-
 export default {
-  CaseAnalyseFiltrateModel: {
-    JYZE_MINValue: 10000.0,
-    Double_0: 1000000.0,
-    JYZECondition: "大于等于",
-    JYZEConditionAccord: ">=",
-    JYCSConditionAccord: ">=",
-    XSMZ: "JYJE",
-    JYCSCondition: "大于等于",
-    Int32_0: 10,
-    XSGS: 10,
-    GLDDZHS: 1,
-    HLJE: 20000,
-    JCB_MAX: 1.0,
-    JCB_MIN: 1.0,
-    JC_SJJG: 48,
-    KEY_PERSIONS_DFMC: "",
-    KEY_PERSIONS_JYMC: "",
-    SJD: "YYYY-MM",
-    SJD_CN: "月，YYYY-MM",
-    XSMZPro: "",
-    SFJEZB: 0.2,
-    ZCDDGLGSSL: 2,
-    BSRGLGSSL: 2,
-    CWFZRGLGSSL: 2,
-    XXSJEHJ: 50000.0,
-    XFSHSL: 2,
-    GFSHSL: 2,
-    MINH: "00",
-    MINM: "00",
-    MINS: "00",
-    MAXH: "23",
-    MAXM: "59",
-    MAXS: "59",
-    MoneyIntervalStr: "1,2,5,10,20,50,100,1000,10000,10000",
-    MinDate: "2010-01-01",
-    MaxDate: getNowFormatDate(0),
-    String_1: "CXZH,JYDFZKH,JDBZ",
-    String_0: "交易账号,对手账号,借贷标志",
-    JYSJ_START: "1970-01-01 00:00:00",
-    JYSJ_END: getNowFormatDate(1),
-    KEY_PERSIONS_JYZKH: "",
-    KEY_PERSIONS_JYDFZKH: "",
-    KEY_PERSIONS_JYZJHM: "",
-    KEY_PERSIONS_JYDFZJHM: "",
-    FILTER: "",
-    RYGLFS: "",
-    ZXKPSJ: 3,
-    //SelectThTypeIndex:0,//团伙
-    SelectThType: ThType[0],
-    KYZT: "",
-    JCZCSB_MIN: 0.1,
-    JCZCSB_MAX: 10.0,
-    SFJEB_MIN: 0.1,
-    SFJEB_MAX: 10.0,
-    SelectedSaveCondition: "",
-    NodeNum: "0",
-    LineNum: "0",
-    SaveTime: "1970-01-01 00:00:00",
-    SelectDataTableColumn: defaultSelectDataTable,
-    FiledsIsNullCondition:
-      " AND CXZH IS NOT NULL AND LENGTH( COALESCE(CXZH, '0'))>0 AND JYDFZKH IS NOT NULL AND LENGTH( COALESCE(JYDFZKH, '0'))>0 AND JDBZ IS NOT NULL AND LENGTH( COALESCE(JDBZ, '0'))>0 ",
-    FiledsEmptyToNullCondition:
-      " CASE WHEN CXZH='' THEN NULL ELSE CXZH END AS CXZH,CASE WHEN JYDFZKH='' THEN NULL ELSE JYDFZKH END AS JYDFZKH,CASE WHEN JDBZ='' THEN NULL ELSE JDBZ END AS JDBZ ",
-  },
   FormatSqlStr: function(
     itemSql,
     sql_OrderBy,
@@ -391,11 +229,11 @@ export default {
         .replace(/\$KEY_PERSIONS_JYDFZKH\$/g, newValue5)
         .replace(/\$KEY_PERSIONS_JYZJHM\$/g, newValue6)
         .replace(/\$KEY_PERSIONS_JYDFZJHM\$/g, newValue7)
-        .replace(/\$JYJE\$/g, selectCondition.Double_0)
-        .replace(/\$JYZJE\$/g, selectCondition.Double_0)
+        .replace(/\$JYJE\$/g, selectCondition.JYZEValue)
+        .replace(/\$JYZJE\$/g, selectCondition.JYZEValue)
         .replace(/\$ZXJYJE\$/g, selectCondition.JYZE_MINValue)
-        .replace(/\$ZXJYZJE\$/g, selectCondition.Double_0)
-        .replace(/\$ZXJZJE\$/g, selectCondition.Double_0)
+        .replace(/\$ZXJYZJE\$/g, selectCondition.JYZEValue)
+        .replace(/\$ZXJZJE\$/g, selectCondition.JYZEValue)
         .replace(/\$CJBZXZ\$/g, selectCondition.JCB_MIN)
         .replace(/\$CJBZDZ\$/g, selectCondition.JCB_MAX)
         .replace(/\$JYSJQJ\$/g, selectCondition.JC_SJJG)
@@ -404,7 +242,7 @@ export default {
         .replace(/\$SJD\$/g, "'" + selectCondition.SJD + "'")
         .replace(/\$XSGS\$/g, "'" + selectCondition.XSGS + "'")
         .replace(/\$SORTPATH\$/g, selectCondition.XSMZ)
-        .replace(/\$ZXJYZCS\$/g, "'" + selectCondition.Int32_0 + "'")
+        .replace(/\$ZXJYZCS\$/g, "'" + selectCondition.JYCSValue + "'")
         .replace(/\$KYZT_KEYS\$/g, newValue8)
         .replace(/\$SFJEZB\$/g, "'" + selectCondition.SFJEZB.ToString + "'")
         .replace(/\$JCZCSB_MIN\$/g, "'" + selectCondition.JCZCSB_MIN + "'")

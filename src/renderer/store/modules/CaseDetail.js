@@ -1,6 +1,5 @@
-import db from "../../db/db";
 import cases from "../../db/Cases";
-import { stat } from "fs";
+
 const state = {
   caseBase: {}, //  st_case表对应的字段对象
   deleteState: "",
@@ -9,14 +8,10 @@ const state = {
   dataSum: 0, // 数据总量
   awaitTaskCount: 0, // 待调单数量
   dataCenterList: [], // 数据中心tree列表数据
-  openeds: [], // 数据中心默认打开的节点
 };
 const mutations = {
   SET_CASE_DETAIL(state, caseBase) {
     state.caseBase = caseBase;
-  },
-  SET_PARENTAJLB(state, parentAjlb) {
-    state.parentAjlb = parentAjlb;
   },
   SET_DELETE_STATE(state, delState) {
     state.deleteState = delState;

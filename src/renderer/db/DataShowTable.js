@@ -30,7 +30,7 @@ export default {
   QueryTableShowCFields: async function(tid) {
     try {
       await cases.SwitchDefaultCase();
-      let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type FROM icap_base.layout_table_column
+      let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type, link_mid::int FROM icap_base.layout_table_column
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
       console.log(sql);
@@ -462,7 +462,15 @@ WHERE
     }
   },
   // 执行模型并获取结果集
-  QueryModelTable: async function(ajid, tid, pgsql, orderby, offset, count) {
+  QueryModelTable: async function(
+    ajid,
+    tid,
+    pgsql,
+    orderby,
+    offset,
+    count,
+    params
+  ) {
     try {
       let { rows } = await this.QueryTableShowCFields(tid);
       let headers = rows;
@@ -470,12 +478,8 @@ WHERE
       for (let item of headers) {
         showFields.push(item.fieldename.toLowerCase());
       }
-      let sql = sqlFormat.FormatSqlStr(
-        pgsql,
-        "",
-        sqlFormat.CaseAnalyseFiltrateModel,
-        ajid
-      );
+      console.log(pgsql);
+      let sql = sqlFormat.FormatSqlStr(pgsql, orderby, params, ajid);
       // let countSql = `select count(${sql})::int count`;
       // sql += ` ${orderby} LIMIT ${count} OFFSET ${offset};`;
       // sql += `  LIMIT ${count} OFFSET ${offset};`;

@@ -96,7 +96,7 @@
             round
             type="primary"
             size="mini"
-            @click="handleClickBtnGroup(item.tablename)"
+            @click="handleClickBtnGroup(item)"
           >{{item.title}}</el-button>
         </el-button-group>
       </div>
@@ -211,6 +211,11 @@ export default {
     handleClickCollection() {},
     handleClickEdit() {
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "edit-case-view");
+    },
+    async handleClickBtnGroup(item) {
+      // 获取右侧的模型数据
+      let tid = item.tid;
+      console.log(tid);
     },
     async handleClickDelCase() {
       let result = await this.$electron.remote.dialog.showMessageBox(null, {

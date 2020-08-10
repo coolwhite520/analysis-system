@@ -1,5 +1,5 @@
 <template>
-  <div class="view-style" :style="{ height: contentViewHeight + 'px'}">
+  <div class="view-style" :style="{ height: contentViewHeight + 'px'}" v-loading="loadingShowData">
     <ul
       v-if="contextMenuVisible"
       :style="{position: 'fixed' ,left:left+'px',top:top+'px'}"
@@ -49,21 +49,28 @@
       >
         <!-- <span slot="label" style="font-size:10px;">{{item.title}}</span> -->
         <!-- <keep-alive> -->
-        <component :is="item.componentName" :tableData="item"></component>
+        <div v-if="item.showType === 1">
+          <component :is="item.componentName" :tableData="item"></component>
+        </div>
+        <div v-else>{{item.showType}}</div>
         <!-- </keep-alive> -->
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import NoDataView from "./DataCollection/NoDataView";
-import TableDataView from "./DataCollection/TableDataView";
+import NoDataView from "./DataShow/NoDataView";
+import TableDataView from "./DataShow/TableDataView";
 import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState("CaseDetail", ["caseBase", "dataSum"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
-    ...mapState("ShowTable", ["tableDataList", "activeIndex"]),
+    ...mapState("ShowTable", [
+      "tableDataList",
+      "activeIndex",
+      "loadingShowData",
+    ]),
     activeIndex: {
       get: function () {
         return this.$store.state.ShowTable.activeIndex;
