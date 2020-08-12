@@ -49,10 +49,10 @@
       >
         <!-- <span slot="label" style="font-size:10px;">{{item.title}}</span> -->
         <!-- <keep-alive> -->
-        <div v-if="item.showType === 1">
-          <component :is="item.componentName" :tableData="item"></component>
-        </div>
-        <div v-else>{{item.showType}}</div>
+        <!-- <div v-if="item.showType === 1"> -->
+        <component :is="item.componentName" :tableData="item"></component>
+        <!-- </div> -->
+        <!-- <div v-else>{{item.showType}}</div> -->
         <!-- </keep-alive> -->
       </el-tab-pane>
     </el-tabs>

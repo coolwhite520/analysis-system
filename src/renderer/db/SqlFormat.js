@@ -106,7 +106,7 @@ export default {
   ) {
     try {
       let array2 = [];
-      let newValue = condtion.replace(/jyje/, "JYJE");
+      let newValue = condtion.replace(/jyje/g, "JYJE");
       let newValue2 = "";
       let newValue3 = "";
       let newValue4 = "";
@@ -125,7 +125,7 @@ export default {
         itemSql.indexOf("$KEY_PERSIONS_JYMC$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYMC.Length > 0
       ) {
-        array2 = selectCondition.KEY_PERSIONS_JYMC.replace(/，/, ",").split(
+        array2 = selectCondition.KEY_PERSIONS_JYMC.replace(/，/g, ",").split(
           ","
         );
         for (let i = 0; i < array2.Length; i++) {
@@ -137,7 +137,7 @@ export default {
         itemSql.indexOf("$KEY_PERSIONS_DFMC$") >= 0 &&
         selectCondition.KEY_PERSIONS_DFMC.Length > 0
       ) {
-        array2 = selectCondition.KEY_PERSIONS_DFMC.replace(/，/, ",").split(
+        array2 = selectCondition.KEY_PERSIONS_DFMC.replace(/，/g, ",").split(
           ","
         );
         for (let i = 0; i < array2.Length; i++) {
@@ -149,7 +149,7 @@ export default {
         itemSql.indexOf("$KEY_PERSIONS_JYZKH$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYZKH.Length > 0
       ) {
-        array2 = selectCondition.KEY_PERSIONS_JYZKH.replace(/，/, ",").split(
+        array2 = selectCondition.KEY_PERSIONS_JYZKH.replace(/，/g, ",").split(
           ","
         );
         for (let i = 0; i < array2.Length; i++) {
@@ -166,7 +166,7 @@ export default {
         itemSql.indexOf("$KEY_PERSIONS_JYDFZKH$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYDFZKH.Length > 0
       ) {
-        array2 = selectCondition.KEY_PERSIONS_JYDFZKH.replace(/，/, ",").split(
+        array2 = selectCondition.KEY_PERSIONS_JYDFZKH.replace(/，/g, ",").split(
           ","
         );
         for (let i = 0; i < array2.Length; i++) {
@@ -178,7 +178,7 @@ export default {
         itemSql.indexOf("$KEY_PERSIONS_JYZJHM$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYZJHM.Length > 0
       ) {
-        array2 = selectCondition.KEY_PERSIONS_JYZJHM.replace(/，/, ",").split(
+        array2 = selectCondition.KEY_PERSIONS_JYZJHM.replace(/，/g, ",").split(
           ","
         );
         for (let i = 0; i < array2.Length; i++) {
@@ -190,9 +190,10 @@ export default {
         itemSql.indexOf("$KEY_PERSIONS_JYDFZJHM$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYDFZJHM.Length > 0
       ) {
-        array2 = selectCondition.KEY_PERSIONS_JYDFZJHM.replace(/，/, ",").split(
+        array2 = selectCondition.KEY_PERSIONS_JYDFZJHM.replace(
+          /，/g,
           ","
-        );
+        ).split(",");
         for (let i = 0; i < array2.Length; i++) {
           text6 = text6 + "'" + array2[i] + "',";
         }
@@ -200,7 +201,7 @@ export default {
       }
       if (itemSql.indexOf("$KYZT_KEYS$") >= 0) {
         if (selectCondition.KYZT.Length > 0) {
-          array2 = selectCondition.KYZT.replace(/，/, ",").split(",");
+          array2 = selectCondition.KYZT.replace(/，/g, ",").split(",");
           for (let i = 0; i < array2.Length; i++) {
             text7 = text7 + "'" + array2[i] + "',";
           }

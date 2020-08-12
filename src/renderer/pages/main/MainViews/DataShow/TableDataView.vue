@@ -1,51 +1,65 @@
 <template>
   <div>
-    <el-table
-      style="width: 100%;"
-      :data="tableData.data.rows"
-      size="mini"
-      max-height="600"
-      height="600"
-      stripe
-      border
-      @sort-change="sortChange"
+    <div
+      :style="{height: (tableData.showType === 1? contentViewHeight -121:(contentViewHeight -121)/2) + 'px'}"
     >
-      <el-table-column fixed type="index" width="50" label="编号"></el-table-column>
-      <el-table-column
-        v-for="(header) in tableData.data.headers"
-        :label="header.fieldcname"
-        :key="header.cid"
-        show-overflow-tooltip
-        :prop="header.fieldename"
-        sortable="custom"
+      <el-table
+        style="width: 100%;"
+        :data="tableData.data.rows"
+        size="mini"
+        :max-height="tableData.showType===1? contentViewHeight -121:(contentViewHeight - 121)/2"
+        stripe
+        border
+        @sort-change="sortChange"
       >
-        <template slot-scope="scope">
-          <div v-if="header.showrightbtn_type">
-            <el-button
-              type="text"
-              size="mini"
-              style="color:#2e69b7"
-              @click="handleClickTableCellLink(scope.row, header.fieldename, header.link_mid, scope.row[header.fieldename].value)"
-            >{{ scope.row[header.fieldename].value }}</el-button>
+        <el-table-column fixed type="index" width="50" label="编号"></el-table-column>
+        <el-table-column
+          v-for="(header) in tableData.data.headers"
+          :label="header.fieldcname"
+          :key="header.cid"
+          show-overflow-tooltip
+          :prop="header.fieldename"
+          sortable="custom"
+        >
+          <template slot-scope="scope">
+            <div v-if="header.showrightbtn_type">
+              <el-button
+                type="text"
+                size="mini"
+                style="color:#2e69b7"
+                @click="handleClickTableCellLink(scope.row, header.fieldename, header.link_mid, scope.row[header.fieldename].value)"
+              >{{ scope.row[header.fieldename].value }}</el-button>
+            </div>
+            <div v-else>{{ scope.row[header.fieldename].value }}</div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-row style="margin-top:10px;">
+        <el-col :span="12">
+          <div
+            style="font-size:12px;color:gray"
+          >每页显示{{pageSize}}条，当前页面条目数量：{{ tableData.data.rows.length }}条, 总计：{{tableData.data.sum}}条</div>
+        </el-col>
+        <el-col :span="12" style="text-align:right;">
+          <div>
+            <el-pagination
+              small
+              layout="prev, pager, next"
+              :page-size="pageSize"
+              :total="tableData.data.sum"
+              @current-change="handleCurrentChange"
+            ></el-pagination>
           </div>
-          <div v-else>{{ scope.row[header.fieldename].value }}</div>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-row>
-      <div
-        style="float:left;margin-top:10px;font-size:12px;color:gray"
-      >每页显示{{pageSize}}条，当前页面条目数量：{{ tableData.data.rows.length }}条, 总计：{{tableData.data.sum}}条</div>
-      <div style="float:right;margin-top:10px;">
-        <el-pagination
-          small
-          layout="prev, pager, next"
-          :page-size="pageSize"
-          :total="tableData.data.sum"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
-      </div>
-    </el-row>
+        </el-col>
+      </el-row>
+    </div>
+    <div
+      id="myChart"
+      v-if="tableData.showType===4"
+      :style="{height: (tableData.showType === 1? contentViewHeight -121:(contentViewHeight -121)/2) + 'px',marginTop: 50 + 'px'}"
+    >
+      <!-- 输出表类型 1表格， 2视图，3上表下图,4上表下柱状图,5上饼图下表 -->
+    </div>
   </div>
 </template>
 
@@ -53,7 +67,8 @@
 import { mapState } from "vuex";
 export default {
   mounted() {
-    console.log(this.tableData);
+    console.log(this.contentViewHeight);
+    this.drawLine();
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -105,6 +120,85 @@ export default {
     },
     async handleClickTableCellLink(row, fieldename, linkMid, value) {
       console.log(row, fieldename, linkMid, value);
+    },
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let el = document.getElementById("myChart");
+      if (el) {
+        let xArray = [];
+        let jzbsArray = [];
+        let czbsArray = [];
+        for (let row of this.tableData.data.rows) {
+          xArray.push(row["jyqj"].value);
+          jzbsArray.push(row["jzbs"].value);
+          czbsArray.push(row["czbs"].value);
+        }
+        let myChart = this.$echarts.init(el);
+        if (myChart) {
+          // 绘制图表
+          myChart.setOption({
+            // backgroundColor: "#2c343c",
+            // textStyle: {
+            //   color: "rgba(255, 255, 255, 0.3)",
+            // },
+            // color: ["#3398DB"],
+            legend: {
+              orient: "vertical", // 'vertical'
+              x: "right", //可设定图例在左、右、居中
+              y: "top", //可设定图例在上、下、居中
+              // padding: [0, 50, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+              data: [
+                {
+                  name: "进账笔数",
+                  textStyle: {
+                    color: "#9cdcfe",
+                  },
+                },
+                {
+                  name: "出账笔数",
+                  textStyle: {
+                    color: "#ee6b5f",
+                  },
+                },
+              ],
+            },
+            grid: {},
+            title: {
+              text: "进出账笔数",
+              // subtext: "在此测试",
+              x: "center",
+              y: "top",
+              textAlign: "center",
+            },
+            tooltip: {},
+            xAxis: {
+              data: xArray,
+              // axisTick: {
+              //   alignWithLabel: true,
+              // },
+            },
+            yAxis: {},
+            series: [
+              {
+                name: "进账笔数",
+                type: "bar",
+                data: jzbsArray,
+                itemStyle: {
+                  color: "#9cdcfe",
+                },
+              },
+              {
+                name: "出账笔数",
+                type: "bar",
+                data: czbsArray,
+                itemStyle: {
+                  color: "#ee6b5f",
+                },
+              },
+            ],
+          });
+        }
+      }
     },
     async handleCurrentChange(val) {
       let { ajid } = this.caseBase;

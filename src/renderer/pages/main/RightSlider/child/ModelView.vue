@@ -20,7 +20,7 @@
     </el-row>
     <el-row>
       <div class="modelTitle">模型数据：</div>
-      <div class="modelDescribe">{{model.describe}}</div>
+      <div class="modelDescribe">根据筛选条件,取得{{resultRowCount}}条记录。</div>
     </el-row>
 
     <el-row>
@@ -53,12 +53,7 @@
         <div v-show="mpids.includes('3')">
           <div class="childTitle">关键人员：</div>
           <div>
-            <el-input
-              placeholder="请输入交易名称"
-              style="width:40%;"
-              size="mini"
-              v-model="SelectCondition.KEY_PERSIONS_JYMC"
-            ></el-input>
+            <el-input placeholder="请输入交易名称" size="mini" v-model="SelectCondition.KEY_PERSIONS_JYMC"></el-input>
             <span>多个请用逗号隔</span>
           </div>
         </div>
@@ -101,13 +96,13 @@
         <div v-show="mpids.includes('7')">
           <div class="childTitle">获利金额：</div>
           <div>
+            <span>大于</span>
             <el-input
               placeholder="请输入获利金额"
               style="width:40%;"
               size="mini"
               v-model="SelectCondition.HLJE"
             ></el-input>
-            <span>多个请用逗号隔</span>
           </div>
         </div>
         <div v-show="mpids.includes('8')">
@@ -119,7 +114,6 @@
               size="mini"
               v-model="SelectCondition.GLDDZHS"
             ></el-input>
-            <span>多个请用逗号隔</span>
           </div>
         </div>
         <div v-show="mpids.includes('9')">
@@ -131,7 +125,7 @@
               size="mini"
               v-model="SelectCondition.JYZE_MINValue"
             ></el-input>
-            <span>多个请用逗号隔</span>
+            <span>元</span>
           </div>
         </div>
         <div v-show="mpids.includes('10')">
@@ -242,7 +236,305 @@
             </el-select>
           </div>
         </div>
-        <div style="margin-top:40px;text-align:center;">
+        <div v-show="mpids.includes('15')" class="selectionItem">
+          <div class="childTitle">时间段：</div>
+          <div>
+            <el-input
+              placeholder="请输入最小值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JYSJ_START"
+            ></el-input>
+          </div>
+          <div class="childTitle">至</div>
+          <div>
+            <el-input
+              placeholder="请输入最大值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JYSJ_END"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('16')" class="selectionItem">
+          <div class="childTitle">交易出进比最小值：</div>
+          <div>
+            <el-input
+              placeholder="请输入最小值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JCB_MIN"
+            ></el-input>
+          </div>
+          <div class="childTitle">最大值：</div>
+          <div>
+            <el-input
+              placeholder="请输入最大值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JCB_MAX"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('18')" class="selectionItem">
+          <div class="childTitle">注册地点关联公司数量：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入公司数量"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.ZCDDGLGSSL"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('19')" class="selectionItem">
+          <div class="childTitle">报税人关联公司数量：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入公司数量"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.BSRGLGSSL"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('20')" class="selectionItem">
+          <div class="childTitle">财务负责人关联公司数量：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入公司数量"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.CWFZRGLGSSL"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('21')" class="selectionItem">
+          <div class="childTitle">销项税金额合计：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入金额合计"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.XXSJEHJ"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('22')" class="selectionItem">
+          <div class="childTitle">可疑主体证照号码：</div>
+          <div>
+            <el-input
+              placeholder="请输入可疑主体证照号码"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.KYZT"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('17')" class="selectionItem">
+          <div class="childTitle">收付金额占比：</div>
+          <div>
+            <span>大于等于</span>
+            <el-input
+              placeholder="请输入收付金额占比"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.SFJEZB"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('23')" class="selectionItem">
+          <div class="childTitle">进出总次数比</div>
+          <div>
+            <span>最小值：</span>
+            <el-input
+              placeholder="请输入最小值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JCZCSB_MIN"
+            ></el-input>
+          </div>
+          <div>
+            <span>最大值：</span>
+            <el-input
+              placeholder="请输入最大值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JCZCSB_MAX"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('24')" class="selectionItem">
+          <div class="childTitle">收付金额比</div>
+          <div>
+            <span>最小值：</span>
+            <el-input
+              placeholder="请输入最小值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.SFJEB_MIN"
+            ></el-input>
+          </div>
+          <div>
+            <span>最大值：</span>
+            <el-input
+              placeholder="请输入最大值"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.SFJEB_MAX"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('25')" class="selectionItem">
+          <div class="childTitle">销方公司关联不同购方公司数量：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入公司数量"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.GFSHSL"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('26')" class="selectionItem">
+          <div class="childTitle">购方公司关联不同销方公司数量：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入公司数量"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.XFSHSL"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('27')" class="selectionItem">
+          <div class="childTitle">存续最小开票时间：</div>
+          <div>
+            <span>大于</span>
+            <el-input
+              placeholder="请输入存续最小开票时间"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.ZXKPSJ"
+            ></el-input>
+          </div>
+        </div>
+        <div v-show="mpids.includes('28')" class="selectionItem">
+          <div class="childTitle">时间：</div>
+          <div class="childSelection">
+            <el-select
+              size="mini"
+              v-model="SelectCondition.MINH"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:25%;"
+            >
+              <el-option v-for="item in HourList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+            <el-select
+              size="mini"
+              v-model="SelectCondition.MINM"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:25%;"
+            >
+              <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+            <el-select
+              size="mini"
+              v-model="SelectCondition.MINS"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:25%;"
+            >
+              <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </div>
+          <span>至</span>
+          <div class="childSelection">
+            <el-select
+              size="mini"
+              v-model="SelectCondition.MAXH"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:25%;"
+            >
+              <el-option v-for="item in HourList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+            <el-select
+              size="mini"
+              v-model="SelectCondition.MAXM"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:25%;"
+            >
+              <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+            <el-select
+              size="mini"
+              v-model="SelectCondition.MAXS"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:25%;"
+            >
+              <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </div>
+        </div>
+        <div v-show="mpids.includes('29')" class="selectionItem">
+          <div class="childTitle">交易金额：</div>
+          <div>
+            <span>大于等于</span>
+            <el-input
+              placeholder="请输入交易金额"
+              style="width:40%;"
+              size="mini"
+              v-model="SelectCondition.JYZEValue"
+            ></el-input>
+          </div>
+        </div>
+        <!-- 30 这个是个？ ？？？？？？？下面的不是哦-->
+        <div v-show="mpids.includes('30')" class="selectionItem">
+          <div class="childTitle">{{MoneyIntervalDes}}</div>
+          <el-button type="text" size="mini">区间设置</el-button>
+        </div>
+
+        <div v-show="mpids.includes('31')" class="selectionItem">
+          <div class="childTitle">时间段：</div>
+          <el-date-picker v-model="SelectCondition.MinDate" type="date" placeholder="选择日期"></el-date-picker>
+          <span>至</span>
+          <el-date-picker v-model="SelectCondition.MaxDate" type="date" placeholder="选择日期"></el-date-picker>
+        </div>
+
+        <div v-show="mpids.includes('32')" class="selectionItem">
+          <div class="childTitle">团伙划分：</div>
+          <div class="childSelection">
+            <el-select
+              size="mini"
+              v-model="SelectCondition.SelectThType"
+              placeholder="请选择"
+              @visible-change="visibleChange"
+              style="width:40%;"
+            >
+              <el-option
+                v-for="item in list_thtype"
+                :key="item.ThId"
+                :label="item.ThName"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </div>
+        </div>
+        <!-- 33、34这个是个？ ？？？？？？？下面的不是哦-->
+        <div v-show="mpids.includes('33')" class="selectionItem"></div>
+        <div v-show="mpids.includes('34')" class="selectionItem"></div>
+        <div v-show="mpids.length>0" style="margin-top:40px;text-align:center;">
           <el-button size="mini" @click="handleClickSaveCondition">保存条件</el-button>
           <el-button size="mini" type="primary" @click="handleClickExecCondition">执行条件</el-button>
         </div>
@@ -253,12 +545,14 @@
 
 <script>
 import aes from "@/utils/aes";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   props: ["position", "model", "ajid"],
   data() {
     return {
+      MoneyIntervalDes: "",
+      resultRowCount: 0,
       mpids: [],
       list_condition: [
         {
@@ -286,6 +580,8 @@ export default {
           JYZEConditionAccord: "<=",
         },
       ],
+      HourList: [],
+      MinuteList: [],
       list_sjds: [
         {
           SJD_CN: "年，YYYY",
@@ -342,7 +638,7 @@ export default {
       listst_jyje: [],
       listst_jycs: [],
       // 团体类型数组
-      thType: [
+      list_thtype: [
         {
           Index: 1,
           ThId: "JYMCGROUP",
@@ -461,21 +757,37 @@ export default {
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   async mounted() {
     console.log("childModel mouted.........");
+    // 交易金额区间描述
+    this.initMoneyIntervalDes();
+    for (let i = 0; i < 24; i++) {
+      if (i.toString().length === 1) {
+        this.HourList.push("0" + String(i));
+      } else {
+        this.HourList.push(String(i));
+      }
+    }
+    for (let i = 0; i < 60; i++) {
+      if (i.toString().length === 1) {
+        this.MinuteList.push("0" + String(i));
+      } else {
+        this.MinuteList.push(String(i));
+      }
+    }
     this.listst_jyje = JSON.parse(JSON.stringify(this.list_condition));
     console.log(this.listst_jyje);
     this.listst_jycs = JSON.parse(JSON.stringify(this.list_condition));
-    this.SelectCondition.SelectThType = this.thType[0];
+    this.SelectCondition.SelectThType = this.list_thtype[0];
     this.SelectCondition.SelectDataTableColumn = this.defaultSelectDataTable;
     let { ajid } = this.caseBase;
     let tid = String(this.model.mid);
     let modelname = this.model.modelname;
     let pgsqlTemplate = this.model.gpsqltemplate;
     let orderby = this.model.orderby ? this.model.orderby : "";
-    let showType =
-      this.model.out_type.length > 0 ? parseInt(this.model.out_type) : 1;
+    let showType = this.model.out_type ? parseInt(this.model.out_type) : 1;
     let pgsql = aes.decrypt(pgsqlTemplate);
     let mpids = this.model.mpids ? this.model.mpids.split(",") : [];
     console.log(mpids);
@@ -492,8 +804,35 @@ export default {
       tablecname: modelname,
       count: 30,
     });
+    for (let item of this.tableDataList) {
+      if (item.tid === tid) {
+        this.resultRowCount = item.data.sum;
+        console.log({ resultRowCount: this.resultRowCount });
+        break;
+      }
+    }
   },
   methods: {
+    initMoneyIntervalDes() {
+      let text = "";
+      let arrMoneyInterval = this.SelectCondition.MoneyIntervalStr.split(",");
+      text += "交易区间：";
+      for (let i = 0; i < arrMoneyInterval.length; i++) {
+        if (i === 0) {
+          text = text + arrMoneyInterval[i].toString() + "万以下,";
+        } else if (i === arrMoneyInterval.length - 1) {
+          text = text + arrMoneyInterval[i - 1].toString() + "万以上";
+        } else {
+          text = text.concat(
+            arrMoneyInterval[i - 1].toString(),
+            "万-",
+            arrMoneyInterval[i].toString(),
+            "万,"
+          );
+        }
+      }
+      this.MoneyIntervalDes = text;
+    },
     //
     visibleChange(value) {
       console.log(value);
@@ -568,6 +907,7 @@ export default {
 .modelTitle {
   margin-top: 30px;
   margin-left: 10px;
+  margin-right: 10px;
   font-size: 13px;
 }
 .modelDescribe {
@@ -583,5 +923,8 @@ export default {
 .childSelection {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+.childTitle {
+  margin-top: 10px;
 }
 </style>

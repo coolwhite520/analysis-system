@@ -12,12 +12,14 @@ import "./assets/css/iconfont.css";
 import "./assets/css/animate.css";
 import "echarts";
 import "./utils/dialog";
+import echarts from "echarts";
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
+Vue.prototype.$echarts = echarts;
 //去除字符串尾部空格或指定字符
 String.prototype.trimEnd = function(c) {
   if (c == null || c == "") {

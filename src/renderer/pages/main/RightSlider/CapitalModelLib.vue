@@ -1,7 +1,7 @@
 <template >
   <div ref="fatherModel" class="all-slider" :style="{ height: contentViewHeight + 'px'}">
     <model-view v-if="showChildModel" :position="position" :model="chidleModel"></model-view>
-    <div v-else>
+    <div v-show="!showChildModel">
       <el-row class="title">
         <el-col :span="22">
           <div>
