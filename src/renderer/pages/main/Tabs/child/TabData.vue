@@ -9,14 +9,18 @@
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button type="text" class="ctrl-button" :disabled="!currentTableData">
           <span class="iconfont selfIcont">&#xe815;</span>
           <br />
           <span class="title-content">筛选</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData && currentTableData.filterList)"
+        >
           <span class="iconfont selfIcont">&#xe606;</span>
           <br />
           <span class="title-content">清除筛选</span>
@@ -31,10 +35,10 @@
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
-        <el-button type="text" class="ctrl-button">
+        <el-button type="text" class="ctrl-button" @click="handleClickHideEmptyField">
           <span class="iconfont selfIcont">&#xe677;</span>
           <br />
-          <span class="title-content">隐藏空列</span>
+          <span class="title-content">{{currentTableData.hideEmptyField? "显示空列": "隐藏空列"}}</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
@@ -116,11 +120,29 @@
         </el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="text" class="ctrl-button">
+        <el-button type="text" class="ctrl-button" :disabled="!currentTableData">
           <span class="iconfont selfIcont">&#xe637;</span>
           <br />
           <span class="title-content">导出数据</span>
         </el-button>
+      </el-col>
+    </el-row>
+
+    <el-row style="font-size:8px;color:gray;">
+      <el-col :span="1" style="border-right:1px solid #e5e7ec;">
+        <div>采集</div>
+      </el-col>
+      <el-col :span="4" style="text-align:center;border-right:1px solid #e5e7ec;">
+        <div>显示</div>
+      </el-col>
+      <el-col :span="4" style="text-align:center;border-right:1px solid #e5e7ec;">
+        <div>清洗</div>
+      </el-col>
+      <el-col :span="7" style="text-align:center;border-right:1px solid #e5e7ec;">
+        <div>分析</div>
+      </el-col>
+      <el-col :span="1">
+        <div>导出</div>
       </el-col>
     </el-row>
     <!-- 智能采集 -->
@@ -142,6 +164,7 @@ export default {
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("DialogPopWnd", ["standardDataVisible"]),
+    ...mapState("ShowTable", ["currentTableData"]),
   },
   methods: {
     async handleClickDataCollection() {
@@ -152,6 +175,7 @@ export default {
       await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
       await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
+    async handleClickHideEmptyField() {},
     // async handleCommandDataCollection(command) {
     //   await this.$store.dispatch(
     //     "CaseDetail/queryBatchCount",

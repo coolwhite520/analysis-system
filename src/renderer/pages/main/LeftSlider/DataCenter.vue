@@ -1,9 +1,5 @@
 <template>
   <div class="data-center-left" :style="{ height: contentViewHeight + 'px'}">
-    <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-      <el-radio-button :label="false" type="text">展</el-radio-button>
-      <el-radio-button :label="true" type="text">收</el-radio-button>
-    </el-radio-group>-->
     <div class="titleBar">
       <b>
         <span class="iconfont" style="font-size:18px;">&#xe612;</span>
@@ -20,7 +16,7 @@
       @select="handleSelect"
     >
       <el-submenu
-        v-for="(item,i) in renderTreeControlList"
+        v-for="(item,i) in dataCenterList"
         :index="item.tid"
         :key="item.tid"
         :currentTid="item.tid"
@@ -62,8 +58,7 @@ export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight", "isCollapseLeftBar"]),
     ...mapState("Models", ["existModelsDetailList"]),
-    ...mapState("CaseDetail", ["caseBase"]),
-    ...mapGetters("CaseDetail", ["renderTreeControlList", "openeds"]),
+    ...mapState("CaseDetail", ["caseBase", "dataCenterList", "openeds"]),
     ...mapState("ShowTable", ["tableDataList"]),
   },
   data() {
@@ -111,96 +106,37 @@ export default {
       console.log(parentid, tableTid);
       // 获取右侧的模型数据
       let tid = tableTid[1];
-      await this.$store.dispatch("Models/getExistModelsList", tid);
-      if (this.existModelsDetailList.length > 0) {
-        this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", true);
-      } else {
-        this.$store.commit("MainPageSwitch/SET_SHOWRIGHTSLIDERVIEW", false);
-      }
-      // 获取表结构数据
-      // 根据tid获取表名称
-      let tablecname = "";
       let tableename = "";
-      for (let item of this.renderTreeControlList) {
+      let title = "";
+      let modelTreeList = [];
+      for (let item of this.dataCenterList) {
         for (let childItem of item.childrenArr) {
           if (childItem.tid === tid) {
-            tablecname = childItem.title;
+            title = childItem.title;
             tableename = childItem.tablename;
+            modelTreeList = childItem.modelTreeList;
             break;
           }
         }
       }
-      // 判断是否已经展示了这个页面，如果已经展示了，那么需要进行active
+      // 判断是否已经展示了这个基础页面，如果已经展示了，那么需要进行active
       for (let tableData of this.tableDataList) {
         if (tableData.tid === tid) {
-          this.$store.commit("ShowTable/SET_ACTIVEINDEX", tid);
+          this.$store.commit("ShowTable/SET_ACTIVEINDEX", tableData.pageIndex);
           return;
         }
       }
       let { ajid } = this.caseBase;
-      // 根据tableName获取表的数据
-      switch (tid) {
-        case "1": //个人
-          await this.$store.dispatch("ShowTable/showPersonTable", {
-            ajid,
-            tid,
-            tablecname,
-            tableename,
-            offset: 0,
-            count: 30,
-          });
-          break;
-        case "2": // 单位
-          await this.$store.dispatch("ShowTable/showPerson2Table", {
-            ajid,
-            tid,
-            tablecname,
-            tableename,
-            offset: 0,
-            count: 30,
-          });
-          break;
-        case "3":
-          await this.$store.dispatch("ShowTable/showAccountTable", {
-            ajid,
-            tid,
-            tablecname,
-            tableename,
-            offset: 0,
-            count: 30,
-          });
-          break;
-        case "4":
-          await this.$store.dispatch("ShowTable/showBankTable", {
-            ajid,
-            tid,
-            tablecname,
-            tableename,
-            offset: 0,
-            count: 30,
-          });
-          break;
-        case "14":
-          await this.$store.dispatch("ShowTable/showTaxTable", {
-            ajid,
-            tid,
-            tablecname,
-            tableename,
-            offset: 0,
-            count: 30,
-          });
-          break;
-        default:
-          await this.$store.dispatch("ShowTable/showOtherTable", {
-            ajid,
-            tid,
-            tablecname,
-            tableename,
-            offset: 0,
-            count: 30,
-          });
-          break;
-      }
+      await this.$store.dispatch("ShowTable/showBaseTable", {
+        ajid,
+        tid,
+        title,
+        tableename,
+        filter: "",
+        offset: 0,
+        count: 30,
+        modelTreeList,
+      });
     },
     handleClickOpenCollapse() {
       if (this.isCollapseLeftBar) {
@@ -213,6 +149,10 @@ export default {
 };
 </script>
 <style scoped>
+.data-center-left {
+  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
+  -webkit-user-select: none;
+}
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   overflow-x: scroll; /*横向滚动*/
   width: 100%;

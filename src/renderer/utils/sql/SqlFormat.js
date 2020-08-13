@@ -96,9 +96,9 @@ function GetJYQJstr(string_0, int_0) {
 }
 
 export default {
-  FormatSqlStr: function(
-    itemSql,
-    sql_OrderBy,
+  FormatModelSqlStr: function(
+    pgsqlTemplate,
+    pgsqlOrderby,
     selectCondition,
     caseId,
     condtion = "",
@@ -122,7 +122,7 @@ export default {
       let text6 = "";
       let text7 = "";
       if (
-        itemSql.indexOf("$KEY_PERSIONS_JYMC$") >= 0 &&
+        pgsqlTemplate.indexOf("$KEY_PERSIONS_JYMC$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYMC.Length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYMC.replace(/，/g, ",").split(
@@ -134,7 +134,7 @@ export default {
         newValue2 = " AND JYMC IN(" + text.TrimEnd(",") + ")";
       }
       if (
-        itemSql.indexOf("$KEY_PERSIONS_DFMC$") >= 0 &&
+        pgsqlTemplate.indexOf("$KEY_PERSIONS_DFMC$") >= 0 &&
         selectCondition.KEY_PERSIONS_DFMC.Length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_DFMC.replace(/，/g, ",").split(
@@ -146,7 +146,7 @@ export default {
         newValue3 = " AND JYDFMC IN(" + text2.TrimEnd(",") + ")";
       }
       if (
-        itemSql.indexOf("$KEY_PERSIONS_JYZKH$") >= 0 &&
+        pgsqlTemplate.indexOf("$KEY_PERSIONS_JYZKH$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYZKH.Length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYZKH.replace(/，/g, ",").split(
@@ -163,7 +163,7 @@ export default {
           "))";
       }
       if (
-        itemSql.indexOf("$KEY_PERSIONS_JYDFZKH$") >= 0 &&
+        pgsqlTemplate.indexOf("$KEY_PERSIONS_JYDFZKH$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYDFZKH.Length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYDFZKH.replace(/，/g, ",").split(
@@ -175,7 +175,7 @@ export default {
         newValue5 = " AND JYDFZKH IN(" + text4.TrimEnd(",") + ")";
       }
       if (
-        itemSql.indexOf("$KEY_PERSIONS_JYZJHM$") >= 0 &&
+        pgsqlTemplate.indexOf("$KEY_PERSIONS_JYZJHM$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYZJHM.Length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYZJHM.replace(/，/g, ",").split(
@@ -187,7 +187,7 @@ export default {
         newValue6 = " AND JYZJHM IN(" + text5.TrimEnd(",") + ")";
       }
       if (
-        itemSql.indexOf("$KEY_PERSIONS_JYDFZJHM$") >= 0 &&
+        pgsqlTemplate.indexOf("$KEY_PERSIONS_JYDFZJHM$") >= 0 &&
         selectCondition.KEY_PERSIONS_JYDFZJHM.Length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYDFZJHM.replace(
@@ -199,7 +199,7 @@ export default {
         }
         newValue7 = " AND JYDFZJHM IN(" + text6.TrimEnd(",") + ")";
       }
-      if (itemSql.indexOf("$KYZT_KEYS$") >= 0) {
+      if (pgsqlTemplate.indexOf("$KYZT_KEYS$") >= 0) {
         if (selectCondition.KYZT.Length > 0) {
           array2 = selectCondition.KYZT.replace(/，/g, ",").split(",");
           for (let i = 0; i < array2.Length; i++) {
@@ -210,7 +210,7 @@ export default {
           newValue8 = "'0'";
         }
       }
-      let text8 = itemSql
+      let text8 = pgsqlTemplate
         .replace(
           /\$MODEL_FILTER_GROUP\$/g,
           GetBankDetailTableSql("gas_bank_records") //.replace(/\$/g,"$$$$")
@@ -261,7 +261,7 @@ export default {
         .replace(/\$RYGLFS\$/g, selectCondition.RYGLFS)
         .replace(/\$ZXKPSJ\$/g, selectCondition.ZXKPSJ)
         .replace(/\$MODEL_FILTER_CHILD\$/g, condition_child)
-        .replace(/\$SQLORDERBY\$/g, sql_OrderBy)
+        .replace(/\$SQLORDERBY\$/g, pgsqlOrderby)
         .replace(
           /\$ZXJYSJ\$/g,
           "'" +

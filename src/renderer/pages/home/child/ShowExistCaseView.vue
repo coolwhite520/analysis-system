@@ -59,23 +59,40 @@ export default {
   computed: {
     ...mapGetters("Cases", ["existCasesFilter"]),
     ...mapState("AppPageSwitch", ["currentViewName"]),
+    ...mapState("CaseDetail", ["dataSum"]),
   },
   methods: {
-    handleClickCase(caseBase) {
+    async handleClickCase(caseBase) {
       console.log(caseBase);
       // 把数据提交
       this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },
+    // 点击分析按钮
     async handleClickAnalysis(caseBase) {
       window.event.stopPropagation();
-      this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
+      await this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       await this.$store.dispatch(
         "CaseDetail/queryCaseDataCenter",
         caseBase.ajid
       );
       await this.$store.dispatch("CaseDetail/queryBatchCount", caseBase.ajid);
-      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
+      if (this.dataSum === 0) {
+        await this.$store.dispatch("ShowTable/showNoDataPage", {
+          tablecname: "数据采集",
+        });
+      } else {
+        await this.$store.dispatch("ShowTable/showBaseTable", {
+          ajid: caseBase.ajid,
+          tid: "1",
+          title: "人员基本信息",
+          tableename: "gas_person",
+          filter: "",
+          offset: 0,
+          count: 30,
+        });
+      }
     },
   },
   mounted() {

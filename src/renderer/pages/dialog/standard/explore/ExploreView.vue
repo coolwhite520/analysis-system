@@ -301,12 +301,9 @@ export default {
             }
             // 更新当前的展示列表中的数据
             for (let tableData of this.tableDataList) {
-              let { tid, tablecname, dispatchName } = tableData;
               // 根据tableName获取表的数据
-              await _this.$store.dispatch(dispatchName, {
-                ajid,
-                tid,
-                tablecname,
+              await _this.$store.dispatch(tableData.dispatchName, {
+                ...tableData,
                 offset: 0,
                 count: 30,
               });

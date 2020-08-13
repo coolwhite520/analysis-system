@@ -42,18 +42,12 @@
       @contextmenu.prevent.native="openContextMenu($event)"
     >
       <el-tab-pane
-        :key="item.tid"
+        :key="item.pageIndex"
         v-for="(item) in tableDataList"
         :label="item.title"
-        :name="item.tid"
+        :name="item.pageIndex"
       >
-        <!-- <span slot="label" style="font-size:10px;">{{item.title}}</span> -->
-        <!-- <keep-alive> -->
-        <!-- <div v-if="item.showType === 1"> -->
         <component :is="item.componentName" :tableData="item"></component>
-        <!-- </div> -->
-        <!-- <div v-else>{{item.showType}}</div> -->
-        <!-- </keep-alive> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -64,7 +58,6 @@ import TableDataView from "./DataShow/TableDataView";
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState("CaseDetail", ["caseBase", "dataSum"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", [
       "tableDataList",
@@ -93,24 +86,7 @@ export default {
       }
     },
   },
-  mounted() {
-    if (this.dataSum === 0) {
-      this.$store.dispatch("ShowTable/showNoDataPage", {
-        ajid: this.caseBase.ajid,
-        tid: "99999",
-        tablecname: "数据采集",
-      });
-    } else {
-      this.$store.dispatch("ShowTable/showPersonTable", {
-        ajid: this.caseBase.ajid,
-        tid: "1",
-        tablecname: "人员基本信息",
-        tableename: "gas_person",
-        offset: 0,
-        count: 30,
-      });
-    }
-  },
+  mounted() {},
   data() {
     return {
       left: 0,
@@ -118,17 +94,9 @@ export default {
       isDisabledCloseLeftBtnFlag: false,
       isDisabledCloseRightBtnFlag: false,
       isDisabledCloseOtherBtnFlag: false,
-      closeLeftTids: [],
-      closeRightTids: [],
+      closeLeftPageIndexs: [],
+      closeRightPageIndexs: [],
       contextMenuVisible: false,
-      // editableTabs: [
-      //   {
-      //     title: "标准采集",
-      //     tid: "9999",
-      //     componentName: "no-data-view",
-      //   },
-      // ],
-      // tabIndex: 3,
     };
   },
   methods: {
@@ -143,10 +111,14 @@ export default {
         //是否存在左边
         if (this.tableDataList.length > 1) {
           this.isDisabledCloseOtherBtnFlag = false;
-          this.closeLeftTids = this.getLeftTids();
-          this.closeRightTids = this.getRightTids();
-          this.isDisabledCloseLeftBtnFlag = !(this.closeLeftTids.length > 0);
-          this.isDisabledCloseRightBtnFlag = !(this.closeRightTids.length > 0);
+          this.closeLeftPageIndexs = this.getLeftPageIndexs();
+          this.closeRightPageIndexs = this.getRightPageIndexs();
+          this.isDisabledCloseLeftBtnFlag = !(
+            this.closeLeftPageIndexs.length > 0
+          );
+          this.isDisabledCloseRightBtnFlag = !(
+            this.closeRightPageIndexs.length > 0
+          );
         } else {
           this.isDisabledCloseLeftBtnFlag = true;
           this.isDisabledCloseRightBtnFlag = true;
@@ -156,29 +128,29 @@ export default {
         this.top = e.clientY + 10;
       }
     },
-    getLeftTids() {
-      let tids = [];
+    getLeftPageIndexs() {
+      let indexs = [];
       for (let index = 0; index < this.tableDataList.length; index++) {
         let tableData = this.tableDataList[index];
         if (tableData.tid === this.activeIndex) {
           break;
         }
-        tids.push(tableData.tid);
+        indexs.push(tableData.tid);
       }
-      return tids;
+      return indexs;
     },
-    getRightTids() {
-      let tids = [];
+    getRightPageInd() {
+      let indexs = [];
       let bfind = false;
       for (let index = 0; index < this.tableDataList.length; index++) {
         let tableData = this.tableDataList[index];
-        if (tableData.tid === this.activeIndex) {
+        if (tableData.pageIndex === this.activeIndex) {
           bfind = true;
           continue;
         }
-        if (bfind) tids.push(tableData.tid);
+        if (bfind) indexs.push(tableData.pageIndex);
       }
-      return tids;
+      return indexs;
     },
     // 关闭contextMenu
     closeContextMenu() {
@@ -187,7 +159,7 @@ export default {
     removeTab(targetName) {
       console.log(targetName, this.activeIndex);
       this.$store.commit("ShowTable/REMOVE_TABLE_DATA_FROM_LIST", {
-        tid: String(targetName),
+        pageIndex: String(targetName),
       });
     },
     closeAllTabs() {
@@ -199,17 +171,19 @@ export default {
       switch (param) {
         case "left":
           this.$store.commit("ShowTable/REMOVE_TABLE_DATAS_FROM_LIST", {
-            tids: this.closeLeftTids,
+            pageIndexList: this.closeLeftPageIndexs,
           });
           break;
         case "right":
           this.$store.commit("ShowTable/REMOVE_TABLE_DATAS_FROM_LIST", {
-            tids: this.closeRightTids,
+            pageIndexList: this.closeRightPageIndexs,
           });
           break;
         case "other":
           this.$store.commit("ShowTable/REMOVE_TABLE_DATAS_FROM_LIST", {
-            tids: this.closeLeftTids.concat(this.closeRightTids),
+            pageIndexList: this.closeLeftPageIndexs.concat(
+              this.closeRightPageIndexs
+            ),
           });
           break;
       }

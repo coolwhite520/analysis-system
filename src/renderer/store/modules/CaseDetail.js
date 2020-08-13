@@ -1,5 +1,6 @@
 import cases from "../../db/Cases";
-
+import models from "../../db/Models";
+import Vue from "vue";
 const state = {
   caseBase: {}, //  st_case表对应的字段对象
   deleteState: "",
@@ -8,6 +9,7 @@ const state = {
   dataSum: 0, // 数据总量
   awaitTaskCount: 0, // 待调单数量
   dataCenterList: [], // 数据中心tree列表数据
+  openeds: [], // 数据中心默认展开项目
 };
 const mutations = {
   SET_CASE_DETAIL(state, caseBase) {
@@ -34,6 +36,9 @@ const mutations = {
   SET_DATA_SUM(state, dataSum) {
     state.dataSum = dataSum;
   },
+  SET_LISTOPENEDS(state, openeds) {
+    state.openeds = openeds;
+  },
   RESET_ALL_DATA(state) {
     state.caseBase = {}; //  st_case表对应的字段对象
     state.deleteState = "";
@@ -48,33 +53,15 @@ const mutations = {
 
 const getters = {
   renderButtonGroupList: (state) => {
-    return state.dataCenterList.filter((item) => {
-      return item.count > 0;
-    });
-  },
-  openeds: (state) => {
-    let fatherNodes = state.dataCenterList.filter((item) => {
-      return item.parentid === "-1";
-    });
-    let list = [];
-    for (let item of fatherNodes) {
-      list.push(item.tid);
+    let arr = [];
+    for (let item of state.dataCenterList) {
+      for (let childItem of item.childrenArr) {
+        if (childItem.count > 0) {
+          arr.push(childItem);
+        }
+      }
     }
-    return list;
-  },
-  renderTreeControlList: (state) => {
-    let treeList = [];
-    let fatherNodes = state.dataCenterList.filter((item) => {
-      return item.parentid === "-1";
-    });
-    for (let item of fatherNodes) {
-      let childrenArr = state.dataCenterList.filter((child) => {
-        return child.parentid === item.tid;
-      });
-      item.childrenArr = childrenArr;
-      treeList.push(item);
-    }
-    return treeList;
+    return arr;
   },
 };
 
@@ -98,8 +85,46 @@ const actions = {
   },
   async queryCaseDataCenter({ commit }, ajid) {
     let { list, dataSum } = await cases.QueryDataCenterTableInfo(ajid);
-    console.log(list);
-    if (list) commit("SET_DATACENTERLIST", list);
+    let treeList = [];
+    let fatherNodes = list.filter((item) => {
+      return item.parentid === "-1";
+    });
+    for (let item of fatherNodes) {
+      let childrenArr = list.filter((child) => {
+        return child.parentid === item.tid;
+      });
+
+      // 遍历子元素，根据tid获取模型的详细列表
+      for (let index = 0; index < childrenArr.length; index++) {
+        let childItem = childrenArr[index];
+        let mids = await models.QueryModelmidsByTid(childItem.tid);
+        if (mids.length > 0) {
+          let modelsDetailList = await models.QueryModelListByMids(mids);
+          let newTreeList = [];
+          let parentList = modelsDetailList.filter((item) => {
+            return item.parentid_200 === -1;
+          });
+          console.log(parentList);
+          for (let father of parentList) {
+            let childrenList = modelsDetailList.filter((item) => {
+              return item.parentid_200 === father.mid;
+            });
+            father.childrenList = childrenList;
+            newTreeList.push(father);
+          }
+          // 把模型库添加到datacenter的项目中
+          Vue.set(childrenArr[index], "modelTreeList", newTreeList);
+        }
+      }
+      item.childrenArr = childrenArr;
+      treeList.push(item);
+    }
+    let listOpeneds = [];
+    for (let item of fatherNodes) {
+      listOpeneds.push(item.tid);
+    }
+    if (treeList.length > 0) commit("SET_DATACENTERLIST", treeList);
+    if (listOpeneds.length > 0) commit("SET_LISTOPENEDS", listOpeneds);
     commit("SET_DATA_SUM", dataSum);
   },
 };

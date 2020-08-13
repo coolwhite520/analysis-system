@@ -149,7 +149,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  async mounted() {
+  async beforeMount() {
     console.log(this.caseBase);
     await this.$store.dispatch(
       "CaseDetail/queryEntityCount",

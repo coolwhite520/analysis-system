@@ -8,33 +8,38 @@
       <el-col :span="isCollapseLeftBar?1:3">
         <data-center></data-center>
       </el-col>
-      <el-col :span="(showRightSliderView ? 17:21) + (isCollapseLeftBar? 2:0)">
+      <el-col
+        :span="( (currentTableData && 
+        currentTableData.showRightView&&
+        (currentTableData.modelTreeList || currentTableData.mpids) )  ? 17:21) + (isCollapseLeftBar? 2:0)"
+      >
         <main-center-view></main-center-view>
       </el-col>
-      <el-col :span="showRightSliderView ? 4:0">
-        <transition
-          name="custom-classes-transition"
-          enter-active-class="animated slideInRight"
-          leave-active-class="animated slideOutRight"
-        >
-          <right-slider v-if="showRightSliderView"></right-slider>
-        </transition>
+      <el-col
+        :span="(currentTableData && 
+        currentTableData.showRightView&&
+        (currentTableData.modelTreeList || currentTableData.mpids)) ? 4:0"
+      >
+        <right-slider></right-slider>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import TabBar from "@/pages/main/Tabs/TabBar";
 import DataCenter from "@/pages/main/LeftSlider/DataCenter";
 import MainCenterView from "@/pages/main/MainViews/MainCenterView";
 import RightSlider from "@/pages/main/RightSlider/CapitalModelLib";
 export default {
-  mounted() {},
+  mounted() {
+    // console.log({ showModelList: this.showModelList });
+  },
   computed: {
-    ...mapState("MainPageSwitch", ["showRightSliderView", "showTabBarView"]),
+    ...mapState("MainPageSwitch", ["showTabBarView"]),
     ...mapState("AppPageSwitch", ["mainViewHeight", "isCollapseLeftBar"]),
+    ...mapState("ShowTable", ["currentTableData"]),
   },
   data() {
     return {

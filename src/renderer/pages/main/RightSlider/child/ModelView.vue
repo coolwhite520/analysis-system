@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="childModel" :style="{ height: contentViewHeight + 'px'}">
     <el-row class="title">
       <el-col :span="22">
         <div>
@@ -12,11 +12,11 @@
     </el-row>
     <el-row>
       <div class="modelTitle">模型名称：</div>
-      <div class="modelDescribe">{{model.modelname}}</div>
+      <div class="modelDescribe">{{title}}</div>
     </el-row>
     <el-row>
       <div class="modelTitle">模型用途：</div>
-      <div class="modelDescribe">{{model.describe}}</div>
+      <div class="modelDescribe">{{describe}}</div>
     </el-row>
     <el-row>
       <div class="modelTitle">模型数据：</div>
@@ -33,7 +33,7 @@
               placeholder="请输入交易账卡号"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.KEY_PERSIONS_JYZKH"
+              v-model="selectCondition.KEY_PERSIONS_JYZKH"
             ></el-input>
             <span>多个请用逗号隔</span>
           </div>
@@ -45,7 +45,7 @@
               placeholder="请输入对方交易账卡号"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.KEY_PERSIONS_JYDFZKH"
+              v-model="selectCondition.KEY_PERSIONS_JYDFZKH"
             ></el-input>
             <span>多个请用逗号隔</span>
           </div>
@@ -53,7 +53,7 @@
         <div v-show="mpids.includes('3')">
           <div class="childTitle">关键人员：</div>
           <div>
-            <el-input placeholder="请输入交易名称" size="mini" v-model="SelectCondition.KEY_PERSIONS_JYMC"></el-input>
+            <el-input placeholder="请输入交易名称" size="mini" v-model="selectCondition.KEY_PERSIONS_JYMC"></el-input>
             <span>多个请用逗号隔</span>
           </div>
         </div>
@@ -64,7 +64,7 @@
               placeholder="请输入对方交易名称"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.KEY_PERSIONS_DFMC"
+              v-model="selectCondition.KEY_PERSIONS_DFMC"
             ></el-input>
             <span>多个请用逗号隔</span>
           </div>
@@ -76,7 +76,7 @@
               placeholder="请输入交易证照号码"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.KEY_PERSIONS_JYZJHM"
+              v-model="selectCondition.KEY_PERSIONS_JYZJHM"
             ></el-input>
             <span>多个请用逗号隔</span>
           </div>
@@ -88,7 +88,7 @@
               placeholder="请输入交易对手证照号码"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.KEY_PERSIONS_JYDFZJHM"
+              v-model="selectCondition.KEY_PERSIONS_JYDFZJHM"
             ></el-input>
             <span>多个请用逗号隔</span>
           </div>
@@ -101,7 +101,7 @@
               placeholder="请输入获利金额"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.HLJE"
+              v-model="selectCondition.HLJE"
             ></el-input>
           </div>
         </div>
@@ -112,7 +112,7 @@
               placeholder="请输入关联账户数阀值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.GLDDZHS"
+              v-model="selectCondition.GLDDZHS"
             ></el-input>
           </div>
         </div>
@@ -123,7 +123,7 @@
               placeholder="请输入最小交易额"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JYZE_MINValue"
+              v-model="selectCondition.JYZE_MINValue"
             ></el-input>
             <span>元</span>
           </div>
@@ -133,7 +133,7 @@
           <div class="childSelection">
             <el-select
               size="mini"
-              v-model="SelectCondition.JYZEConditionAccord"
+              v-model="selectCondition.JYZEConditionAccord"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:40%;"
@@ -149,7 +149,7 @@
               size="mini"
               style="width:40%;"
               placeholder="请输入交易金额"
-              v-model="SelectCondition.JYZEValue"
+              v-model="selectCondition.JYZEValue"
             ></el-input>
             <span>元</span>
           </div>
@@ -159,7 +159,7 @@
           <div class="childSelection">
             <el-select
               size="mini"
-              v-model="SelectCondition.JYZEConditionAccord"
+              v-model="selectCondition.JYZEConditionAccord"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:40%;"
@@ -175,7 +175,7 @@
               size="mini"
               style="width:40%;"
               placeholder="请输入交易总额"
-              v-model="SelectCondition.JYZEValue"
+              v-model="selectCondition.JYZEValue"
             ></el-input>
             <span>元</span>
           </div>
@@ -186,7 +186,7 @@
             <el-select
               size="mini"
               style="width:40%;"
-              v-model="SelectCondition.JYCSConditionAccord"
+              v-model="selectCondition.JYCSConditionAccord"
               placeholder="请选择"
             >
               <el-option
@@ -200,7 +200,7 @@
               size="mini"
               style="width:40%;"
               placeholder="请输入交易笔数"
-              v-model="SelectCondition.JYCSValue"
+              v-model="selectCondition.JYCSValue"
             ></el-input>
             <span>笔</span>
           </div>
@@ -212,7 +212,7 @@
               placeholder="请输入时间间隔"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JC_SJJG"
+              v-model="selectCondition.JC_SJJG"
             ></el-input>
             <span>小时</span>
           </div>
@@ -222,7 +222,7 @@
           <div class="childSelection">
             <el-select
               size="mini"
-              v-model="SelectCondition.SJD"
+              v-model="selectCondition.SJD"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:40%;"
@@ -243,7 +243,7 @@
               placeholder="请输入最小值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JYSJ_START"
+              v-model="selectCondition.JYSJ_START"
             ></el-input>
           </div>
           <div class="childTitle">至</div>
@@ -252,7 +252,7 @@
               placeholder="请输入最大值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JYSJ_END"
+              v-model="selectCondition.JYSJ_END"
             ></el-input>
           </div>
         </div>
@@ -263,7 +263,7 @@
               placeholder="请输入最小值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JCB_MIN"
+              v-model="selectCondition.JCB_MIN"
             ></el-input>
           </div>
           <div class="childTitle">最大值：</div>
@@ -272,7 +272,7 @@
               placeholder="请输入最大值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JCB_MAX"
+              v-model="selectCondition.JCB_MAX"
             ></el-input>
           </div>
         </div>
@@ -284,7 +284,7 @@
               placeholder="请输入公司数量"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.ZCDDGLGSSL"
+              v-model="selectCondition.ZCDDGLGSSL"
             ></el-input>
           </div>
         </div>
@@ -296,7 +296,7 @@
               placeholder="请输入公司数量"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.BSRGLGSSL"
+              v-model="selectCondition.BSRGLGSSL"
             ></el-input>
           </div>
         </div>
@@ -308,7 +308,7 @@
               placeholder="请输入公司数量"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.CWFZRGLGSSL"
+              v-model="selectCondition.CWFZRGLGSSL"
             ></el-input>
           </div>
         </div>
@@ -320,7 +320,7 @@
               placeholder="请输入金额合计"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.XXSJEHJ"
+              v-model="selectCondition.XXSJEHJ"
             ></el-input>
           </div>
         </div>
@@ -331,7 +331,7 @@
               placeholder="请输入可疑主体证照号码"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.KYZT"
+              v-model="selectCondition.KYZT"
             ></el-input>
           </div>
         </div>
@@ -343,7 +343,7 @@
               placeholder="请输入收付金额占比"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.SFJEZB"
+              v-model="selectCondition.SFJEZB"
             ></el-input>
           </div>
         </div>
@@ -355,7 +355,7 @@
               placeholder="请输入最小值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JCZCSB_MIN"
+              v-model="selectCondition.JCZCSB_MIN"
             ></el-input>
           </div>
           <div>
@@ -364,7 +364,7 @@
               placeholder="请输入最大值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JCZCSB_MAX"
+              v-model="selectCondition.JCZCSB_MAX"
             ></el-input>
           </div>
         </div>
@@ -376,7 +376,7 @@
               placeholder="请输入最小值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.SFJEB_MIN"
+              v-model="selectCondition.SFJEB_MIN"
             ></el-input>
           </div>
           <div>
@@ -385,7 +385,7 @@
               placeholder="请输入最大值"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.SFJEB_MAX"
+              v-model="selectCondition.SFJEB_MAX"
             ></el-input>
           </div>
         </div>
@@ -397,7 +397,7 @@
               placeholder="请输入公司数量"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.GFSHSL"
+              v-model="selectCondition.GFSHSL"
             ></el-input>
           </div>
         </div>
@@ -409,7 +409,7 @@
               placeholder="请输入公司数量"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.XFSHSL"
+              v-model="selectCondition.XFSHSL"
             ></el-input>
           </div>
         </div>
@@ -421,7 +421,7 @@
               placeholder="请输入存续最小开票时间"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.ZXKPSJ"
+              v-model="selectCondition.ZXKPSJ"
             ></el-input>
           </div>
         </div>
@@ -430,7 +430,7 @@
           <div class="childSelection">
             <el-select
               size="mini"
-              v-model="SelectCondition.MINH"
+              v-model="selectCondition.MINH"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:25%;"
@@ -439,7 +439,7 @@
             </el-select>
             <el-select
               size="mini"
-              v-model="SelectCondition.MINM"
+              v-model="selectCondition.MINM"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:25%;"
@@ -448,7 +448,7 @@
             </el-select>
             <el-select
               size="mini"
-              v-model="SelectCondition.MINS"
+              v-model="selectCondition.MINS"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:25%;"
@@ -460,7 +460,7 @@
           <div class="childSelection">
             <el-select
               size="mini"
-              v-model="SelectCondition.MAXH"
+              v-model="selectCondition.MAXH"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:25%;"
@@ -469,7 +469,7 @@
             </el-select>
             <el-select
               size="mini"
-              v-model="SelectCondition.MAXM"
+              v-model="selectCondition.MAXM"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:25%;"
@@ -478,7 +478,7 @@
             </el-select>
             <el-select
               size="mini"
-              v-model="SelectCondition.MAXS"
+              v-model="selectCondition.MAXS"
               placeholder="请选择"
               @visible-change="visibleChange"
               style="width:25%;"
@@ -495,7 +495,7 @@
               placeholder="请输入交易金额"
               style="width:40%;"
               size="mini"
-              v-model="SelectCondition.JYZEValue"
+              v-model="selectCondition.JYZEValue"
             ></el-input>
           </div>
         </div>
@@ -507,9 +507,21 @@
 
         <div v-show="mpids.includes('31')" class="selectionItem">
           <div class="childTitle">时间段：</div>
-          <el-date-picker v-model="SelectCondition.MinDate" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker
+            size="mini"
+            v-model="selectCondition.MinDate"
+            type="date"
+            placeholder="选择日期"
+            style="width:60%"
+          ></el-date-picker>
           <span>至</span>
-          <el-date-picker v-model="SelectCondition.MaxDate" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker
+            style="width:60%"
+            size="mini"
+            v-model="selectCondition.MaxDate"
+            type="date"
+            placeholder="选择日期"
+          ></el-date-picker>
         </div>
 
         <div v-show="mpids.includes('32')" class="selectionItem">
@@ -517,16 +529,16 @@
           <div class="childSelection">
             <el-select
               size="mini"
-              v-model="SelectCondition.SelectThType"
+              v-model="selectCondition.SelectThType.ThId"
               placeholder="请选择"
-              @visible-change="visibleChange"
-              style="width:40%;"
+              @change="handleChangeThSelect"
+              style="width:80%;"
             >
               <el-option
                 v-for="item in list_thtype"
                 :key="item.ThId"
                 :label="item.ThName"
-                :value="item"
+                :value="item.ThId"
               ></el-option>
             </el-select>
           </div>
@@ -548,12 +560,15 @@ import aes from "@/utils/aes";
 import { mapState, mapGetters } from "vuex";
 
 export default {
-  props: ["position", "model", "ajid"],
   data() {
     return {
-      MoneyIntervalDes: "",
-      resultRowCount: 0,
+      selectCondition: {},
       mpids: [],
+      MoneyIntervalDes: "",
+      HourList: [],
+      MinuteList: [],
+      listst_jyje: [],
+      listst_jycs: [],
       list_condition: [
         {
           JYZECondition: "大于",
@@ -580,8 +595,7 @@ export default {
           JYZEConditionAccord: "<=",
         },
       ],
-      HourList: [],
-      MinuteList: [],
+
       list_sjds: [
         {
           SJD_CN: "年，YYYY",
@@ -635,8 +649,7 @@ export default {
           XSMZ: "OUTJE",
         },
       ],
-      listst_jyje: [],
-      listst_jycs: [],
+
       // 团体类型数组
       list_thtype: [
         {
@@ -688,79 +701,29 @@ export default {
           COLUMN_TYPE: 0,
         },
       ],
-      //团伙选项 //界面显示ThName，其余选项用于替换模板参数
-      SelectCondition: {
-        JYZE_MINValue: 10000.0,
-        JYZEValue: 1000000.0,
-        JYZECondition: "大于等于",
-        JYZEConditionAccord: ">=",
-        JYCSConditionAccord: ">=",
-        XSMZ: "JYJE",
-        JYCSCondition: "大于等于",
-        JYCSValue: 10,
-        XSGS: 10,
-        GLDDZHS: 1,
-        HLJE: 20000,
-        JCB_MAX: 1.0,
-        JCB_MIN: 1.0,
-        JC_SJJG: 48,
-        KEY_PERSIONS_DFMC: "",
-        KEY_PERSIONS_JYMC: "",
-        SJD: "YYYY-MM",
-        SJD_CN: "月，YYYY-MM",
-        XSMZPro: "",
-        SFJEZB: 0.2,
-        ZCDDGLGSSL: 2,
-        BSRGLGSSL: 2,
-        CWFZRGLGSSL: 2,
-        XXSJEHJ: 50000.0,
-        XFSHSL: 2,
-        GFSHSL: 2,
-        MINH: "00",
-        MINM: "00",
-        MINS: "00",
-        MAXH: "23",
-        MAXM: "59",
-        MAXS: "59",
-        MoneyIntervalStr: "1,2,5,10,20,50,100,1000,10000,10000",
-        MinDate: "2010-01-01",
-        MaxDate: this.getNowFormatDate(0),
-        String_1: "CXZH,JYDFZKH,JDBZ",
-        String_0: "交易账号,对手账号,借贷标志",
-        JYSJ_START: "1970-01-01 00:00:00",
-        JYSJ_END: this.getNowFormatDate(1),
-        KEY_PERSIONS_JYZKH: "",
-        KEY_PERSIONS_JYDFZKH: "",
-        KEY_PERSIONS_JYZJHM: "",
-        KEY_PERSIONS_JYDFZJHM: "",
-        FILTER: "",
-        RYGLFS: "",
-        ZXKPSJ: 3,
-        SelectThTypeIndex: 0, //团伙
-        SelectThType: "", //this.thType[0],
-        KYZT: "",
-        JCZCSB_MIN: 0.1,
-        JCZCSB_MAX: 10.0,
-        SFJEB_MIN: 0.1,
-        SFJEB_MAX: 10.0,
-        SelectedSaveCondition: "",
-        NodeNum: "0",
-        LineNum: "0",
-        SaveTime: "1970-01-01 00:00:00",
-        SelectDataTableColumn: [], //this.defaultSelectDataTable,
-        FiledsIsNullCondition:
-          " AND CXZH IS NOT NULL AND LENGTH( COALESCE(CXZH, '0'))>0 AND JYDFZKH IS NOT NULL AND LENGTH( COALESCE(JYDFZKH, '0'))>0 AND JDBZ IS NOT NULL AND LENGTH( COALESCE(JDBZ, '0'))>0 ",
-        FiledsEmptyToNullCondition:
-          " CASE WHEN CXZH='' THEN NULL ELSE CXZH END AS CXZH,CASE WHEN JYDFZKH='' THEN NULL ELSE JYDFZKH END AS JYDFZKH,CASE WHEN JDBZ='' THEN NULL ELSE JDBZ END AS JDBZ ",
-      },
     };
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
-    ...mapState("ShowTable", ["tableDataList"]),
+    ...mapState("AppPageSwitch", ["contentViewHeight"]),
+    ...mapState("ShowTable", ["currentTableData"]),
+    resultRowCount() {
+      return this.currentTableData.sum;
+    },
+    title() {
+      return this.currentTableData.title;
+    },
+    describe() {
+      return this.currentTableData.describe;
+    },
   },
-  async mounted() {
+  async beforeMount() {
     console.log("childModel mouted.........");
+    this.mpids = JSON.parse(JSON.stringify(this.currentTableData.mpids));
+    this.selectCondition = JSON.parse(
+      JSON.stringify(this.currentTableData.selectCondition)
+    );
+    console.log(this.selectCondition);
     // 交易金额区间描述
     this.initMoneyIntervalDes();
     for (let i = 0; i < 24; i++) {
@@ -780,42 +743,20 @@ export default {
     this.listst_jyje = JSON.parse(JSON.stringify(this.list_condition));
     console.log(this.listst_jyje);
     this.listst_jycs = JSON.parse(JSON.stringify(this.list_condition));
-    this.SelectCondition.SelectThType = this.list_thtype[0];
-    this.SelectCondition.SelectDataTableColumn = this.defaultSelectDataTable;
-    let { ajid } = this.caseBase;
-    let tid = String(this.model.mid);
-    let modelname = this.model.modelname;
-    let pgsqlTemplate = this.model.gpsqltemplate;
-    let orderby = this.model.orderby ? this.model.orderby : "";
-    let showType = this.model.out_type ? parseInt(this.model.out_type) : 1;
-    let pgsql = aes.decrypt(pgsqlTemplate);
-    let mpids = this.model.mpids ? this.model.mpids.split(",") : [];
-    console.log(mpids);
-    this.mpids = mpids;
-    await this.$store.dispatch("ShowTable/showModelTable", {
-      ajid,
-      offset: 0,
-      tid,
-      pgsql,
-      orderby,
-      showType,
-      mpids,
-      params: this.SelectCondition,
-      tablecname: modelname,
-      count: 30,
-    });
-    for (let item of this.tableDataList) {
-      if (item.tid === tid) {
-        this.resultRowCount = item.data.sum;
-        console.log({ resultRowCount: this.resultRowCount });
-        break;
-      }
-    }
   },
   methods: {
+    handleChangeThSelect(currentValue) {
+      console.log(this.list_thtype);
+      for (let item of this.list_thtype) {
+        if (item.ThId === currentValue) {
+          this.selectCondition.SelectThType = JSON.parse(JSON.stringify(item));
+          break;
+        }
+      }
+    },
     initMoneyIntervalDes() {
       let text = "";
-      let arrMoneyInterval = this.SelectCondition.MoneyIntervalStr.split(",");
+      let arrMoneyInterval = this.selectCondition.MoneyIntervalStr.split(",");
       text += "交易区间：";
       for (let i = 0; i < arrMoneyInterval.length; i++) {
         if (i === 0) {
@@ -837,11 +778,22 @@ export default {
     visibleChange(value) {
       console.log(value);
     },
-    handleClickExecCondition() {},
+    async handleClickExecCondition() {
+      // 先更新currentTable的过滤条件
+      await this.$store.commit("ShowTable/UPDATE_MODEL_SELECTION", {
+        pageIndex: this.currentTableData.pageIndex,
+        selectCondition: this.selectCondition,
+      });
+      await this.$store.dispatch(this.currentTableData.dispatchName, {
+        ...this.currentTableData,
+        offset: 0,
+        count: 30,
+      });
+      console.log(this.currentTableData);
+    },
     handleClickSaveCondition() {},
     handleClickClose() {
-      this.$store.commit("MainPageSwitch/HIDE_CHILD_MODEL");
-      console.log(this.model);
+      this.$store.commit("ShowTable/HIDE_CURRENT_TABLE_RIGHT_VIEW");
     },
     getNowFormatDate(type = 0) {
       let date = new Date();
@@ -885,7 +837,8 @@ export default {
 </script>
 <style scoped>
 .childModel {
-  background-color: white;
+  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
+  -webkit-user-select: none;
 }
 .title {
   height: 40px;
