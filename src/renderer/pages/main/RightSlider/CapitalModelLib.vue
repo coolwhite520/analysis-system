@@ -1,11 +1,22 @@
 <template >
-  <div class="all-slider" :style="{ height: contentViewHeight + 'px'}">
-    <keep-alive>
-      <model-list-view
-        v-if="(currentTableData && currentTableData.showRightView&& currentTableData.modelTreeList)"
-      ></model-list-view>
-    </keep-alive>
-    <model-view v-if="(currentTableData &&currentTableData.showRightView&& currentTableData.mpids)"></model-view>
+  <div :style="{ height: contentViewHeight + 'px'}">
+    <el-tabs
+      class="rightTab"
+      tab-position="bottom"
+      type="card"
+      closable
+      :style="{ height: contentViewHeight + 'px'}"
+      @tab-remove="handleTabRemove"
+    >
+      <el-tab-pane
+        v-for="(item) in currentTableData.rightTabs.filter( obj=> obj.visible === true)"
+        :key="item.tabIndex"
+        :name="item.tabIndex"
+      >
+        <span slot="label" style="font-size:10px;" class="iconfont" v-html="item.title"></span>
+        <component :is="item.componentName" :renderData="item"></component>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -23,13 +34,25 @@ export default {
     "model-list-view": ModelListView,
     "model-view": ModelView,
   },
+  methods: {
+    handleTabRemove(tabIndex) {
+      console.log(tabIndex);
+      //更新rightTabs的显示和隐藏
+      this.$store.commit("ShowTable/SET_RIGHT_TAB_VISIBLE", {
+        pageIndex: this.currentTableData.pageIndex,
+        tabIndex,
+        visible: false,
+      });
+    },
+  },
 };
 </script>
 
-<style scoped>
-.all-slider {
-  /* position: relative; */
-  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
-  -webkit-user-select: none;
+<style>
+.rightTab .el-tabs__item {
+  /* background-color: white; */
+}
+.rightTab .el-tabs__nav-scroll {
+  background-color: #f5f7fa;
 }
 </style>

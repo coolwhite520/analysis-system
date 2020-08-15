@@ -135,6 +135,7 @@ export default {
         filter: "",
         offset: 0,
         count: 30,
+        selectCondition: JSON.parse(JSON.stringify(this.$defaultSelection)),
         modelTreeList,
       });
     },

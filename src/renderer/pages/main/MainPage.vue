@@ -10,17 +10,18 @@
       </el-col>
       <el-col
         :span="( (currentTableData && 
-        currentTableData.showRightView&&
-        (currentTableData.modelTreeList || currentTableData.mpids) )  ? 17:21) + (isCollapseLeftBar? 2:0)"
+        currentTableData.rightTabs && currentTableData.rightTabs.filter( obj=> obj.visible === true).length > 0 )  ? 17:21) + (isCollapseLeftBar? 2:0)"
       >
         <main-center-view></main-center-view>
       </el-col>
       <el-col
         :span="(currentTableData && 
-        currentTableData.showRightView&&
-        (currentTableData.modelTreeList || currentTableData.mpids)) ? 4:0"
+        currentTableData.rightTabs && currentTableData.rightTabs.filter( obj=> obj.visible === true).length > 0  ) ? 4:0"
       >
-        <right-slider></right-slider>
+        <right-slider
+          v-if="currentTableData && 
+        currentTableData.rightTabs && currentTableData.rightTabs.filter( obj=> obj.visible === true).length > 0 "
+        ></right-slider>
       </el-col>
     </el-row>
   </div>

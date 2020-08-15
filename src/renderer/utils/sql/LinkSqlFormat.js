@@ -28,6 +28,8 @@ CA_PageItemDetail为详细参数：
 交易时间规律     id=357，设置交易时间 CA_PageItemDetail.jysj
 交易时段分析     id=358，设置交易区间 CA_PageItemDetail.jyqj,设置最早最晚时间CA_PageItemDetail.mindate,CA_PageItemDetail.maxdate(模型参数)
 资金透视分析 id=421，设置CA_PageItemDetail.FiledENDictionary字典，内容为key=分类维度，value为对应的值
+查找重点联系人 id=802，设置CA_PageItemDetail.ddfhm，CA_PageItemDetail.dfhm。调单方电话号码，对方电话号码
+数据中心人员界面  id=1或2，设置CA_PageItemDetail.jyzjhm，CA_PageItemDetail.jymc。证件号码，交易名称
 */
 String.prototype.startWith = function(str) {
   var reg = new RegExp("^" + str);
@@ -123,42 +125,7 @@ let CA_PageItem = {
 const DataType = {
   STR: 0,
 };
-let CA_PageItemDetail = {
-  CurrCellVal: "", //当前点击的值
-  CurrentExeSql: "", //模型模板sql
-  Ajid: "", //AJID
 
-  cxkh: "jiaoyikahao", //交易卡号
-  jymc: "jiaoyimingchen", //交易名称
-  jydfmc: "jiaoyidfmc", //交易对方名称
-  jydfzkh: "jiaoyiduifangkh", //交易对方卡号
-  jyzjhm: "jyzjhm", //交易证件号码
-  jydfzjhm: "jydfzjhm", //交易对方证件号码
-  jyje: 0, //交易金额
-  //MinJyje:0,//最小金额
-  //JyjeOper:"",//交易金额操作  JYCSConditionAccord  > = <等
-  //MinJcb:0,//最小进出比
-  //MaxJcb:0,//最大进出比
-  //JyJzje:0,//总金额？交易进账金额？
-  //Jyjgsj:0,//时间间隔    JC_SJJG
-  //jykhIn:"",//交易卡号 进账
-  //jykhOut:"",//交易卡号 出账
-  ddfhm: "1111", //调单方号码
-  dfhm: "2222", //对方号码
-  jysj: "2019-6-29 23:59:59", //交易时间
-  zzlxmc: "", //证照类型名称
-  zysm: "", //摘要说明
-  sfmc: "未知", //省份名称
-  jyqj: "8-9时", //交易区间;时段区间
-  groupname: "", //分组值
-  groupid: "", //分组ID名称
-  dfgroupname: "", //对方分组名称
-  dfgroupid: "", //对方组ID
-  FiledENDictionary: { CXZH: "615873188201", JYDFZKH: "", JYJE: "1000" }, //filed字典，421资金透视分析模型参数
-  mindate: "2010-1-1", //最小日期,358交易时段分析模型参数
-  maxdate: "2020-8-12", //最大日期,358交易时段分析模型参数
-  //LinkDetailCondition:""
-};
 const FiltrateLogicID = {
   EqualTo: 0,
   // Token: 0x04000378 RID: 888
@@ -205,38 +172,38 @@ const FiltrateLogicID = {
 //原BackFiltrateCondtion通过字符串hash值比较
 
 /*function BackFiltrateCondtion(condtion,vale){
-    let result = "";
-    if(condtion ==null){
-        return result;
-    }
-    if (condtion == FiltrateLogicID.GreaterOrEqual){
-        result = " >=  '" + vale + "' ";
-    }else if (condtion == FiltrateLogicID.GreaterThan){
-        result = " > '" + vale + "' ";
-    }else if (condtion == FiltrateLogicID.LessThan){
-        result = " <  '" + vale + "' ";
-    }else if (condtion == FiltrateLogicID.NotEmpty){
-        result = " not null ";
-    }else if (condtion == FiltrateLogicID.EqualTo){
-        result = " = '" + vale + "' ";
-    }else if (condtion == FiltrateLogicID.StartWith){
-        result = " like '" + vale + "%'";
-    }else if (condtion == FiltrateLogicID.EndWith){
-        result = " like '%" + vale + "'";
-    }else if (condtion == FiltrateLogicID.NotEndWith){
-        result = " not like '%"+ vale+ "' or"+vale+" IS NULL ";
-    }else if (condtion == FiltrateLogicID.Contains){
-        result = " like '%" + vale + "%'";
-    }else if (condtion == FiltrateLogicID.NotEqualTo){
-        result = " != '" + vale + "' or "+vale+" IS NULL ";
-    }else if (condtion == FiltrateLogicID.LessOrEqual){
-        result = " <=  '" + vale + "' ";
-    }else if (condtion == FiltrateLogicID.NotStartWith){
-        result = " not like '" + vale + "%' or"+vale+" IS NULL ";
-    }else if (condtion == FiltrateLogicID.NotContains){
-        result = " not like '%" + vale + "%' or"+vale+" IS NULL ";
-    }
-    return result;
+  let result = "";
+  if(condtion ==null){
+      return result;
+  }
+  if (condtion == FiltrateLogicID.GreaterOrEqual){
+      result = " >=  '" + vale + "' ";
+  }else if (condtion == FiltrateLogicID.GreaterThan){
+      result = " > '" + vale + "' ";
+  }else if (condtion == FiltrateLogicID.LessThan){
+      result = " <  '" + vale + "' ";
+  }else if (condtion == FiltrateLogicID.NotEmpty){
+      result = " not null ";
+  }else if (condtion == FiltrateLogicID.EqualTo){
+      result = " = '" + vale + "' ";
+  }else if (condtion == FiltrateLogicID.StartWith){
+      result = " like '" + vale + "%'";
+  }else if (condtion == FiltrateLogicID.EndWith){
+      result = " like '%" + vale + "'";
+  }else if (condtion == FiltrateLogicID.NotEndWith){
+      result = " not like '%"+ vale+ "' or"+vale+" IS NULL ";
+  }else if (condtion == FiltrateLogicID.Contains){
+      result = " like '%" + vale + "%'";
+  }else if (condtion == FiltrateLogicID.NotEqualTo){
+      result = " != '" + vale + "' or "+vale+" IS NULL ";
+  }else if (condtion == FiltrateLogicID.LessOrEqual){
+      result = " <=  '" + vale + "' ";
+  }else if (condtion == FiltrateLogicID.NotStartWith){
+      result = " not like '" + vale + "%' or"+vale+" IS NULL ";
+  }else if (condtion == FiltrateLogicID.NotContains){
+      result = " not like '%" + vale + "%' or"+vale+" IS NULL ";
+  }
+  return result;
 }*/
 function BackFiltrateCondtion(
   condtion,
@@ -267,6 +234,7 @@ function BackFiltrateCondtion(
     for (let i = 0; i < array.length; i++) {
       text = text + " " + FiltrateFieldEN + " >= '" + array[i] + "' ";
       if (i < array.length - 1) {
+        j;
         text += " OR ";
       }
     }
@@ -573,7 +541,7 @@ function GetdisplayRelation(dataFilter) {
   return dataFilter == "且" ? "AND" : "OR";
 }
 function GetListCondition(list, timeindex = [], timetype = []) {
-  text = "";
+  let text = "";
   if (list == null || list == undefined || list.length <= 0) {
     return text;
   }
@@ -1144,11 +1112,11 @@ function Get307CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   }
   if (CurrTabItem.M_TYPE == 301) {
     //mid=301,交易账户关联对手账户（人）数
-    newValue2 = " AND cxkh = " + _CA_PageItemDetail.cxkh; //jykh交易卡号
+    newValue2 = " AND cxkh = '" + _CA_PageItemDetail.cxkh + "'"; //jykh交易卡号
   }
   let sql = _CA_PageItemDetail.CurrentExeSql.replace(/\$CXKH\$/g, newValue2)
-    .replace(/\$JYMC\$/g, _CA_PageItemDetail.jymc)
-    .replace(/\$JYZJHM\$/g, _CA_PageItemDetail.jyzjhm)
+    .replace(/\$JYMC\$/g, "'" + _CA_PageItemDetail.jymc + "'")
+    .replace(/\$JYZJHM\$/g, "'" + _CA_PageItemDetail.jyzjhm + "'")
     .replace(/\$JDBZ\$/g, newValue);
   return sql;
 }
@@ -1164,11 +1132,11 @@ function Get308CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   }
   if (CurrTabItem.M_TYPE == 301) {
     //mid=301,交易账户关联对手账户（人）数
-    newValue2 = " AND cxkh = " + _CA_PageItemDetail.cxkh; //jykh交易卡号
+    newValue2 = " AND cxkh = '" + _CA_PageItemDetail.cxkh + "'"; //jykh交易卡号
   }
   let sql = _CA_PageItemDetail.CurrentExeSql.replace(/\$CXKH\$/g, newValue2)
-    .replace(/\$JYMC\$/g, _CA_PageItemDetail.jymc)
-    .replace(/\$JYZJHM\$/g, _CA_PageItemDetail.jyzjhm)
+    .replace(/\$JYMC\$/g, "'" + _CA_PageItemDetail.jymc + "'")
+    .replace(/\$JYZJHM\$/g, "'" + _CA_PageItemDetail.jyzjhm + "'")
     .replace(/\$JDBZ\$/g, newValue);
   return sql;
 }
@@ -1176,10 +1144,10 @@ function Get308CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
 function Get309CA_PageItem(_CA_PageItemDetail) {
   return _CA_PageItemDetail.CurrentExeSql.replace(
     /\$JYZJHM\$/g,
-    _CA_PageItemDetail.jyzjhm
+    "'" + _CA_PageItemDetail.jyzjhm + "'"
   )
-    .replace(/\$ZZHMLX\$/g, _CA_PageItemDetail.zzlxmc)
-    .replace(/\$JYMC\$/g, _CA_PageItemDetail.jymc);
+    .replace(/\$ZZHMLX\$/g, "'" + _CA_PageItemDetail.zzlxmc + "'")
+    .replace(/\$JYMC\$/g, "'" + _CA_PageItemDetail.jymc + "'");
 }
 function Get310CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   let newValue = "";
@@ -1193,11 +1161,11 @@ function Get310CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   }
   if (CurrTabItem.M_TYPE == 303) {
     //mid=303,对手账户关联交易账户（人）数
-    newValue2 = " AND jydfzkh = " + _CA_PageItemDetail.jydfzkh; //jykh交易卡号
+    newValue2 = " AND jydfzkh = '" + _CA_PageItemDetail.jydfzkh + "'"; //jykh交易卡号
   }
   let sql = _CA_PageItemDetail.CurrentExeSql.replace(/\$JYDFZKH\$/g, newValue2)
-    .replace(/\$JYDFMC\$/g, _CA_PageItemDetail.jydfmc)
-    .replace(/\$JYDFZJHM\$/g, _CA_PageItemDetail.jydfzjhm)
+    .replace(/\$JYDFMC\$/g, "'" + _CA_PageItemDetail.jydfmc + "'")
+    .replace(/\$JYDFZJHM\$/g, "'" + _CA_PageItemDetail.jydfzjhm + "'")
     .replace(/\$JDBZ\$/g, newValue);
   return sql;
 }
@@ -1213,43 +1181,43 @@ function Get311CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   }
   if (CurrTabItem.M_TYPE == 303) {
     //mid=303,对手账户关联交易账户（人）数
-    newValue2 = " AND JYDFZKH = " + _CA_PageItemDetail.jydfzkh; //jykh交易卡号
+    newValue2 = " AND JYDFZKH = '" + _CA_PageItemDetail.jydfzkh + "'"; //jykh交易卡号
   }
   let sql = _CA_PageItemDetail.CurrentExeSql.replace(/\$JYDFZKH\$/g, newValue2)
-    .replace(/\$JYDFMC\$/g, _CA_PageItemDetail.jydfmc)
-    .replace(/\$JYDFZJHM\$/g, _CA_PageItemDetail.jydfzjhm)
+    .replace(/\$JYDFMC\$/g, "'" + _CA_PageItemDetail.jydfmc + "'")
+    .replace(/\$JYDFZJHM\$/g, "'" + _CA_PageItemDetail.jydfzjhm + "'")
     .replace(/\$JDBZ\$/g, newValue);
   return sql;
 }
 function Get805CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
   return _CA_PageItemDetail.CurrentExeSql.replace(
     /\$DDFHM\$/g,
-    _CA_PageItemDetail.ddfhm
+    "'" + _CA_PageItemDetail.ddfhm + "'"
   );
 }
 function Get806CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
   return _CA_PageItemDetail.CurrentExeSql.replace(
     /\$DFHM\$/g,
-    _CA_PageItemDetail.dfhm
+    "'" + _CA_PageItemDetail.dfhm + "'"
   );
 }
 function Get813CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
   return _CA_PageItemDetail.CurrentExeSql.replace(
     /\$DDFHM\$/g,
-    _CA_PageItemDetail.ddfhm
+    "'" + _CA_PageItemDetail.ddfhm + "'"
   );
 }
 function Get814CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
   return _CA_PageItemDetail.CurrentExeSql.replace(
     /\$DFHM\$/g,
-    _CA_PageItemDetail.dfhm
+    "'" + _CA_PageItemDetail.dfhm + "'"
   );
 }
 function Get824CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
   return _CA_PageItemDetail.CurrentExeSql.replace(
     /\$DDFHM\$/g,
-    _CA_PageItemDetail.ddfhm
-  ).replace(/\$DFHM\$/g, _CA_PageItemDetail.dfhm);
+    "'" + _CA_PageItemDetail.ddfhm + "'"
+  ).replace(/\$DFHM\$/g, "'" + _CA_PageItemDetail.dfhm + "'");
 }
 
 function AnalysePageGrid_OnLinkClick(
@@ -1257,10 +1225,10 @@ function AnalysePageGrid_OnLinkClick(
   CurrTabItem,
   ColumnName
 ) {
-  if (cA_PageItemDetail.CurrCellVal == "'0'") {
-    console.log(cA_PageItemDetail.TabName + "没有可钻取的数据");
-    return;
-  }
+  /*if (cA_PageItemDetail.CurrCellVal == "'0'"){
+      console.log(cA_PageItemDetail.TabName+"没有可钻取的数据");
+      return;
+  }*/
   cA_PageItemDetail.CurrentExeSql = CurrTabItem.Sql_Detail; //模型模板sql
   let list;
   if (CurrTabItem.M_TYPE == 203) {
@@ -1485,11 +1453,169 @@ function AnalysePageGrid_OnLinkClick(
   //method_9(cA_PageItemDetail, list, null);
   return { type: "18", msg: list };
 }
+function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
+  let CA_PageItemDetail = {
+    //CurrCellVal:"",//当前点击的值
+    CurrentExeSql: "", //模型模板sql
+    //Ajid:"",//AJID
+    cxkh: "", //交易卡号
+    jymc: "", //交易名称
+    jydfmc: "", //交易对方名称
+    jydfzkh: "", //交易对方卡号
+    jyzjhm: "", //交易证件号码
+    jydfzjhm: "", //交易对方证件号码
+    jyje: 0, //交易金额
+    //MinJyje:0,//最小金额
+    //JyjeOper:"",//交易金额操作  JYCSConditionAccord  > = <等
+    //MinJcb:0,//最小进出比
+    //MaxJcb:0,//最大进出比
+    //JyJzje:0,//总金额？交易进账金额？
+    //Jyjgsj:0,//时间间隔    JC_SJJG
+    //jykhIn:"",//交易卡号 进账
+    //jykhOut:"",//交易卡号 出账
+    ddfhm: "", //调单方号码
+    dfhm: "", //对方号码
+    jysj: "", //交易时间
+    zzlxmc: "", //证照类型名称
+    zysm: "", //摘要说明
+    sfmc: "", //省份名称
+    jyqj: "", //交易区间;时段区间
+    groupname: "", //分组值
+    groupid: "", //分组ID名称
+    dfgroupname: "", //对方分组名称
+    dfgroupid: "", //对方组ID
+    FiledENDictionary: {}, //filed字典，421资金透视分析模型参数
+    mindate: "", //最小日期,358交易时段分析模型参数
+    maxdate: "", //最大日期,358交易时段分析模型参数
+    //LinkDetailCondition:""
+  };
+  switch (CA_PageItem.M_TYPE) {
+    case 1:
+    case 2:
+      CA_PageItemDetail.jyzjhm = item["zzhm"].trim();
+      CA_PageItemDetail.zzlxmc = item["zzlxmc"].trim();
+      CA_PageItemDetail.jymc = item["khmc"].trim();
+      break;
+    case 202:
+      CA_PageItemDetail.jydfzkh = item["jydfzkh"].trim();
+    case 200:
+      CA_PageItemDetail.cxkh = item["cxkh"].trim();
+      break;
+    case 203:
+      CA_PageItemDetail.jymc = item["jymc"].trim();
+      CA_PageItemDetail.jydfmc = item["jydfmc"].trim();
+      break;
+    case 213:
+      let dsthid = parm["SelectThType"]["DsThId"].toLowerCase();
+      CA_PageItemDetail.dfgroupid = dsthid.split("group")[0];
+      CA_PageItemDetail.dfgroupname = item[dsthid].trim();
+    case 211:
+      let thid = parm["SelectThType"].ThId.toLowerCase();
+      CA_PageItemDetail.groupid = thid.split("group")[0];
+      CA_PageItemDetail.groupname = item[thid].trim();
+      break;
+    case 301:
+      CA_PageItemDetail.cxkh = item["cxkh"].trim();
+    case 302:
+      CA_PageItemDetail.jymc = item["jymc"].trim();
+      CA_PageItemDetail.jyzjhm = item["jyzjhm"].trim();
+      break;
+    case 303:
+      CA_PageItemDetail.jydfzkh = item["jydfzkh"].trim();
+    case 304:
+      CA_PageItemDetail.jydfmc = item["jydfmc"].trim();
+      CA_PageItemDetail.jydfzjhm = item["jydfzjhm"].trim();
+      break;
+    case 305:
+      CA_PageItemDetail.jysj = item["jyrq"].trim();
+      break;
+    case 351:
+      CA_PageItemDetail.zysm = item["zysm"].trim();
+      break;
+    case 358:
+      CA_PageItemDetail.mindate = parm["MinDate"];
+      CA_PageItemDetail.maxdate = parm["MaxDate"];
+    case 352:
+      CA_PageItemDetail.jyqj = item["jyqj"].trim();
+      break;
+    case 353:
+      CA_PageItemDetail.sfmc = item["sfmc"].trim();
+      break;
+    case 354:
+      CA_PageItemDetail.jyje = item["jyje"].trim();
+      break;
+    case 357:
+      CA_PageItemDetail.jysj = item["jysj"].trim();
+      break;
+    case 421:
+      let arr = parm["String_1"].split(",");
+      for (let i = 0; i < arr.length; i++) {
+        let field = arr[i].toLowerCase();
+        CA_PageItemDetail.FiledENDictionary[field] = item[field].trim();
+      }
+      break;
+    case 802:
+    case 805:
+    case 804:
+    case 812:
+      CA_PageItemDetail.dfhm = item["dfhm"].trim();
+      if (CA_PageItem.M_TYPE == 804 || CA_PageItem.M_TYPE == 812) {
+        break;
+      }
+    case 803:
+    case 811:
+      CA_PageItemDetail.ddfhm = item["ddfhm"].trim();
+      break;
+    case 822:
+      CA_PageItemDetail.ddfhm = item["sjhm"].trim();
+      CA_PageItemDetail.dfhm = item["sjhm"].trim();
+      break;
+  }
+  return AnalysePageGrid_OnLinkClick(
+    CA_PageItemDetail,
+    CA_PageItem,
+    ColumnName
+  );
+}
 
 export default {
-  formatClickLinkSql: function() {},
+  format: OnLinkClick,
 };
 
-// CA_PageItem.M_TYPE = 202;
-// let res = AnalysePageGrid_OnLinkClick(CA_PageItemDetail, CA_PageItem, "");
-// if (res != null) console.log(res["msg"]);
+// CA_PageItem.M_TYPE=421
+// let res=OnLinkClick(CA_PageItem,{jydfzkh:"zhangsan",cxkh:"123456"},{String_1:"jydfzkh,cxkh"},"JZBS")
+// if(res!=null)
+//     console.log(res["msg"])
+/*   
+通过layout_table_column link_mid找到连接跳转到的页面id。分为两类，一类当作数据中心页面，4为资金页面，18为通话页面；其他都可当作点击模型处理
+当作为模型时,可以在layout_model_info中查询到模板sql
+
+所有链接回调 
+AnalysePageGrid_OnLinkClick 
+参数 CA_PageItemDetail，CA_PageItem，ColumnName（英文列名）
+CA_PageItem.M_TYPE传入当前页面的id，CA_PageItem.Sql_Detail传入link_mid对应模型的模板sql（4，18为空）
+CA_PageItemDetail为详细参数：
+大额交易行为账户发现 id=200,需要设置查询卡号 CA_PageItemDetail.cxkh
+重点对手账户发现  id=202，需要设置查询卡号，交易对方张卡号  CA_PageItemDetail.cxkh ,CA_PageItemDetail.jydfzkh
+重点对手户名发现 id=203, 需设置交易名称，交易对方名称   CA_PageItemDetail.jymc,CA_PageItemDetail.jydfmc
+
+大额交易行为团伙账户发现 id=211,需要设置团伙划分CA_PageItemDetail.groupid：ThType.ThId去除"GROUP"，主体名称划分（jymc）,证照号码划分（jyzjhm）,交易卡号划分（cxkh）;CA_PageItemDetail.groupname为对应的值
+重点交易对手团伙发现 id=213,需要设置团伙划分CA_PageItemDetail.groupid 以及对方CA_PageItemDetail.dfgroupid
+
+交易账户关联对手账户（人）数   id=301,设置查询卡号CA_PageItemDetail.cxkh，交易名称CA_PageItemDetail.jymc,交易证件号码CA_PageItemDetail.jyzjhm
+交易户名关联对手账户（人）数   id=302，设置交易名称CA_PageItemDetail.jymc，交易证件号码CA_PageItemDetail.jyzjhm
+对手账户关联交易账户（人）数   id=303，设置交易对方账卡号CA_PageItemDetail.jydfzkh，交易对方名称CA_PageItemDetail.jydfmc，交易对方证件号码CA_PageItemDetail.jydfzjhm
+对手户名关联交易账户（人）数   id=304，设置交易对方名称CA_PageItemDetail.jydfmc，交易对方证件号码CA_PageItemDetail.jydfzjhm
+
+
+交易日期规律    id= 305，设置交易日期 CA_PageItemDetail.jysj
+交易方式规律    id=  351，设置摘要说明 CA_PageItemDetail.zysm
+交易金额区间规律   id=352，设置交易区间 CA_PageItemDetail.jyqj
+交易地区分布    id= 353，设置省份名称 CA_PageItemDetail.sfmc
+交易金额特征     id=354，设置交易金额 CA_PageItemDetail.jyje
+交易时间规律     id=357，设置交易时间 CA_PageItemDetail.jysj
+交易时段分析     id=358，设置交易区间 CA_PageItemDetail.jyqj,设置最早最晚时间CA_PageItemDetail.mindate,CA_PageItemDetail.maxdate(模型参数)
+资金透视分析 id=421，设置CA_PageItemDetail.FiledENDictionary字典，内容为key=分类维度，value为对应的值
+查找重点联系人 id=802设置CA_PageItemDetail.ddfhm，CA_PageItemDetail.dfhm。调单方电话号码，对方电话号码
+数据中心人员界面  id=1或2，设置CA_PageItemDetail.jyzjhm，CA_PageItemDetail.jymc,CA_PageItemDetail.zzlxmc。证件号码，交易名称,证件类型
+*/

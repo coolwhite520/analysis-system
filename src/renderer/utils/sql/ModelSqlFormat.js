@@ -312,15 +312,3 @@ export default {
     }
   },
 };
-
-// let sss = "111$jyje$ 222";
-// let a = 222;
-
-// let ll =
-//   "SELECT DISTINCT\r\n\r\n\tt1.cxkh,\r\n\r\n\tt1.jyzjhm,\r\n\r\n\tt1.jymc,\r\n\r\n\tt1.jyzje,\r\n\r\n\tt1.jyzbs,\r\n\r\n\tt1.CZJE,\r\n\r\n\tt1.CZBS,\r\n\r\n\tt1.JZJE,\r\n\r\n\tt1.JZBS,\r\n\r\n\tt1.JCZCE\r\n\r\nFROM\r\n\r\n\t(\r\n\r\nSELECT\r\n\r\n\tmax( jymc ) AS jymc,\r\n\r\n\tcxkh,\r\n\r\n\tmax( jyzjhm ) AS jyzjhm,\r\n\r\n\tmax( jyrq ) AS jyrq,\r\n\r\n\tsum( jyje ) AS jyzje,\r\n\r\n\tcount( 1 ) AS jyzbs,\r\n\r\n\tSUM(CASE JDBZ WHEN '出' THEN JYJE ELSE 0 END) AS CZJE, \r\n\r\n\tSUM(CASE JDBZ WHEN '出' THEN 1 ELSE 0 END) AS CZBS, \r\n\r\n\tSUM(CASE JDBZ WHEN '进' THEN JYJE ELSE 0 END) AS JZJE, \r\n\r\n\tSUM(CASE JDBZ WHEN '进' THEN 1 ELSE 0 END) AS JZBS, \r\n\r\n\tSUM(CASE JDBZ WHEN '进' THEN JYJE ELSE - JYJE END) AS JCZCE\r\n\r\nFROM\r\n\r\n\r\n\r\n$MODEL_FILTER_GROUP$\r\n\r\n\r\n\r\nWHERE\r\n\r\n\tajid = $AJID$ $MODEL_FILTER$ \r\n\r\n\tAND cxkh IS NOT NULL \r\n\r\nGROUP BY\r\n\r\n\tcxkh \r\n\r\nHAVING\r\n\r\n\tsum( jyje ) $ZXJYJE_CONDITION$ $ZXJYZJE$ \r\n\r\n\tAND count( 1 ) $JYBS_CONDITION$ $ZXJYZCS$ \r\n\r\n\t) t1 \r\n\r\nWHERE 1=1 $MODEL_FILTER_CHILD$  $SQLORDERBY$";
-// let or = "ORDER BY jyzbs DESC";
-
-// var qqq = FormatSqlStr(ll, or, CaseAnalyseFiltrateModel, "100", "", "");
-// console.log(qqq);
-// console.log(CaseAnalyseFiltrateModel.JYSJ_END);
-// console.log(CaseAnalyseFiltrateModel.MaxDate);

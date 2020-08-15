@@ -29,4 +29,22 @@ export default {
       return null;
     }
   },
+  // 根据模型id获取模型的模版
+  QueryModelSqlTemplateByMid: async function(mid) {
+    try {
+      await cases.SwitchDefaultCase();
+      let sql = `select modelname, gpsqltemplate, orderby from layout_model_info where mid=${mid}`;
+      const res = await db.query(sql);
+      console.log(sql, res);
+      return {
+        success: true,
+        modelname: res.rows[0].modelname,
+        gpsqltemplate: res.rows[0].gpsqltemplate,
+        orderby: res.rows[0].orderby,
+      };
+    } catch (e) {
+      console.log(e);
+      return { success: false };
+    }
+  },
 };

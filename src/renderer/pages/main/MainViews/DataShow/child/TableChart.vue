@@ -54,6 +54,7 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   mounted() {
     console.log(this.tableData);
@@ -103,6 +104,21 @@ export default {
     },
     async handleClickTableCellLink(row, fieldename, linkMid, value) {
       console.log(row, fieldename, linkMid, value);
+      let newRow = {};
+      for (let k in row) {
+        newRow[k] = row[k].value;
+      }
+
+      this.$store.dispatch("ShowTable/showLinkTable", {
+        tid: parseInt(this.tableData.tid),
+        ajid: this.caseBase.ajid,
+        linkMid,
+        selectCondition: this.tableData.selectCondition,
+        row: newRow,
+        fieldename: fieldename.toUpperCase(), // 注意列名需要传递大写
+        count: 30,
+        offset: 0,
+      });
     },
 
     async handleCurrentChange(val) {
