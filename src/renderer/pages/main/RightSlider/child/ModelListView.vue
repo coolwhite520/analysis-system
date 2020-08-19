@@ -72,7 +72,6 @@ export default {
   data() {
     return {
       openeds: ["1"],
-      selectCondition: this.$defaultSelection,
     };
   },
   methods: {
@@ -96,32 +95,8 @@ export default {
         });
         return;
       }
-      // 判断是否已经展示了这个页面，如果已经展示了，那么需要进行active
-      // for (let tableData of this.tableDataList) {
-      //   if (tableData.tid === tid) {
-      //     this.$store.commit("ShowTable/SET_ACTIVEINDEX", tid);
-      //     return;
-      //   }
-      // }
-      // 执行默认参数进行查询
-      let { ajid } = this.caseBase;
-      let title = model.modelname;
-      let orderby = model.orderby ? model.orderby : "";
-      let showType = model.out_type ? parseInt(model.out_type) : 1;
-      let mpids = model.mpids ? model.mpids.split(",") : [];
-      let describe = model.describe;
-      let filter = this.currentTableData.filter;
       await this.$store.dispatch("ShowTable/showModelTable", {
-        ajid,
         tid,
-        title,
-        pgsqlTemplate,
-        orderby,
-        filter,
-        mpids,
-        selectCondition: this.selectCondition,
-        describe,
-        showType,
         offset: 0,
         count: 30,
       });

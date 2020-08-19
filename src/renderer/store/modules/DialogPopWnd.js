@@ -3,6 +3,7 @@ const state = {
   standardViewSwitch: "begin-import", //"begin-import", // 标准采集的页面切换state
   standardDataVisible: false, // 标准采集
   autoDataVisible: false, //智能采集
+  filterVisible: false,
 };
 
 const mutations = {
@@ -15,6 +16,10 @@ const mutations = {
 
   SET_AUTODATAVISIBAL(state, autoDataVisible) {
     state.autoDataVisible = autoDataVisible;
+  },
+
+  SET_FILTER_DIALOG_VISIBLE(state, filterVisible) {
+    state.filterVisible = filterVisible;
   },
 };
 

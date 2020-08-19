@@ -96,7 +96,7 @@ function GetJYQJstr(string_0, int_0) {
 }
 
 export default {
-  FormatModelSqlStr: function(
+  format: function(
     pgsqlTemplate,
     pgsqlOrderby,
     selectCondition,

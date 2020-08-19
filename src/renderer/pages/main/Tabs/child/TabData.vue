@@ -9,7 +9,12 @@
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!currentTableData">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          @click="handleClickFilter"
+        >
           <span class="iconfont selfIcont">&#xe815;</span>
           <br />
           <span class="title-content">筛选</span>
@@ -19,7 +24,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData && currentTableData.filterList)"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
         >
           <span class="iconfont selfIcont">&#xe606;</span>
           <br />
@@ -28,63 +33,102 @@
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe600;</span>
           <br />
           <span class="title-content">选择显示列</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
-        <el-button type="text" class="ctrl-button" @click="handleClickHideEmptyField">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          @click="handleClickHideEmptyField"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe677;</span>
           <br />
-          <span class="title-content">{{currentTableData.hideEmptyField? "显示空列": "隐藏空列"}}</span>
+          <span
+            class="title-content"
+          >{{ (currentTableData && currentTableData.hideEmptyField) ? "显示空列" : "隐藏空列" }}</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe89a;</span>
           <br />
           <span class="title-content">查找替换</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe669;</span>
           <br />
           <span class="title-content">特殊字符</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe61d;</span>
           <br />
           <span class="title-content">无效数据</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe6ff;</span>
           <br />
           <span class="title-content">数据去重</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe62c;</span>
           <br />
           <span class="title-content">同交易去重</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe602;</span>
           <br />
           <span class="title-content">数据补全</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe652;</span>
           <br />
           <span class="title-content">数据重置</span>
@@ -92,35 +136,55 @@
       </el-col>
 
       <el-col :span="1">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe629;</span>
           <br />
           <span class="title-content">分组</span>
         </el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe60f;</span>
           <br />
           <span class="title-content">模型库</span>
         </el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe66b;</span>
           <br />
           <span class="title-content">模型参数</span>
         </el-button>
       </el-col>
       <el-col :span="1" style="border-right:1px solid #e5e7ec;">
-        <el-button type="text" class="ctrl-button">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe607;</span>
           <br />
           <span class="title-content">可视化</span>
         </el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="text" class="ctrl-button" :disabled="!currentTableData">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+        >
           <span class="iconfont selfIcont">&#xe637;</span>
           <br />
           <span class="title-content">导出数据</span>
@@ -149,21 +213,28 @@
     <!-- <auto-dialog></auto-dialog> -->
     <!-- 标准采集 -->
 
-    <standard-dialog></standard-dialog>
+    <div v-if="standardDataVisible">
+      <standard-dialog></standard-dialog>
+    </div>
+    <div v-if="filterVisible">
+      <filter-dialog></filter-dialog>
+    </div>
   </div>
 </template>
 <script >
 import StandardDataCollectionDialog from "@/pages/dialog/StandardDataCollectionDialog";
 import AutoDataCollectionDialog from "@/pages/dialog/AutoDataCollectionDialog";
+import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import { mapState } from "vuex";
 export default {
   components: {
     "standard-dialog": StandardDataCollectionDialog,
+    "filter-dialog": FilterDialog,
     // "auto-dialog": AutoDataCollectionDialog,
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
-    ...mapState("DialogPopWnd", ["standardDataVisible"]),
+    ...mapState("DialogPopWnd", ["standardDataVisible", "filterVisible"]),
     ...mapState("ShowTable", ["currentTableData"]),
   },
   methods: {
@@ -175,20 +246,21 @@ export default {
       await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
       await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
-    async handleClickHideEmptyField() {},
-    // async handleCommandDataCollection(command) {
-    //   await this.$store.dispatch(
-    //     "CaseDetail/queryBatchCount",
-    //     this.caseBase.ajid
-    //   );
-    //   await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
-    //   if (command === "a") {
-    //     console.log(command);
-    //     this.$store.commit("DialogPopWnd/SET_AUTODATAVISIBAL", true);
-    //   } else if (command === "b") {
-    //     this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
-    //   }
-    // },
+    async handleClickHideEmptyField() {
+      // 计算空
+      if (!this.currentTableData.hideEmptyField) {
+        await this.$store.commit("ShowTable/SET_HIDEEMPTYFIELD", {
+          hideEmptyField: true,
+        });
+      } else {
+        await this.$store.commit("ShowTable/SET_HIDEEMPTYFIELD", {
+          hideEmptyField: false,
+        });
+      }
+    },
+    async handleClickFilter() {
+      await this.$store.commit("DialogPopWnd/SET_FILTER_DIALOG_VISIBLE", true);
+    },
   },
 };
 </script>

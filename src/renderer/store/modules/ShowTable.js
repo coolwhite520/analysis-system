@@ -2,21 +2,22 @@ import showTable from "../../db/DataShowTable";
 import models from "../../db/Models";
 import Vue from "vue";
 import aes from "@/utils/aes";
-import LinkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
-import sqlFormat from "@/utils/sql/ModelSqlFormat.js";
+import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
+import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
+import convertSql from "@/utils/sql/DataFiltrator.js";
+import { link } from "fs";
 
 const state = {
   activeIndex: "", // 当前active的tab索引
   tableDataList: [], // 存放每个表的数据结构 { title: "标准采集" name: tid, componentName: "no-data-view", data: data}
   loadingShowData: false,
-  currentTableData: {},
+  currentTableData: null,
   pageIndex: "0", //为每个进来的table分配一个id，作为tab的标记
 };
 
 const mutations = {
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
-    state.currentTableData = tableData;
     let newId = parseInt(state.pageIndex);
     newId++;
     // 分配页面索引
@@ -24,6 +25,7 @@ const mutations = {
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
     state.activeIndex = state.pageIndex;
+    state.currentTableData = tableData;
   },
   // focus某个table
   SET_ACTIVEINDEX(state, activeIndex) {
@@ -55,7 +57,32 @@ const mutations = {
   HIDE_CURRENT_TABLE_RIGHT_VIEW(state) {
     Vue.set(state.currentTableData, "showRightView", false);
   },
-
+  // 设置隐藏列或者显示隐藏列
+  SET_HIDEEMPTYFIELD(state, { hideEmptyField }) {
+    Vue.set(state.currentTableData, "hideEmptyField", hideEmptyField);
+    if (state.currentTableData.hideEmptyField) {
+      let newShowHeaders = [];
+      for (let header of state.currentTableData.headers) {
+        let bFindNotNull = false;
+        for (let row of state.currentTableData.rows) {
+          if (row[header.fieldename].value) {
+            bFindNotNull = true;
+            break;
+          }
+        }
+        if (bFindNotNull) {
+          newShowHeaders.push(header);
+        }
+      }
+      Vue.set(state.currentTableData, "showHeaders", newShowHeaders);
+    } else {
+      Vue.set(
+        state.currentTableData,
+        "showHeaders",
+        state.currentTableData.headers
+      );
+    }
+  },
   // 清空所有的表数据
   CLEAR_TABLE_LIST(state) {
     state.activeIndex = "";
@@ -71,12 +98,39 @@ const mutations = {
   },
 
   // 跟新table的数据
-  UPDATE_TABLE_DATA(state, { pageIndex, rows, headers }) {
+  UPDATE_TABLE_DATA(state, { pageIndex, rows, headers, sum }) {
     for (let index = 0; index < state.tableDataList.length; index++) {
       let tableData = state.tableDataList[index];
       if (tableData.pageIndex === pageIndex) {
-        if (rows) Vue.set(state.tableDataList[index], "rows", rows);
-        if (headers) Vue.set(state.tableDataList[index], "headers", headers);
+        if (typeof rows !== "undefined")
+          Vue.set(state.tableDataList[index], "rows", rows);
+        if (typeof sum !== "undefined")
+          Vue.set(state.tableDataList[index], "sum", sum);
+        if (typeof headers !== "undefined")
+          Vue.set(state.tableDataList[index], "headers", headers);
+        // 判断显示、隐藏状态进行显示
+        if (state.currentTableData.hideEmptyField) {
+          let newShowHeaders = [];
+          for (let header of state.currentTableData.headers) {
+            let bFindNotNull = false;
+            for (let row of state.currentTableData.rows) {
+              if (row[header.fieldename].value) {
+                bFindNotNull = true;
+                break;
+              }
+            }
+            if (bFindNotNull) {
+              newShowHeaders.push(header);
+            }
+          }
+          Vue.set(state.currentTableData, "showHeaders", newShowHeaders);
+        } else {
+          Vue.set(
+            state.currentTableData,
+            "showHeaders",
+            state.currentTableData.headers
+          );
+        }
         return;
       }
     }
@@ -95,15 +149,15 @@ const mutations = {
       }
     }
   },
-  // 更新图标的筛选条件
-  UPDATE_TABLE_FILTER(state, { pageIndex, filter }) {
+  // 更新筛选条件
+  UPDATE_TABLE_FILTER(state, { pageIndex, modelFilterChildList }) {
     for (let index = 0; index < state.tableDataList.length; index++) {
       let tableData = state.tableDataList[index];
       if (tableData.pageIndex === pageIndex) {
         Vue.set(
           state.tableDataList[index],
-          "filter",
-          JSON.parse(JSON.stringify(filter))
+          "modelFilterChildList",
+          JSON.parse(JSON.stringify(modelFilterChildList))
         );
         return;
       }
@@ -176,32 +230,46 @@ const actions = {
       data: [],
       dispatchName: "ShowTable/showNoDataPage",
       showType: 1,
+      rightTabs: [],
     });
 
     commit("SET_LOADINGSHOWDATA_STATE", false);
   },
   // 展示基础页面（数据中心的基本表格）
   async showBaseTable(
-    { commit },
+    { commit, rootState },
     {
-      pageIndex, // 根据这个参数判定是否是新加入
-      ajid, // 案件id
+      pageIndex, // 根据这个参数判定是否是新加入还是点击了下一页
       tid, // 表的id
-      title, // 表的名称显示在tab标签上面
-      tableename, // 表格的英文名称
       count, // 查询数量
-      selectCondition,
       offset, // 查询的偏移
-      filter, // 过滤条件
-      modelTreeList, // 基本表对应的右侧模型列表的tree结构，第一展示的时候需要保存
+      modelFilterChildList, // 数据筛选
     }
   ) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
+    let ajid = rootState.CaseDetail.caseBase.ajid;
+    let modelTreeList = [];
+    let title = "";
+    let tableename = "";
+    for (let item of rootState.CaseDetail.dataCenterList) {
+      for (let childItem of item.childrenArr) {
+        if (String(childItem.tid) === String(tid)) {
+          modelTreeList = childItem.modelTreeList;
+          title = childItem.title; // 表的名称显示在tab标签上面
+          tableename = childItem.tableename; // 表格的英文名称
+          break;
+        }
+      }
+    }
+    let filterStr = convertSql.convertDataFilterToSqlStr(
+      parseInt(tid),
+      modelFilterChildList
+    );
     let data = await showTable.QueryBaseTableData(
       ajid,
       tid,
       tableename,
-      filter,
+      filterStr,
       offset,
       count
     );
@@ -210,8 +278,11 @@ const actions = {
       let { headers, rows, sum } = data;
       if (pageIndex) {
         // 更新数据
-        commit("UPDATE_TABLE_DATA", { pageIndex, rows });
+        commit("UPDATE_TABLE_DATA", { pageIndex, rows, sum, headers });
       } else {
+        let selectCondition = JSON.parse(
+          JSON.stringify(global.defaultSelection)
+        );
         let obj = {
           ajid,
           title,
@@ -225,11 +296,11 @@ const actions = {
           dispatchName: "ShowTable/showBaseTable",
           tableType: "base",
           hideEmptyField: false,
-          filter,
+          modelFilterChildList,
           rightTabs: [],
           showType: 1,
         };
-        if (modelTreeList) {
+        if (modelTreeList && modelTreeList.length > 0) {
           obj.rightTabs.push({
             tabIndex: "0",
             title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
@@ -246,45 +317,66 @@ const actions = {
     }
   },
 
+  // 执行模型列表中的模型
   async showModelTable(
-    { commit, state },
-    {
-      pageIndex,
-      ajid,
-      tid,
-      title,
-      pgsqlTemplate, // 模版
-      orderby, // 排序方式
-      selectCondition, // 用户选择的东西
-      filter, //过滤条件
-      showType, //展示的方式
-      count,
-      offset,
-      describe, // 模型描述
-      mpids, // 子选项
-    }
+    { commit, state, rootState },
+    { pageIndex, tid, pgsqlTemplateDecode, count, offset }
   ) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
-    let pgsqlTemplateDecode = aes.decrypt(pgsqlTemplate);
-    let sql = sqlFormat.FormatModelSqlStr(
+    let ajid = rootState.CaseDetail.caseBase.ajid;
+    // 所有的模型都是基于当前的表格进行的操作
+    let {
+      selectCondition,
+      modelFilterStr,
+      modelFilterChildList,
+    } = state.currentTableData;
+
+    // 第一次add重新赋值给modelfilter
+    if (!pageIndex) {
+      modelFilterChildList = null;
+    }
+
+    let {
+      title,
+      pgsqltemplate,
+      orderby,
+      mpids,
+      showType,
+      describe,
+    } = await models.QueryModelSqlTemplateByMid(tid);
+
+    if (typeof pgsqlTemplateDecode === "undefined") {
+      pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+      // 过滤结构体转sql字符串
+    }
+    let filterChildStr = convertSql.convertDataFilterToSqlStr(
+      parseInt(tid),
+      modelFilterChildList
+    );
+    console.log({ modelFilterChildList, filterStr, filterChildStr });
+    let sql = modelSqlFormat.format(
       pgsqlTemplateDecode,
       orderby,
       selectCondition,
       ajid,
-      filter,
-      ""
+      modelFilterStr,
+      filterChildStr
     );
-    let data = await showTable.QueryModelTable(ajid, tid, sql, offset, count);
+    let data = await showTable.QueryDataTableBySql(
+      ajid,
+      tid,
+      sql,
+      offset,
+      count
+    );
     if (data.success) {
       let { headers, rows, sum } = data;
       // 判断是否add，还是update
-
       if (pageIndex) {
         // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
-        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows });
+        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows, sum });
       } else {
         let obj = {
-          ajid,
           tid,
           title,
           headers,
@@ -297,8 +389,9 @@ const actions = {
           tableType: "model",
           selectCondition,
           describe,
-          pgsqlTemplate,
-          filter,
+          pgsqlTemplateDecode,
+          modelFilterList,
+          modelFilterChildList,
           showType,
           rightTabs: [],
           orderby,
@@ -319,189 +412,47 @@ const actions = {
       console.log("errr...........");
     }
   },
-  // 点击link跳转的页面
+  // 点击表格中的link跳转的页面查询
   async showLinkTable(
-    { commit, rootState },
-    {
-      pageIndex,
-      ajid,
-      tid,
-      selectCondition,
-      row,
-      linkMid,
-      fieldename,
-      offset,
-      count,
-    }
+    { commit, rootState, state, dispatch },
+    { tid, row, linkMid, fieldename }
   ) {
-    console.log({
-      pageIndex,
-      ajid,
-      tid,
-      linkMid,
-      row,
-      selectCondition,
-      fieldename,
-      offset,
-      count,
-    });
     commit("SET_LOADINGSHOWDATA_STATE", true);
-    let title = "";
-    let pgsqlTemplateDecode = "";
-    let orderby = "";
-    let modelTreeList = [];
-    let tableename = "";
-    let sql = ""; //最后格式化后的真实sql
+    let selectCondition = state.currentTableData.selectCondition;
     if (linkMid === 4 || linkMid === 18) {
-      for (let item of rootState.CaseDetail.dataCenterList) {
-        for (let childItem of item.childrenArr) {
-          if (String(childItem.tid) === String(linkMid)) {
-            title = childItem.title;
-            tableename = childItem.tablename;
-            modelTreeList = childItem.modelTreeList;
-            break;
-          }
-        }
-      }
-      // title = linkMid === 4 ? "资金交易明细" : "通话记录";
-      let res = LinkSqlFormat.format(
+      // 相当于在基本表的sql基础添加了过滤条件
+      let res = linkSqlFormat.format(
+        { M_TYPE: parseInt(tid), Sql_Detail: "" },
+        row,
+        selectCondition,
+        fieldename.toUpperCase()
+      );
+      // 执行基本表的查询并add到list中（不传递pageIndex即可）
+      await dispatch("showBaseTable", {
+        tid: String(linkMid),
+        count: 30,
+        offset: 0,
+        modelFilterChildList: res.msg.obj,
+      });
+    } else {
+      //相当于执行模型
+      //1.先根据linkmid 获取模版
+      let { pgsqltemplate } = await models.QueryModelSqlTemplateByMid(linkMid);
+      let pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+      //2.格式化替换后生成link的模版
+      let { msg, type } = linkSqlFormat.format(
         { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
         row,
         selectCondition,
         fieldename.toUpperCase()
       );
-      if (res) {
-        // let tableename =
-        //   linkMid === 4 ? "gas_bank_records" : "gas_phone_call_info";
-        let filter = res.msg;
-        let data = await showTable.QueryBaseTableData(
-          ajid,
-          linkMid,
-          tableename,
-          filter,
-          offset,
-          count
-        );
-        console.log(data);
-        if (data.success) {
-          let { headers, rows, sum } = data;
-          if (pageIndex) {
-            // 更新数据
-            commit("UPDATE_TABLE_DATA", { pageIndex, rows });
-          } else {
-            let obj = {
-              ajid,
-              title,
-              tid,
-              headers,
-              showHeaders: headers,
-              sum,
-              rows,
-              selectCondition,
-              componentName: "table-data-view",
-              dispatchName: "ShowTable/showLinkTable",
-              tableType: "base",
-              hideEmptyField: false,
-              filter,
-              rightTabs: [],
-              showType: 1,
-              row,
-              linkMid,
-              fieldename,
-            };
-
-            if (modelTreeList) {
-              obj.rightTabs.push({
-                tabIndex: "0",
-                title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
-                modelTreeList,
-                componentName: "model-list-view",
-                visible: true,
-              });
-            }
-            commit("ADD_TABLE_DATA_TO_LIST", obj);
-          }
-        }
-      }
-    } else {
-      // 先根据linkmid获取sql模版
-      let data = await models.QueryModelSqlTemplateByMid(linkMid);
-      if (data.success) {
-        let pgsqlTemplate = data.gpsqltemplate;
-        title = data.modelname;
-        pgsqlTemplateDecode = aes.decrypt(pgsqlTemplate);
-        orderby = data.orderby;
-        // 获取连接拼接的sql
-        let res = LinkSqlFormat.format(
-          { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
-          row,
-          selectCondition,
-          fieldename.toUpperCase()
-        );
-        if (res != null) {
-          console.log({ res: res["msg"], orderby, selectCondition, ajid });
-          // 最后格式化连接返回的模版
-          let filter = res.msg;
-          let childTid = res.type;
-          sql = sqlFormat.FormatModelSqlStr(
-            res["msg"],
-            orderby,
-            selectCondition,
-            ajid,
-            filter
-          );
-          data = await showTable.QueryModelTable(
-            ajid,
-            childTid,
-            sql,
-            offset,
-            count
-          );
-          if (data.success) {
-            let { headers, rows, sum } = data;
-            // 判断是否add，还是update
-
-            if (pageIndex) {
-              // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
-              commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows });
-            } else {
-              let obj = {
-                ajid,
-                tid,
-                title,
-                headers,
-                showHeaders: headers,
-                hideEmptyField: false,
-                sum,
-                rows,
-                componentName: "table-data-view",
-                dispatchName: "ShowTable/showLinkTable",
-                tableType: "model",
-                selectCondition,
-                describe: "",
-                pgsqlTemplate,
-                filter,
-                showType: 1,
-                rightTabs: [],
-                orderby,
-                row,
-                linkMid,
-                fieldename,
-              };
-              // if (mpids && mpids.length > 0) {
-              //   obj.rightTabs.push({
-              //     tabIndex: "0",
-              //     title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
-              //     mpids,
-              //     componentName: "model-view",
-              //     visible: true,
-              //   });
-              // }
-              commit("ADD_TABLE_DATA_TO_LIST", obj);
-            }
-          }
-        }
-      }
+      console.log({ msg, type });
+      await dispatch("showModelTable", {
+        tid: type,
+        pgsqlTemplateDecode: msg.str,
+        count: 30,
+        offset: 0,
+      });
     }
 
     commit("SET_LOADINGSHOWDATA_STATE", false);

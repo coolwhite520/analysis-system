@@ -106,7 +106,7 @@ export default {
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$TABLENAME\$/g, tableename);
 
-      console.log(querySql);
+      console.log("QueryBaseTableData", querySql);
       let result = await db.query(querySql);
       // 数据过滤
       let retRows = [];
@@ -136,7 +136,7 @@ export default {
     }
   },
   // 执行模型并获取结果集
-  QueryModelTable: async function(ajid, tid, sql, offset, count) {
+  QueryDataTableBySql: async function(ajid, tid, sql, offset, count) {
     try {
       let { rows } = await this.QueryTableShowCFields(tid);
       let headers = rows;
@@ -145,6 +145,7 @@ export default {
         showFields.push(item.fieldename.toLowerCase());
       }
       await cases.SwitchCase(ajid);
+      console.log(sql);
       let result = await db.query(sql);
       console.log({ result });
       // 数据过滤

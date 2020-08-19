@@ -84,12 +84,7 @@ export default {
         });
       } else {
         await this.$store.dispatch("ShowTable/showBaseTable", {
-          ajid: caseBase.ajid,
           tid: "1",
-          title: "人员基本信息",
-          tableename: "gas_person",
-          selectCondition: JSON.parse(JSON.stringify(this.$defaultSelection)),
-          filter: "",
           offset: 0,
           count: 30,
         });

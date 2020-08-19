@@ -1,4 +1,4 @@
-<template>
+<template >
   <div class="view-style" :style="{ height: contentViewHeight + 'px'}" v-loading="loadingShowData">
     <ul
       v-if="contextMenuVisible"

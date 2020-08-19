@@ -93,7 +93,7 @@ function getNowFormatDate(type = 0) {
 }
 
 // 定义全局的默认选择属性
-Vue.prototype.$defaultSelection = {
+global.defaultSelection = {
   JYZE_MINValue: 10000.0,
   JYZEValue: 1000000.0, // 注意这个值就是Double_0
   JYZECondition: "大于等于",

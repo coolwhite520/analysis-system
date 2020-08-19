@@ -31,6 +31,9 @@ CA_PageItemDetail为详细参数：
 查找重点联系人 id=802，设置CA_PageItemDetail.ddfhm，CA_PageItemDetail.dfhm。调单方电话号码，对方电话号码
 数据中心人员界面  id=1或2，设置CA_PageItemDetail.jyzjhm，CA_PageItemDetail.jymc。证件号码，交易名称
 */
+
+let Default = require("./Default");
+
 String.prototype.startWith = function(str) {
   var reg = new RegExp("^" + str);
   return reg.test(this);
@@ -44,6 +47,40 @@ function IsNullOrEmpty(str) {
   return str == null || str.length == 0 || str == undefined;
 }
 
+function GetDataFilterFromList(list1, list2 = null) {
+  let ld = [];
+  ld.push(
+    new Default.DataFilter(Default.NodeType.NodeType_ConditionList, "AND")
+  );
+  ld[0].children.push(
+    new Default.DataFilter(Default.NodeType.NodeType_ConditionList, "AND")
+  );
+  if (list2 != null) {
+    ld[0].DisplayRelation = "OR";
+    ld[0].children.push(
+      new Default.DataFilter(Default.NodeType.NodeType_ConditionList, "AND")
+    );
+  }
+  for (let i = 0; i < list1.length; ++i) {
+    ld[0].children[0].children.push(
+      new Default.DataFilter(Default.NodeType.NodeType_Condition)
+    );
+    ld[0].children[0].children[i].FiltrateValue = list1[i].value;
+    ld[0].children[0].children[i].FiltrateFieldEN = list1[i].name;
+    ld[0].children[0].children[i].condtion = list1[i].type;
+  }
+  if (list2 != null) {
+    for (let i = 0; i < list2.length; ++i) {
+      ld[0].children[1].children.push(
+        new Default.DataFilter(Default.NodeType.NodeType_Condition)
+      );
+      ld[0].children[1].children[i].FiltrateValue = list2[i].value;
+      ld[0].children[1].children[i].FiltrateFieldEN = list2[i].name;
+      ld[0].children[1].children[i].condtion = list2[i].type;
+    }
+  }
+  return ld;
+}
 function GetIndex(arr, obj) {
   var i = arr.length;
   while (i--) {
@@ -55,161 +92,15 @@ function GetIndex(arr, obj) {
 }
 
 let CA_PageItem = {
-  // ID:0,
-  // Index:0,//mid
-  // Soft:0,//Soft + int
-  // IcapVersion:"0.0.0.0",
-  //  IsPreview:false,
-  //  Index_Parent:0,  //PARENTID_ + int
-  //  PageType:null,
-  //  DataType:null,
-  //   LABEL_ID:"",//mid
-  //   LABEL_NAME:"",//MODELNAME
-  // LABEL_IMG:"",
-  // LABEL_IMG_SEL:"",
-  //  LABEL_PAGE:"",
-  // VIS_IMG:"",
-  // LABEL_TIP:"",//DESCRIBE
-  // VIS_TIME:"",
-  // Sql_OrderBy:"",//ORDERBY
-  //  LABEL_OBJ:null,
-  //   ITEM_OBJ:null,
-  //  CurrentExeSql:"",//当前选择的sql
-  //Sql_MySql:"",
-  // Sql_Oracle:"",
-  // Sql_GP:"",//sql
   Sql_Detail: "", //模型sql模板
-  // VIS_PAGE:null,
-  // OutType:"",//OUT_TYPE
-  // Tb_Name:"",//TABLENAME
-  // Tb_Where:"",
   M_TYPE: 0, //mid
-  //  MD_TYPE:"2",
-  //  Model_ParamIds:[],
-  //  Model_ParamIds_Describe:"",
-  //  Model_Mids:[],
-  //  Menu_Vids:[],
-  //  SelectDataSourceType:null,
-  //  MenuObj_id:0,
-  //  ExtendIndex:0,
-  //  AnalyseBatchId:"",
-  //  ParentType:null,
-  //  ParentCondition:"",
-  //  Dhhm:"",
-  //  ItemWidth:120,
-  //  ChildModelColumn:"",
-  //  ModelType:"",//((dataRow_0["MODEL_TYPE"] == DBNull.Value) ? "0" : obj19.ToString());
-  //  DataTableColumnList:[],
-  //  SqlConditionList:[],
-  //  ExecuteSqlComeBack:"",
-  //  SelectSqlCondition:null,
-  //  ItemType:0,
-  //  ResultDataTableColumnList:[],
-  //  ResultDataTable:null,
-  //  IsNewAddModelState:0,
-  //  Lab_IsEnabled:true,
-  //  Lab_IsTh:false,//是否团伙
-  //  AnHelperType:-1,
-  //  TempSaveCondition:"",
-  //  CurrentModelName:"",//MODELNAME
-  //  SelectedSaveCondition:"",
-  //  Condition_OBJ:null,
-  // NodeNumStr:"",
-  //  LineNumStr:"",
-  // ParentPageItem:null,
-  // IsSelected:false,
-  // TabRowCnt:0,
-  // TableColumnsType:-1,
-  // IsExpanded:false,
-};
-const DataType = {
-  STR: 0,
 };
 
-const FiltrateLogicID = {
-  EqualTo: 0,
-  // Token: 0x04000378 RID: 888
-  NotEqualTo: 1,
-  // Token: 0x04000379 RID: 889
-  GreaterThan: 2,
-  // Token: 0x0400037A RID: 890
-  LessThan: 3,
-  // Token: 0x0400037B RID: 891
-  GreaterOrEqual: 4,
-  // Token: 0x0400037C RID: 892
-  LessOrEqual: 5,
-  // Token: 0x0400037D RID: 893
-  StartWith: 6,
-  // Token: 0x0400037E RID: 894
-  NotStartWith: 7,
-  // Token: 0x0400037F RID: 895
-  EndWith: 8,
-  // Token: 0x04000380 RID: 896
-  NotEndWith: 9,
-  // Token: 0x04000381 RID: 897
-  Contains: 10,
-  // Token: 0x04000382 RID: 898
-  NotContains: 11,
-  // Token: 0x04000383 RID: 899
-  NotEmpty: 14,
-  // Token: 0x04000384 RID: 900
-  IsEmpty: 15,
-};
-
-//internal static uint ComputeStringHash(string s)
-//{
-//    uint num=0;
-//    if (s != null)
-//    {
-//        num = 2166136261u;
-//        for (int i = 0; i < s.Length; i++)
-//        {
-//            num = ((uint)s[i] ^ num) * 16777619u;
-//        }
-//    }
-//    return num;
-//}
-//原BackFiltrateCondtion通过字符串hash值比较
-
-/*function BackFiltrateCondtion(condtion,vale){
-  let result = "";
-  if(condtion ==null){
-      return result;
-  }
-  if (condtion == FiltrateLogicID.GreaterOrEqual){
-      result = " >=  '" + vale + "' ";
-  }else if (condtion == FiltrateLogicID.GreaterThan){
-      result = " > '" + vale + "' ";
-  }else if (condtion == FiltrateLogicID.LessThan){
-      result = " <  '" + vale + "' ";
-  }else if (condtion == FiltrateLogicID.NotEmpty){
-      result = " not null ";
-  }else if (condtion == FiltrateLogicID.EqualTo){
-      result = " = '" + vale + "' ";
-  }else if (condtion == FiltrateLogicID.StartWith){
-      result = " like '" + vale + "%'";
-  }else if (condtion == FiltrateLogicID.EndWith){
-      result = " like '%" + vale + "'";
-  }else if (condtion == FiltrateLogicID.NotEndWith){
-      result = " not like '%"+ vale+ "' or"+vale+" IS NULL ";
-  }else if (condtion == FiltrateLogicID.Contains){
-      result = " like '%" + vale + "%'";
-  }else if (condtion == FiltrateLogicID.NotEqualTo){
-      result = " != '" + vale + "' or "+vale+" IS NULL ";
-  }else if (condtion == FiltrateLogicID.LessOrEqual){
-      result = " <=  '" + vale + "' ";
-  }else if (condtion == FiltrateLogicID.NotStartWith){
-      result = " not like '" + vale + "%' or"+vale+" IS NULL ";
-  }else if (condtion == FiltrateLogicID.NotContains){
-      result = " not like '%" + vale + "%' or"+vale+" IS NULL ";
-  }
-  return result;
-}*/
 function BackFiltrateCondtion(
   condtion,
   vale,
   FiltrateFieldEN,
-  DataType_ = DataType.STR
+  DataType_ = Default.DataType.STR
 ) {
   let text = "";
   let flag = false;
@@ -227,7 +118,7 @@ function BackFiltrateCondtion(
   }
 
   if (
-    condtion == FiltrateLogicID.GreaterOrEqual &&
+    condtion == Default.FiltrateLogicID.GreaterOrEqual &&
     array != null &&
     array.length != 0
   ) {
@@ -239,7 +130,7 @@ function BackFiltrateCondtion(
       }
     }
   } else if (
-    condtion == FiltrateLogicID.GreaterThan &&
+    condtion == Default.FiltrateLogicID.GreaterThan &&
     array != null &&
     array.length != 0
   ) {
@@ -250,7 +141,7 @@ function BackFiltrateCondtion(
       }
     }
   } else if (
-    condtion == FiltrateLogicID.LessThan &&
+    condtion == Default.FiltrateLogicID.LessThan &&
     array != null &&
     array.length != 0
   ) {
@@ -260,8 +151,8 @@ function BackFiltrateCondtion(
         text += " OR ";
       }
     }
-  } else if (condtion == FiltrateLogicID.NotEmpty) {
-    if (DataType_ == DataType.STR) {
+  } else if (condtion == Default.FiltrateLogicID.NotEmpty) {
+    if (DataType_ == Default.DataType.STR) {
       text =
         " " +
         FiltrateFieldEN +
@@ -271,7 +162,7 @@ function BackFiltrateCondtion(
     } else {
       text = " " + FiltrateFieldEN + " is not null ";
     }
-  } else if (condtion == FiltrateLogicID.EqualTo) {
+  } else if (condtion == Default.FiltrateLogicID.EqualTo) {
     let text2 = "";
     if (array != null && array.length != 0) {
       for (let l = 0; l < array.length; l++) {
@@ -287,11 +178,11 @@ function BackFiltrateCondtion(
         ? FiltrateFieldEN + " IS NULL "
         : "OR " + FiltrateFieldEN + " IS NULL ";
     }
-    if (flag && DataType_ == DataType.STR) {
+    if (flag && DataType_ == Default.DataType.STR) {
       text = text + "OR (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))<=0)";
     }
   } else if (
-    condtion == FiltrateLogicID.StartWith &&
+    condtion == Default.FiltrateLogicID.StartWith &&
     array != null &&
     array.length != 0
   ) {
@@ -303,7 +194,7 @@ function BackFiltrateCondtion(
     }
     n;
   } else if (
-    condtion == FiltrateLogicID.EndWith &&
+    condtion == Default.FiltrateLogicID.EndWith &&
     array != null &&
     array.length != 0
   ) {
@@ -314,7 +205,7 @@ function BackFiltrateCondtion(
       }
     }
   } else if (
-    condtion == FiltrateLogicID.NotEndWith &&
+    condtion == Default.FiltrateLogicID.NotEndWith &&
     array != null &&
     array.length != 0
   ) {
@@ -326,7 +217,7 @@ function BackFiltrateCondtion(
     }
     text = text + " OR " + FiltrateFieldEN + " IS NULL ";
   } else if (
-    condtion == FiltrateLogicID.Contains &&
+    condtion == Default.FiltrateLogicID.Contains &&
     array != null &&
     array.length != 0
   ) {
@@ -336,8 +227,8 @@ function BackFiltrateCondtion(
         text += " OR ";
       }
     }
-  } else if (condtion == FiltrateLogicID.IsEmpty) {
-    if (DataType_ == DataType.STR) {
+  } else if (condtion == Default.FiltrateLogicID.IsEmpty) {
+    if (DataType_ == Default.DataType.STR) {
       text =
         " " +
         FiltrateFieldEN +
@@ -347,7 +238,7 @@ function BackFiltrateCondtion(
     } else {
       text = " " + FiltrateFieldEN + " IS NULL ";
     }
-  } else if (condtion == FiltrateLogicID.NotEqualTo) {
+  } else if (condtion == Default.FiltrateLogicID.NotEqualTo) {
     let text3 = "";
     if (array != null && array.length != 0) {
       for (let num4 = 0; num4 < array.length; num4++) {
@@ -371,7 +262,7 @@ function BackFiltrateCondtion(
     if (flag) {
       text = text + "AND " + FiltrateFieldEN + " IS NOT NULL ";
     }
-    if (flag && DataType_ == DataType.STR) {
+    if (flag && DataType_ == Default.DataType.STR) {
       text = text + "AND (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))>0)";
     }
 
@@ -383,7 +274,7 @@ function BackFiltrateCondtion(
       FiltrateFieldEN +
       " IS NULL ";
   } else if (
-    condtion == FiltrateLogicID.LessOrEqual &&
+    condtion == Default.FiltrateLogicID.LessOrEqual &&
     array != null &&
     array.length != 0
   ) {
@@ -394,7 +285,7 @@ function BackFiltrateCondtion(
       }
     }
   } else if (
-    condtion == FiltrateLogicID.NotStartWith &&
+    condtion == Default.FiltrateLogicID.NotStartWith &&
     array != null &&
     array.length != 0
   ) {
@@ -406,7 +297,7 @@ function BackFiltrateCondtion(
     }
     text = text + " OR " + FiltrateFieldEN + " IS NULL ";
   } else if (
-    condtion == FiltrateLogicID.NotContains &&
+    condtion == Default.FiltrateLogicID.NotContains &&
     array != null &&
     array.length != 0
   ) {
@@ -443,7 +334,7 @@ function BackFiltrateCondtion_DateTime(
   if (condtion == null) {
     return result;
   }
-  if (condtion == FiltrateLogicID.GreaterThan) {
+  if (condtion == Default.FiltrateLogicID.GreaterThan) {
     result = "".concat(
       "to_timestamp(",
       FiltrateFieldEN,
@@ -455,7 +346,7 @@ function BackFiltrateCondtion_DateTime(
       text,
       ")"
     );
-  } else if (condtion == FiltrateLogicID.LessThan) {
+  } else if (condtion == Default.FiltrateLogicID.LessThan) {
     result = "".concat(
       "to_timestamp(",
       FiltrateFieldEN,
@@ -467,7 +358,7 @@ function BackFiltrateCondtion_DateTime(
       text,
       ")"
     );
-  } else if (condtion == FiltrateLogicID.EqualTo) {
+  } else if (condtion == Default.FiltrateLogicID.EqualTo) {
     result = "".concat(
       "to_timestamp(",
       FiltrateFieldEN,
@@ -479,7 +370,7 @@ function BackFiltrateCondtion_DateTime(
       text,
       ")"
     );
-  } else if (condtion == FiltrateLogicID.GreaterOrEqual) {
+  } else if (condtion == Default.FiltrateLogicID.GreaterOrEqual) {
     result = "".concat(
       "to_timestamp(",
       FiltrateFieldEN,
@@ -491,7 +382,7 @@ function BackFiltrateCondtion_DateTime(
       text,
       ")"
     );
-  } else if (condtion == FiltrateLogicID.IsEmpty) {
+  } else if (condtion == Default.FiltrateLogicID.IsEmpty) {
     result = "".concat(
       " ",
       FiltrateFieldEN,
@@ -499,7 +390,7 @@ function BackFiltrateCondtion_DateTime(
       FiltrateFieldEN,
       ", '0'))<=0)"
     );
-  } else if (condtion == FiltrateLogicID.NotEmpty) {
+  } else if (condtion == Default.FiltrateLogicID.NotEmpty) {
     result = "".concat(
       " ",
       FiltrateFieldEN,
@@ -507,7 +398,7 @@ function BackFiltrateCondtion_DateTime(
       FiltrateFieldEN,
       ", '0'))>0)"
     );
-  } else if (condtion == FiltrateLogicID.NotEqualTo) {
+  } else if (condtion == Default.FiltrateLogicID.NotEqualTo) {
     result = "".concat(
       "to_timestamp(",
       FiltrateFieldEN,
@@ -521,7 +412,7 @@ function BackFiltrateCondtion_DateTime(
       FiltrateFieldEN,
       " IS NULL "
     );
-  } else if (condtion == FiltrateLogicID.LessOrEqual) {
+  } else if (condtion == Default.FiltrateLogicID.LessOrEqual) {
     result = "".concat(
       "to_timestamp(",
       FiltrateFieldEN,
@@ -603,77 +494,102 @@ function Get203DetailCondition(PageItemDetail, ColumnName = "", MD_TYPE = "2") {
   if (MD_TYPE == "1") {
     list.push({
       name: "JYZJHM",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jyzjhm.replace(/'/g, ""),
     });
     list.push({
       name: "JYDFZJHM",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jydfzjhm.replace(/'/g, ""),
     });
     list2.push({
       name: "JYZJHM",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jydfzjhm.replace(/'/g, ""),
     });
     list2.push({
       name: "JYDFZJHM",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jyzjhm.replace(/'/g, ""),
     });
   } else if (MD_TYPE == "2") {
     list.push({
       name: "JYMC",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jymc.replace(/'/g, ""),
     });
     list.push({
       name: "JYDFMC",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jydfmc.replace(/'/g, ""),
     });
     list2.push({
       name: "JYMC",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jydfmc.replace(/'/g, ""),
     });
     list2.push({
       name: "JYDFMC",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.jymc.replace(/'/g, ""),
     });
   }
   if (ColumnName == "CZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
-    list2.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
+    list2.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
-    list2.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
+    list2.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
-  // list3.push(list)
-  // list3.push(list2)
-  // return list3
   let text = "";
   text += " AND( ";
   text += GetListCondition(list);
   text = text + " OR " + GetListCondition(list2);
   text += " )";
-  return text;
+  //return text
+  return { str: text, obj: GetDataFilterFromList(list, list2) };
 }
 function Get200DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
   list.push({
     name: "CXKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.cxkh.replace(/'/g, ""),
   });
   if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "CZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list
-  return " AND " + GetListCondition(list);
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  }; //(" AND "+ GetListCondition(list));
 }
 function Get202DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
@@ -681,55 +597,79 @@ function Get202DetailCondition(PageItemDetail, ColumnName = "") {
   let list3 = [];
   list2.push({
     name: "CXKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.cxkh.replace(/'/g, ""),
   });
   list2.push({
     name: "JYDFZKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfzkh.replace(/'/g, ""),
   });
   list3.push({
     name: "CXKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfzkh.replace(/'/g, ""),
   });
   list3.push({
     name: "JYDFZKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.cxkh.replace(/'/g, ""),
   });
   if (ColumnName == "JZBS") {
-    list2.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
-    list3.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list2.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
+    list3.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   } else if (ColumnName == "CZBS") {
-    list2.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
-    list3.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list2.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
+    list3.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   }
-  //list.push(list2)
-  //list.push(list3)
-  //return list
   let text = "";
   text += " AND( ";
   text += GetListCondition(list2);
   text = text + " OR " + GetListCondition(list3);
   text += " )";
-  return text;
+  return { str: text, obj: GetDataFilterFromList(list2, list3) }; //text
 }
 function Get211DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
   list.push({
     name: PageItemDetail.groupid,
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.groupname.replace(/'/g, ""),
   });
   if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "CZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list;
-  return " AND " + GetListCondition(list);
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  }; //(" AND "+ GetListCondition(list));
 }
 function Get213DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
@@ -737,161 +677,215 @@ function Get213DetailCondition(PageItemDetail, ColumnName) {
   let list3 = [];
   list2.push({
     name: PageItemDetail.groupid,
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.groupname.replace(/'/g, ""),
   });
   list2.push({
     name: PageItemDetail.dfgroupid,
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.dfgroupname.replace(/'/g, ""),
   });
   list3.push({
     name: PageItemDetail.groupid,
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.dfgroupname.replace(/'/g, ""),
   });
   list3.push({
     name: PageItemDetail.dfgroupid,
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.groupname.replace(/'/g, ""),
   });
 
   if (ColumnName == "JZBS") {
-    list2.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
-    list3.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list2.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
+    list3.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   } else if (ColumnName == "CZBS") {
-    list2.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
-    list3.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list2.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
+    list3.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   }
-  //list.push(list2);
-  //list.push(list3);
-  //return list;
   let text = "";
   text += " AND( ";
   text += GetListCondition(list2);
   text = text + " OR " + GetListCondition(list3);
   text += " )";
-  return text;
+  //return text
+  return { str: text, obj: GetDataFilterFromList(list2, list3) };
 }
 function Get301DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
   list.push({
     name: "CXKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.cxkh.replace(/'/g, ""),
   });
   list.push({
     name: "JYMC",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jymc.replace(/'/g, ""),
   });
   list.push({
     name: "JYZJHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jyzjhm.replace(/'/g, ""),
   });
   list.push({
     name: "JDBZ",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: ColumnName == "JZBS" ? "进" : "出",
   });
   //return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get302DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
   list.push({
     name: "JYMC",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jymc.replace(/'/g, ""),
   });
   list.push({
     name: "JYZJHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jyzjhm.replace(/'/g, ""),
   });
   list.push({
     name: "JDBZ",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: ColumnName == "JZBS" ? "进" : "出",
   });
   // return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get303DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
   list.push({
     name: "JYDFZKH",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfzkh.replace(/'/g, ""),
   });
   list.push({
     name: "JYDFMC",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfmc.replace(/'/g, ""),
   });
   list.push({
     name: "JYDFZJHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfzjhm.replace(/'/g, ""),
   });
   list.push({
     name: "JDBZ",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: ColumnName == "JZBS" ? "进" : "出",
   });
   //return list
-  return " AND " + GetListCondition(list);
+  // return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get304DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
   list.push({
     name: "JYDFMC",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfmc.replace(/'/g, ""),
   });
   list.push({
     name: "JYDFZJHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jydfzjhm.replace(/'/g, ""),
   });
   list.push({
     name: "JDBZ",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: ColumnName == "JZBS" ? "进" : "出",
   });
   //return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get305DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
   list.push({
     name: "JYSJ",
-    type: FiltrateLogicID.Contains,
+    type: Default.FiltrateLogicID.Contains,
     value: PageItemDetail.jysj.replace(/'/g, ""),
   });
   if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "CZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get351DetailCondition(PageItemDetail, ColumnName = "") {
   let list = [];
   list.push({
     name: "zysm",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.zysm.replace(/'/g, ""),
   });
   if (ColumnName == "INCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "OUTCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get352DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
@@ -899,48 +893,64 @@ function Get352DetailCondition(PageItemDetail, ColumnName) {
   if (text.indexOf("以下") >= 0) {
     list.push({
       name: "JYJE",
-      type: FiltrateLogicID.LessThan,
+      type: Default.FiltrateLogicID.LessThan,
       value: text.replace(/以下/g, ""),
     });
   } else if (text.indexOf("以上") >= 0) {
     list.push({
       name: "JYJE",
-      type: FiltrateLogicID.GreaterOrEqual,
+      type: Default.FiltrateLogicID.GreaterOrEqual,
       value: text.replace(/以上/g, ""),
     });
   } else {
     let arr = text.split("-");
     list.push({
       name: "JYJE",
-      type: FiltrateLogicID.GreaterOrEqual,
+      type: Default.FiltrateLogicID.GreaterOrEqual,
       value: arr[0],
     });
-    list.push({ name: "JYJE", type: FiltrateLogicID.LessThan, value: arr[1] });
+    list.push({
+      name: "JYJE",
+      type: Default.FiltrateLogicID.LessThan,
+      value: arr[1],
+    });
   }
   if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "CZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list;
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get353DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
   if (PageItemDetail.sfmc.replace(/'/g, "") == "未知") {
     list.push({
       name: "JYFSD",
-      type: FiltrateLogicID.NotContains,
+      type: Default.FiltrateLogicID.NotContains,
       value: "自治区",
     });
     list.push({
       name: "JYFSD",
-      type: FiltrateLogicID.NotContains,
+      type: Default.FiltrateLogicID.NotContains,
       value: "省",
     });
     list.push({
       name: "JYFSD",
-      type: FiltrateLogicID.NotContains,
+      type: Default.FiltrateLogicID.NotContains,
       value: "市",
     });
   } else if (
@@ -950,53 +960,89 @@ function Get353DetailCondition(PageItemDetail, ColumnName) {
   ) {
     list.push({
       name: "JYFSD",
-      type: FiltrateLogicID.Contains,
+      type: Default.FiltrateLogicID.Contains,
       value: PageItemDetail.sfmc.replace(/'/g, ""),
     });
   } else {
     list.push({
       name: "JYFSD",
-      type: FiltrateLogicID.EqualTo,
+      type: Default.FiltrateLogicID.EqualTo,
       value: PageItemDetail.sfmc.replace(/'/g, ""),
     });
   }
   if (ColumnName == "INCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "OUTCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get354DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
   list.push({
     name: "JYJE",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jyje.replace(/'/g, ""),
   });
   if (ColumnName == "INCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "OUTCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list
-  return " AND " + GetListCondition(list);
+  //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get357DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
   list.push({
     name: "JYSJ",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jysj.replace(/'/g, ""),
   });
   if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "OUTCOUNT") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
   //return list
-  return " AND " + GetListCondition(list, [0], [1]);
+  //return (" AND "+ GetListCondition(list,[0],[1]));
+  return {
+    str: " AND " + GetListCondition(list, [0], [1]),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get358DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
@@ -1005,24 +1051,38 @@ function Get358DetailCondition(PageItemDetail, ColumnName) {
     .replace(/时/g, "")
     .split("-");
   var text = arr[0].length == 2 ? " " + arr[0] + ":" : " 0" + arr[0] + ":";
-  list.push({ name: "JYSJ", type: FiltrateLogicID.Contains, value: text });
   list.push({
     name: "JYSJ",
-    type: FiltrateLogicID.GreaterOrEqual,
+    type: Default.FiltrateLogicID.Contains,
+    value: text,
+  });
+  list.push({
+    name: "JYSJ",
+    type: Default.FiltrateLogicID.GreaterOrEqual,
     value: PageItemDetail.mindate,
   });
   list.push({
     name: "JYSJ",
-    type: FiltrateLogicID.LessOrEqual,
+    type: Default.FiltrateLogicID.LessOrEqual,
     value: PageItemDetail.maxdate,
   });
   if (ColumnName == "JZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "进" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
   } else if (ColumnName == "CZBS") {
-    list.push({ name: "JDBZ", type: FiltrateLogicID.EqualTo, value: "出" });
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
   }
-  //return list;
-  return " AND " + GetListCondition(list, [1, 2], [1, 1]);
+  return {
+    str: " AND " + GetListCondition(list, [1, 2], [1, 1]),
+    obj: GetDataFilterFromList(list),
+  };
 }
 //421资金透视分析模型，点击交易次数，对手数量。所执行sql与展示结果都一样。
 function Get421DetailCondition(PageItemDetail, ColumnName) {
@@ -1035,35 +1095,39 @@ function Get421DetailCondition(PageItemDetail, ColumnName) {
       ) {
         list.push({
           name: item,
-          type: FiltrateLogicID.IsEmpty,
+          type: Default.FiltrateLogicID.IsEmpty,
           value: PageItemDetail.FiledENDictionary[item].replace(/'/g, ""),
         });
       } else {
         list.push({
           name: item,
-          type: FiltrateLogicID.EqualTo,
+          type: Default.FiltrateLogicID.EqualTo,
           value: PageItemDetail.FiledENDictionary[item].replace(/'/g, ""),
         });
       }
     }
   }
-  //return list;
-  return " AND " + GetListCondition(list);
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function Get802PhoneDetailCondition(PageItemDetail) {
   let list = [];
   list.push({
     name: "DDFHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.ddfhm,
   });
   list.push({
     name: "DFHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.dfhm,
   });
-  //return list;
-  return " AND " + GetListCondition(list);
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
 }
 function GetPersonDetailCondition(PageItemDetail) {
   let list = [];
@@ -1071,33 +1135,31 @@ function GetPersonDetailCondition(PageItemDetail) {
   let list3 = [];
   list2.push({
     name: "JYZJHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jyzjhm,
   });
   list2.push({
     name: "JYMC",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jymc,
   });
   list3.push({
     name: "JYDFZJHM",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jyzjhm,
   });
   list3.push({
     name: "JYDFMC",
-    type: FiltrateLogicID.EqualTo,
+    type: Default.FiltrateLogicID.EqualTo,
     value: PageItemDetail.jymc,
   });
-  list.push(list2);
-  list.push(list3);
-  //return list;
   let text = "";
   text += " AND( ";
   text += GetListCondition(list2);
   text = text + " OR " + GetListCondition(list3);
   text += " )";
-  return text;
+  //return text
+  return { str: text, obj: GetDataFilterFromList(list2, list3) };
 }
 
 function Get307CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
@@ -1226,9 +1288,9 @@ function AnalysePageGrid_OnLinkClick(
   ColumnName
 ) {
   /*if (cA_PageItemDetail.CurrCellVal == "'0'"){
-      console.log(cA_PageItemDetail.TabName+"没有可钻取的数据");
-      return;
-  }*/
+        console.log(cA_PageItemDetail.TabName+"没有可钻取的数据");
+        return;
+    }*/
   cA_PageItemDetail.CurrentExeSql = CurrTabItem.Sql_Detail; //模型模板sql
   let list;
   if (CurrTabItem.M_TYPE == 203) {
@@ -1245,49 +1307,62 @@ function AnalysePageGrid_OnLinkClick(
         if (ColumnName == "THZCS") {
           list.push({
             name: "DDFHM",
-            type: FiltrateLogicID.EqualTo,
+            type: Default.FiltrateLogicID.EqualTo,
             value: cA_PageItemDetail.ddfhm,
           });
           //method_9(cA_PageItemDetail, list, null)
           let sql = " AND " + GetListCondition(list);
-          return { type: "18", msg: sql };
+          //return  {type:"18",msg:sql}
+          return {
+            type: "18",
+            msg: { str: sql, obj: GetDataFilterFromList(list) },
+          };
         }
         if (ColumnName == "GLDFDHHMS") {
           let sql = Get805CA_PageItem(cA_PageItemDetail, CurrTabItem);
           //OpenAnalyseTab(sql)
-          return { type: "805", msg: sql };
+          //return  {type:"805",msg:sql}
+          return { type: "805", msg: { str: sql, obj: null } };
         }
       } else if (CurrTabItem.M_TYPE == 804) {
         if (ColumnName == "THZCS") {
           list.push({
             name: "DFHM",
-            type: FiltrateLogicID.EqualTo,
+            type: Default.FiltrateLogicID.EqualTo,
             value: cA_PageItemDetail.dfhm,
           });
           //method_9(cA_PageItemDetail, list, null)
           let sql = " AND " + GetListCondition(list);
-          return { type: "18", msg: sql };
+          //return {type:"18",msg:sql}
+          return {
+            type: "18",
+            msg: { str: sql, obj: GetDataFilterFromList(list) },
+          };
         }
         if (ColumnName == "GLDDFDHHMS") {
           let sql = Get806CA_PageItem(cA_PageItemDetail, CurrTabItem);
           //OpenAnalyseTab(sql)
-          return { type: "806", msg: sql };
+          //return  {type:"806",msg:sql}
+          return { type: "806", msg: { str: sql, obj: null } };
         }
       } else {
         if (CurrTabItem.M_TYPE == 811) {
           let sql = Get813CA_PageItem(cA_PageItemDetail, CurrTabItem);
           //OpenAnalyseTab(sql)
-          return { type: "813", msg: sql };
+          //return  {type:"813",msg:sql}
+          return { type: "813", msg: { str: sql, obj: null } };
         }
         if (CurrTabItem.M_TYPE == 812) {
           let sql = Get814CA_PageItem(cA_PageItemDetail, CurrTabItem);
           //OpenAnalyseTab(sql)
-          return { type: "814", msg: sql };
+          //return  {type:"814",msg:sql}
+          return { type: "814", msg: { str: sql, obj: null } };
         }
         if (CurrTabItem.M_TYPE == 822) {
           let sql = Get824CA_PageItem(cA_PageItemDetail, CurrTabItem);
           //OpenAnalyseTab(sql)
-          return { type: "824", msg: sql };
+          //return  {type:"824",msg:sql}
+          return { type: "824", msg: { str: sql, obj: null } };
         }
         if (CurrTabItem.M_TYPE != 301) {
           if (CurrTabItem.M_TYPE != 302) {
@@ -1366,7 +1441,7 @@ function AnalysePageGrid_OnLinkClick(
                     return { type: "4", msg: sql };
                   } else if (ColumnName == "GLZHS") {
                     let sql_tmp = Get309CA_PageItem(cA_PageItemDetail);
-                    return { type: "309", msg: sql_tmp };
+                    return { type: "309", msg: { str: sql_tmp, obj: null } };
                   }
                 }
                 return null;
@@ -1383,7 +1458,7 @@ function AnalysePageGrid_OnLinkClick(
                 ColumnName
               );
               //OpenAnalyseTab(sql)
-              return { type: "310", msg: sql };
+              return { type: "310", msg: { str: sql, obj: null } };
             }
             if (
               ColumnName == "GLDDZHS" ||
@@ -1396,7 +1471,7 @@ function AnalysePageGrid_OnLinkClick(
                 ColumnName
               );
               //OpenAnalyseTab(sql)
-              return { type: "311", msg: sql };
+              return { type: "311", msg: { str: sql, obj: null } };
             }
             if (ColumnName == "JZBS" || ColumnName == "CZBS") {
               if (CurrTabItem.M_TYPE == 303) {
@@ -1405,9 +1480,10 @@ function AnalysePageGrid_OnLinkClick(
                 list = Get304DetailCondition(cA_PageItemDetail, ColumnName);
               }
               //method_8(cA_PageItemDetail, list, null);
+              //return {type:"4",msg:list}
               return { type: "4", msg: list };
             }
-            return;
+            return null;
           }
         }
         if (
@@ -1421,7 +1497,7 @@ function AnalysePageGrid_OnLinkClick(
             ColumnName
           );
           //OpenAnalyseTab(sql)
-          return { type: "307", msg: sql };
+          return { type: "307", msg: { str: sql, obj: null } };
         }
         if (
           ColumnName == "GLDSZHS" ||
@@ -1434,7 +1510,7 @@ function AnalysePageGrid_OnLinkClick(
             ColumnName
           );
           //OpenAnalyseTab(sql)
-          return { type: "308", msg: sql };
+          return { type: "308", msg: { str: sql, obj: null } };
         }
         if (ColumnName == "JZBS" || ColumnName == "CZBS") {
           if (CurrTabItem.M_TYPE == 301) {
@@ -1455,9 +1531,7 @@ function AnalysePageGrid_OnLinkClick(
 }
 function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
   let CA_PageItemDetail = {
-    //CurrCellVal:"",//当前点击的值
     CurrentExeSql: "", //模型模板sql
-    //Ajid:"",//AJID
     cxkh: "", //交易卡号
     jymc: "", //交易名称
     jydfmc: "", //交易对方名称
@@ -1465,14 +1539,6 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
     jyzjhm: "", //交易证件号码
     jydfzjhm: "", //交易对方证件号码
     jyje: 0, //交易金额
-    //MinJyje:0,//最小金额
-    //JyjeOper:"",//交易金额操作  JYCSConditionAccord  > = <等
-    //MinJcb:0,//最小进出比
-    //MaxJcb:0,//最大进出比
-    //JyJzje:0,//总金额？交易进账金额？
-    //Jyjgsj:0,//时间间隔    JC_SJJG
-    //jykhIn:"",//交易卡号 进账
-    //jykhOut:"",//交易卡号 出账
     ddfhm: "", //调单方号码
     dfhm: "", //对方号码
     jysj: "", //交易时间
@@ -1578,44 +1644,16 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
   );
 }
 
+CA_PageItem.M_TYPE = 203;
+let res = OnLinkClick(
+  CA_PageItem,
+  { jydfmc: "zhangsan", jymc: "123456" },
+  { String_1: "jydfzkh,cxkh" },
+  "JZBS"
+);
+
+if (res != null) console.dir(res["msg"]["obj"][0]);
+
 export default {
   format: OnLinkClick,
 };
-
-// CA_PageItem.M_TYPE=421
-// let res=OnLinkClick(CA_PageItem,{jydfzkh:"zhangsan",cxkh:"123456"},{String_1:"jydfzkh,cxkh"},"JZBS")
-// if(res!=null)
-//     console.log(res["msg"])
-/*   
-通过layout_table_column link_mid找到连接跳转到的页面id。分为两类，一类当作数据中心页面，4为资金页面，18为通话页面；其他都可当作点击模型处理
-当作为模型时,可以在layout_model_info中查询到模板sql
-
-所有链接回调 
-AnalysePageGrid_OnLinkClick 
-参数 CA_PageItemDetail，CA_PageItem，ColumnName（英文列名）
-CA_PageItem.M_TYPE传入当前页面的id，CA_PageItem.Sql_Detail传入link_mid对应模型的模板sql（4，18为空）
-CA_PageItemDetail为详细参数：
-大额交易行为账户发现 id=200,需要设置查询卡号 CA_PageItemDetail.cxkh
-重点对手账户发现  id=202，需要设置查询卡号，交易对方张卡号  CA_PageItemDetail.cxkh ,CA_PageItemDetail.jydfzkh
-重点对手户名发现 id=203, 需设置交易名称，交易对方名称   CA_PageItemDetail.jymc,CA_PageItemDetail.jydfmc
-
-大额交易行为团伙账户发现 id=211,需要设置团伙划分CA_PageItemDetail.groupid：ThType.ThId去除"GROUP"，主体名称划分（jymc）,证照号码划分（jyzjhm）,交易卡号划分（cxkh）;CA_PageItemDetail.groupname为对应的值
-重点交易对手团伙发现 id=213,需要设置团伙划分CA_PageItemDetail.groupid 以及对方CA_PageItemDetail.dfgroupid
-
-交易账户关联对手账户（人）数   id=301,设置查询卡号CA_PageItemDetail.cxkh，交易名称CA_PageItemDetail.jymc,交易证件号码CA_PageItemDetail.jyzjhm
-交易户名关联对手账户（人）数   id=302，设置交易名称CA_PageItemDetail.jymc，交易证件号码CA_PageItemDetail.jyzjhm
-对手账户关联交易账户（人）数   id=303，设置交易对方账卡号CA_PageItemDetail.jydfzkh，交易对方名称CA_PageItemDetail.jydfmc，交易对方证件号码CA_PageItemDetail.jydfzjhm
-对手户名关联交易账户（人）数   id=304，设置交易对方名称CA_PageItemDetail.jydfmc，交易对方证件号码CA_PageItemDetail.jydfzjhm
-
-
-交易日期规律    id= 305，设置交易日期 CA_PageItemDetail.jysj
-交易方式规律    id=  351，设置摘要说明 CA_PageItemDetail.zysm
-交易金额区间规律   id=352，设置交易区间 CA_PageItemDetail.jyqj
-交易地区分布    id= 353，设置省份名称 CA_PageItemDetail.sfmc
-交易金额特征     id=354，设置交易金额 CA_PageItemDetail.jyje
-交易时间规律     id=357，设置交易时间 CA_PageItemDetail.jysj
-交易时段分析     id=358，设置交易区间 CA_PageItemDetail.jyqj,设置最早最晚时间CA_PageItemDetail.mindate,CA_PageItemDetail.maxdate(模型参数)
-资金透视分析 id=421，设置CA_PageItemDetail.FiledENDictionary字典，内容为key=分类维度，value为对应的值
-查找重点联系人 id=802设置CA_PageItemDetail.ddfhm，CA_PageItemDetail.dfhm。调单方电话号码，对方电话号码
-数据中心人员界面  id=1或2，设置CA_PageItemDetail.jyzjhm，CA_PageItemDetail.jymc,CA_PageItemDetail.zzlxmc。证件号码，交易名称,证件类型
-*/

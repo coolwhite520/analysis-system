@@ -106,19 +106,6 @@ export default {
       console.log(parentid, tableTid);
       // 获取右侧的模型数据
       let tid = tableTid[1];
-      let tableename = "";
-      let title = "";
-      let modelTreeList = [];
-      for (let item of this.dataCenterList) {
-        for (let childItem of item.childrenArr) {
-          if (childItem.tid === tid) {
-            title = childItem.title;
-            tableename = childItem.tablename;
-            modelTreeList = childItem.modelTreeList;
-            break;
-          }
-        }
-      }
       // 判断是否已经展示了这个基础页面，如果已经展示了，那么需要进行active
       for (let tableData of this.tableDataList) {
         if (tableData.tid === tid) {
@@ -128,15 +115,9 @@ export default {
       }
       let { ajid } = this.caseBase;
       await this.$store.dispatch("ShowTable/showBaseTable", {
-        ajid,
         tid,
-        title,
-        tableename,
-        filter: "",
         offset: 0,
         count: 30,
-        selectCondition: JSON.parse(JSON.stringify(this.$defaultSelection)),
-        modelTreeList,
       });
     },
     handleClickOpenCollapse() {

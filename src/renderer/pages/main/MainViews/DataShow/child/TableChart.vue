@@ -11,7 +11,7 @@
     >
       <el-table-column fixed type="index" width="50" label="编号"></el-table-column>
       <el-table-column
-        v-for="(header) in tableData.headers"
+        v-for="(header) in tableData.showHeaders"
         :label="header.fieldcname"
         :key="header.cid"
         show-overflow-tooltip
@@ -25,7 +25,9 @@
               size="mini"
               style="color:#2e69b7"
               @click="handleClickTableCellLink(scope.row, header.fieldename, header.link_mid, scope.row[header.fieldename].value)"
-            >{{ scope.row[header.fieldename].value }}</el-button>
+            >
+              <u>{{ scope.row[header.fieldename].value }}</u>
+            </el-button>
           </div>
           <div v-else>{{ scope.row[header.fieldename].value }}</div>
         </template>
@@ -111,13 +113,10 @@ export default {
 
       this.$store.dispatch("ShowTable/showLinkTable", {
         tid: parseInt(this.tableData.tid),
-        ajid: this.caseBase.ajid,
         linkMid,
         selectCondition: this.tableData.selectCondition,
         row: newRow,
         fieldename: fieldename.toUpperCase(), // 注意列名需要传递大写
-        count: 30,
-        offset: 0,
       });
     },
 
