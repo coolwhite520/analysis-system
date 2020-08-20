@@ -4,6 +4,7 @@ const state = {
   standardDataVisible: false, // 标准采集
   autoDataVisible: false, //智能采集
   filterVisible: false,
+  showFieldsVisible: false,
 };
 
 const mutations = {
@@ -20,6 +21,9 @@ const mutations = {
 
   SET_FILTER_DIALOG_VISIBLE(state, filterVisible) {
     state.filterVisible = filterVisible;
+  },
+  SET_SHOW_FILEDS_DIALOG_VISIBLE(state, showFieldsVisible) {
+    state.showFieldsVisible = showFieldsVisible;
   },
 };
 

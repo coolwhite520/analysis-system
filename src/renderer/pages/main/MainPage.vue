@@ -4,6 +4,7 @@
       <tab-bar v-show="showTabBarView"></tab-bar>
     </el-row>
     <!-- <el-button type="text" @click="handleClickOpenNewWin">open new win</el-button> -->
+
     <el-row>
       <el-col :span="isCollapseLeftBar?1:3">
         <data-center></data-center>
@@ -38,7 +39,7 @@ export default {
     // console.log({ showModelList: this.showModelList });
   },
   computed: {
-    ...mapState("MainPageSwitch", ["showTabBarView"]),
+    ...mapState("MainPageSwitch", ["showTabBarView", "showFieldsVisible"]),
     ...mapState("AppPageSwitch", ["mainViewHeight", "isCollapseLeftBar"]),
     ...mapState("ShowTable", ["currentTableData"]),
   },

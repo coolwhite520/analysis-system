@@ -139,7 +139,7 @@ export default {
       }
       return indexs;
     },
-    getRightPageInd() {
+    getRightPageIndexs() {
       let indexs = [];
       let bfind = false;
       for (let index = 0; index < this.tableDataList.length; index++) {

@@ -24,7 +24,8 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          @click="handleClickClearFilter"
+          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' && currentTableData.modelFilterChildList.length>0)"
         >
           <span class="iconfont selfIcont">&#xe606;</span>
           <br />
@@ -36,6 +37,7 @@
         <el-button
           type="text"
           class="ctrl-button"
+          @click="handleClickShowField"
           :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
         >
           <span class="iconfont selfIcont">&#xe600;</span>
@@ -94,6 +96,7 @@
         <el-button
           type="text"
           class="ctrl-button"
+          @click="handleClickDataDiff"
           :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
         >
           <span class="iconfont selfIcont">&#xe6ff;</span>
@@ -219,22 +222,39 @@
     <div v-if="filterVisible">
       <filter-dialog></filter-dialog>
     </div>
+    <div v-if="showFieldsVisible">
+      <show-fields-dialog></show-fields-dialog>
+    </div>
   </div>
 </template>
 <script >
 import StandardDataCollectionDialog from "@/pages/dialog/StandardDataCollectionDialog";
 import AutoDataCollectionDialog from "@/pages/dialog/AutoDataCollectionDialog";
 import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
+import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import { mapState } from "vuex";
 export default {
+  data() {
+    return {
+      defaultProps: {
+        children: "children",
+        label: "fieldcname",
+      },
+    };
+  },
   components: {
     "standard-dialog": StandardDataCollectionDialog,
     "filter-dialog": FilterDialog,
-    // "auto-dialog": AutoDataCollectionDialog,
+    "show-fields-dialog": ShowFieldsDialog,
+    "auto-dialog": AutoDataCollectionDialog,
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
-    ...mapState("DialogPopWnd", ["standardDataVisible", "filterVisible"]),
+    ...mapState("DialogPopWnd", [
+      "standardDataVisible",
+      "filterVisible",
+      "showFieldsVisible",
+    ]),
     ...mapState("ShowTable", ["currentTableData"]),
   },
   methods: {
@@ -261,6 +281,15 @@ export default {
     async handleClickFilter() {
       await this.$store.commit("DialogPopWnd/SET_FILTER_DIALOG_VISIBLE", true);
     },
+    // 清除筛选
+    async handleClickClearFilter() {},
+    async handleClickShowField() {
+      await this.$store.commit(
+        "DialogPopWnd/SET_SHOW_FILEDS_DIALOG_VISIBLE",
+        true
+      );
+    },
+    async handleClickDataDiff() {},
   },
 };
 </script>

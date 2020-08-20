@@ -6,6 +6,9 @@ import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 import { link } from "fs";
+import { type } from "os";
+import { Pagination } from "element-ui";
+import { Z_ASCII } from "zlib";
 
 const state = {
   activeIndex: "", // 当前active的tab索引
@@ -163,6 +166,10 @@ const mutations = {
       }
     }
   },
+  // 更新筛选条件
+  UPDATE_TABLE_MODEL_FILTER(state, modelFilterStr) {
+    Vue.set(state.currentTableData, "modelFilterStr", modelFilterStr);
+  },
   // 移除单个tableData
   REMOVE_TABLE_DATA_FROM_LIST(state, { pageIndex }) {
     let rightIndex = "";
@@ -237,17 +244,30 @@ const actions = {
   },
   // 展示基础页面（数据中心的基本表格）
   async showBaseTable(
-    { commit, rootState },
+    { commit, state, rootState },
     {
       pageIndex, // 根据这个参数判定是否是新加入还是点击了下一页
       tid, // 表的id
       count, // 查询数量
       offset, // 查询的偏移
+      selectCondition,
+      modelFilterStr,
       modelFilterChildList, // 数据筛选
     }
   ) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
     let ajid = rootState.CaseDetail.caseBase.ajid;
+
+    if (typeof selectCondition === "undefined") {
+      // 添加新表
+      selectCondition = JSON.parse(JSON.stringify(global.defaultSelection));
+    }
+    if (typeof modelFilterStr === "undefined") {
+      modelFilterStr = "";
+    }
+    if (typeof modelFilterChildList === "undefined") {
+      modelFilterChildList = [];
+    }
     let modelTreeList = [];
     let title = "";
     let tableename = "";
@@ -261,15 +281,17 @@ const actions = {
         }
       }
     }
-    let filterStr = convertSql.convertDataFilterToSqlStr(
+    let filterChildStr = convertSql.convertDataFilterToSqlStr(
       parseInt(tid),
       modelFilterChildList
     );
+
+    // 需要累加过滤条件
     let data = await showTable.QueryBaseTableData(
       ajid,
       tid,
       tableename,
-      filterStr,
+      modelFilterStr + filterChildStr,
       offset,
       count
     );
@@ -279,10 +301,9 @@ const actions = {
       if (pageIndex) {
         // 更新数据
         commit("UPDATE_TABLE_DATA", { pageIndex, rows, sum, headers });
+        // 每次筛选的时候更新
+        commit("UPDATE_TABLE_MODEL_FILTER", modelFilterStr + filterChildStr);
       } else {
-        let selectCondition = JSON.parse(
-          JSON.stringify(global.defaultSelection)
-        );
         let obj = {
           ajid,
           title,
@@ -296,6 +317,7 @@ const actions = {
           dispatchName: "ShowTable/showBaseTable",
           tableType: "base",
           hideEmptyField: false,
+          modelFilterStr: modelFilterStr + filterChildStr,
           modelFilterChildList,
           rightTabs: [],
           showType: 1,
@@ -320,20 +342,29 @@ const actions = {
   // 执行模型列表中的模型
   async showModelTable(
     { commit, state, rootState },
-    { pageIndex, tid, pgsqlTemplateDecode, count, offset }
-  ) {
-    commit("SET_LOADINGSHOWDATA_STATE", true);
-    let ajid = rootState.CaseDetail.caseBase.ajid;
-    // 所有的模型都是基于当前的表格进行的操作
-    let {
+    {
+      pageIndex,
+      tid,
+      pgsqlTemplateDecode,
+      count,
+      offset,
       selectCondition,
       modelFilterStr,
       modelFilterChildList,
-    } = state.currentTableData;
+    }
+  ) {
+    commit("SET_LOADINGSHOWDATA_STATE", true);
+    let ajid = rootState.CaseDetail.caseBase.ajid;
 
-    // 第一次add重新赋值给modelfilter
-    if (!pageIndex) {
-      modelFilterChildList = null;
+    if (typeof selectCondition === "undefined") {
+      // 添加新表
+      selectCondition = JSON.parse(JSON.stringify(global.defaultSelection));
+    }
+    if (typeof modelFilterStr === "undefined") {
+      modelFilterStr = "";
+    }
+    if (typeof modelFilterChildList === "undefined") {
+      modelFilterChildList = [];
     }
 
     let {
@@ -353,7 +384,6 @@ const actions = {
       parseInt(tid),
       modelFilterChildList
     );
-    console.log({ modelFilterChildList, filterStr, filterChildStr });
     let sql = modelSqlFormat.format(
       pgsqlTemplateDecode,
       orderby,
@@ -387,10 +417,10 @@ const actions = {
           componentName: "table-data-view",
           dispatchName: "ShowTable/showModelTable",
           tableType: "model",
-          selectCondition,
           describe,
           pgsqlTemplateDecode,
-          modelFilterList,
+          selectCondition,
+          modelFilterStr,
           modelFilterChildList,
           showType,
           rightTabs: [],
@@ -412,9 +442,9 @@ const actions = {
       console.log("errr...........");
     }
   },
-  // 点击表格中的link跳转的页面查询
+  // 点击表格中的link跳转的页面查询, 每次点击link的时候需要传递当前页面的modelFilterStr;
   async showLinkTable(
-    { commit, rootState, state, dispatch },
+    { commit, state, dispatch },
     { tid, row, linkMid, fieldename }
   ) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
@@ -427,11 +457,11 @@ const actions = {
         selectCondition,
         fieldename.toUpperCase()
       );
-      // 执行基本表的查询并add到list中（不传递pageIndex即可）
       await dispatch("showBaseTable", {
         tid: String(linkMid),
         count: 30,
         offset: 0,
+        modelFilterStr: tid != "1" ? state.currentTableData.modelFilterStr : "",
         modelFilterChildList: res.msg.obj,
       });
     } else {
@@ -446,10 +476,15 @@ const actions = {
         selectCondition,
         fieldename.toUpperCase()
       );
-      console.log({ msg, type });
+      let filterChildStr = convertSql.convertDataFilterToSqlStr(
+        parseInt(tid),
+        state.currentTableData.modelFilterChildList
+      );
       await dispatch("showModelTable", {
         tid: type,
         pgsqlTemplateDecode: msg.str,
+        modelFilterStr: filterChildStr,
+        modelFilterChildList: [],
         count: 30,
         offset: 0,
       });

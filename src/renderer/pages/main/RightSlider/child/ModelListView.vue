@@ -60,7 +60,7 @@
 
 <script >
 import { mapState, mapGetters } from "vuex";
-
+import convertSql from "@/utils/sql/DataFiltrator.js";
 export default {
   props: ["renderData"],
   mounted() {},
@@ -95,8 +95,25 @@ export default {
         });
         return;
       }
+      let {
+        count,
+        offset,
+        selectCondition,
+        modelFilterStr,
+        modelFilterChildList,
+      } = this.currentTableData;
+
+      let filterChildStr = convertSql.convertDataFilterToSqlStr(
+        parseInt(tid),
+        this.currentTableData.modelFilterChildList
+      );
       await this.$store.dispatch("ShowTable/showModelTable", {
         tid,
+        count,
+        offset,
+        selectCondition,
+        modelFilterStr: filterChildStr,
+        modelFilterChildList: [],
         offset: 0,
         count: 30,
       });

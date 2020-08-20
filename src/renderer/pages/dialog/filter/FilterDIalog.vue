@@ -158,7 +158,7 @@ const UUID = require("uuid");
 export default {
   mounted() {
     let headerFirst = this.currentTableData.headers[0];
-    if (!this.currentTableData.modelFilterChildList) {
+    if (this.currentTableData.modelFilterChildList.length === 0) {
       this.filterList.push({
         id: UUID.v1(),
         DisplayRelation: "AND",
@@ -204,7 +204,7 @@ export default {
         modelFilterChildList: this.filterList,
       });
       await this.$store.commit("DialogPopWnd/SET_FILTER_DIALOG_VISIBLE", false);
-      this.$store.dispatch(this.currentTableData.dispatchName, {
+      await this.$store.dispatch(this.currentTableData.dispatchName, {
         ...this.currentTableData,
         offset: 0,
         count: 30,
