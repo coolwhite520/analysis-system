@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen } from "electron";
 import initIpcEvent from "./modules/ipcEvents";
 import createMiniWindow from "./modules/window/miniWindow";
+import createExportWindow from "./modules/window/exportWindow";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 /**
@@ -53,6 +54,7 @@ function createWindow() {
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
     global.miniWindow = createMiniWindow(BrowserWindow);
+    global.exportWindow = createExportWindow(BrowserWindow);
     // if (isDevelopment) {
     //   // 安装vue-devtools
     //   let extensions = BrowserWindow.getDevToolsExtensions();

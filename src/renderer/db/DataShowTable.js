@@ -100,6 +100,15 @@ export default {
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$COUNT\$/g, count)
         .replace(/\$OFFSET\$/g, offset);
+
+      let exportSql = querySqlTemp
+        .replace(/\$AJID\$/g, ajid)
+        .replace(/\$FIELDS\$/g, showFields)
+        .replace(/\$TABLENAME\$/g, tableename)
+        .replace(/\$FILTER\$/g, filter)
+        .replace(/\$COUNT\$/g, 100000)
+        .replace(/\$OFFSET\$/g, 0);
+
       let countSql = countSqlTemp
         .replace(/\$AJID\$/g, ajid)
         .replace(/\$FIELDS\$/g, showFields)
@@ -129,7 +138,7 @@ export default {
         sum = resultCount.rows[0].count;
       }
       console.log(showFields);
-      return { success: true, headers, rows: retRows, sum };
+      return { success: true, headers, rows: retRows, sum, exportSql };
     } catch (e) {
       console.log(e);
       return { success: false, msg: e.message };
@@ -146,6 +155,7 @@ export default {
       }
       await cases.SwitchCase(ajid);
       console.log(sql);
+      let exportSql = sql;
       let result = await db.query(sql);
       console.log({ result });
       // 数据过滤
@@ -165,7 +175,13 @@ export default {
       let retRows = [];
       let sum = result.rows.length;
       if (sum === 0) {
-        return { success: true, headers: newHeaders, rows: retRows, sum };
+        return {
+          success: true,
+          headers: newHeaders,
+          rows: retRows,
+          sum,
+          exportSql,
+        };
       }
       for (let index = offset; index < offset + count; index++) {
         if (sum < index + 1) {
@@ -182,7 +198,13 @@ export default {
         }
         retRows.push(newRow);
       }
-      return { success: true, headers: newHeaders, rows: retRows, sum };
+      return {
+        success: true,
+        headers: newHeaders,
+        rows: retRows,
+        sum,
+        exportSql,
+      };
     } catch (e) {
       console.log(e);
       return { success: false, msg: e.message };

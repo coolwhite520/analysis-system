@@ -2,15 +2,15 @@ import { ipcRenderer } from "electron";
 
 const miniWinURL =
   process.env.NODE_ENV === "development"
-    ? `http://localhost:9080/#mini`
-    : `file://${__dirname}/#mini`;
+    ? `http://localhost:9080/#export`
+    : `file://${__dirname}/#export`;
 
 const createMiniWindow = function(BrowserWindow) {
   let obj = {
     height: 100,
     width: 100,
     minWidth: 0,
-    show: false,
+    show: true,
     frame: true,
     fullscreenable: false,
     skipTaskbar: true,

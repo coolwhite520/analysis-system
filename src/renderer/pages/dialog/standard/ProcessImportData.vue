@@ -1,12 +1,13 @@
 <template>
   <div>
-    <div style="margin-bottom:30px;">当前正在导入[{{fileName}}]文件中的[{{sheetName}}]表中的数据...</div>
-    <el-progress
-      :text-inside="true"
-      :stroke-width="30"
-      :percentage="percentage"
-      :color="customColor"
-    ></el-progress>
+    <div style="margin-bottom:30px;">
+      <span>当前正在导入</span>
+      <span style="font-size:12px">[{{fileName}}]</span>
+      <span>文件中的</span>
+      <span style="font-size:12px">[{{sheetName}}]</span>
+      <span>表中的数据...</span>
+    </div>
+    <el-progress :text-inside="true" :percentage="percentage" :color="customColor"></el-progress>
   </div>
 </template>
 

@@ -4,7 +4,11 @@
     <div style="height:100px;"></div>
     <component :is="currentViewName"></component>
     <div style="height:20px;"></div>
-    <div class="state-bar">&nbsp;</div>
+    <div class="state-bar">
+      <el-row v-if="exportProcessVisible">
+        <el-progress :percentage="percentage" :color="customColor"></el-progress>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -14,6 +18,31 @@ import TitleBar from "@/pages/title/TitleBar";
 import HomePage from "@/pages/home/HomePage";
 import MainPage from "@/pages/main/MainPage";
 export default {
+  mounted() {
+    let _this = this;
+    this.$electron.ipcRenderer.on("export-one-file-proccess", (event, data) => {
+      const { success, errormsg, percentage } = data;
+      if (success && percentage) {
+        _this.$store.commit("MainPageSwitch/SET_EXPORTPROCESSVISIBLE", true);
+        _this.percentage = percentage;
+      }
+    });
+    this.$electron.ipcRenderer.on("export-one-file-over", (event, data) => {
+      _this.$store.commit("MainPageSwitch/SET_EXPORTPROCESSVISIBLE", false);
+      _this.percentage = 0;
+      _this.$notify({
+        title: "成功",
+        message: `文件导出成功!`,
+        type: "success",
+      });
+    });
+  },
+  data() {
+    return {
+      percentage: 0,
+      customColor: "#75d083",
+    };
+  },
   name: "App",
   components: {
     "title-bar": TitleBar,
@@ -22,6 +51,7 @@ export default {
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
+    ...mapState("MainPageSwitch", ["exportProcessVisible"]),
   },
 };
 </script>

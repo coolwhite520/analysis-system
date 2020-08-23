@@ -19,5 +19,12 @@ export default new Router({
         require(["@/pages/mini/MiniView"], resolve);
       },
     },
+    {
+      path: "/export",
+      name: "export",
+      component: function(resolve) {
+        require(["@/pages/mini/ExportView"], resolve);
+      },
+    },
   ],
 });

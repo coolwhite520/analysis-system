@@ -186,6 +186,7 @@
         <el-button
           type="text"
           class="ctrl-button"
+          @click="handleClickExportData"
           :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
         >
           <span class="iconfont selfIcont">&#xe637;</span>
@@ -233,6 +234,7 @@ import AutoDataCollectionDialog from "@/pages/dialog/AutoDataCollectionDialog";
 import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import { mapState } from "vuex";
+import path, { extname } from "path";
 export default {
   data() {
     return {
@@ -256,6 +258,7 @@ export default {
       "showFieldsVisible",
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
+    ...mapState("MainPageSwitch", ["exportProcessVisible"]),
   },
   methods: {
     async handleClickDataCollection() {
@@ -282,7 +285,17 @@ export default {
       await this.$store.commit("DialogPopWnd/SET_FILTER_DIALOG_VISIBLE", true);
     },
     // 清除筛选
-    async handleClickClearFilter() {},
+    async handleClickClearFilter() {
+      await this.$store.commit("ShowTable/UPDATE_TABLE_FILTER", {
+        pageIndex: this.currentTableData.pageIndex,
+        modelFilterChildList: [],
+      });
+      await this.$store.dispatch(this.currentTableData.dispatchName, {
+        ...this.currentTableData,
+        offset: 0,
+        count: 30,
+      });
+    },
     async handleClickShowField() {
       await this.$store.commit(
         "DialogPopWnd/SET_SHOW_FILEDS_DIALOG_VISIBLE",
@@ -290,6 +303,37 @@ export default {
       );
     },
     async handleClickDataDiff() {},
+    async handleClickExportData() {
+      if (this.exportProcessVisible) {
+        this.$notify({
+          title: "警告",
+          message: "当前存在导出操作，请稍后...",
+          type: "warning",
+        });
+        return;
+      }
+      let result = await this.$electron.remote.dialog.showSaveDialog({
+        title: "请选择要保存的文件名",
+        buttonLabel: "保存",
+        defaultPath: this.currentTableData.title,
+        filters: [
+          { name: "excel", extensions: ["xls", "xlsx"] },
+          { name: "txt", extensions: ["txt"] },
+          { name: "csv", extensions: ["csv"] },
+        ],
+      });
+      console.log(result);
+      if (!result.canceled) {
+        let exportSql = this.currentTableData.exportSql;
+        let args = {
+          ajid: this.caseBase.ajid,
+          exportSql,
+          filePath: result.filePath,
+          headers: this.currentTableData.headers,
+        };
+        this.$electron.ipcRenderer.send("export-one-file-begin", args);
+      }
+    },
   },
 };
 </script>

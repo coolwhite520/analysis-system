@@ -35,6 +35,19 @@ export default function() {
     global.mainWindow.webContents.send("read-all-file-over", args);
   });
 
+  // 给export窗口发送开始
+  ipcMain.on("export-one-file-begin", (e, args) => {
+    global.exportWindow.webContents.send("export-one-file-begin", args);
+  });
+  // export窗口发送进度条数据
+  ipcMain.on("export-one-file-proccess", (e, args) => {
+    global.mainWindow.webContents.send("export-one-file-proccess", args);
+  });
+  //export窗口发送开始
+  ipcMain.on("export-one-file-over", (e, args) => {
+    global.mainWindow.webContents.send("export-one-file-over", args);
+  });
+
   ipcMain.on("move-to-zero", () => {
     let bounds = global.mainWindow.getBounds();
     bounds.x = 0;

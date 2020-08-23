@@ -2,6 +2,7 @@
 const state = {
   currentViewName: "", //"new-case-view", //"case-detail-view", //"show-exist-case-view",
   showTabBarView: true,
+  exportProcessVisible: false,
 };
 
 const mutations = {
@@ -10,6 +11,9 @@ const mutations = {
   },
   SET_SHOWTABBARVIEW(state, showTabBarView) {
     state.showTabBarView = showTabBarView;
+  },
+  SET_EXPORTPROCESSVISIBLE(state, exportProcessVisible) {
+    state.exportProcessVisible = exportProcessVisible;
   },
 };
 

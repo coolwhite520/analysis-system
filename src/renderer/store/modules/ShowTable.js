@@ -170,6 +170,10 @@ const mutations = {
   UPDATE_TABLE_MODEL_FILTER(state, modelFilterStr) {
     Vue.set(state.currentTableData, "modelFilterStr", modelFilterStr);
   },
+  // 设置显示列
+  SET_SHOWHAEDERS(state, newShowHeaders) {
+    Vue.set(state.currentTableData, "showHeaders", newShowHeaders);
+  },
   // 移除单个tableData
   REMOVE_TABLE_DATA_FROM_LIST(state, { pageIndex }) {
     let rightIndex = "";
@@ -285,24 +289,30 @@ const actions = {
       parseInt(tid),
       modelFilterChildList
     );
-
+    // 新添加的需要
+    if (!pageIndex) {
+      modelFilterStr =
+        tid !== "1"
+          ? state.currentTableData.modelFilterStr + filterChildStr
+          : filterChildStr;
+    } else {
+      modelFilterStr = filterChildStr;
+    }
     // 需要累加过滤条件
     let data = await showTable.QueryBaseTableData(
       ajid,
       tid,
       tableename,
-      modelFilterStr + filterChildStr,
+      modelFilterStr,
       offset,
       count
     );
     console.log(data);
     if (data.success) {
-      let { headers, rows, sum } = data;
+      let { headers, rows, sum, exportSql } = data;
       if (pageIndex) {
         // 更新数据
         commit("UPDATE_TABLE_DATA", { pageIndex, rows, sum, headers });
-        // 每次筛选的时候更新
-        commit("UPDATE_TABLE_MODEL_FILTER", modelFilterStr + filterChildStr);
       } else {
         let obj = {
           ajid,
@@ -317,10 +327,11 @@ const actions = {
           dispatchName: "ShowTable/showBaseTable",
           tableType: "base",
           hideEmptyField: false,
-          modelFilterStr: modelFilterStr + filterChildStr,
+          modelFilterStr,
           modelFilterChildList,
           rightTabs: [],
           showType: 1,
+          exportSql,
         };
         if (modelTreeList && modelTreeList.length > 0) {
           obj.rightTabs.push({
@@ -400,7 +411,7 @@ const actions = {
       count
     );
     if (data.success) {
-      let { headers, rows, sum } = data;
+      let { headers, rows, sum, exportSql } = data;
       // 判断是否add，还是update
       if (pageIndex) {
         // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
@@ -425,6 +436,7 @@ const actions = {
           showType,
           rightTabs: [],
           orderby,
+          exportSql,
         };
         if (mpids && mpids.length > 0) {
           obj.rightTabs.push({
@@ -461,7 +473,6 @@ const actions = {
         tid: String(linkMid),
         count: 30,
         offset: 0,
-        modelFilterStr: tid != "1" ? state.currentTableData.modelFilterStr : "",
         modelFilterChildList: res.msg.obj,
       });
     } else {
