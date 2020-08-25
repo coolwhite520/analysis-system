@@ -315,7 +315,7 @@ export default {
       let result = await this.$electron.remote.dialog.showSaveDialog({
         title: "请选择要保存的文件名",
         buttonLabel: "保存",
-        defaultPath: this.currentTableData.title,
+        defaultPath: `案件（${this.caseBase.ajmc}-${this.currentTableData.title}`,
         filters: [
           { name: "excel", extensions: ["xls", "xlsx"] },
           { name: "txt", extensions: ["txt"] },

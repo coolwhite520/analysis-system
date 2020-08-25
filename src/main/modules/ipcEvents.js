@@ -35,6 +35,14 @@ export default function() {
     global.mainWindow.webContents.send("read-all-file-over", args);
   });
 
+  // main窗口发送导入请求
+  ipcMain.on("import-one-table-begin", (e, args) => {
+    global.miniWindow.webContents.send("import-one-table-begin", args);
+  });
+  ipcMain.on("import-one-table-process", (e, args) => {
+    global.mainWindow.webContents.send("import-one-table-process", args);
+  });
+
   // 给export窗口发送开始
   ipcMain.on("export-one-file-begin", (e, args) => {
     global.exportWindow.webContents.send("export-one-file-begin", args);

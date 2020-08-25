@@ -281,9 +281,10 @@ function j_GetDataFiltrateStr(pgid, DataFilterList) {
     let dataFilter2 = dataFilter.children[i];
     if (dataFilter2.ConditionNodeType == Default.NodeType.NodeType_Condition) {
       if (
-        !Default.IsNullOrEmpty(dataFilter2.FiltrateValue) ||
-        dataFilter2.condtion == Default.FiltrateLogicID.IsEmpty ||
-        dataFilter2.condtion == Default.FiltrateLogicID.NotEmpty
+        true
+        // !Default.IsNullOrEmpty(dataFilter2.FiltrateValue) ||
+        // dataFilter2.condtion == Default.FiltrateLogicID.IsEmpty ||
+        // dataFilter2.condtion == Default.FiltrateLogicID.NotEmpty
       ) {
         let str = GetDataFiltrateStr(
           dataFilter2.condtion,
@@ -302,9 +303,10 @@ function j_GetDataFiltrateStr(pgid, DataFilterList) {
       let text3 = "";
       for (let j = 0; j < dataFilter2.children.length; j++) {
         if (
-          !Default.IsNullOrEmpty(dataFilter2.children[j].FiltrateValue) ||
-          dataFilter2.children[j].condtion == Default.FiltrateLogicID.IsEmpty ||
-          dataFilter2.children[j].condtion == Default.FiltrateLogicID.NotEmpty
+          true
+          // !Default.IsNullOrEmpty(dataFilter2.children[j].FiltrateValue) ||
+          // dataFilter2.children[j].condtion == Default.FiltrateLogicID.IsEmpty ||
+          // dataFilter2.children[j].condtion == Default.FiltrateLogicID.NotEmpty
         ) {
           let str3 = GetDataFiltrateStr(
             dataFilter2.children[j].condtion,

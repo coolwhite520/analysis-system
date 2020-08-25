@@ -5,6 +5,7 @@ const state = {
   autoDataVisible: false, //智能采集
   filterVisible: false,
   showFieldsVisible: false,
+  showCollectionRecordVisible: false,
 };
 
 const mutations = {
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_SHOW_FILEDS_DIALOG_VISIBLE(state, showFieldsVisible) {
     state.showFieldsVisible = showFieldsVisible;
+  },
+  SET_SHOWCOLLECTIONRECORDVISIBLE(state, showCollectionRecordVisible) {
+    state.showCollectionRecordVisible = showCollectionRecordVisible;
   },
 };
 

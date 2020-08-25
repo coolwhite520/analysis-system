@@ -14,7 +14,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import exploreView from "./explore/ExploreView";
+import exploreView from "./ExploreView";
 export default {
   async mounted() {
     this.activeName = "0";

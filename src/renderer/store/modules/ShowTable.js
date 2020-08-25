@@ -5,10 +5,6 @@ import aes from "@/utils/aes";
 import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
-import { link } from "fs";
-import { type } from "os";
-import { Pagination } from "element-ui";
-import { Z_ASCII } from "zlib";
 
 const state = {
   activeIndex: "", // 当前active的tab索引
@@ -280,7 +276,7 @@ const actions = {
         if (String(childItem.tid) === String(tid)) {
           modelTreeList = childItem.modelTreeList;
           title = childItem.title; // 表的名称显示在tab标签上面
-          tableename = childItem.tableename; // 表格的英文名称
+          tableename = childItem.tablename; // 表格的英文名称
           break;
         }
       }
@@ -290,7 +286,7 @@ const actions = {
       modelFilterChildList
     );
     // 新添加的需要
-    if (!pageIndex) {
+    if (!pageIndex && state.currentTableData) {
       modelFilterStr =
         tid !== "1"
           ? state.currentTableData.modelFilterStr + filterChildStr
@@ -469,6 +465,8 @@ const actions = {
         selectCondition,
         fieldename.toUpperCase()
       );
+      console.log({ tid, selectCondition, row, fieldename });
+      console.log(res.msg.str, res.msg.obj);
       await dispatch("showBaseTable", {
         tid: String(linkMid),
         count: 30,

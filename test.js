@@ -1,31 +1,21 @@
 const excel = require("exceljs");
 const fs = require("fs");
 
-let res = fs.createWriteStream("./a.xls");
-
-const options = {
-  stream: res,
-  useStyles: true,
-  useSharedStrings: true,
-};
-
-let workbook = new excel.stream.xlsx.WorkbookWriter(options);
-
-let title = "hahah";
-let worksheet = workbook.addWorksheet(title);
-let headers = [
-  { header: "Id", key: "id", width: 10 },
-  { header: "Name", key: "name", width: 32 },
-  { header: "D.O.B.", key: "DOB", width: 10, outlineLevel: 1 },
-];
-// 生成标题头
-worksheet.columns = headers;
-
-worksheet.addRow({ id: 6, name: "Barbara", DOB: new Date() });
-worksheet.addRow({ id: 6, name: "Barbara", DOB: new Date() });
-worksheet.addRow({ id: 6, name: "Barbara", DOB: new Date() });
-worksheet.addRow({ id: 6, name: "Barbara", DOB: new Date() });
-worksheet.addRow({ id: 6, name: "Barbara", DOB: new Date() });
-// worksheet.addRows(rows);
-worksheet.commit();
-workbook.commit();
+(async () => {
+  let filePathName = "/Users/baiyang/Desktop/未命名文件夹/交易明细汇总.xlsx";
+  const workbook = new excel.Workbook();
+  let now = new Date().getSeconds();
+  await workbook.xlsx.read(fs.createReadStream(filePathName));
+  workbook.eachSheet(function(worksheet, id) {
+    console.log(worksheet.name);
+    let end = new Date().getSeconds();
+    console.log(end - now);
+  });
+  // const workbookReader = new excel.stream.xlsx.WorkbookReader(filePathName);
+  // for await (const worksheetReader of workbookReader) {
+  //   console.log(worksheetReader.id, worksheetReader.name);
+  //   for await (const row of worksheetReader) {
+  //     // console.log(JSON.stringify(row.values));
+  //   }
+  // }
+})();

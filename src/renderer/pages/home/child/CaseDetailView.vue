@@ -106,14 +106,14 @@
         <span>案件数据：</span>
         <span class="caseContent">共采集&nbsp;{{batchCount}}&nbsp;批次</span>
         <span>
-          <el-button type="text" size="mini" @click="handleClickCollection">采集记录</el-button>
+          <el-button type="text" size="mini" @click="handleClickCollectionRecord">采集记录</el-button>
         </span>
       </div>
       <p>
         <span>数据总量：</span>
         <span class="caseContent">共&nbsp;{{dataSum}}&nbsp;条</span>
         <span>
-          <el-button type="text" size="mini">离线采集</el-button>
+          <el-button type="text" size="mini" @click="handleClickDataCollection">数据采集</el-button>
         </span>
       </p>
       <p>
@@ -133,8 +133,13 @@
         <el-col :span="8">
           <div>
             <div style="text-align:center;">
-              <el-button class="button" type="primary" round>开始分析</el-button>
-              <el-button round class="button" type="primary">分析报告</el-button>
+              <el-button class="button" type="primary" @click="handleClickBeginAnalysis" round>开始分析</el-button>
+              <el-button
+                round
+                class="button"
+                type="primary"
+                @click="handleClickBeginAnalysisReport"
+              >分析报告</el-button>
             </div>
           </div>
         </el-col>
@@ -143,10 +148,12 @@
         </el-col>
       </el-row>
     </div>
+    <collection-record></collection-record>
   </div>
 </template>
 
 <script>
+import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog";
 import { mapState, mapGetters } from "vuex";
 export default {
   async beforeMount() {
@@ -173,6 +180,9 @@ export default {
       loading: false,
     };
   },
+  components: {
+    "collection-record": CollectionRecordDialog,
+  },
   computed: {
     ...mapState("CaseDetail", [
       "caseBase",
@@ -181,6 +191,7 @@ export default {
       "batchCount",
       "dataSum",
       "awaitTaskCount",
+      "dataCenterList",
     ]),
     ...mapGetters("CaseDetail", ["renderButtonGroupList"]),
   },
@@ -208,7 +219,83 @@ export default {
     },
   },
   methods: {
-    handleClickCollection() {},
+    // 采集记录
+    handleClickCollectionRecord() {
+      this.$store.commit("DialogPopWnd/SET_SHOWCOLLECTIONRECORDVISIBLE", true);
+    },
+    // 数据采集
+    async handleClickDataCollection() {
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+
+      if (this.dataSum === 0) {
+        await this.$store.dispatch("ShowTable/showNoDataPage", {
+          tablecname: "数据采集",
+        });
+      } else {
+        // 查找第一个数据中心中的数据不为零的tid
+        let tid = "";
+        for (let item of this.dataCenterList) {
+          for (let child of item.childrenArr) {
+            if (child.count > 0) {
+              tid = child.tid;
+              break;
+            }
+          }
+        }
+        console.log(tid);
+        await this.$store.dispatch("ShowTable/showBaseTable", {
+          tid,
+          offset: 0,
+          count: 30,
+        });
+      }
+      await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
+    },
+    // 分析报告
+    async handleClickBeginAnalysisReport() {},
+    // 开始分析
+    async handleClickBeginAnalysis() {
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      if (this.dataSum === 0) {
+        await this.$store.dispatch("ShowTable/showNoDataPage", {
+          tablecname: "数据采集",
+        });
+      } else {
+        // 查找第一个数据中心中的数据不为零的tid
+        let tid = "";
+        for (let item of this.dataCenterList) {
+          for (let child of item.childrenArr) {
+            if (child.count > 0) {
+              tid = child.tid;
+              break;
+            }
+          }
+        }
+        console.log(tid);
+        await this.$store.dispatch("ShowTable/showBaseTable", {
+          tid,
+          offset: 0,
+          count: 30,
+        });
+      }
+    },
     handleClickEdit() {
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "edit-case-view");
     },
@@ -216,6 +303,20 @@ export default {
       // 获取右侧的模型数据
       let tid = item.tid;
       console.log(tid);
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch("ShowTable/showBaseTable", {
+        tid: String(tid),
+        offset: 0,
+        count: 30,
+      });
     },
     async handleClickDelCase() {
       let result = await this.$electron.remote.dialog.showMessageBox(null, {

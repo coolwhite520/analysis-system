@@ -7,6 +7,12 @@
       element-loading-background="rgba(0, 0, 0, 0.8)"
     >
       <el-row>
+        <div
+          style="float:left;"
+          v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length > 0"
+        >
+          <h3>下表为错误数据示例：</h3>
+        </div>
         <div style="float:right;">
           <el-button
             size="small"
@@ -67,7 +73,7 @@
               type="primary"
               size="mini"
               @click="handleClickBtnGroup(item)"
-            >{{item.fieldcname}}</el-button>
+            >{{item.fieldcname}}({{item.rownums.length}})条</el-button>
           </el-button-group>&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
           <el-button type="danger" size="mini" @click="handleClickDeleteAllErrorRows">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
         </div>
@@ -99,7 +105,7 @@
         append-to-body
         :modal="false"
       >
-        <el-row>
+        <el-row v-loading="isUpdateDataLoading" :element-loading-text="updateloadingText">
           <el-col :span="1">&nbsp;</el-col>
           <el-col :span="22">
             <div v-if=" currentErrorField.filterName === 'exceedLen'">
@@ -144,12 +150,14 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import dataImport from "../../../../db/DataImport";
+import dataImport from "../../../db/DataImport";
 export default {
   props: ["sheetItem", "activeName"],
   data() {
     return {
       loadingText: "正在进行数据检测，请稍后...",
+      isUpdateDataLoading: false,
+      updateloadingText: "正在进行数据更新，请稍后...",
       currentPercentage: 0,
       isDataLoading: false,
       input: "",
@@ -166,7 +174,15 @@ export default {
     ...mapState("DataCollection", ["exampleDataList"]),
     ...mapState("ShowTable", ["tableDataList"]),
   },
-  mounted() {},
+  mounted() {
+    this.$electron.ipcRenderer.on(
+      "import-one-table-process",
+      this.recvImportMsg
+    );
+  },
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners("import-one-table-process");
+  },
   methods: {
     async handleClickDeleteAllErrorRows() {
       const { ajid } = this.caseBase;
@@ -208,6 +224,7 @@ export default {
     },
     async handleClickSubmitModify() {
       if (this.input.length > 0) {
+        this.isUpdateDataLoading = true;
         const { ajid } = this.caseBase;
         const { headers, tableName } = this.sheetItem;
         let result = await dataImport.updateErrorRows(
@@ -246,9 +263,58 @@ export default {
           message: `输入框为空，请输入。`,
         });
       }
+      this.isUpdateDataLoading = false;
+    },
+    // 导入消息的回调
+    async recvImportMsg(e, args) {
+      let { sumRow, index } = args;
+      console.log({ sumRow, index });
+      this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
+      console.log(this.currentPercentage);
+
+      if (this.currentPercentage >= 100) {
+        this.bClickBtnCheck = false;
+        this.currentPercentage = 0;
+        this.isDataLoading = false;
+
+        await this.$store.commit(
+          "DataCollection/DELETE_DATA_LIST_BY_INDEX",
+          this.activeName
+        );
+        await this.$store.dispatch(
+          "CaseDetail/queryCaseDataCenter",
+          this.caseBase.ajid
+        );
+
+        if (this.exampleDataList.length === 0) {
+          await this.$store.commit(
+            "DialogPopWnd/SET_STANDARDDATAVISIBLE",
+            false
+          );
+          await this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
+          await this.$store.commit(
+            "DialogPopWnd/SET_STANDARDVIEW",
+            "begin-import"
+          );
+        }
+        // 更新当前的展示列表中的数据
+        for (let tableData of this.tableDataList) {
+          // 根据tableName获取表的数据
+          await this.$store.dispatch(tableData.dispatchName, {
+            ...tableData,
+            offset: 0,
+            count: 30,
+          });
+        }
+        // 导入成功，清理examplelist
+        this.$notify({
+          title: "成功",
+          message: `数据插入成功`,
+          type: "success",
+        });
+      }
     },
     async handleClickImportCurrentData() {
-      let _this = this;
       this.loadingText = "正在进行数据导入，请稍后...";
       this.isDataLoading = true;
       const { ajid } = this.caseBase;
@@ -264,7 +330,7 @@ export default {
       if (tablecname.endsWith("_source")) {
         tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
       }
-      await dataImport.importDataFromTempTableToRealTable(
+      this.$electron.ipcRenderer.send("import-one-table-begin", {
         ajid,
         tableName,
         tablecname,
@@ -272,51 +338,7 @@ export default {
         publicFields,
         matchedFields,
         externFields,
-        async ({ sumRow, index }) => {
-          console.log({ sumRow, index });
-          _this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
-          console.log(_this.currentPercentage);
-
-          if (_this.currentPercentage === 100) {
-            _this.bClickBtnCheck = false;
-            _this.currentPercentage = 0;
-            _this.isDataLoading = false;
-
-            await _this.$store.commit(
-              "DataCollection/DELETE_DATA_LIST_BY_INDEX",
-              _this.activeName
-            );
-            await _this.$store.dispatch("CaseDetail/queryCaseDataCenter", ajid);
-
-            if (_this.exampleDataList.length === 0) {
-              _this.$store.commit(
-                "DialogPopWnd/SET_STANDARDDATAVISIBLE",
-                false
-              );
-              _this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
-              _this.$store.commit(
-                "DialogPopWnd/SET_STANDARDVIEW",
-                "begin-import"
-              );
-            }
-            // 更新当前的展示列表中的数据
-            for (let tableData of this.tableDataList) {
-              // 根据tableName获取表的数据
-              await _this.$store.dispatch(tableData.dispatchName, {
-                ...tableData,
-                offset: 0,
-                count: 30,
-              });
-            }
-            // 导入成功，清理examplelist
-            _this.$notify({
-              title: "成功",
-              message: `数据插入成功`,
-              type: "success",
-            });
-          }
-        }
-      );
+      });
     },
     handleCheckChange(node, Checked, childrenChecked) {
       console.log(node, Checked, childrenChecked);

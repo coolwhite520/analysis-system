@@ -32,7 +32,7 @@
           :index="child.tid"
         >
           {{child.title}}
-          <span style="color: gray;">&nbsp;{{child.count}}条</span>
+          <span style="color: gray;font-size:10px">&nbsp;{{child.count}}条</span>
         </el-menu-item>
       </el-submenu>
     </el-menu>

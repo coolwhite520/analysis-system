@@ -39,7 +39,7 @@
           style="font-size:12px;color:gray"
         >每页显示{{pageSize}}条，当前页面条目数量：{{ tableData.rows.length }}条, 总计：{{tableData.sum}}条</div>
       </el-col>
-      <el-col :span="12" style="text-align:right;">
+      <el-col :span="11" style="text-align:right;">
         <div>
           <el-pagination
             small
@@ -49,6 +49,16 @@
             @current-change="handleCurrentChange"
           ></el-pagination>
         </div>
+      </el-col>
+      <el-col :span="1">
+        <el-select v-model="pageSize" placeholder="请选择" size="mini" @change="handleChangePageSize">
+          <el-option
+            v-for="item in optionsPageSize"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-col>
     </el-row>
   </div>
@@ -60,6 +70,12 @@ import { mapState } from "vuex";
 export default {
   mounted() {
     console.log(this.tableData);
+    for (let size = 10; size <= 60; size++) {
+      this.optionsPageSize.push({
+        label: String(size),
+        value: size,
+      });
+    }
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -68,10 +84,19 @@ export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      optionsPageSize: [],
       pageSize: 30,
     };
   },
   methods: {
+    async handleChangePageSize() {
+      // 根据tableName获取表的数据
+      await this.$store.dispatch(this.tableData.dispatchName, {
+        ...this.tableData,
+        offset: 0,
+        count: this.pageSize,
+      });
+    },
     sortChange(column) {
       console.log(column);
       //获取字段名称和排序类型

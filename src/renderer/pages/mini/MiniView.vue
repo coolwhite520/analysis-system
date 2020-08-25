@@ -447,6 +447,7 @@ export default {
             fields,
             newData
           );
+          newData = null;
           if (successInsert) {
             let percentage = parseInt(parseFloat(i / resultList.length) * 100);
             this.$electron.ipcRenderer.send("read-one-file-proccess", {
@@ -456,6 +457,7 @@ export default {
             });
           }
         }
+        resultList = null;
         this.$electron.ipcRenderer.send("read-one-file-over", {
           fileName,
           sheetName,
@@ -467,6 +469,7 @@ export default {
     },
   },
   mounted() {
+    let _this = this;
     console.log("miniview mounted...............");
     this.softVersion = this.$electron.remote.getGlobal("softVersion");
     this.$electron.ipcRenderer.on("read-all-file", this.readAllFile);
@@ -474,6 +477,37 @@ export default {
       "read-all-example-file",
       this.readExampleFile
     );
+    //监听单个表的导入
+    this.$electron.ipcRenderer.on("import-one-table-begin", async function (
+      e,
+      args
+    ) {
+      let {
+        ajid,
+        tableName,
+        tablecname,
+        bestMatchTemplate,
+        publicFields,
+        matchedFields,
+        externFields,
+      } = args;
+      console.log(args);
+      await dataImport.importDataFromTempTableToRealTable(
+        ajid,
+        tableName,
+        tablecname,
+        bestMatchTemplate,
+        publicFields,
+        matchedFields,
+        externFields,
+        function ({ sumRow, index }) {
+          _this.$electron.ipcRenderer.send("import-one-table-process", {
+            sumRow,
+            index,
+          });
+        }
+      );
+    });
   },
 };
 </script>

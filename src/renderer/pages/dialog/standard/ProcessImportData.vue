@@ -7,7 +7,7 @@
       <span style="font-size:12px">[{{sheetName}}]</span>
       <span>表中的数据...</span>
     </div>
-    <el-progress :text-inside="true" :percentage="percentage" :color="customColor"></el-progress>
+    <el-progress :percentage="percentage" :color="customColor"></el-progress>
   </div>
 </template>
 

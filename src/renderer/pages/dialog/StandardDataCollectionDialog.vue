@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      title: `标准数据采集`,
+      title: `数据采集`,
     };
   },
   methods: {

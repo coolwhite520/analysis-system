@@ -169,12 +169,12 @@ export default {
     headers // 包含字段的所有属性
   ) {
     // 展示的时候需要行号， 所以查询的时候需要添加到select中
-    matchedFields = ["rownum"].concat(matchedFields);
+    let matchedFieldsNew = ["rownum"].concat(matchedFields);
     let newRows = [];
     let errorFields = [];
     try {
       await cases.SwitchCase(ajid);
-      let sql = `select ${matchedFields} from ${tableName}`;
+      let sql = `select ${matchedFieldsNew} from ${tableName}`;
       if (filterList.length === 0) {
         sql = sql + ` limit ${limit} OFFSET ${beginIndex}`;
         console.log(sql);
@@ -192,17 +192,16 @@ export default {
           newRows.push(newRow);
         }
       } else {
-        for (let item of headers) {
-          if (
-            filterList.find((el) => {
-              return el === "exceedLen";
-            }) &&
-            item.fieldtype === 1
-          ) {
+        for (let matchedField of matchedFields) {
+          let arr = headers.filter((el) => el.fieldename === matchedField);
+          if (arr.length === 0) continue;
+          let item = arr[0];
+          console.log("loop&&&&&&&&&&&&&&", item);
+          if (item.fieldtype === 1) {
             let temp = await this.QueryFieldExceedLengthRows(
               ajid,
               tableName,
-              matchedFields,
+              matchedFieldsNew,
               item.fieldename,
               item.fieldlength
             );
@@ -211,18 +210,20 @@ export default {
               for (let row of temp.rows) {
                 let newRow = [];
                 rownums.push(row["rownum"]);
-                for (let k in row) {
-                  let value = row[k];
-                  let key = k;
-                  let error =
-                    key.toLowerCase() === item.fieldename.toLowerCase()
-                      ? true
-                      : false; //这个地方需要判定
+                if (rownums.length === 1) {
+                  for (let k in row) {
+                    let value = row[k];
+                    let key = k;
+                    let error =
+                      key.toLowerCase() === item.fieldename.toLowerCase()
+                        ? true
+                        : false; //这个地方需要判定
 
-                  let cell = { key, value, error };
-                  newRow.push(cell);
+                    let cell = { key, value, error };
+                    newRow.push(cell);
+                  }
+                  newRows.push(newRow);
                 }
-                newRows.push(newRow);
               }
               errorFields.push({
                 filterName: "exceedLen",
@@ -232,17 +233,12 @@ export default {
                 rownums,
               });
             }
-          }
-          if (
-            filterList.find((el) => {
-              return el === "notNum";
-            }) &&
-            (item.fieldtype === 2 || item.fieldtype === 3)
-          ) {
+          } else if (item.fieldtype === 2 || item.fieldtype === 3) {
+            // continue;
             let temp = await this.QueryFieldNotNumberRows(
               ajid,
               tableName,
-              matchedFields,
+              matchedFieldsNew,
               item.fieldename
             );
             if (temp.success && temp.rows.length > 0) {
@@ -250,18 +246,21 @@ export default {
               for (let row of temp.rows) {
                 let newRow = [];
                 rownums.push(row["rownum"]);
-                for (let k in row) {
-                  let value = row[k];
-                  let key = k;
-                  let error =
-                    key.toLowerCase() === item.fieldename.toLowerCase()
-                      ? true
-                      : false; //这个地方需要判定
+                if (rownums.length === 1) {
+                  // 只要一行示例错误
+                  for (let k in row) {
+                    let value = row[k];
+                    let key = k;
+                    let error =
+                      key.toLowerCase() === item.fieldename.toLowerCase()
+                        ? true
+                        : false; //这个地方需要判定
 
-                  let cell = { key, value, error };
-                  newRow.push(cell);
+                    let cell = { key, value, error };
+                    newRow.push(cell);
+                  }
+                  newRows.push(newRow);
                 }
-                newRows.push(newRow);
               }
               errorFields.push({
                 filterName: "notNum",
@@ -270,37 +269,32 @@ export default {
                 rownums,
               });
             }
-          }
-          if (
-            (filterList.find((el) => {
-              return el === "notDate";
-            }) &&
-              item.fieldtype === 4) ||
-            item.fieldtype === 6
-          ) {
+          } else if (item.fieldtype === 4 || item.fieldtype === 6) {
             let temp = await this.QueryFieldNotDateRows(
               ajid,
               tableName,
-              matchedFields,
+              matchedFieldsNew,
               item.fieldename
             );
             if (temp.success && temp.rows.length > 0) {
               let rownums = [];
               for (let row of temp.rows) {
                 rownums.push(row["rownum"]);
-                let newRow = [];
-                for (let k in row) {
-                  let value = row[k];
-                  let key = k;
-                  let error =
-                    key.toLowerCase() === item.fieldename.toLowerCase()
-                      ? true
-                      : false; //这个地方需要判定
+                if (rownums.length === 1) {
+                  let newRow = [];
+                  for (let k in row) {
+                    let value = row[k];
+                    let key = k;
+                    let error =
+                      key.toLowerCase() === item.fieldename.toLowerCase()
+                        ? true
+                        : false; //这个地方需要判定
 
-                  let cell = { key, value, error };
-                  newRow.push(cell);
+                    let cell = { key, value, error };
+                    newRow.push(cell);
+                  }
+                  newRows.push(newRow);
                 }
-                newRows.push(newRow);
               }
               errorFields.push({
                 filterName: "notDate",
@@ -326,7 +320,6 @@ export default {
       let sql = `select count(*)::int count from ${tableName}`;
       console.log(sql);
       const res = await db.query(sql);
-      console.log(res.rows);
       return res.rows[0].count;
     } catch (e) {
       console.log(e);
@@ -345,9 +338,16 @@ export default {
     try {
       await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
-      console.log(sql);
-      const res = await db.query(sql);
-      return { rows: res.rows, success };
+      let res = await db.query(sql);
+      let rows = res.rows;
+      let sqlCount = `SELECT count(*) from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
+      res = await db.query(sqlCount);
+      let count = res.rows[0].count;
+      return {
+        rows,
+        count,
+        success,
+      };
     } catch (e) {
       console.log(e);
       return { success: false, msg: e.message };
@@ -363,11 +363,15 @@ export default {
   ) {
     let success = true;
     try {
-      await cases.SwitchCase(ajid);
+      // await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
       console.log(sql);
-      const res = await db.query(sql);
-      return { rows: res.rows, success };
+      let res = await db.query(sql);
+      let rows = res.rows;
+      let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
+      res = await db.query(sqlCount);
+      let count = res.rows[0].count;
+      return { rows, success, count };
     } catch (e) {
       console.log(e);
       return { success: false, msg: e.message };
@@ -386,10 +390,16 @@ export default {
       let sql = `SELECT ${matchedFields} from ${tableName} 
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
-      and TRIM(both '  ' FROM ${fieldName}) !=''; `;
-      console.log(sql);
-      const res = await db.query(sql);
-      return { rows: res.rows, success };
+      and TRIM(both '  ' FROM ${fieldName}) !=''; `; // 查找一个示例
+      let res = await db.query(sql);
+      let rows = res.rows;
+      let sqlCount = `SELECT count(*)::int count from ${tableName} 
+      WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
+      and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !='' ; `;
+      res = await db.query(sqlCount);
+      let count = res.rows[0].count;
+      return { rows, success, count };
     } catch (e) {
       console.log(e);
       return { success: false, msg: e.message };

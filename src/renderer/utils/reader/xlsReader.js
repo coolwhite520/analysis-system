@@ -1,14 +1,72 @@
 import xlsx from "xlsx";
 import path from "path";
+import fs from "fs";
+import excel from "exceljs";
 
 export default {
-  parseFileExampleSync: function(filePathName) {
+  parseFileExampleSync: async function(filePathName) {
+    const workbook = new excel.Workbook();
+    let now = new Date().getSeconds();
+    let resultList = [];
+    await workbook.xlsx.read(fs.createReadStream(filePathName));
+    workbook.eachSheet(function(worksheet, id) {
+      let end = new Date().getSeconds();
+      console.log(end - now);
+      let rows = [];
+      let count = 0;
+      worksheet.eachRow(function(row, rowNumber) {
+        if (count >= 3) return;
+        row = row.values.filter((el, index) => index !== 0);
+        console.log(row);
+        rows.push(row);
+        count++;
+      });
+      let result = {
+        fileName: path.basename(filePathName),
+        sheetName: worksheet.name,
+        fileColsName: rows.length > 0 ? rows[0] : [],
+        ins1: rows.length > 1 ? rows[1] : [],
+        ins2: rows.length > 2 ? rows[2] : [],
+      };
+      resultList.push(result);
+    });
+    return resultList;
+  },
+  parseFileAllSync: async function(
+    filePathName,
+    sheetName,
+    fileColsName,
+    fileInsertCols
+  ) {
+    let indexList = [];
+    for (let i = 0; i < fileColsName.length; i++) {
+      let bfind = fileInsertCols.find((el) => {
+        return el === fileColsName[i];
+      });
+      if (bfind) indexList.push(i + 1);
+    }
+    const workbook = new excel.Workbook();
+    let rows = [];
+    await workbook.xlsx.read(fs.createReadStream(filePathName));
+    workbook.eachSheet(function(worksheet, id) {
+      if (worksheet.name === sheetName) {
+        worksheet.eachRow(function(row, rowNumber) {
+          row = row.values.filter((el, index) => indexList.includes(index));
+          rows.push(row);
+        });
+      }
+    });
+    console.log(rows);
+    return rows.slice(1);
+  },
+  parseFileExampleSync2: function(filePathName) {
     let book = xlsx.readFileSync(filePathName, { sheetRows: 3 }); // 每个sheet只要三条数据
     let resultList = [];
     //循环工作表中的每个 sheet 页
     book.SheetNames.forEach(function(name) {
       //拿到当前 sheet 页对象
       let sheet = book.Sheets[name];
+      console.log(sheet);
       //得到当前页内数据范围
       let range = xlsx.utils.decode_range(sheet["!ref"]);
       console.log(range);
@@ -23,9 +81,14 @@ export default {
         let row_data = [];
         //读取当前行里面各个列的数据
         for (let i = col_start; i <= col_end; i++) {
-          let addr =
-            xlsx.utils.encode_col(i) + xlsx.utils.encode_row(row_start);
+          var cell_address = { c: i, r: row_start };
+          /* if an A1-style address is needed, encode the address */
+          var addr = xlsx.utils.encode_cell(cell_address);
+          console.log(addr);
+          // let addr =
+          //   xlsx.utils.encode_col(i) + xlsx.utils.encode_row(row_start);
           let cell = sheet[addr];
+
           //如果是链接，保存为对象，其它格式直接保存原始值
           if (cell.l) {
             row_data.push({ text: cell.v, link: cell.l.Target });
@@ -34,6 +97,7 @@ export default {
             row_data.push(newValue);
           }
         }
+        console.log(row_data);
         rows.push(row_data);
       }
       //保存当前页内的数据
@@ -46,10 +110,11 @@ export default {
       };
       resultList.push(result);
     });
+    console.log(resultList);
     return resultList;
   },
 
-  parseFileAllSync: function(
+  parseFileAllSync2: function(
     filePathName,
     sheetName,
     fileColsName,
@@ -75,11 +140,11 @@ export default {
       let row_data = [];
       //读取当前行里面各个列的数据
       for (let i = col_start; i <= col_end; i++) {
-        let addr = xlsx.utils.encode_col(i) + xlsx.utils.encode_row(row_start);
+        var cell_address = { c: i, r: row_start };
+        /* if an A1-style address is needed, encode the address */
+        var addr = xlsx.utils.encode_cell(cell_address);
+        // let addr = xlsx.utils.encode_col(i) + xlsx.utils.encode_row(row_start);
         let cell = sheet[addr];
-        if (typeof cell === "undefined") {
-          continue;
-        }
         //如果是链接，保存为对象，其它格式直接保存原始值
         if (cell.l) {
           row_data.push({ text: cell.v, link: cell.l.Target });

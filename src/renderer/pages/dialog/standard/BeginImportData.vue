@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading">
+  <div v-loading="loading" element-loading-text="拼命加载中，请耐心等待...">
     <el-row style="text-align:center;">
       <span style="font-size:13px;">标准导入：</span>
       <el-button-group>

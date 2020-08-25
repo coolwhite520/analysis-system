@@ -59,7 +59,7 @@ export default {
   computed: {
     ...mapGetters("Cases", ["existCasesFilter"]),
     ...mapState("AppPageSwitch", ["currentViewName"]),
-    ...mapState("CaseDetail", ["dataSum"]),
+    ...mapState("CaseDetail", ["dataSum", "dataCenterList"]),
   },
   methods: {
     async handleClickCase(caseBase) {
@@ -83,8 +83,19 @@ export default {
           tablecname: "数据采集",
         });
       } else {
+        // 查找第一个数据中心中的数据不为零的tid
+        let tid = "";
+        for (let item of this.dataCenterList) {
+          for (let child of item.childrenArr) {
+            if (child.count > 0) {
+              tid = child.tid;
+              break;
+            }
+          }
+        }
+        console.log(tid);
         await this.$store.dispatch("ShowTable/showBaseTable", {
-          tid: "1",
+          tid,
           offset: 0,
           count: 30,
         });

@@ -205,6 +205,7 @@ const actions = {
       headers
     );
     if (result.success) {
+      console.log("queryDataFromTable", { result });
       let rowSum = await dataImport.queryRowsum(ajid, tableName);
       commit("SET_ROWSUM", {
         sheetIndex,
