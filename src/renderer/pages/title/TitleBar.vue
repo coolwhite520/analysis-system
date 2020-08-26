@@ -113,7 +113,7 @@ export default {
   color: #fff;
   height: 100px;
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
-  -webkit-app-region: drag;
+  /* -webkit-app-region: drag; */
   -webkit-user-select: none;
   position: fixed;
   z-index: 999;

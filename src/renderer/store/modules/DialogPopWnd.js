@@ -6,6 +6,7 @@ const state = {
   filterVisible: false,
   showFieldsVisible: false,
   showCollectionRecordVisible: false,
+  showReportVisible: false,
 };
 
 const mutations = {
@@ -28,6 +29,9 @@ const mutations = {
   },
   SET_SHOWCOLLECTIONRECORDVISIBLE(state, showCollectionRecordVisible) {
     state.showCollectionRecordVisible = showCollectionRecordVisible;
+  },
+  SET_SHOWREPORTVISIBLE(state, showReportVisible) {
+    state.showReportVisible = showReportVisible;
   },
 };
 

@@ -154,6 +154,7 @@
 
 <script>
 import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog";
+
 import { mapState, mapGetters } from "vuex";
 export default {
   async beforeMount() {
@@ -257,11 +258,50 @@ export default {
           offset: 0,
           count: 30,
         });
+        await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
       }
-      await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
     // 分析报告
-    async handleClickBeginAnalysisReport() {},
+    async handleClickBeginAnalysisReport() {
+      this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+
+      if (this.dataSum === 0) {
+        await this.$store.dispatch("ShowTable/showNoDataPage", {
+          tablecname: "数据采集",
+        });
+      } else {
+        // 查找第一个数据中心中的数据不为零的tid
+        let tid = "";
+        for (let item of this.dataCenterList) {
+          for (let child of item.childrenArr) {
+            if (child.count > 0) {
+              tid = child.tid;
+              break;
+            }
+          }
+        }
+        console.log(tid);
+        await this.$store.dispatch("ShowTable/showBaseTable", {
+          tid,
+          offset: 0,
+          count: 30,
+        });
+        await this.$store.commit(
+          "MainPageSwitch/SET_TABBARACTIVENAME",
+          "third"
+        );
+        await this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", true);
+      }
+    },
     // 开始分析
     async handleClickBeginAnalysis() {
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
