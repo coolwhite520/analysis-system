@@ -303,6 +303,208 @@ function BackFiltrateCondtion_DateTime(
   return result;
 }
 
+const ReportTableDic = {
+  603: {
+    YHKH: "银行卡号",
+    HM: "户名",
+    ZCZJE: "转出总金额",
+    ZCZCS: "转出总次数",
+    ZRZJE: "转入总金额",
+    ZRZCS: "转入总次数",
+    JYZJE: "交易总金额",
+  },
+  604: {
+    JYHM: "交易户名",
+    JYSFZH: "交易身份证号",
+    DJYHKSM: "调集银行卡数目",
+    ZCZJE: "转出总金额",
+    ZCZCS: "转出总次数",
+    ZRZJE: "转入总金额",
+    ZRZCS: "转入总次数",
+    JYZJE: "交易总金额",
+  },
+  605: {
+    DSZKH: "对手账户",
+    DSHM: "对手户名",
+    ZCZJE: "转入总金额",
+    ZCZCS: "转入总次数",
+    ZRZJE: "转出总金额",
+    ZRZCS: "转出总次数",
+    JCZCJE: "进出账差额",
+  },
+  606: {
+    DSZKH: "对手账户",
+    DSHM: "对手户名",
+    DSSFZH: "对手身份证号",
+    GLDJRYGS: "关联调集人员个数",
+  },
+  607: {
+    CXKH: "交易账号",
+    JYDFZKH: "对手账号",
+    JYDFMC: "对手户名",
+    JZJE: "转入总金额",
+    JZCS: "转入总笔数",
+    CZJE: "转出总金额",
+    CZCS: "转出总笔数",
+    JCZCJE: "进出账差额",
+  },
+  608: {
+    CXKH: "交易账号",
+    JYDFZKH: "对手账号",
+    JYDFMC: "对手户名",
+    JZJE: "转入总金额",
+    JZCS: "转入总笔数",
+    CZJE: "转出总金额",
+    CZCS: "转出总笔数",
+    JCZCJE: "进出账差额",
+  },
+  609: {
+    CXKH: "异常交易账户",
+    JYMC: "交易户名",
+    FSCS: "匹配次数",
+    JZJE: "进账总额",
+    CZJE: "出账总额",
+  },
+  610: {
+    ZYSM: "摘要说明",
+    JYCS: "总次数",
+    JYZJE: "交易总金额",
+    JZCS: "进账次数",
+    JZJE: "进账金额",
+    CZCS: "出账次数",
+    CZJE: "出账金额 ",
+  },
+};
+//获取当前时间
+function getNowFormatDate(type = 0) {
+  let date = new Date();
+  let seperator1 = "-";
+  let seperator2 = ":";
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
+
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  if (type == 1) {
+    return (
+      date.getFullYear() +
+      seperator1 +
+      month +
+      seperator1 +
+      strDate +
+      " " +
+      date.getHours() +
+      seperator2 +
+      date.getMinutes() +
+      seperator2 +
+      date.getSeconds()
+    );
+  }
+  return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+}
+
+function HashSet() {
+  if (!(this instanceof HashSet)) return;
+
+  var _data = {};
+  var _length = 0;
+  var _DEFAULT = new Date();
+
+  this.contains = function(val) {
+    val = val.toString();
+    return !!_data[val] && _data.hasOwnProperty(val);
+  };
+
+  this.add = function(val) {
+    if (!this.contains(val.toString())) {
+      _length++;
+    }
+    _data[val.toString()] = val;
+  };
+  this.add = function(key, val) {
+    if (!this.contains(key)) {
+      _length++;
+    }
+    _data[key] = val;
+  };
+
+  this.remove = function(val) {
+    val = val.toString();
+    if (!this.contains(val)) {
+      return false;
+    } else {
+      delete _data[val.toString()];
+      _length--;
+      return true;
+    }
+  };
+
+  this.clear = function() {
+    for (var val in _data) {
+      if (_data.hasOwnProperty(val)) {
+        delete _data[val];
+      }
+    }
+    _length = 0;
+  };
+
+  this.isEmpty = function() {
+    return _length === 0;
+  };
+
+  this.size = function() {
+    return _length;
+  };
+
+  this.toArray = function() {
+    _data.length = _length;
+    var arr = Array.prototype.slice.call(_data);
+    delete _data.length;
+    return arr;
+  };
+}
+//栈
+function Stack() {
+  this.data = []; //保存栈内元素
+  this.top = 0; //记录栈顶位置
+
+  this.push = push;
+  this.pop = pop;
+  this.peek = peek;
+
+  /*辅助方法*/
+  this.size = size;
+  this.clear = clear_stack;
+}
+/*向栈中压入新元素*/
+function push(element) {
+  this.data[this.top++] = element;
+}
+/*从栈中弹出栈顶元素*/
+function pop() {
+  return this.data[--this.top];
+}
+/*预览栈顶元素，空栈返回undefined*/
+function peek() {
+  return this.data[this.top - 1];
+}
+/*获取栈内存储的元素数量*/
+function size() {
+  return this.top;
+}
+/*清空栈*/
+function clear_stack() {
+  this.top = 0;
+}
+
+module.exports.getNowFormatDate = getNowFormatDate;
+// module.exports.Dictionary = Dictionary;
+module.exports.HashSet = HashSet;
+module.exports.Stack = Stack;
 module.exports.FiltrateLogicID = FiltrateLogicID;
 module.exports.DataFilter = DataFilter;
 module.exports.DataType = DataType;
@@ -310,7 +512,7 @@ module.exports.NodeType = NodeType;
 module.exports.FiltrateLogic = FiltrateLogic;
 module.exports.DataSourceType = DataSourceType;
 module.exports.IsNullOrEmpty = IsNullOrEmpty;
-module.exports.GetBankDetailTableSumSql = GetBankDetailTableSumSql;
+module.exports.GetBankDetailTableSql = GetBankDetailTableSumSql;
 module.exports.BackFiltrateCondtion_DateTime = BackFiltrateCondtion_DateTime;
 module.exports.DataRuleType = DataRuleType;
 module.exports.DataRule = DataRule;

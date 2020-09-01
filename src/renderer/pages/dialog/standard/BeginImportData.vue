@@ -116,7 +116,7 @@
                 @change=" ((val)=>{handleChangeMatchColName(val, scope.$index, scope.row)})"
               >
                 <el-option
-                  v-for="item in currentRow.templateToFieldNames"
+                  v-for="item in currentRow.templateToFieldObjList"
                   :key="item.id"
                   :label="item.fieldcname"
                   :value="item.fieldename"
@@ -227,7 +227,7 @@ export default {
             case "gas_account_info":
               {
                 let filterTemp = allFieldList.filter((el) => {
-                  return el === "ZH" || el === "KH";
+                  return el.toUpperCase() === "ZH" || el.toUpperCase() === "KH";
                 });
                 if (filterTemp.length === 0) {
                   this.$notify.error({
@@ -266,7 +266,7 @@ export default {
           let matchedFields = [];
           for (let item of sheetData.dataList) {
             if (item.matchedFieldName !== "") {
-              let temp = sheetData.templateToFieldNames.filter((e) => {
+              let temp = sheetData.templateToFieldObjList.filter((e) => {
                 return (
                   item.matchedFieldName.toLowerCase() ===
                   e.fieldename.toLowerCase()

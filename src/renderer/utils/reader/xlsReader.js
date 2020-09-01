@@ -2,31 +2,64 @@ import xlsx from "xlsx";
 import path from "path";
 import fs from "fs";
 import excel from "exceljs";
+import moment from "moment";
 
 export default {
   parseFileExampleSync: async function(filePathName) {
     const workbook = new excel.Workbook();
+    workbook.calcProperties.fullCalcOnLoad = true;
     let now = new Date().getSeconds();
     let resultList = [];
+    let actualRowCount = 0;
     await workbook.xlsx.read(fs.createReadStream(filePathName));
     workbook.eachSheet(function(worksheet, id) {
       let end = new Date().getSeconds();
       console.log(end - now);
       let rows = [];
       let count = 0;
-      worksheet.eachRow(function(row, rowNumber) {
+      actualRowCount = worksheet.actualRowCount;
+      worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+        console.log(row);
         if (count >= 3) return;
         row = row.values.filter((el, index) => index !== 0);
+        for (let index = 0; index < row.length; index++) {
+          if (row[index] instanceof Date) {
+            let cellDate = new Date(row[index]);
+            let m = moment(cellDate).utc();
+            let year = m.year();
+            let month = m.month() + 1;
+            month = String(month).length === 1 ? "0" + month : month;
+            let day = m.date();
+            day = String(day).length === 1 ? "0" + day : day;
+            let hour = m.hour();
+            hour = String(hour).length === 1 ? "0" + hour : hour;
+            let minute = m.minute();
+            minute = String(minute).length === 1 ? "0" + minute : minute;
+            let sec = m.second();
+            sec = String(sec).length === 1 ? "0" + sec : sec;
+            console.log({ year, month, day, hour, minute, sec });
+            if (year === 1899) {
+              row[index] = `${hour}:${minute}:${sec}`;
+            } else {
+              row[index] = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+            }
+          }
+        }
         console.log(row);
         rows.push(row);
         count++;
       });
+
+      if (rows.length === 0) {
+        return [];
+      }
       let result = {
         fileName: path.basename(filePathName),
         sheetName: worksheet.name,
         fileColsName: rows.length > 0 ? rows[0] : [],
         ins1: rows.length > 1 ? rows[1] : [],
         ins2: rows.length > 2 ? rows[2] : [],
+        sheetId: worksheet.id,
       };
       resultList.push(result);
     });
@@ -35,6 +68,7 @@ export default {
   parseFileAllSync: async function(
     filePathName,
     sheetName,
+    matchedfields,
     fileColsName,
     fileInsertCols
   ) {
@@ -50,8 +84,39 @@ export default {
     await workbook.xlsx.read(fs.createReadStream(filePathName));
     workbook.eachSheet(function(worksheet, id) {
       if (worksheet.name === sheetName) {
+        let rowCount = worksheet.rowCount;
+        let isFirstRow = true;
         worksheet.eachRow(function(row, rowNumber) {
+          if (isFirstRow) {
+            isFirstRow = false;
+            return;
+          }
           row = row.values.filter((el, index) => indexList.includes(index));
+          for (let index = 0; index < row.length; index++) {
+            if (row[index] instanceof Date) {
+              let cellDate = new Date(row[index]);
+              let m = moment(cellDate).utc();
+              let year = m.year();
+              let month = m.month() + 1;
+              month = String(month).length === 1 ? "0" + month : month;
+              let day = m.date();
+              day = String(day).length === 1 ? "0" + day : day;
+              let hour = m.hour();
+              hour = String(hour).length === 1 ? "0" + hour : hour;
+              let minute = m.minute();
+              minute = String(minute).length === 1 ? "0" + minute : minute;
+              let sec = m.second();
+              sec = String(sec).length === 1 ? "0" + sec : sec;
+              console.log({ year, month, day, hour, minute, sec });
+              if (year === 1899) {
+                row[index] = `${hour}:${minute}:${sec}`;
+              } else {
+                row[index] = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+              }
+            } else {
+              row[index] = String(row[index]).trim();
+            }
+          }
           rows.push(row);
         });
       }

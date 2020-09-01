@@ -319,13 +319,13 @@ export default {
       this.isDataLoading = true;
       const { ajid } = this.caseBase;
       let {
-        headers,
         tableName,
         tablecname,
         bestMatchTemplate,
         matchedFields,
         publicFields,
         externFields,
+        templateToFieldObjList,
       } = this.sheetItem;
       if (tablecname.endsWith("_source")) {
         tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));

@@ -179,9 +179,11 @@ export default {
             case "xlsx":
               {
                 resultList = await xlsReader.parseFileExampleSync(filePathName);
-                console.log(resultList);
               }
               break;
+          }
+          if (resultList.length === 0) {
+            continue;
           }
           for (let result of resultList) {
             let { fileName, sheetName, fileColsName, ins1, ins2 } = result;
@@ -194,6 +196,7 @@ export default {
               pdm,
               fileColsName
             );
+            console.log({ queryResult });
             let bestMatchTemplate = queryResult.mbdm;
             // 说明是自动匹配
             if (pdm === "") {
@@ -223,6 +226,7 @@ export default {
             let tabletemp = data.matchTemplates.filter((value) => {
               return value.mbdm === bestMatchTemplate;
             });
+            console.log("GOGOGOGOOGOO", tabletemp, bestMatchTemplate);
             let tablecname = tabletemp[0].tablecname;
 
             let externFields = tabletemp[0].extern_field
@@ -244,10 +248,10 @@ export default {
             data.externFields = externFields;
             data.bestMatchTemplate = bestMatchTemplate;
             // 最佳匹配的模版对应的字段名称
-            let templateToFieldNames = await dataImport.QueryColsNameByMbdm(
+            let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
               bestMatchTemplate
             );
-            data.templateToFieldNames = templateToFieldNames;
+            data.templateToFieldObjList = templateToFieldObjList;
 
             // 读取log表中的匹配list
             let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
@@ -257,7 +261,7 @@ export default {
             for (let i = 0; i < fileColsName.length; i++) {
               let fileColName = fileColsName[i];
               // 这个地方需要参考log表进行匹配
-              let bestArray = templateToFieldNames.filter((ele) => {
+              let bestArray = templateToFieldObjList.filter((ele) => {
                 return ele.fieldcname === fileColName;
               });
               let obj = {
@@ -273,7 +277,7 @@ export default {
                   return ele.columnname === fileColName;
                 });
                 if (bestArray.length > 0) {
-                  bestArray = templateToFieldNames.filter((ele) => {
+                  bestArray = templateToFieldObjList.filter((ele) => {
                     return ele.fieldcname === bestArray[0].fieldname;
                   });
                   obj.matchedFieldName =
@@ -316,6 +320,7 @@ export default {
             console.log(data);
           }
         } catch (e) {
+          console.log(e);
           data.filePathName = filePathName;
           data.success = false;
           data.errormsg = e.message;
@@ -349,14 +354,15 @@ export default {
 
         // 统计选中的列名称
         let fields = [];
+        let matchedFields = [];
         let fileInsertCols = [];
         for (let item of data.dataList) {
           if (item.matchedFieldName !== "") {
-            fields.push(item.matchedFieldName);
+            matchedFields.push(item.matchedFieldName);
             fileInsertCols.push(item.fileColName);
           }
         }
-        fields = publicFields.concat(fields).concat(externFields);
+        fields = publicFields.concat(matchedFields).concat(externFields);
         fields = fields.map((value) => {
           return value.toLowerCase();
         });
@@ -401,6 +407,7 @@ export default {
               resultList = await xlsReader.parseFileAllSync(
                 filePathName,
                 sheetName,
+                matchedFields,
                 fileColsName,
                 fileInsertCols
               );
@@ -414,7 +421,7 @@ export default {
           bestMatchTemplate,
           fields
         );
-        console.log("begin:", new Date().Format("yyyy-MM-dd hh:mm:ss"));
+
         for (let i = 0; i < resultList.length; i++) {
           let item = resultList[i];
           let rownum = i + 1;
@@ -467,21 +474,8 @@ export default {
       }
       this.$electron.ipcRenderer.send("read-all-file-over", {});
     },
-  },
-  mounted() {
-    let _this = this;
-    console.log("miniview mounted...............");
-    this.softVersion = this.$electron.remote.getGlobal("softVersion");
-    this.$electron.ipcRenderer.on("read-all-file", this.readAllFile);
-    this.$electron.ipcRenderer.on(
-      "read-all-example-file",
-      this.readExampleFile
-    );
-    //监听单个表的导入
-    this.$electron.ipcRenderer.on("import-one-table-begin", async function (
-      e,
-      args
-    ) {
+    async copyTempDataToRealTable(e, args) {
+      let _this = this;
       let {
         ajid,
         tableName,
@@ -489,7 +483,6 @@ export default {
         bestMatchTemplate,
         publicFields,
         matchedFields,
-        externFields,
       } = args;
       console.log(args);
       await dataImport.importDataFromTempTableToRealTable(
@@ -507,7 +500,21 @@ export default {
           });
         }
       );
-    });
+    },
+  },
+  beforeMount() {
+    this.softVersion = this.$electron.remote.getGlobal("softVersion");
+  },
+  mounted() {
+    this.$electron.ipcRenderer.on("read-all-file", this.readAllFile);
+    this.$electron.ipcRenderer.on(
+      "read-all-example-file",
+      this.readExampleFile
+    );
+    this.$electron.ipcRenderer.on(
+      "import-one-table-begin",
+      this.copyTempDataToRealTable
+    );
   },
 };
 </script>

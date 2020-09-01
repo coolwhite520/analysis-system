@@ -1,7 +1,5 @@
 import db, { emit } from "./db";
 import cases from "./Cases";
-import model from "./Models";
-import sqlFormat from "@/utils/sql/ModelSqlFormat";
 
 function getSameFieldArray(arr1, arr2) {
   var arr = [];

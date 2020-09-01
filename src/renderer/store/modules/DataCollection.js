@@ -29,15 +29,15 @@ const mutations = {
     state,
     { index, dbColsName, logMatchList }
   ) {
-    state.exampleDataList[index].templateToFieldNames = dbColsName;
+    state.exampleDataList[index].templateToFieldObjList = dbColsName;
     for (let item of state.exampleDataList[index].dataList) {
       let { fileColName } = item;
 
-      let bestArray = state.exampleDataList[index].templateToFieldNames.filter(
-        (ele) => {
-          return ele.fieldcname === fileColName;
-        }
-      );
+      let bestArray = state.exampleDataList[
+        index
+      ].templateToFieldObjList.filter((ele) => {
+        return ele.fieldcname === fileColName;
+      });
       item.matchedFieldName =
         bestArray.length > 0 ? bestArray[0].fieldename : "";
       // 如果没有直接匹配上，那么和log表再次进行匹配。

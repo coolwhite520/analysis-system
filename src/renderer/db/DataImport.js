@@ -1,5 +1,6 @@
 import db from "./db";
 import cases from "./Cases";
+import importModel from "@/utils/sql/ImportModel";
 
 export default {
   // 根据导入数据类型获取对应的匹配表
@@ -158,6 +159,17 @@ export default {
       return false;
     }
   },
+  importMultiRowData: async function(createdTableName, fields, datas) {
+    try {
+      let sql = `insert into ${createdTableName}(${fields}) VALUES ${datas}`;
+      console.log(sql);
+      const res = await db.query(sql);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  },
   // 查询temp表中的数据
   queryDataFromTable: async function(
     ajid,
@@ -269,7 +281,7 @@ export default {
                 rownums,
               });
             }
-          } else if (item.fieldtype === 4 || item.fieldtype === 6) {
+          } else if (item.fieldtype === 4 /*|| item.fieldtype === 6*/) {
             let temp = await this.QueryFieldNotDateRows(
               ajid,
               tableName,
@@ -337,10 +349,13 @@ export default {
     let success = true;
     try {
       await cases.SwitchCase(ajid);
-      let sql = `SELECT ${matchedFields} from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
+      let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
       let res = await db.query(sql);
       let rows = res.rows;
-      let sqlCount = `SELECT count(*) from ${tableName} WHERE not icap_base.isnumeric(${fieldName});`;
+      let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName}) `;
+      console.log(sql);
       res = await db.query(sqlCount);
       let count = res.rows[0].count;
       return {
@@ -1185,7 +1200,6 @@ export default {
       return { success: false, msg: e.message };
     }
   },
-  // 从临时表导入到真实表，需要考虑数据类型啊。。。。
   importDataFromTempTableToRealTable: async function(
     ajid,
     tempTableName,
@@ -1194,6 +1208,7 @@ export default {
     publicFields,
     matchedFields,
     externFields,
+    // templateAllFields,
     callback
   ) {
     try {
@@ -1219,36 +1234,61 @@ export default {
           selectList.push(field);
         }
       }
-      let sql = `select ${selectList} from ${tempTableName}`;
-      console.log(sql);
-      const res = await db.query(sql);
-      for (let index = 0; index < res.rows.length; index++) {
-        let row = res.rows[index];
-        let values = [];
-        for (let k in row) {
-          if (k.toLowerCase() === "sjlyid") {
-            sjlyid = row[k];
-          }
-          // 需要特殊判定ajid
-          let obj = resFieldTypeList.find((el) => {
-            return el.fieldename.toLowerCase() === k.toLowerCase();
-          });
-          if (
-            obj.fieldtype === 1 ||
-            obj.fieldtype === 4 ||
-            obj.fieldtype === 6
-          ) {
-            values.push(`'${row[k].trimEnd()}'`);
-          } else {
-            let temValue = row[k].trimEnd() ? row[k].trimEnd() : 0;
-            values.push(`${temValue}`);
-          }
+      const pageSize = 30;
+      let countSql = `select count(*)::int count from ${tempTableName}`;
+      let resCount = await db.query(countSql);
+      let rowsCount = resCount.rows[0].count;
+      let loopCount = 0;
+      if (rowsCount === 0) {
+        loopCount = 0;
+      } else if (rowsCount < pageSize) {
+        loopCount = 1;
+      } else {
+        if (rowsCount % pageSize === 0) {
+          loopCount = parseInt(rowsCount / pageSize);
+        } else {
+          loopCount = parseInt(rowsCount / pageSize + 1);
         }
-        let insertSql = `insert into ${tableName} (${selectList}) values (${values})`;
+      }
+      // 每次查询30条记录，然后格式化插入
+      for (let index = 0; index < loopCount; index++) {
+        let beginIndex = index * pageSize;
+        let sql = `select ${selectList} from ${tempTableName}`;
+        let limitSql = ` limit ${pageSize} OFFSET ${beginIndex}`;
+        sql = sql + limitSql;
+        console.log(sql);
+        let res = await db.query(sql);
+        let sumRows = [];
+
+        for (let row of res.rows) {
+          // row = importModel.TestingHandle(templateAllFields, row, tableName);
+          let values = [];
+          for (let k in row) {
+            if (k.toLowerCase() === "sjlyid") {
+              sjlyid = row[k];
+            }
+            // 需要特殊判定ajid
+            let obj = resFieldTypeList.find((el) => {
+              return el.fieldename.toLowerCase() === k.toLowerCase();
+            });
+            if (
+              obj.fieldtype === 1 ||
+              obj.fieldtype === 4 ||
+              obj.fieldtype === 6
+            ) {
+              values.push(`'${row[k].trim()}'`);
+            } else {
+              let temValue = row[k].trim() ? row[k].trim() : 0;
+              values.push(`${temValue}`);
+            }
+          }
+          sumRows.push(`(${values})`);
+        }
+        sumRows = sumRows.join(",");
+        let insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
         console.log(insertSql);
         await db.query(insertSql);
-        let sumRow = res.rows.length;
-        callback({ sumRow, index });
+        callback({ sumRow: loopCount, index });
       }
       await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);
       callback({ sumRow: 100, index: 100 });
