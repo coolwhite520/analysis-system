@@ -1160,9 +1160,10 @@ export default {
   },
   // 展示目标表的结构
   showTableStruct: async function(ajid, tableName) {
+    let sql = "";
     try {
       await cases.SwitchCase(ajid);
-      let sql = `SELECT DISTINCT a.attnum,
+      sql = `SELECT DISTINCT a.attnum,
       a.attname AS field,
       t.typname AS type,
       a.attlen AS length,
@@ -1196,7 +1197,7 @@ export default {
       }
       return { success: true, rows: resultList };
     } catch (e) {
-      console.log(e);
+      console.log(sql, e);
       return { success: false, msg: e.message };
     }
   },
@@ -1234,7 +1235,7 @@ export default {
           selectList.push(field);
         }
       }
-      const pageSize = 30;
+      const pageSize = 100;
       let countSql = `select count(*)::int count from ${tempTableName}`;
       let resCount = await db.query(countSql);
       let rowsCount = resCount.rows[0].count;

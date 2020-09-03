@@ -4,12 +4,18 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
-      :title="title"
       :visible.sync="standardDataVisible"
-      width="65%"
+      :width="exampleDataList.length > 0 ? '65%': '30%'"
       :before-close="handleClose"
       :modal="false"
     >
+      <div slot="title" class="dialog-title">
+        <i class="iconfont" style="color: white;font-size:30px;">&#xe6a1;</i>
+        <span class="title-text" style="color: white;">{{title}}</span>
+        <div class="button-right">
+          <span class="title-close" @click="handleClose"></span>
+        </div>
+      </div>
       <component :is="standardViewSwitch"></component>
     </el-dialog>
   </div>
@@ -19,16 +25,17 @@
 import { mapState, mapGetters } from "vuex";
 import BeginImportData from "./standard/BeginImportData";
 import ProcessImportData from "./standard/ProcessImportData";
-import ExploreData from "./standard/ExploreData";
+import ExploreTabs from "./standard/ExploreTabs";
 
 export default {
   components: {
     "begin-import": BeginImportData,
     "process-import": ProcessImportData,
-    "explore-data": ExploreData,
+    "explore-data": ExploreTabs,
   },
   computed: {
     ...mapState("DialogPopWnd", ["standardDataVisible", "standardViewSwitch"]),
+    ...mapState("DataCollection", ["exampleDataList"]),
   },
   data() {
     return {
@@ -37,9 +44,9 @@ export default {
   },
   methods: {
     handleClose() {
+      this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
       this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
       this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
-      this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
       // this.$electron.ipcRenderer.removeAllListeners("read-csv-file-over");
     },
   },

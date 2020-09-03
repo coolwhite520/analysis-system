@@ -174,15 +174,6 @@ export default {
     ...mapState("DataCollection", ["exampleDataList"]),
     ...mapState("ShowTable", ["tableDataList"]),
   },
-  mounted() {
-    this.$electron.ipcRenderer.on(
-      "import-one-table-process",
-      this.recvImportMsg
-    );
-  },
-  destroyed() {
-    this.$electron.ipcRenderer.removeAllListeners("import-one-table-process");
-  },
   methods: {
     async handleClickDeleteAllErrorRows() {
       const { ajid } = this.caseBase;
@@ -266,13 +257,17 @@ export default {
       this.isUpdateDataLoading = false;
     },
     // 导入消息的回调
-    async recvImportMsg(e, args) {
-      let { sumRow, index } = args;
+    async onRecvImportMsg(e, args) {
+      let { sumRow, index, tabIndex } = args;
+      if (tabIndex !== this.activeName) return;
       console.log({ sumRow, index });
       this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
       console.log(this.currentPercentage);
 
       if (this.currentPercentage >= 100) {
+        this.$electron.ipcRenderer.removeAllListeners(
+          "import-one-table-process"
+        );
         this.bClickBtnCheck = false;
         this.currentPercentage = 0;
         this.isDataLoading = false;
@@ -292,20 +287,19 @@ export default {
             false
           );
           await this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
-          await this.$store.commit(
-            "DialogPopWnd/SET_STANDARDVIEW",
-            "begin-import"
-          );
+          // 更新当前的展示列表中的数据
+          for (let tableData of this.tableDataList) {
+            // 根据tableName获取表的数据
+            if (tableData.componentName !== "no-data-view") {
+              await this.$store.dispatch(tableData.dispatchName, {
+                ...tableData,
+                offset: 0,
+                count: 30,
+              });
+            }
+          }
         }
-        // 更新当前的展示列表中的数据
-        for (let tableData of this.tableDataList) {
-          // 根据tableName获取表的数据
-          await this.$store.dispatch(tableData.dispatchName, {
-            ...tableData,
-            offset: 0,
-            count: 30,
-          });
-        }
+
         // 导入成功，清理examplelist
         this.$notify({
           title: "成功",
@@ -315,6 +309,10 @@ export default {
       }
     },
     async handleClickImportCurrentData() {
+      this.$electron.ipcRenderer.on(
+        "import-one-table-process",
+        this.onRecvImportMsg
+      );
       this.loadingText = "正在进行数据导入，请稍后...";
       this.isDataLoading = true;
       const { ajid } = this.caseBase;
@@ -331,6 +329,7 @@ export default {
         tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
       }
       this.$electron.ipcRenderer.send("import-one-table-begin", {
+        tabIndex: this.activeName,
         ajid,
         tableName,
         tablecname,
@@ -348,6 +347,7 @@ export default {
     },
     // 数据检查 1,字符串,2,小数,3整数,,4,日期,5,通话时长(没有用)
     async handleClickCheckData() {
+      this.loadingText = "正在进行数据检测，请稍后...";
       this.isDataLoading = true;
       this.bClickBtnCheck = true; // 标记是否点击了当前页面的检测按钮
       const { ajid } = this.caseBase;

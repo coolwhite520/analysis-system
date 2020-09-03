@@ -5,12 +5,18 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
-      :title="title"
       :visible.sync="filterVisible"
       width="50%"
       :before-close="handleClose"
       :modal="false"
     >
+      <div slot="title" class="dialog-title">
+        <i class="iconfont" style="color: white;font-size:30px;">&#xe815;</i>
+        <span class="title-text" style="color: white;">{{title}}</span>
+        <div class="button-right">
+          <span class="title-close" @click="handleClose"></span>
+        </div>
+      </div>
       <div class="block">
         <el-tree
           class="el-tree"

@@ -210,6 +210,8 @@ const mutations = {
       state.currentTableData = null;
     }
   },
+
+  // 主要负责关闭时候的隐藏
   SET_RIGHT_TAB_VISIBLE(state, { pageIndex, tabIndex, visible }) {
     for (let index = 0; index < state.tableDataList.length; index++) {
       let tableData = state.tableDataList[index];
@@ -222,17 +224,33 @@ const mutations = {
       }
     }
   },
+  // 显示模型库
+  SHOW_MODEL_LIB_VIEW(state) {
+    for (let tab of state.currentTableData.rightTabs) {
+      if (tab.componentName === "model-list-view") {
+        tab.visible = true;
+      }
+    }
+  },
+  // 显示模型
+  SHOW_MODEL_VIEW(state) {
+    for (let tab of state.currentTableData.rightTabs) {
+      if (tab.componentName === "model-view") {
+        tab.visible = true;
+      }
+    }
+  },
 };
 
 const getters = {};
 
 const actions = {
   // 没有数据的时候显示数据采集页面
-  async showNoDataPage({ commit }, { tablecname }) {
+  async showNoDataPage({ commit }, { title }) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
 
     commit("ADD_TABLE_DATA_TO_LIST", {
-      title: tablecname,
+      title,
       componentName: "no-data-view",
       data: [],
       dispatchName: "ShowTable/showNoDataPage",
@@ -286,7 +304,11 @@ const actions = {
       modelFilterChildList
     );
     // 新添加的需要
-    if (!pageIndex && state.currentTableData) {
+    if (
+      !pageIndex &&
+      state.currentTableData &&
+      state.currentTableData.componentName !== "no-data-view"
+    ) {
       modelFilterStr =
         tid !== "1"
           ? state.currentTableData.modelFilterStr + filterChildStr
@@ -294,6 +316,7 @@ const actions = {
     } else {
       modelFilterStr = filterChildStr;
     }
+
     // 需要累加过滤条件
     let data = await showTable.QueryBaseTableData(
       ajid,

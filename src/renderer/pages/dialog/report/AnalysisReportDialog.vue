@@ -11,7 +11,7 @@
       :modal="false"
     >
       <div slot="title" class="dialog-title">
-        <i class="el-icon-edit-outline" style="color: white;"></i>
+        <i class="iconfont" style="color: white;font-size:30px;">&#xe630;</i>
         <span class="title-text" style="color: white;">{{title}}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
@@ -475,8 +475,8 @@ export default {
           opts: {
             // cellColWidth: 4261,
             b: true,
-            sz: "12",
-            align: "center",
+            sz: "5",
+            align: "left",
             shd: {
               fill: "7F7F7F",
               themeFill: "text1",
@@ -497,7 +497,7 @@ export default {
       }
       var tableStyle = {
         // tableColWidth: 4261,
-        tableSize: 5,
+        tableSize: 1,
         tableColor: "ada",
         tableAlign: "left",
         borders: true,

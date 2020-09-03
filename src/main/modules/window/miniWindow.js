@@ -10,7 +10,7 @@ const createMiniWindow = function(BrowserWindow) {
     height: 100,
     width: 100,
     minWidth: 0,
-    show: true,
+    show: false,
     frame: true,
     fullscreenable: false,
     skipTaskbar: true,

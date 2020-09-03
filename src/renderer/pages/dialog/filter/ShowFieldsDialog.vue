@@ -5,7 +5,6 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
-      :title="title"
       :visible.sync="showFieldsVisible"
       width="30%"
       :before-close="handleClose"
@@ -13,6 +12,13 @@
     >
       <!-- <el-tree :data="currentTableData.headers" :props="defaultProps" show-checkbox></el-tree>
       -->
+      <div slot="title" class="dialog-title">
+        <i class="iconfont" style="color: white;font-size:30px;">&#xe600;</i>
+        <span class="title-text" style="color: white;">{{title}}</span>
+        <div class="button-right">
+          <span class="title-close" @click="handleClose"></span>
+        </div>
+      </div>
       <el-row style="margin-top:10px;">
         <el-checkbox-group v-model="checkList" size="mini" @change="handleChangeSelect">
           <el-checkbox-button
@@ -52,19 +58,28 @@ export default {
       );
     },
     async handleClickSelectAll() {
+      let _this = this;
       this.checked = true;
       this.checkList = this.currentTableData.headers.map((el) => el.fieldcname);
       await this.$store.commit(
         "ShowTable/SET_SHOWHAEDERS",
         this.currentTableData.headers
       );
+      // this.$nextTick(() => {
+      //   _this.$refs.tableShowData.doLayout();
+      // });
     },
     async handleClickNotSelectAll() {
+      let _this = this;
       this.checked = false;
       this.checkList = [];
       await this.$store.commit("ShowTable/SET_SHOWHAEDERS", []);
+      // this.$nextTick(() => {
+      //   _this.$refs.tableShowData.doLayout();
+      // });
     },
     async handleChangeSelect(val) {
+      let _this = this;
       console.log(val);
       let newShowHeaders = [];
       for (let header of this.currentTableData.headers) {
@@ -73,6 +88,9 @@ export default {
         }
       }
       await this.$store.commit("ShowTable/SET_SHOWHAEDERS", newShowHeaders);
+      // this.$nextTick(() => {
+      //   _this.$refs.tableShowData.doLayout();
+      // });
     },
   },
   data() {

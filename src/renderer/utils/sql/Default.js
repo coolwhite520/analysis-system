@@ -502,7 +502,7 @@ function clear_stack() {
 }
 
 module.exports.getNowFormatDate = getNowFormatDate;
-// module.exports.Dictionary = Dictionary;
+module.exports.ReportTableDic = ReportTableDic;
 module.exports.HashSet = HashSet;
 module.exports.Stack = Stack;
 module.exports.FiltrateLogicID = FiltrateLogicID;

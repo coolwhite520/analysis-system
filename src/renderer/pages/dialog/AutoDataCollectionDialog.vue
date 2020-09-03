@@ -114,7 +114,7 @@ export default {
       this.parseFileCount = filePathList.length;
       if (typeof filePathList !== "undefined") {
         this.loading = true;
-        this.$electron.ipcRenderer.send("read-all-example-file", {
+        this.$electron.ipcRenderer.send("parse-all-example-file", {
           caseBase: this.caseBase,
           batchCount: this.batchCount,
           filePathList,

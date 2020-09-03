@@ -153,7 +153,9 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!(currentTableData &&  
+          currentTableData.componentName !== 'no-data-view' )"
+          @click="handleClickShowModelLib"
         >
           <span class="iconfont selfIcont">&#xe60f;</span>
           <br />
@@ -164,8 +166,11 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!(currentTableData &&  
+          currentTableData.componentName !== 'no-data-view' )"
+          @click="handleClickShowModel"
         >
+          >
           <span class="iconfont selfIcont">&#xe66b;</span>
           <br />
           <span class="title-content">模型参数</span>
@@ -261,12 +266,19 @@ export default {
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
   },
   methods: {
+    async handleClickShowModelLib() {
+      this.$store.commit("ShowTable/SHOW_MODEL_LIB_VIEW");
+    },
+    async handleClickShowModel() {
+      this.$store.commit("ShowTable/SHOW_MODEL_VIEW");
+    },
     async handleClickDataCollection() {
       await this.$store.dispatch(
         "CaseDetail/queryBatchCount",
         this.caseBase.ajid
       );
       await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+      await this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
       await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
     async handleClickHideEmptyField() {

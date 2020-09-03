@@ -329,62 +329,67 @@ export default {
   },
   // 查询数据中心列表信息
   QueryDataCenterTableInfo: async function(ajid) {
-    await this.SwitchCase(ajid);
-    let sql = ` with m as 
-       ( 
-       SELECT a.* FROM icap_base.layout_table_info AS a join(select distinct relname from pg_class where relkind = 'r' and relnamespace in (select oid from pg_namespace where nspname in ('icap_${ajid}', 'icap_base'))) pc on pc.relname = a.tablename and a.isenable::bool=true 
-       ), n as 
-       ( 
-       select* from icap_base.layout_table_info as b where b.tid in (select parentid from m) 
-       union all 
-       select* from m 
-       ) 
-       select* from n as lt 
-       LEFT JOIN icap_base.layout_menu_model AS lm  ON lt.tid =lm.menu_tid and lm.product_code='200' ORDER BY tid,title`;
-    let dataSum = 0;
-    const res = await db.query(sql);
-    let list = [];
-    for (let item of res.rows) {
-      if (
-        item.tid === "30" ||
-        item.parentid === "30" ||
-        item.tid === "40" ||
-        item.parentid === "40"
-      ) {
-        continue;
-      }
-      let obj;
-      if (item.parentid !== "-1") {
-        let sql = "";
-        if (item.tid === "1") {
-          sql = `select count(1)::int count from ${item.tablename} where 1=1  AND (ckztlb='01' OR ZZLX='z1')`;
-        } else if (item.tid === "2") {
-          sql = `select count(1)::int count from ${item.tablename} where 1=1 AND (ckztlb='02' OR ZZLX='dz1') `;
+    try {
+      await this.SwitchCase(ajid);
+      let sql = ` with m as 
+         ( 
+         SELECT a.* FROM icap_base.layout_table_info AS a join(select distinct relname from pg_class where relkind = 'r' and relnamespace in (select oid from pg_namespace where nspname in ('icap_${ajid}', 'icap_base'))) pc on pc.relname = a.tablename and a.isenable::bool=true 
+         ), n as 
+         ( 
+         select* from icap_base.layout_table_info as b where b.tid in (select parentid from m) 
+         union all 
+         select* from m 
+         ) 
+         select* from n as lt 
+         LEFT JOIN icap_base.layout_menu_model AS lm  ON lt.tid =lm.menu_tid and lm.product_code='200' ORDER BY tid,title`;
+      let dataSum = 0;
+      console.log(sql);
+      const res = await db.query(sql);
+      let list = [];
+      for (let item of res.rows) {
+        if (
+          item.tid === "30" ||
+          item.parentid === "30" ||
+          item.tid === "40" ||
+          item.parentid === "40"
+        ) {
+          continue;
+        }
+        let obj;
+        if (item.parentid !== "-1") {
+          let sql = "";
+          if (item.tid === "1") {
+            sql = `select count(1)::int count from ${item.tablename} where 1=1  AND (ckztlb='01' OR ZZLX='z1')`;
+          } else if (item.tid === "2") {
+            sql = `select count(1)::int count from ${item.tablename} where 1=1 AND (ckztlb='02' OR ZZLX='dz1') `;
+          } else {
+            sql = `select count(1)::int count from ${item.tablename} where 1=1`;
+          }
+          const res = await db.query(sql);
+          if (res.rows.length > 0) {
+            dataSum += res.rows[0].count;
+          }
+          obj = {
+            parentid: item.parentid,
+            count: res.rows[0].count,
+            tid: item.tid,
+            tablename: item.tablename,
+            title: item.title,
+          };
         } else {
-          sql = `select count(1)::int count from ${item.tablename} where 1=1`;
+          obj = {
+            parentid: item.parentid,
+            tid: item.tid,
+            tablename: item.tablename,
+            title: item.title,
+          };
         }
-        const res = await db.query(sql);
-        if (res.rows.length > 0) {
-          dataSum += res.rows[0].count;
-        }
-        obj = {
-          parentid: item.parentid,
-          count: res.rows[0].count,
-          tid: item.tid,
-          tablename: item.tablename,
-          title: item.title,
-        };
-      } else {
-        obj = {
-          parentid: item.parentid,
-          tid: item.tid,
-          tablename: item.tablename,
-          title: item.title,
-        };
+        list.push(obj);
       }
-      list.push(obj);
+      return { list, dataSum };
+    } catch (e) {
+      console.log(e);
     }
-    return { list, dataSum };
   },
 
   // 查询当前tid对应的模型库model_mids , product_code（不同产品进行区分模型）

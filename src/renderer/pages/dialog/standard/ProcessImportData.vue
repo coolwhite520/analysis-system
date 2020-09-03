@@ -56,7 +56,6 @@ export default {
         _this.customColor = "#6f7ad3";
       }
     });
-
     this.$electron.ipcRenderer.on("read-one-file-over", (event, data) => {
       const { sheetIndex, tableName } = data;
       _this.$store.commit("DataCollection/SET_TABLENAME", {

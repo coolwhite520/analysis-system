@@ -314,7 +314,7 @@ export default {
             data.dataList = dataList;
             data.success = true;
             this.$electron.ipcRenderer.send(
-              "read-one-example-sheet-over",
+              "parse-one-example-sheet-over",
               data
             );
             console.log(data);
@@ -324,10 +324,10 @@ export default {
           data.filePathName = filePathName;
           data.success = false;
           data.errormsg = e.message;
-          this.$electron.ipcRenderer.send("read-one-example-sheet-over", data);
+          this.$electron.ipcRenderer.send("parse-one-example-sheet-over", data);
         }
       }
-      this.$electron.ipcRenderer.send("read-all-example-file-over", {});
+      this.$electron.ipcRenderer.send("parse-all-example-file-over", {});
       // this.$store.commit("DataCollection/SET_CSV_LIST", data); // 如果需要多进程访问vuex，需要启用插件功能并所有的commit都需要改成dispatch
     },
     async readAllFile(e, args) {
@@ -483,6 +483,8 @@ export default {
         bestMatchTemplate,
         publicFields,
         matchedFields,
+        externFields,
+        tabIndex,
       } = args;
       console.log(args);
       await dataImport.importDataFromTempTableToRealTable(
@@ -495,6 +497,7 @@ export default {
         externFields,
         function ({ sumRow, index }) {
           _this.$electron.ipcRenderer.send("import-one-table-process", {
+            tabIndex,
             sumRow,
             index,
           });
@@ -508,7 +511,7 @@ export default {
   mounted() {
     this.$electron.ipcRenderer.on("read-all-file", this.readAllFile);
     this.$electron.ipcRenderer.on(
-      "read-all-example-file",
+      "parse-all-example-file",
       this.readExampleFile
     );
     this.$electron.ipcRenderer.on(

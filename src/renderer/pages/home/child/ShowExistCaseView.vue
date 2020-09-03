@@ -80,20 +80,20 @@ export default {
       await this.$store.dispatch("CaseDetail/queryBatchCount", caseBase.ajid);
       if (this.dataSum === 0) {
         await this.$store.dispatch("ShowTable/showNoDataPage", {
-          tablecname: "数据采集",
+          title: "数据采集",
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
         let tid = "";
+        let maxCount = 0;
         for (let item of this.dataCenterList) {
           for (let child of item.childrenArr) {
-            if (child.count > 0) {
+            if (child.count > maxCount) {
+              maxCount = child.count;
               tid = child.tid;
-              break;
             }
           }
         }
-        console.log(tid);
         await this.$store.dispatch("ShowTable/showBaseTable", {
           tid,
           offset: 0,

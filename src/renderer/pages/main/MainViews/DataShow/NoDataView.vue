@@ -23,6 +23,7 @@
 export default {
   methods: {
     handleClickImportData() {
+      this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
       this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
   },

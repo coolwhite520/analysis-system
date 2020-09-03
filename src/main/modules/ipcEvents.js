@@ -3,16 +3,16 @@ import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 export default function() {
   // 通过主进称中转消息到calculate渲染进程
   // 发送读取所有文件示例的消息到mini窗口
-  ipcMain.on("read-all-example-file", (e, args) => {
-    global.miniWindow.webContents.send("read-all-example-file", args);
+  ipcMain.on("parse-all-example-file", (e, args) => {
+    global.miniWindow.webContents.send("parse-all-example-file", args);
   });
   // mini窗口发送一条解析sheet数据到mainWnd
-  ipcMain.on("read-one-example-sheet-over", (e, args) => {
-    global.mainWindow.webContents.send("read-one-example-sheet-over", args);
+  ipcMain.on("parse-one-example-sheet-over", (e, args) => {
+    global.mainWindow.webContents.send("parse-one-example-sheet-over", args);
   });
   // mini窗口通知mainWnd所有的解析玩不
-  ipcMain.on("read-all-example-file-over", (e, args) => {
-    global.mainWindow.webContents.send("read-all-example-file-over", args);
+  ipcMain.on("parse-all-example-file-over", (e, args) => {
+    global.mainWindow.webContents.send("parse-all-example-file-over", args);
   });
   // 发送读取开始的消息到mini窗口
   ipcMain.on("read-all-file", (e, args) => {

@@ -1,7 +1,9 @@
 <template>
   <div v-loading="loading" element-loading-text="拼命加载中，请耐心等待...">
-    <el-row style="text-align:center;">
-      <span style="font-size:13px;">标准导入：</span>
+    <el-row>
+      <span style="font-size:12px;">标准导入：</span>
+    </el-row>
+    <el-row style="text-align:center;margin-top:10px;">
       <el-button-group>
         <el-button
           size="mini"
@@ -14,8 +16,10 @@
         </el-button>
       </el-button-group>
     </el-row>
-    <el-row style="text-align:center;margin-top:20px;">
-      <span style="font-size:13px;">自动导入：</span>
+
+    <el-row style="margin-top: 20px;"></el-row>
+    <el-row>
+      <span style="font-size:12px;">自动导入：</span>
       <el-tooltip effect="dark" content="可以自动分析文件字段并进行自动匹配" placement="top">
         <el-button size="mini" @click="handleClickImportData('')">
           <span class="mybutton iconfont">&#xe620;</span>
@@ -151,9 +155,9 @@ export default {
     console.log("mounted....................");
     let _this = this;
     this.$electron.ipcRenderer.on(
-      "read-one-example-sheet-over",
+      "parse-one-example-sheet-over",
       (event, data) => {
-        console.log("read-one-example-sheet-over******************");
+        console.log("parse-one-example-sheet-over******************");
         if (!data.success) {
           const h = _this.$createElement;
           let message = `文件：[${data.filePathName}] 解析错误信息：${data.errormsg}`;
@@ -167,7 +171,7 @@ export default {
       }
     );
     this.$electron.ipcRenderer.on(
-      "read-all-example-file-over",
+      "parse-all-example-file-over",
       (event, data) => {
         _this.loading = false;
         _this.currentRow =
@@ -179,9 +183,11 @@ export default {
   destroyed() {
     console.log("destroyed..............");
     this.$electron.ipcRenderer.removeAllListeners(
-      "read-one-example-sheet-over"
+      "parse-one-example-sheet-over"
     );
-    this.$electron.ipcRenderer.removeAllListeners("read-all-example-file-over");
+    this.$electron.ipcRenderer.removeAllListeners(
+      "parse-all-example-file-over"
+    );
   },
   computed: {
     ...mapState("DataCollection", ["buttonGroupList", "exampleDataList"]),
@@ -357,7 +363,7 @@ export default {
       this.parseFileCount = filePathList.length;
       if (typeof filePathList !== "undefined") {
         this.loading = true;
-        this.$electron.ipcRenderer.send("read-all-example-file", {
+        this.$electron.ipcRenderer.send("parse-all-example-file", {
           caseBase: this.caseBase,
           batchCount: this.batchCount,
           filePathList,

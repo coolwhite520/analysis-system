@@ -207,14 +207,14 @@ export default {
         this.$store.commit("CaseDetail/SET_DELETE_STATE", "failed");
         this.$notify({
           title: "成功",
-          message: `删除案件[${this.caseBase.ajmc}]成功!`,
+          message: `删除案件成功!`,
           type: "success",
         });
       } else if (newValue === "failed") {
         this.loading = false;
         this.$notify.error({
           title: "错误",
-          message: `删除案件[${this.caseBase.ajmc}]失败!`,
+          message: `删除案件失败!`,
         });
       }
     },
@@ -239,16 +239,17 @@ export default {
 
       if (this.dataSum === 0) {
         await this.$store.dispatch("ShowTable/showNoDataPage", {
-          tablecname: "数据采集",
+          title: "数据采集",
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
         let tid = "";
+        let maxCount = 0;
         for (let item of this.dataCenterList) {
           for (let child of item.childrenArr) {
-            if (child.count > 0) {
+            if (child.count > maxCount) {
               tid = child.tid;
-              break;
+              maxCount = child.count;
             }
           }
         }
@@ -276,7 +277,7 @@ export default {
 
       if (this.dataSum === 0) {
         await this.$store.dispatch("ShowTable/showNoDataPage", {
-          tablecname: "数据采集",
+          title: "数据采集",
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
@@ -315,16 +316,17 @@ export default {
       );
       if (this.dataSum === 0) {
         await this.$store.dispatch("ShowTable/showNoDataPage", {
-          tablecname: "数据采集",
+          title: "数据采集",
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
         let tid = "";
+        let maxCount = 0;
         for (let item of this.dataCenterList) {
           for (let child of item.childrenArr) {
-            if (child.count > 0) {
+            if (child.count > maxCount) {
               tid = child.tid;
-              break;
+              maxCount = child.count;
             }
           }
         }

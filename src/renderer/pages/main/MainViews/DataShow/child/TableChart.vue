@@ -5,15 +5,16 @@
       :data="tableData.rows"
       size="mini"
       :max-height="limitHeight"
+      :height="limitHeight"
       stripe
       border
       @sort-change="sortChange"
     >
-      <el-table-column fixed type="index" width="50" label="编号"></el-table-column>
+      <!-- <el-table-column fixed type="index" width="50" label="编号"></el-table-column> -->
       <el-table-column
         v-for="(header) in tableData.showHeaders"
         :label="header.fieldcname"
-        :key="header.cid"
+        :key="header.cid+Math.random()"
         show-overflow-tooltip
         :prop="header.fieldename"
         sortable="custom"
@@ -39,10 +40,11 @@
           style="font-size:12px;color:gray"
         >每页显示{{pageSize}}条，当前页面条目数量：{{ tableData.rows.length }}条, 总计：{{tableData.sum}}条</div>
       </el-col>
-      <el-col :span="11" style="text-align:right;">
+      <el-col :span="10" style="text-align:right;">
         <div>
           <el-pagination
             small
+            :current-page="currentPage"
             layout="prev, pager, next"
             :page-size="pageSize"
             :total="tableData.sum"
@@ -50,7 +52,7 @@
           ></el-pagination>
         </div>
       </el-col>
-      <el-col :span="1">
+      <el-col :span="2">
         <el-select v-model="pageSize" placeholder="请选择" size="mini" @change="handleChangePageSize">
           <el-option
             v-for="item in optionsPageSize"
@@ -86,6 +88,7 @@ export default {
     return {
       optionsPageSize: [],
       pageSize: 30,
+      currentPage: 1,
     };
   },
   methods: {
@@ -96,6 +99,7 @@ export default {
         offset: 0,
         count: this.pageSize,
       });
+      this.currentPage = 1;
     },
     sortChange(column) {
       console.log(column);
@@ -157,5 +161,6 @@ export default {
   },
 };
 </script>
-<style >
-</style>
+<style scoped>
+</style>>
+
