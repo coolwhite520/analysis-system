@@ -1,4 +1,4 @@
-let Default = require("./Default");
+import Default from "./Default";
 
 // let PageItem = {
 //   Index: 0, //页面ID

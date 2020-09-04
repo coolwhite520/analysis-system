@@ -32,7 +32,7 @@ CA_PageItemDetail为详细参数：
 数据中心人员界面  id=1或2，设置CA_PageItemDetail.jyzjhm，CA_PageItemDetail.jymc。证件号码，交易名称
 */
 
-let Default = require("./Default");
+import Default from "./Default";
 
 String.prototype.startWith = function(str) {
   var reg = new RegExp("^" + str);

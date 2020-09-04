@@ -1,4 +1,4 @@
-function GetBankDetailTableSumSql(TableName) {
+function GetBankDetailTableSql(TableName) {
   return "".concat(
     "(  SELECT *, (CASE WHEN CXKHGROUPNAME IS NULL THEN CXKH ELSE CXKHGROUPNAME END) AS CXKHGROUP,  (CASE WHEN JYDFZKHGROUPNAME IS NULL THEN JYDFZKH ELSE JYDFZKHGROUPNAME END) AS JYDFZKHGROUP,  (CASE WHEN JYZJHMGROUPNAME IS NULL THEN JYZJHM ELSE JYZJHMGROUPNAME END) AS JYZJHMGROUP, (CASE WHEN JYDFZJHMGROUPNAME IS NULL THEN JYDFZJHM ELSE JYDFZJHMGROUPNAME END) AS JYDFZJHMGROUP,  (CASE WHEN JYMCGROUPNAME IS NULL THEN JYMC ELSE JYMCGROUPNAME END) AS JYMCGROUP,  (CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END) AS JYDFMCGROUP  FROM(  (SELECT * FROM ",
     TableName,
@@ -500,20 +500,37 @@ function size() {
 function clear_stack() {
   this.top = 0;
 }
-
-module.exports.getNowFormatDate = getNowFormatDate;
-module.exports.ReportTableDic = ReportTableDic;
-module.exports.HashSet = HashSet;
-module.exports.Stack = Stack;
-module.exports.FiltrateLogicID = FiltrateLogicID;
-module.exports.DataFilter = DataFilter;
-module.exports.DataType = DataType;
-module.exports.NodeType = NodeType;
-module.exports.FiltrateLogic = FiltrateLogic;
-module.exports.DataSourceType = DataSourceType;
-module.exports.IsNullOrEmpty = IsNullOrEmpty;
-module.exports.GetBankDetailTableSql = GetBankDetailTableSumSql;
-module.exports.BackFiltrateCondtion_DateTime = BackFiltrateCondtion_DateTime;
-module.exports.DataRuleType = DataRuleType;
-module.exports.DataRule = DataRule;
-module.exports.GetTimeType = GetTimeType;
+export default {
+  getNowFormatDate,
+  ReportTableDic,
+  HashSet,
+  Stack,
+  FiltrateLogicID,
+  DataFilter,
+  DataType,
+  NodeType,
+  FiltrateLogic,
+  DataSourceType,
+  IsNullOrEmpty,
+  GetBankDetailTableSql,
+  BackFiltrateCondtion_DateTime,
+  DataRuleType,
+  DataRule,
+  GetTimeType,
+};
+// module.exports.getNowFormatDate = getNowFormatDate;
+// module.exports.ReportTableDic = ReportTableDic;
+// module.exports.HashSet = HashSet;
+// module.exports.Stack = Stack;
+// module.exports.FiltrateLogicID = FiltrateLogicID;
+// module.exports.DataFilter = DataFilter;
+// module.exports.DataType = DataType;
+// module.exports.NodeType = NodeType;
+// module.exports.FiltrateLogic = FiltrateLogic;
+// module.exports.DataSourceType = DataSourceType;
+// module.exports.IsNullOrEmpty = IsNullOrEmpty;
+// module.exports.GetBankDetailTableSql = GetBankDetailTableSumSql;
+// module.exports.BackFiltrateCondtion_DateTime = BackFiltrateCondtion_DateTime;
+// module.exports.DataRuleType = DataRuleType;
+// module.exports.DataRule = DataRule;
+// module.exports.GetTimeType = GetTimeType;

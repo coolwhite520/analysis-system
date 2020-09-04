@@ -1,4 +1,4 @@
-const Default = require("./Default");
+import Default from "./Default";
 
 class Dictionary {
   constructor() {

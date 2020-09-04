@@ -1,4 +1,4 @@
-let Default = require("./Default");
+import Default from "./Default";
 
 function BackFiltrateCondtion(
   condtion,
