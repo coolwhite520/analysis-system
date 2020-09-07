@@ -34,7 +34,7 @@ const createMiniWindow = function(BrowserWindow) {
     miniWindow = null;
   });
   miniWindow.once("ready-to-show", () => {
-    miniWindow.showInactive();
+    // miniWindow.showInactive();
     miniWindow.hide();
   });
 

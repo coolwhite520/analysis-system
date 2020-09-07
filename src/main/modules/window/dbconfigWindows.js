@@ -7,13 +7,14 @@ const dbConfigWinURL =
 
 const createDbConfigWindow = function(BrowserWindow) {
   let obj = {
+    title: "数据库连接设置",
     height: 380,
     width: 480,
     minWidth: 0,
     show: false,
     frame: false,
     fullscreenable: false,
-    skipTaskbar: true,
+    // skipTaskbar: true,
     resizable: process.env.NODE_ENV === "production" ? false : true,
     // transparent: process.platform !== "linux",
     parent: global.mainWindow,

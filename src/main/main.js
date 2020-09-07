@@ -36,6 +36,7 @@ function createWindow() {
   /**
    * Initial window options
    */
+  global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
   let exePath = path.dirname(app.getPath("exe"));
   global.appPath = exePath;
@@ -43,9 +44,10 @@ function createWindow() {
   if (!fs.existsSync(global.configPath)) {
     fs.mkdirSync(global.configPath, { recursive: true });
   }
+
   mainWindow = new BrowserWindow({
     useContentSize: true,
-    title: require("../../package.json").description,
+    title: global.title,
     resizable: process.platform === "darwin" ? true : false,
     movable: process.platform === "darwin" ? true : false,
     show: false,
