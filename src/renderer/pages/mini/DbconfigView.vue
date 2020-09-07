@@ -115,7 +115,8 @@ export default {
     },
     async handleClickSave() {
       console.log(this.form);
-      let result = await this.$electron.remote.dialog.showMessageBox(null, {
+      let wnd = this.$electron.remote.getGlobal("dbConfigWindow");
+      let result = await this.$electron.remote.dialog.showMessageBox(wnd, {
         type: "warning",
         title: "提示",
         message: `保存设置将会重新启动应用程序，您确定这样做吗？`,
