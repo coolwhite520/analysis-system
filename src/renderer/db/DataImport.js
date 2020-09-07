@@ -1,13 +1,11 @@
-import db from "./db";
 import cases from "./Cases";
-import importModel from "@/utils/sql/ImportModel";
 
 export default {
   // 根据导入数据类型获取对应的匹配表
   QueryMatchTableListByPdm: async function(pdm) {
     await cases.SwitchDefaultCase();
     let sql = `select *  from  st_data_template  where pdm='${pdm}' order by MBMC;`;
-    const res = await db.query(sql);
+    const res = await global.db.query(sql);
     console.log(sql, res);
     return res.rows; // id, mbdm, mbmc, tablename ...
   },
@@ -16,7 +14,7 @@ export default {
     await cases.SwitchDefaultCase();
     let sql = `SELECT ID,MBDM,TABLEENAME,FIELDCNAME,FIELDENAME,FIELDTYPE,
     fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
-    const res = await db.query(sql);
+    const res = await global.db.query(sql);
     console.log(sql, res);
     return res.rows; // id, fieldcname, fieldename, ...
   },
@@ -24,7 +22,7 @@ export default {
   QueryInfoFromLogMatchByMbdm: async function(mbdm) {
     await cases.SwitchDefaultCase();
     let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM gas_match_log where MBDM = '${mbdm}'`;
-    const res = await db.query(sql);
+    const res = await global.db.query(sql);
     console.log(sql, res);
     return res.rows; // id, fieldcname, fieldename, ...
   },
@@ -55,14 +53,14 @@ export default {
     }
     let mbdm = "";
     console.log(sql);
-    const res = await db.query(sql);
+    const res = await global.db.query(sql);
     console.log(res);
     if (res.rows.length > 0) {
       mbdm = res.rows[0].mbdm;
       if (pdm === "") {
         sql = `select pdm from st_data_template where mbdm='${mbdm}'`;
         console.log(sql);
-        let ret = await db.query(sql);
+        let ret = await global.db.query(sql);
         pdm = ret.rows[0].pdm;
       }
       return { mbdm, pdm };
@@ -94,7 +92,7 @@ export default {
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
        '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       console.log(res.rows);
       return res.rows[0].sjlyid;
     } catch (e) {
@@ -108,7 +106,7 @@ export default {
      and table_name like '%${like}%' 
      and POSITION ( '_temp' IN TABLE_NAME ) > 0;`;
     console.log(sql);
-    const res = await db.query(sql);
+    const res = await global.db.query(sql);
     console.log(res);
     return res.rows[0].count;
   },
@@ -139,7 +137,7 @@ export default {
       let sql = `DROP TABLE IF EXISTS ${createTableName};
       CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       console.log(res);
       return createTableName;
     } catch (e) {
@@ -152,7 +150,7 @@ export default {
     try {
       let sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       return true;
     } catch (e) {
       console.log(e);
@@ -163,7 +161,7 @@ export default {
     try {
       let sql = `insert into ${createdTableName}(${fields}) VALUES ${datas}`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       return true;
     } catch (e) {
       console.log(e);
@@ -190,7 +188,7 @@ export default {
       if (filterList.length === 0) {
         sql = sql + ` limit ${limit} OFFSET ${beginIndex}`;
         console.log(sql);
-        const res = await db.query(sql);
+        const res = await global.db.query(sql);
         let rows = res.rows;
         for (let row of rows) {
           let newRow = [];
@@ -331,7 +329,7 @@ export default {
       await cases.SwitchCase(ajid);
       let sql = `select count(*)::int count from ${tableName}`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       return res.rows[0].count;
     } catch (e) {
       console.log(e);
@@ -351,12 +349,12 @@ export default {
       await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
-      let res = await db.query(sql);
+      let res = await global.db.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName}) `;
       console.log(sql);
-      res = await db.query(sqlCount);
+      res = await global.db.query(sqlCount);
       let count = res.rows[0].count;
       return {
         rows,
@@ -381,10 +379,10 @@ export default {
       // await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
       console.log(sql);
-      let res = await db.query(sql);
+      let res = await global.db.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
-      res = await db.query(sqlCount);
+      res = await global.db.query(sqlCount);
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
@@ -406,13 +404,13 @@ export default {
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !=''; `; // 查找一个示例
-      let res = await db.query(sql);
+      let res = await global.db.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} 
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' ; `;
-      res = await db.query(sqlCount);
+      res = await global.db.query(sqlCount);
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
@@ -429,7 +427,7 @@ export default {
       });
       let sql = `update ${tableName} set ${field} = '${newValue}' where rownum in (${rownums})`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       return { success: true };
     } catch (e) {
       return { success: false, msg: e.message };
@@ -444,7 +442,7 @@ export default {
       });
       let sql = `delete from ${tableName} where rownum in (${rownums})`;
       console.log(sql);
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       return { success: true };
     } catch (e) {
       return { success: false, msg: e.message };
@@ -1151,7 +1149,7 @@ export default {
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
       console.log(sql);
-      await db.query(sql);
+      await global.db.query(sql);
       return { success: true };
     } catch (e) {
       console.log(e);
@@ -1180,7 +1178,7 @@ export default {
       and a.atttypid = t.oid
       ORDER BY a.attnum;`;
       let resultList = [];
-      let res = await db.query(sql);
+      let res = await global.db.query(sql);
       for (let row of res.rows) {
         let obj = {};
         if (row.type.includes("char")) {
@@ -1237,7 +1235,7 @@ export default {
       }
       const pageSize = 100;
       let countSql = `select count(*)::int count from ${tempTableName}`;
-      let resCount = await db.query(countSql);
+      let resCount = await global.db.query(countSql);
       let rowsCount = resCount.rows[0].count;
       let loopCount = 0;
       if (rowsCount === 0) {
@@ -1258,7 +1256,7 @@ export default {
         let limitSql = ` limit ${pageSize} OFFSET ${beginIndex}`;
         sql = sql + limitSql;
         console.log(sql);
-        let res = await db.query(sql);
+        let res = await global.db.query(sql);
         let sumRows = [];
 
         for (let row of res.rows) {
@@ -1288,7 +1286,7 @@ export default {
         sumRows = sumRows.join(",");
         let insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
         console.log(insertSql);
-        await db.query(insertSql);
+        await global.db.query(insertSql);
         callback({ sumRow: loopCount, index });
       }
       await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);

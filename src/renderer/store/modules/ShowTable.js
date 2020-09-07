@@ -2,6 +2,7 @@ import showTable from "../../db/DataShowTable";
 import models from "../../db/Models";
 import Vue from "vue";
 import aes from "@/utils/aes";
+import Default from "@/utils/sql/Default.js";
 import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
@@ -278,7 +279,7 @@ const actions = {
 
     if (typeof selectCondition === "undefined") {
       // 添加新表
-      selectCondition = JSON.parse(JSON.stringify(global.defaultSelection));
+      selectCondition = JSON.parse(JSON.stringify(Default.defaultSelection));
     }
     if (typeof modelFilterStr === "undefined") {
       modelFilterStr = "";
@@ -388,7 +389,7 @@ const actions = {
 
     if (typeof selectCondition === "undefined") {
       // 添加新表
-      selectCondition = JSON.parse(JSON.stringify(global.defaultSelection));
+      selectCondition = JSON.parse(JSON.stringify(Default.defaultSelection));
     }
     if (typeof modelFilterStr === "undefined") {
       modelFilterStr = "";

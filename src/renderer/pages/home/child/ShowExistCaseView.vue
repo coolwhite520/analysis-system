@@ -103,7 +103,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("Cases/getExistCaseAsync");
+    if (global.db) this.$store.dispatch("Cases/getExistCaseAsync");
   },
 };
 </script>

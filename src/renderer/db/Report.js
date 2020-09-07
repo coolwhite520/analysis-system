@@ -1,4 +1,3 @@
-import db from "./db";
 import cases from "./Cases";
 
 // 小写字母转换设定快捷键 cmd+alt+s
@@ -8,7 +7,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `select modelname, gpsqltemplate, orderby, mpids, out_type::int, describe from layout_model_info where mid=${mid}`;
-      const res = await db.query(sql);
+      const res = await global.db.query(sql);
       console.log(sql, res);
       return {
         success: true,

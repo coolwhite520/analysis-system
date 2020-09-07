@@ -1,4 +1,3 @@
-import db, { emit } from "./db";
 import cases from "./Cases";
 
 function getSameFieldArray(arr1, arr2) {
@@ -23,6 +22,199 @@ function getSameFieldArray(arr1, arr2) {
   return arr;
 }
 
+const dataCenterTableTemplate = {
+  // 人员基本信息
+  personTemplate: {
+    querySql: `SELECT
+    $FIELDS$
+  FROM
+    (
+      ( SELECT * FROM gas_person WHERE ( ckztlb = '01' OR ZZLX = 'z1' ) AND ajid = $AJID$ )
+      P LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+        ) C 
+      ) G ON P.zzhm = G.zjhm 
+      AND P.khmc = G.mc
+      LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        COUNT ( DISTINCT kh ) AS glzhs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+        ) F 
+      GROUP BY
+        zjhm,
+        mc 
+      ) H ON P.zzhm = H.zjhm 
+      AND P.khmc = H.mc 
+    ) 
+  WHERE
+    1 = 1 
+    $FILTER$
+  ORDER BY
+    shard_id DESC 
+    LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='01' OR ZZLX='z1') AND ajid = $AJID$ $FILTER$`,
+  },
+  // 单位信息
+  person2Template: {
+    querySql: `SELECT
+    $FIELDS$
+  FROM
+    (
+      ( SELECT * FROM gas_person WHERE ( ckztlb = '02' OR ZZLX = 'dz1' ) AND ajid = $AJID$ )
+      P LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+        ) C 
+      ) G ON P.zzhm = G.zjhm 
+      AND P.khmc = G.mc
+      LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        COUNT ( DISTINCT kh ) AS glzhs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+        ) F 
+      GROUP BY
+        zjhm,
+        mc 
+      ) H ON P.zzhm = H.zjhm 
+      AND P.khmc = H.mc 
+    ) 
+  WHERE
+    1 = 1 
+    $FILTER$
+  ORDER BY
+    shard_id DESC 
+    LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='02' OR ZZLX='dz1') AND ajid = $AJID$ $FILTER$`,
+  },
+  // 账户信息模版
+  accountTemplate: {
+    querySql: `SELECT
+    $FIELDS$ 
+  FROM
+    (
+    SELECT
+      *  ,
+      ( CASE WHEN cxkh IS NULL THEN '未调单' ELSE'已调单' END ) AS sfdd 
+    FROM
+      (
+        (
+        SELECT
+          * 
+        FROM
+          gas_account_info 
+        WHERE
+          ajid = $AJID$ 
+          AND (
+            LENGTH ( COALESCE ( Kh, '0' ) ) > 0 
+            AND kh IS NOT NULL 
+            OR LENGTH ( COALESCE ( zh, '0' ) ) > 0 
+            AND zh IS NOT NULL 
+          ) 
+        )
+        A LEFT JOIN ( SELECT cxkh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY cxkh ) B ON A.kh = B.cxkh 
+      ) 
+    ) C 
+  WHERE
+    1 = 1 $FILTER$ 
+  ORDER BY
+    shard_id DESC 
+    LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `SELECT count(*)::int count FROM( SELECT *  ,(case WHEN cxkh is NULL then '未调单' else '已调单' end ) as sfdd 
+    from((SELECT * FROM  gas_account_info  WHERE ajid = $AJID$  
+       AND(LENGTH(coalesce(Kh, '0')) > 0 
+       AND kh IS NOt NULL OR LENGTH(coalesce(zh, '0')) > 0 
+       AND zh IS NOt NULL))A left join(SELECT  cxkh  FROM gas_bank_records where ajid=$AJID$  GROUP BY cxkh)B on A.kh = B.cxkh) )C WHERE 1=1  $FILTER$`,
+  },
+  //银行信息模版
+  bankTemplate: {
+    querySql: `SELECT
+    $FIELDS$
+  FROM
+    (
+    SELECT
+      *,
+      ( CASE WHEN CXKHGROUPNAME IS NULL THEN CXKH ELSE CXKHGROUPNAME END ) AS CXKHGROUP,
+      ( CASE WHEN JYDFZKHGROUPNAME IS NULL THEN JYDFZKH ELSE JYDFZKHGROUPNAME END ) AS JYDFZKHGROUP,
+      ( CASE WHEN JYZJHMGROUPNAME IS NULL THEN JYZJHM ELSE JYZJHMGROUPNAME END ) AS JYZJHMGROUP,
+      ( CASE WHEN JYDFZJHMGROUPNAME IS NULL THEN JYDFZJHM ELSE JYDFZJHMGROUPNAME END ) AS JYDFZJHMGROUP,
+      ( CASE WHEN JYMCGROUPNAME IS NULL THEN JYMC ELSE JYMCGROUPNAME END ) AS JYMCGROUP,
+      ( CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END ) AS JYDFMCGROUP 
+    FROM
+      (
+        ( SELECT * FROM gas_bank_records WHERE ajid = $AJID$ ) BANK
+        LEFT JOIN ( SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP1 ON BANK.CXKH = GROUP1.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP2 ON BANK.JYDFZKH = GROUP2.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP3 ON BANK.JYZJHM = GROUP3.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP4 ON BANK.JYDFZJHM = GROUP4.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP5 ON BANK.JYMC = GROUP5.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP6 ON BANK.JYDFMC = GROUP6.GROUPMEMBER 
+      ) ALLBANK 
+    ) GROUPBANKTABLE 
+  WHERE
+    1 = 1 
+    $FILTER$
+  ORDER BY
+    shard_id DESC 
+    LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `
+    SELECT COUNT
+( * )::int count 
+FROM
+(
+SELECT
+  *,
+  ( CASE WHEN CXKHGROUPNAME IS NULL THEN CXKH ELSE CXKHGROUPNAME END ) AS CXKHGROUP,
+  ( CASE WHEN JYDFZKHGROUPNAME IS NULL THEN JYDFZKH ELSE JYDFZKHGROUPNAME END ) AS JYDFZKHGROUP,
+  ( CASE WHEN JYZJHMGROUPNAME IS NULL THEN JYZJHM ELSE JYZJHMGROUPNAME END ) AS JYZJHMGROUP,
+  ( CASE WHEN JYDFZJHMGROUPNAME IS NULL THEN JYDFZJHM ELSE JYDFZJHMGROUPNAME END ) AS JYDFZJHMGROUP,
+  ( CASE WHEN JYMCGROUPNAME IS NULL THEN JYMC ELSE JYMCGROUPNAME END ) AS JYMCGROUP,
+  ( CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END ) AS JYDFMCGROUP 
+FROM
+  (
+    ( SELECT * FROM gas_bank_records WHERE ajid = $AJID$ ) BANK
+    LEFT JOIN ( SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP1 ON BANK.CXKH = GROUP1.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP2 ON BANK.JYDFZKH = GROUP2.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP3 ON BANK.JYZJHM = GROUP3.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP4 ON BANK.JYDFZJHM = GROUP4.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP5 ON BANK.JYMC = GROUP5.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP6 ON BANK.JYDFMC = GROUP6.GROUPMEMBER 
+  ) ALLBANK 
+) GROUPBANKTABLE 
+WHERE
+1 = 1 $FILTER$`,
+  },
+  taxTemplate: {
+    querySql: `SELECT $FIELDS$ FROM gas_tax_records WHERE ajid = '$AJID$' $FILTER$ ORDER BY shard_id DESC LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `select count(1)::int count from gas_tax_records where 1=1 $FILTER$`,
+  },
+  otherTemplate: {
+    querySql: `SELECT $FIELDS$ FROM $TABLENAME$ WHERE ajid = '$AJID$' $FILTER$ ORDER BY shard_id DESC LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `select count(1)::int count from $TABLENAME$ where 1=1 $FILTER$`,
+  },
+};
 export default {
   // 根据tid获取显示的列名称list
   QueryTableShowCFields: async function(tid) {
@@ -32,7 +224,7 @@ export default {
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
       console.log(sql);
-      let result = await db.query(sql);
+      let result = await global.db.query(sql);
       return { success: true, rows: result.rows };
     } catch (e) {
       console.log(e);
@@ -63,32 +255,28 @@ export default {
 
       switch (tid) {
         case "1": //个人
-          querySqlTemp = global.dataCenterTableTemplate.personTemplate.querySql;
-          countSqlTemp = global.dataCenterTableTemplate.personTemplate.countSql;
+          querySqlTemp = dataCenterTableTemplate.personTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.personTemplate.countSql;
           break;
         case "2": // 单位
-          querySqlTemp =
-            global.dataCenterTableTemplate.person2Template.querySql;
-          countSqlTemp =
-            global.dataCenterTableTemplate.person2Template.countSql;
+          querySqlTemp = dataCenterTableTemplate.person2Template.querySql;
+          countSqlTemp = dataCenterTableTemplate.person2Template.countSql;
           break;
         case "3":
-          querySqlTemp =
-            global.dataCenterTableTemplate.accountTemplate.querySql;
-          countSqlTemp =
-            global.dataCenterTableTemplate.accountTemplate.countSql;
+          querySqlTemp = dataCenterTableTemplate.accountTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.accountTemplate.countSql;
           break;
         case "4":
-          querySqlTemp = global.dataCenterTableTemplate.bankTemplate.querySql;
-          countSqlTemp = global.dataCenterTableTemplate.bankTemplate.countSql;
+          querySqlTemp = dataCenterTableTemplate.bankTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.bankTemplate.countSql;
           break;
         case "14":
-          querySqlTemp = global.dataCenterTableTemplate.taxTemplate.querySql;
-          countSqlTemp = global.dataCenterTableTemplate.taxTemplate.countSql;
+          querySqlTemp = dataCenterTableTemplate.taxTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.taxTemplate.countSql;
           break;
         default:
-          querySqlTemp = global.dataCenterTableTemplate.otherTemplate.querySql;
-          countSqlTemp = global.dataCenterTableTemplate.otherTemplate.countSql;
+          querySqlTemp = dataCenterTableTemplate.otherTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.otherTemplate.countSql;
           break;
       }
       let querySql = querySqlTemp
@@ -114,7 +302,7 @@ export default {
         .replace(/\$TABLENAME\$/g, tableename);
 
       console.log("QueryBaseTableData", querySql);
-      let result = await db.query(querySql);
+      let result = await global.db.query(querySql);
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
@@ -130,7 +318,7 @@ export default {
       }
 
       // 查询结果集的总量
-      let resultCount = await db.query(countSql);
+      let resultCount = await global.db.query(countSql);
       let sum = 0;
       if (resultCount.rows.length > 0) {
         sum = resultCount.rows[0].count;
@@ -154,7 +342,7 @@ export default {
       await cases.SwitchCase(ajid);
       console.log(sql);
       let exportSql = sql;
-      let result = await db.query(sql);
+      let result = await global.db.query(sql);
       console.log({ result });
       // 数据过滤
       let resultFields = [];

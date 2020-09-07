@@ -192,7 +192,6 @@ import { mapState } from "vuex";
 import Report from "@/db/Report.js";
 import cases from "@/db/Cases.js";
 import aes from "@/utils/aes";
-import db from "@/db/db";
 import reportSqlFormat from "@/utils/sql/ReportSqlFormat";
 import Default from "@/utils/sql/Default";
 import os from "os";
@@ -344,7 +343,7 @@ export default {
       worksheet.columns = columns;
       worksheet.properties.defaultRowHeight = 30;
       await cases.SwitchCase(ajid);
-      let { rows } = await db.query(exportSql);
+      let { rows } = await global.db.query(exportSql);
       for (let index = 0; index < rows.length; index++) {
         worksheet.addRow(rows[index]).commit();
       }
@@ -420,7 +419,7 @@ export default {
       let sql = reportSqlFormat.GetReportSql(ajid, PageItem, this.ReportParams);
       await cases.SwitchCase(ajid);
       console.log(sql);
-      let res = await db.query(sql);
+      let res = await global.db.query(sql);
       let jyrs = res.rows[0].jyrs;
       let jyzhs = res.rows[0].jyzhs;
       let jyjls = res.rows[0].jyjls;

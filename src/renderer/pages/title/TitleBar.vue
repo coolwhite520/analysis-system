@@ -12,7 +12,12 @@
       <el-col class="colum" :span="4">
         <div>
           <span class="opterationBtn iconfont">
-            <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
+            <el-tooltip content="数据库连接设置" placement="bottom">
+              <span @click="handleClickDbConfig" class="dbconfig">&#xe71a;</span>
+            </el-tooltip>
+            <el-tooltip content="返回首页" placement="bottom">
+              <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
+            </el-tooltip>
             <span @click="handleClickMin" class="min">&#xe60c;</span>
             <span @click="handleClickClose" class="close">&#xe634;</span>
           </span>
@@ -102,6 +107,9 @@ export default {
     handleClickClose() {
       this.$electron.ipcRenderer.send("window-close");
     },
+    handleClickDbConfig() {
+      this.$electron.ipcRenderer.send("show-db-config");
+    },
   },
 };
 </script>
@@ -143,6 +151,16 @@ export default {
   color: white;
   -webkit-app-region: no-drag;
 }
+.dbconfig {
+  font-size: 28px;
+  margin-right: 10px;
+  border-right: 1px solid gray;
+  padding-right: 10px;
+}
+.dbconfig:hover {
+  color: gray;
+  cursor: pointer;
+}
 .gohome {
   font-size: 25px;
   margin-right: 10px;
@@ -155,6 +173,7 @@ export default {
 
 .gohome:hover {
   cursor: pointer;
+  color: gray;
 }
 .min:hover {
   color: green;

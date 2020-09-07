@@ -55,7 +55,17 @@ export default function() {
   ipcMain.on("export-one-file-over", (e, args) => {
     global.mainWindow.webContents.send("export-one-file-over", args);
   });
-
+  // 隐藏db设置
+  ipcMain.on("hide-db-config", () => {
+    global.dbConfigWindow.hide();
+  });
+  ipcMain.on("show-db-config", () => {
+    global.dbConfigWindow.show();
+  });
+  //
+  ipcMain.on("reloadApp", () => {
+    global.mainWindow.webContents.send("reloadApp");
+  });
   ipcMain.on("move-to-zero", () => {
     let bounds = global.mainWindow.getBounds();
     bounds.x = 0;

@@ -5,7 +5,6 @@
 <script>
 import path from "path";
 import cases from "@/db/Cases.js";
-import db from "@/db/db.js";
 export default {
   methods: {
     async sleep(ms) {
@@ -49,7 +48,7 @@ export default {
       // 生成标题头
       worksheet.columns = columns;
       await cases.SwitchCase(ajid);
-      let { rows } = await db.query(exportSql);
+      let { rows } = await global.db.query(exportSql);
       for (let index = 0; index < rows.length; index++) {
         console.log(rows[index]);
         worksheet.addRow(rows[index]).commit();

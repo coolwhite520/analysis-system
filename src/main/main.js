@@ -2,6 +2,9 @@ import { app, BrowserWindow, screen } from "electron";
 import initIpcEvent from "./modules/ipcEvents";
 import createMiniWindow from "./modules/window/miniWindow";
 import createExportWindow from "./modules/window/exportWindow";
+import createDbConfigWindow from "./modules/window/dbconfigWindows";
+import fs from "fs";
+import path from "path";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 /**
@@ -14,7 +17,7 @@ if (process.env.NODE_ENV !== "development") {
     .replace(/\\/g, "\\\\");
 }
 
-global.softVersion = "4.2.0.5";
+global.softVersion = require("../../package.json").version;
 
 let mainWindow;
 const winURL =
@@ -27,7 +30,12 @@ function createWindow() {
    * Initial window options
    */
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
-
+  let appPath = app.getAppPath();
+  global.appPath = appPath;
+  global.configPath = require("path").join(appPath, "config");
+  if (!fs.existsSync(global.configPath)) {
+    fs.mkdirSync(global.configPath, { recursive: true });
+  }
   mainWindow = new BrowserWindow({
     useContentSize: true,
     title: require("../../package.json").description,
@@ -55,6 +63,7 @@ function createWindow() {
     global.mainWindow = mainWindow;
     global.miniWindow = createMiniWindow(BrowserWindow);
     global.exportWindow = createExportWindow(BrowserWindow);
+    global.dbConfigWindow = createDbConfigWindow(BrowserWindow);
     // if (isDevelopment) {
     //   // 安装vue-devtools
     //   let extensions = BrowserWindow.getDevToolsExtensions();

@@ -500,7 +500,103 @@ function size() {
 function clear_stack() {
   this.top = 0;
 }
+
+// 定义全局的默认选择属性
+const defaultSelection = {
+  JYZE_MINValue: 10000.0,
+  JYZEValue: 1000000.0, // 注意这个值就是Double_0
+  JYZECondition: "大于等于",
+  JYZEConditionAccord: ">=",
+  JYCSConditionAccord: ">=",
+  XSMZ: "JYJE",
+  JYCSCondition: "大于等于",
+  JYCSValue: 10,
+  XSGS: 10,
+  GLDDZHS: 1,
+  HLJE: 20000,
+  JCB_MAX: 1.0,
+  JCB_MIN: 1.0,
+  JC_SJJG: 48,
+  KEY_PERSIONS_DFMC: "",
+  KEY_PERSIONS_JYMC: "",
+  SJD: "YYYY-MM",
+  SJD_CN: "月，YYYY-MM",
+  XSMZPro: "",
+  SFJEZB: 0.2,
+  ZCDDGLGSSL: 2,
+  BSRGLGSSL: 2,
+  CWFZRGLGSSL: 2,
+  XXSJEHJ: 50000.0,
+  XFSHSL: 2,
+  GFSHSL: 2,
+  MINH: "00",
+  MINM: "00",
+  MINS: "00",
+  MAXH: "23",
+  MAXM: "59",
+  MAXS: "59",
+  MoneyIntervalStr: "1,2,5,10,20,50,100,1000,10000,10000",
+  MinDate: "2010-01-01",
+  MaxDate: getNowFormatDate(0),
+  String_1: "CXZH,JYDFZKH,JDBZ",
+  String_0: "交易账号,对手账号,借贷标志",
+  JYSJ_START: "1970-01-01 00:00:00",
+  JYSJ_END: getNowFormatDate(1),
+  KEY_PERSIONS_JYZKH: "",
+  KEY_PERSIONS_JYDFZKH: "",
+  KEY_PERSIONS_JYZJHM: "",
+  KEY_PERSIONS_JYDFZJHM: "",
+  FILTER: "",
+  RYGLFS: "",
+  ZXKPSJ: 3,
+  SelectThTypeIndex: 0, //团伙
+  SelectThType: {
+    Index: 1,
+    ThId: "JYMCGROUP",
+    ThName: "按主体名称划分",
+    DsThId: "JYDFMCGROUP",
+    ThMemberCntId: "JYMCGROUPMEMBERCOUNT",
+    DsThMemberCntId: "JYDFMCGROUPMEMBERCOUNT",
+  }, //this.thType[0],
+  KYZT: "",
+  JCZCSB_MIN: 0.1,
+  JCZCSB_MAX: 10.0,
+  SFJEB_MIN: 0.1,
+  SFJEB_MAX: 10.0,
+  SelectedSaveCondition: "",
+  NodeNum: "0",
+  LineNum: "0",
+  SaveTime: "1970-01-01 00:00:00",
+  SelectDataTableColumn: [
+    {
+      CFIELD: "CXZH",
+      CNAME: "交易账号",
+      DATA_TYPE: 0, //VARCHAR
+      SHOWABLE: "Y",
+      COLUMN_TYPE: 0, //NONE
+    },
+    {
+      CFIELD: "JYDFZKH",
+      CNAME: "对手账号",
+      DATA_TYPE: 0,
+      SHOWABLE: "Y",
+      COLUMN_TYPE: 0,
+    },
+    {
+      CFIELD: "JDBZ",
+      CNAME: "借贷标志",
+      DATA_TYPE: 0,
+      SHOWABLE: "Y",
+      COLUMN_TYPE: 0,
+    },
+  ],
+  FiledsIsNullCondition:
+    " AND CXZH IS NOT NULL AND LENGTH( COALESCE(CXZH, '0'))>0 AND JYDFZKH IS NOT NULL AND LENGTH( COALESCE(JYDFZKH, '0'))>0 AND JDBZ IS NOT NULL AND LENGTH( COALESCE(JDBZ, '0'))>0 ",
+  FiledsEmptyToNullCondition:
+    " CASE WHEN CXZH='' THEN NULL ELSE CXZH END AS CXZH,CASE WHEN JYDFZKH='' THEN NULL ELSE JYDFZKH END AS JYDFZKH,CASE WHEN JDBZ='' THEN NULL ELSE JDBZ END AS JDBZ ",
+};
 export default {
+  defaultSelection,
   getNowFormatDate,
   ReportTableDic,
   HashSet,
