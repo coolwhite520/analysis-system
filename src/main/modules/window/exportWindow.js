@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
-
+import { LOAD_URL } from "../../config";
 const miniWinURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#export`
-    : `file://${__dirname}/#export`;
+    : `${LOAD_URL}#export`;
 
 const createMiniWindow = function(BrowserWindow) {
   let obj = {

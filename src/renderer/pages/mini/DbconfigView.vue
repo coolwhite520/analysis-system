@@ -113,20 +113,30 @@ export default {
         });
       }
     },
-    handleClickSave() {
+    async handleClickSave() {
       console.log(this.form);
-      let { user, password, database, port, host } = this.form;
-      let config = new DbConfig();
-      try {
-        config.writeDbConfig(user, host, database, password, port);
-        this.$electron.ipcRenderer.send("hide-db-config");
-        this.$electron.ipcRenderer.send("reloadApp");
-      } catch (e) {
-        console.log(e);
-        this.$notify.error({
-          title: "错误",
-          message: `数据保存错误：${e.message}`,
-        });
+      let result = await this.$electron.remote.dialog.showMessageBox(null, {
+        type: "warning",
+        title: "提示",
+        message: `保存设置将会重新启动应用程序，您确定这样做吗？`,
+        buttons: ["确定", "取消"],
+        defaultId: 0,
+      });
+      console.log(result);
+      if (result.response === 0) {
+        let { user, password, database, port, host } = this.form;
+        let config = new DbConfig();
+        try {
+          config.writeDbConfig(user, host, database, password, port);
+          this.$electron.ipcRenderer.send("hide-db-config");
+          this.$electron.ipcRenderer.send("reloadApp");
+        } catch (e) {
+          console.log(e);
+          this.$notify.error({
+            title: "错误",
+            message: `数据保存错误：${e.message}`,
+          });
+        }
       }
     },
   },

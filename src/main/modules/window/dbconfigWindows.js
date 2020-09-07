@@ -1,14 +1,14 @@
 import { ipcRenderer } from "electron";
-
+import { LOAD_URL } from "../../config";
 const dbConfigWinURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#dbconfig`
-    : `file://${__dirname}/#dbconfig`;
+    : `${LOAD_URL}#dbconfig`;
 
 const createDbConfigWindow = function(BrowserWindow) {
   let obj = {
-    height: 360,
-    width: 500,
+    height: 380,
+    width: 480,
     minWidth: 0,
     show: false,
     frame: false,

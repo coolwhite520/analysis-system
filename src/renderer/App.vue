@@ -37,11 +37,11 @@ export default {
     let height = this.$electron.remote.getGlobal("height");
     let MainViewHeight = height - 100 - 20; // titelbar footbar
     let ContentViewHeight = MainViewHeight - 120; // 减去 tabbars的高度
-    this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", MainViewHeight);
     this.$store.commit(
       "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
       ContentViewHeight
     );
+    this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", MainViewHeight);
     let config = new DbConfig();
     let dbCon = config.readDbConfig();
     try {
@@ -50,6 +50,7 @@ export default {
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");
     } catch (e) {
+      console.log(e);
       global.db = null;
       this.$electron.ipcRenderer.send("show-db-config");
     }

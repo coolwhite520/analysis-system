@@ -1,10 +1,12 @@
-import { app, BrowserWindow, screen } from "electron";
+import { app, protocol, BrowserWindow, screen } from "electron";
+import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
 import createMiniWindow from "./modules/window/miniWindow";
 import createExportWindow from "./modules/window/exportWindow";
 import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
 import path from "path";
+import { ACHEME, LOAD_URL } from "./config";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 /**
@@ -20,18 +22,23 @@ if (process.env.NODE_ENV !== "development") {
 global.softVersion = require("../../package.json").version;
 
 let mainWindow;
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: ACHEME, privileges: { secure: true, standard: true } },
+]);
+
 const winURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#/`
-    : `file://${__dirname}/index.html`;
+    : `${LOAD_URL}`;
 
 function createWindow() {
   /**
    * Initial window options
    */
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
-  let appPath = app.getAppPath();
-  global.appPath = appPath;
+  let exePath = path.dirname(app.getPath("exe"));
+  global.appPath = exePath;
   global.configPath = require("path").join(appPath, "config");
   if (!fs.existsSync(global.configPath)) {
     fs.mkdirSync(global.configPath, { recursive: true });
@@ -50,7 +57,8 @@ function createWindow() {
       enableRemoteModule: true,
     },
   });
-
+  // 必须调用创建scheme的协议函数，否则打包后通过路由的子页面会显示空白。
+  createProtocol(ACHEME);
   mainWindow.loadURL(winURL);
   mainWindow.maximize();
 
