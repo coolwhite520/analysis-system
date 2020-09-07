@@ -118,7 +118,8 @@ export default {
         // this.enableSaveBtn = false;
         this.$notify.error({
           title: "错误",
-          message: "数据库测试连接失败",
+          message: "数据库测试连接失败," + e.message,
+          showClose: false,
         });
       }
       this.loading = false;
