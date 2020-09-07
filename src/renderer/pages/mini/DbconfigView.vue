@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row class="title">
+    <el-row class="dbConfigtitle">
       <el-col :span="23">
         <div class="iconfont" style="font-size:30px;margin:10px;float:left;">&#xe71a;</div>
         <div style="margin:15px;">数据库连接设置</div>
@@ -16,7 +16,14 @@
       </el-col>
     </el-row>
     <el-row style="margin-top:30px;">
-      <el-form ref="form" :model="form" label-width="100px" label-position="right" size="mini">
+      <el-form
+        ref="form"
+        v-loading="loading"
+        :model="form"
+        label-width="100px"
+        label-position="right"
+        size="mini"
+      >
         <el-row>
           <el-col :span="4">&nbsp;</el-col>
           <el-col :span="14">
@@ -84,6 +91,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       form: {},
       enableSaveBtn: true,
     };
@@ -93,6 +101,7 @@ export default {
       this.$electron.ipcRenderer.send("hide-db-config");
     },
     async handleClickTestConn() {
+      this.loading = true;
       let db = new Pool(this.form);
       try {
         await db.query("SET search_path TO icap_base");
@@ -112,6 +121,7 @@ export default {
           message: "数据库测试连接失败",
         });
       }
+      this.loading = false;
     },
     async handleClickSave() {
       console.log(this.form);
@@ -144,13 +154,17 @@ export default {
 };
 </script>
 <style scoped>
-.title {
+.dbConfigtitle {
   height: 50px;
   -webkit-user-select: none;
   -webkit-app-region: drag;
   background-color: beige;
   color: white;
-  background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
+  background: radial-gradient(
+    ellipse at bottom,
+    #384e6e 0%,
+    hsl(231, 26%, 29%) 100%
+  );
 }
 .close:hover {
   color: red;
