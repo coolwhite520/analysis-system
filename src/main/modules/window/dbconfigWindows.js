@@ -1,4 +1,4 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import { LOAD_URL } from "../../config";
 const dbConfigWinURL =
   process.env.NODE_ENV === "development"
@@ -14,11 +14,12 @@ const createDbConfigWindow = function(BrowserWindow) {
     frame: false,
     fullscreenable: false,
     skipTaskbar: true,
-    resizable: false,
+    resizable: process.env.NODE_ENV === "production" ? false : true,
     // transparent: process.platform !== "linux",
     parent: global.mainWindow,
-    // modal: true,
-    alwaysOnTop: true,
+    modal: true,
+    center: true,
+    // alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
