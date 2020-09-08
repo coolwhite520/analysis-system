@@ -18,10 +18,12 @@ const state = {
 const mutations = {
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
+    const uuid = require("uuid");
     let newId = parseInt(state.pageIndex);
     newId++;
     // 分配页面索引
     Vue.set(tableData, "pageIndex", String(newId));
+    Vue.set(tableData, "uuid", uuid.v1());
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
     state.activeIndex = state.pageIndex;

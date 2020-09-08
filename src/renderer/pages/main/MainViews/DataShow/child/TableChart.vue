@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-table
+      :id="tableData.uuid"
       style="width: 100%;"
       :data="tableData.rows"
       size="mini"
@@ -34,10 +35,12 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-row style="margin-top:10px;">
+    <el-row
+      style=" background-color: #f5f7fa;padding: 5px;border-bottom: 1px solid #dddfe5; border-left: 1px solid #dddfe5; border-right: 1px solid #dddfe5"
+    >
       <el-col :span="12">
         <div
-          style="font-size:12px;color:gray"
+          style="font-size:12px;color:gray;margin-top:5px;"
         >每页显示{{pageSize}}条，当前页面条目数量：{{ tableData.rows.length }}条, 总计：{{tableData.sum}}条</div>
       </el-col>
       <el-col :span="10" style="text-align:right;">
@@ -72,7 +75,7 @@ import { mapState } from "vuex";
 export default {
   mounted() {
     console.log(this.tableData);
-    for (let size = 10; size <= 60; size++) {
+    for (let size = 1; size <= 60; size++) {
       this.optionsPageSize.push({
         label: String(size),
         value: size,

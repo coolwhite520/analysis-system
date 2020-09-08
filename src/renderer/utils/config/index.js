@@ -9,7 +9,7 @@ class DbConfig {
     let configPath = remote.getGlobal("configPath");
     this.configFilePath = path.join(configPath, FILE_NAME);
     if (!fs.existsSync(this.configFilePath)) {
-      this.writeDbConfig("", "127.0.0.1", "gas_data11", "", 5432);
+      this.writeDbConfig("", "127.0.0.1", "gas_data", "", 5432);
     }
   }
   /**
