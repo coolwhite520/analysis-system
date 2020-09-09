@@ -55,7 +55,7 @@ export default {
 
 <style >
 .standard-data-dialog .el-dialog {
-  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
+  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
   border: 1px solid gray;
   position: absolute;
   top: 50%;
@@ -64,23 +64,18 @@ export default {
   transform: translate(-50%, -50%);
   max-height: calc(100% - 100px);
   max-width: calc(100% - 100px);
+  border-radius: 5px;
 }
 .standard-data-dialog .el-dialog__header {
+  height: 50px;
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
 }
 .standard-data-dialog .el-dialog__title {
   color: white;
   font-size: 16px;
 }
-.auto-data-dialog .el-dialog {
-  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
-  border: 1px solid gray;
-}
-.auto-data-dialog .el-dialog__header {
-  background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
-}
-.auto-data-dialog .el-dialog__title {
-  color: white;
+.standard-data-dialog .dialog-title {
+  margin-top: -10px;
 }
 </style>
 

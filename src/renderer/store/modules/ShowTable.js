@@ -7,6 +7,51 @@ import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 
+// 关系图设置的金额区间
+
+let graphicMoneySectionList = [
+  {
+    value: 10,
+    label: `万元以下`,
+    id: "1",
+    color: "#9cdcfe",
+    selected: true,
+  },
+  {
+    value: 100,
+    label: `万元`,
+    id: "2",
+    color: "#6a9955",
+    selected: true,
+  },
+  {
+    value: 1000,
+    label: `万元`,
+    id: "3",
+    color: "#edad40",
+    selected: true,
+  },
+  {
+    value: 1000,
+    label: `万元以上`,
+    id: "4",
+    color: "#ee6b5f",
+    selected: true,
+  },
+  // {
+  //   label: "离散实体",
+  //   id: "5",
+  //   color: "#dddfe5",
+  //   selected: false,
+  // },
+  // {
+  //   label: "线宽",
+  //   id: "6",
+  //   color: "#dddfe5",
+  //   selected: false,
+  // },
+];
+
 const state = {
   activeIndex: "", // 当前active的tab索引
   tableDataList: [], // 存放每个表的数据结构 { title: "标准采集" name: tid, componentName: "no-data-view", data: data}
@@ -24,10 +69,38 @@ const mutations = {
     // 分配页面索引
     Vue.set(tableData, "pageIndex", String(newId));
     Vue.set(tableData, "uuid", uuid.v1());
+    if (
+      ["101", "102", "103", "202", "203", "213", "502", "802"].includes(
+        tableData.tid
+      )
+    ) {
+      Vue.set(tableData, "graphicMoneySectionList", graphicMoneySectionList);
+    }
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
     state.activeIndex = state.pageIndex;
     state.currentTableData = tableData;
+  },
+  // 修改金额区间的选定状态
+  MODIFY_MONDY_SECTION_CHECKED(state, id) {
+    for (
+      let index = 0;
+      index < state.currentTableData.graphicMoneySectionList.length;
+      index++
+    ) {
+      if (state.currentTableData.graphicMoneySectionList[index].id === id) {
+        state.currentTableData.graphicMoneySectionList[index].selected = !state
+          .currentTableData.graphicMoneySectionList[index].selected;
+        break;
+      }
+    }
+  },
+  MOIDFY_GRAPHICMONEYSECTIONLIST(state, graphicMoneySectionList) {
+    Vue.set(
+      state.currentTableData,
+      "graphicMoneySectionList",
+      graphicMoneySectionList
+    );
   },
   // focus某个table
   SET_ACTIVEINDEX(state, activeIndex) {

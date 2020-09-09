@@ -73,10 +73,10 @@ export default {
   },
   methods: {
     async handleMouseover(params) {
-      console.log(params);
-      let elTable = document.getElementById(this.tableData.uuid);
-      elTable.scrollTop = params.dataIndex * 20;
-      console.log(elTable);
+      // console.log(params);
+      // let elTable = document.getElementById(this.tableData.uuid);
+      // elTable.scrollTop = params.dataIndex * 20;
+      // console.log(elTable);
       // let row = this.tableData.rows[params.dataIndex];
     },
     async handleClickBar(params) {

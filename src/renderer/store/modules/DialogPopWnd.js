@@ -7,6 +7,7 @@ const state = {
   showFieldsVisible: false,
   showCollectionRecordVisible: false,
   showReportVisible: false,
+  graphicSettingVisible: false,
 };
 
 const mutations = {
@@ -32,6 +33,9 @@ const mutations = {
   },
   SET_SHOWREPORTVISIBLE(state, showReportVisible) {
     state.showReportVisible = showReportVisible;
+  },
+  SET_GRAPHICSETTINGVISIBLE(state, graphicSettingVisible) {
+    state.graphicSettingVisible = graphicSettingVisible;
   },
 };
 
