@@ -3,19 +3,19 @@
     <!-- 输出表类型 1表格， 2视图，3上表下图,4上表下柱状图,5上饼图下表 -->
     <!-- <table-chart :tableData="tableData" :limitHeight="contentViewHeight-110"></table-chart> -->
     <div v-if="tableData.showType === 1">
-      <table-chart :tableData="tableData" :limitHeight="contentViewHeight-110"></table-chart>
+      <table-chart :tableData="tableData" :limitHeight="contentViewHeight-80"></table-chart>
     </div>
     <div v-else-if="tableData.showType === 2">
       <div>这里是个图</div>
     </div>
     <div v-else-if="tableData.showType === 3">
-      <table-chart :tableData="tableData" :limitHeight="(contentViewHeight-110)/2 - 50"></table-chart>
+      <table-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2 - 47"></table-chart>
       <!-- <div>这里是个关系图</div> -->
-      <relation-chart :tableData="tableData" :limitHeight="(contentViewHeight-110)/2"></relation-chart>
+      <relation-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2"></relation-chart>
     </div>
     <div v-else-if="tableData.showType === 4">
-      <table-chart :tableData="tableData" :limitHeight="(contentViewHeight-110)/2 - 50"></table-chart>
-      <graphic-bar-chart :tableData="tableData" :limitHeight="(contentViewHeight-110)/2"></graphic-bar-chart>
+      <table-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2 - 47"></table-chart>
+      <graphic-bar-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2"></graphic-bar-chart>
     </div>
     <div v-else-if="tableData.showType === 5">
       <div :style="{height: 250 + 'px'}">这里是个饼状图</div>

@@ -60,14 +60,14 @@ export default {
   methods: {
     handleClickShowTabBar() {
       if (this.showTabBarView) {
-        let newContentViewHeight = this.contentViewHeight + 120; // titelbar tabbar footbar lineheight
+        let newContentViewHeight = this.contentViewHeight + 100; // titelbar tabbar footbar lineheight
         this.$store.commit(
           "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
           newContentViewHeight
         );
         this.$store.commit("MainPageSwitch/SET_SHOWTABBARVIEW", false);
       } else {
-        let newContentViewHeight = this.contentViewHeight - 120;
+        let newContentViewHeight = this.contentViewHeight - 100;
         this.$store.commit(
           "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
           newContentViewHeight

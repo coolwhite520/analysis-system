@@ -26,7 +26,7 @@
             justify="center"
           >
             <el-col :span="2">
-              <div>{{item.id}}级</div>
+              <div style="margin-top:3px;">{{item.id}}级</div>
             </el-col>
             <el-col :span="2">
               <el-color-picker v-model="item.color" size="mini"></el-color-picker>
@@ -47,7 +47,7 @@
                 <el-input size="mini" v-model="myGraphicMoneySectionList[index-1].value" disabled></el-input>
               </el-col>
               <el-col :span="2">
-                <div>&nbsp;&nbsp;至&nbsp;&nbsp;</div>
+                <div style="margin-top:3px;">&nbsp;&nbsp;至&nbsp;&nbsp;</div>
               </el-col>
               <el-col :span="7">
                 <el-input-number
@@ -68,7 +68,7 @@
                 ></el-input>
               </el-col>
               <el-col :span="2">
-                <div>&nbsp;&nbsp;至&nbsp;&nbsp;</div>
+                <div style="margin-top:3px;">&nbsp;&nbsp;至&nbsp;&nbsp;</div>
               </el-col>
               <el-col :span="7">
                 <el-input-number
@@ -89,16 +89,16 @@
               </el-col>
             </template>
             <el-col :span="6">
-              <div>&nbsp;&nbsp;{{item.label}}</div>
+              <div style="margin-top:3px;">&nbsp;&nbsp;{{item.label}}</div>
             </el-col>
           </el-row>
           <el-row style="margin-top:30px;">
-            <el-col :span="8">&nbsp;</el-col>
-            <el-col :span="8" style="text-align:center">
-              <el-button type="primary" size="mini" @click="handleClickColorTab">确定</el-button>
-              <el-button type="text" size="mini" @click="handleClose">取消</el-button>
+            <el-col :span="4">&nbsp;</el-col>
+            <el-col :span="16" style="text-align:center">
+              <el-button type="primary" size="medium" @click="handleClickColorTab">确定</el-button>
+              <el-button size="medium" @click="handleClose">取消</el-button>
             </el-col>
-            <el-col :span="8">&nbsp;</el-col>
+            <el-col :span="4">&nbsp;</el-col>
           </el-row>
         </el-tab-pane>
         <el-tab-pane label="交易线宽" name="second">配置管理</el-tab-pane>

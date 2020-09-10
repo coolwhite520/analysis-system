@@ -35,8 +35,8 @@ export default {
     });
     // 设置主区域的height
     let height = this.$electron.remote.getGlobal("height");
-    let MainViewHeight = height - 100 - 20; // titelbar footbar
-    let ContentViewHeight = MainViewHeight - 120; // 减去 tabbars的高度
+    let MainViewHeight = height - 120; // titelbar footbar
+    let ContentViewHeight = MainViewHeight - 100; // 减去 tabbars的高度
     this.$store.commit(
       "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
       ContentViewHeight

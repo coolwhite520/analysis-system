@@ -56,7 +56,7 @@ export default {
 
 <style scoped>
 .tab-bar {
-  height: 120px;
+  height: 100px;
   box-sizing: border-box;
 }
 </style>

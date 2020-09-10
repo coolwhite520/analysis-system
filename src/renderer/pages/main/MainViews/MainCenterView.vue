@@ -193,6 +193,11 @@ export default {
   },
 };
 </script>
+<style>
+.el-tabs .el-tabs__content {
+  padding: 0;
+}
+</style>
 <style scoped>
 .el-tabs {
   overflow-x: scroll; /*横向滚动*/

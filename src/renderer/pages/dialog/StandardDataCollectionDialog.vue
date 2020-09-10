@@ -67,6 +67,8 @@ export default {
   border-radius: 5px;
 }
 .standard-data-dialog .el-dialog__header {
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
   height: 50px;
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
 }
