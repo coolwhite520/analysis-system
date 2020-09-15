@@ -1217,6 +1217,7 @@ export default {
     // templateAllFields,
     callback
   ) {
+    let insertSql;
     try {
       let targetTableStruct = await this.showTableStruct(ajid, tableName);
       if (!targetTableStruct.success)
@@ -1290,7 +1291,7 @@ export default {
           sumRows.push(`(${values})`);
         }
         sumRows = sumRows.join(",");
-        let insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
+        insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
         await global.db.query(insertSql);
         callback({ sumRow: loopCount, index });
       }
@@ -1298,7 +1299,7 @@ export default {
       callback({ sumRow: 100, index: 100 });
       return { success: true };
     } catch (e) {
-      log.error(e);
+      log.error(insertSql, e);
       return { success: false, msg: e.message };
     }
   },
