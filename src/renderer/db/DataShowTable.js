@@ -226,7 +226,7 @@ export default {
       let result = await global.db.query(sql);
       return { success: true, rows: result.rows };
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -323,7 +323,7 @@ export default {
       }
       return { success: true, headers, rows: retRows, sum, exportSql };
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -386,7 +386,7 @@ export default {
         exportSql,
       };
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },

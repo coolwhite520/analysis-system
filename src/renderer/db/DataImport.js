@@ -157,14 +157,24 @@ export default {
       return false;
     }
   },
-  // 插入一条数据
-  importOneRowData: async function(createdTableName, fields, data) {
+  deleteTempTable: async function(ajid, tempTableName) {
     try {
+      await cases.SwitchCase(ajid);
+      let sql = `DROP TABLE IF EXISTS ${tempTableName};`;
+      await global.db.query(sql);
+    } catch (e) {
+      log.info(e);
+    }
+  },
+  // 插入一条数据
+  importOneRowData: async function(ajid, createdTableName, fields, data) {
+    try {
+      await cases.SwitchCase(ajid);
       let sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
       const res = await global.db.query(sql);
       return true;
     } catch (e) {
-      log.error(e);
+      log.error(e, sql);
       return false;
     }
   },
@@ -1313,9 +1323,11 @@ export default {
       }
       if (loopCount > 0)
         await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);
+      await this.deleteTempTable(ajid, tempTableName);
       callback({ sumRow: 100, index: 100 });
       return { success: true };
     } catch (e) {
+      await this.deleteTempTable(ajid, tempTableName);
       log.info(insertSql, e);
       return { success: false, msg: e.message };
     }
