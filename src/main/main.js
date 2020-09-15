@@ -7,7 +7,6 @@ import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
 import path from "path";
 import { ACHEME, LOAD_URL } from "./config";
-import log from "electron-log";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 /**

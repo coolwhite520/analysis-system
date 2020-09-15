@@ -1191,7 +1191,14 @@ export default {
         if (row.type.includes("char")) {
           obj.fieldtype = 1;
           obj.fieldename = row.field.toLowerCase();
-        } else if (row.type.includes("int") || row.type.includes("num")) {
+        } else if (
+          row.type.includes("int") ||
+          row.type.includes("num") ||
+          row.type.includes("float") ||
+          row.type.includes("double") ||
+          row.type.includes("byte") ||
+          row.type.includes("bool")
+        ) {
           obj.fieldtype = 2;
           obj.fieldename = row.field.toLowerCase();
         } else {
