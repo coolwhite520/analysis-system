@@ -1306,7 +1306,7 @@ export default {
       callback({ sumRow: 100, index: 100 });
       return { success: true };
     } catch (e) {
-      log.error(insertSql, e);
+      log.info(insertSql, e);
       return { success: false, msg: e.message };
     }
   },
