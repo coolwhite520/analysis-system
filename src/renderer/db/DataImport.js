@@ -1301,7 +1301,8 @@ export default {
         await global.db.query(insertSql);
         callback({ sumRow: loopCount, index });
       }
-      await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);
+      if (loopCount > 0)
+        await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);
       callback({ sumRow: 100, index: 100 });
       return { success: true };
     } catch (e) {
