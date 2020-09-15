@@ -1217,6 +1217,12 @@ export default {
     // templateAllFields,
     callback
   ) {
+    log.info(
+      "importDataFromTempTableToRealTable:",
+      ajid,
+      tempTableName,
+      tableName
+    );
     let insertSql;
     try {
       let targetTableStruct = await this.showTableStruct(ajid, tableName);
