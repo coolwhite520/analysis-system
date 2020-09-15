@@ -1197,7 +1197,10 @@ export default {
           row.type.includes("float") ||
           row.type.includes("double") ||
           row.type.includes("byte") ||
-          row.type.includes("bool")
+          row.type.includes("bool") ||
+          row.type.includes("bit") ||
+          row.type.includes("money") ||
+          row.type.includes("timestamp")
         ) {
           obj.fieldtype = 2;
           obj.fieldename = row.field.toLowerCase();
