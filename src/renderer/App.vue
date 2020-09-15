@@ -50,9 +50,9 @@ export default {
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");
     } catch (e) {
-      log.error(e);
       global.db = null;
       this.$electron.ipcRenderer.send("show-db-config");
+      log.error(e);
     }
   },
 };

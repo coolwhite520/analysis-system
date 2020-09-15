@@ -137,7 +137,6 @@ export default {
       return true;
     } catch (e) {
       log.error(e);
-      return false;
     }
   },
   // 查询案件状态列表下拉信息
@@ -149,7 +148,6 @@ export default {
       return res.rows; // id, item_code, item_name,
     } catch (e) {
       log.error(e);
-      return null;
     }
   },
   // 获取案件类别下拉信息
@@ -161,7 +159,6 @@ export default {
       return res.rows;
     } catch (e) {
       log.error(e);
-      return null;
     }
   },
   // 获取已经存在的case
@@ -173,7 +170,6 @@ export default {
       return res.rows;
     } catch (e) {
       log.error(e);
-      return null;
     }
   },
   // 根据id获取案件详细信息
@@ -257,7 +253,6 @@ export default {
       return true;
     } catch (e) {
       log.error(e);
-      return false;
     }
   },
   // 创建一个新的案件
