@@ -88,8 +88,9 @@ export default function() {
   ipcMain.on("window-close", () => {
     let wins = BrowserWindow.getAllWindows();
     for (let i = 0; i < wins.length; i++) {
-      wins[i].hide();
+      wins[i].close();
     }
+    app.exit(0);
   });
 
   ipcMain.on("app-exit", () => {

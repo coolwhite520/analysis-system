@@ -98,8 +98,17 @@ export default {
     handleClickMin() {
       this.$electron.ipcRenderer.send("window-min");
     },
-    handleClickClose() {
-      this.$electron.ipcRenderer.send("window-close");
+    async handleClickClose() {
+      let result = await this.$electron.remote.dialog.showMessageBox(null, {
+        type: "warning",
+        title: "关闭",
+        message: `是否要退出应用程序？`,
+        buttons: ["确定", "取消"],
+        defaultId: 0,
+      });
+      if (result.response === 0) {
+        this.$electron.ipcRenderer.send("window-close");
+      }
     },
     handleClickDbConfig() {
       this.$electron.ipcRenderer.send("show-db-config");
