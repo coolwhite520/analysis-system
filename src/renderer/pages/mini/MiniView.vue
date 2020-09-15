@@ -2,6 +2,7 @@
   <div></div>
 </template>
 <script>
+const log = require("@/utils/log");
 import csvReader from "@/utils/reader/csvReader";
 import xlsReader from "@/utils/reader/xlsReader";
 import dataImport from "../../db/DataImport";
@@ -196,7 +197,7 @@ export default {
               pdm,
               fileColsName
             );
-            console.log({ queryResult });
+
             let bestMatchTemplate = queryResult.mbdm;
             // 说明是自动匹配
             if (pdm === "") {
@@ -226,7 +227,6 @@ export default {
             let tabletemp = data.matchTemplates.filter((value) => {
               return value.mbdm === bestMatchTemplate;
             });
-            console.log("GOGOGOGOOGOO", tabletemp, bestMatchTemplate);
             let tablecname = tabletemp[0].tablecname;
 
             let externFields = tabletemp[0].extern_field
@@ -317,10 +317,9 @@ export default {
               "parse-one-example-sheet-over",
               data
             );
-            console.log(data);
           }
         } catch (e) {
-          console.log(e);
+          log.error(e);
           data.filePathName = filePathName;
           data.success = false;
           data.errormsg = e.message;
@@ -331,7 +330,6 @@ export default {
       // this.$store.commit("DataCollection/SET_CSV_LIST", data); // 如果需要多进程访问vuex，需要启用插件功能并所有的commit都需要改成dispatch
     },
     async readAllFile(e, args) {
-      console.log(args);
       let ryid = UUID.v1();
       for (let sheetIndex = 0; sheetIndex < args.length; sheetIndex++) {
         let data = args[sheetIndex];
@@ -486,7 +484,6 @@ export default {
         externFields,
         tabIndex,
       } = args;
-      console.log(args);
       await dataImport.importDataFromTempTableToRealTable(
         ajid,
         tableName,

@@ -48,9 +48,7 @@ export default {
         await this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
       }
     },
-    handleClickTab(index) {
-      console.log(index);
-    },
+    handleClickTab(index) {},
   },
 };
 </script>

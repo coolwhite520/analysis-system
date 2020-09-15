@@ -188,6 +188,7 @@
   </div>
 </template>
 <script>
+const log = require("@/utils/log");
 import { mapState } from "vuex";
 import Report from "@/db/Report.js";
 import cases from "@/db/Cases.js";
@@ -198,6 +199,7 @@ import os from "os";
 import path from "path";
 const excel = require("exceljs");
 const fs = require("fs");
+
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showReportVisible"]),
@@ -292,9 +294,7 @@ export default {
     };
   },
   methods: {
-    handleChange(val) {
-      console.log(val);
-    },
+    handleChange(val) {},
     handleClose() {
       if (this.buttonDisabled) {
         return;
@@ -412,13 +412,11 @@ export default {
         Tb_Name: "", //页面表名，目前报告中没有该参数
       };
       let data = await Report.QueryReportTemplateByMid(602);
-      console.log(data);
       let template = await aes.decrypt(data.pgsqltemplate);
       PageItem.Index = 602;
       PageItem.CurrentExeSql = template;
       let sql = reportSqlFormat.GetReportSql(ajid, PageItem, this.ReportParams);
       await cases.SwitchCase(ajid);
-      console.log(sql);
       let res = await global.db.query(sql);
       let jyrs = res.rows[0].jyrs;
       let jyzhs = res.rows[0].jyzhs;
@@ -528,10 +526,10 @@ export default {
       const officegen = require("officegen");
       let docx = officegen("docx");
       docx.on("finalize", function (written) {
-        console.log("Finish to create a Microsoft Word document.");
+        log.info("Finish to create a Microsoft Word document.");
       });
       docx.on("error", function (err) {
-        console.log(err);
+        log.error(err);
       });
       // 添加页眉 页脚
       let headerFontSytle = {
@@ -571,7 +569,6 @@ export default {
         if (item.value) {
           this.loadingText = `正在生成[${item.label}]相关数据...`;
           let data = await Report.QueryReportTemplateByMid(item.id);
-          console.log(data);
           let template = await aes.decrypt(data.pgsqltemplate);
           PageItem.Index = item.id;
           PageItem.CurrentExeSql = template;
@@ -589,7 +586,7 @@ export default {
             tableDic,
             sql
           );
-          console.log({ dataResult });
+
           let { tableDataRows, subTitle, p, mainTitle } = dataResult;
           if (mainTitle.length !== 0) {
             let title = this.convertNumToCh(this.activeStep);
@@ -608,14 +605,13 @@ export default {
             tableDataRows,
             tableDic
           );
-          console.log({ resultTable, tableStyle });
           pObj = docx.createTable(resultTable, tableStyle);
           this.activeStep++;
         }
       }
       let out = fs.createWriteStream(docfilePath);
       out.on("error", function (err) {
-        console.log(err);
+        log.error(err);
       });
       docx.generate(out);
 

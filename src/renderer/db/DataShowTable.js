@@ -1,5 +1,5 @@
 import cases from "./Cases";
-
+const log = require("@/utils/log");
 function getSameFieldArray(arr1, arr2) {
   var arr = [];
   if (arr1.length > arr2.length) {
@@ -223,11 +223,10 @@ export default {
       let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type, link_mid::int, data_type FROM icap_base.layout_table_column
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
-      console.log(sql);
       let result = await global.db.query(sql);
       return { success: true, rows: result.rows };
     } catch (e) {
-      console.log(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -301,7 +300,6 @@ export default {
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$TABLENAME\$/g, tableename);
 
-      console.log("QueryBaseTableData", querySql);
       let result = await global.db.query(querySql);
       // 数据过滤
       let retRows = [];
@@ -323,10 +321,9 @@ export default {
       if (resultCount.rows.length > 0) {
         sum = resultCount.rows[0].count;
       }
-      console.log(showFields);
       return { success: true, headers, rows: retRows, sum, exportSql };
     } catch (e) {
-      console.log(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -340,10 +337,8 @@ export default {
         showFields.push(item.fieldename.toLowerCase());
       }
       await cases.SwitchCase(ajid);
-      console.log(sql);
       let exportSql = sql;
       let result = await global.db.query(sql);
-      console.log({ result });
       // 数据过滤
       let resultFields = [];
       for (let item of result.fields) {
@@ -357,7 +352,6 @@ export default {
           newHeaders.push(header);
         }
       }
-      console.log({ newHeaders, showFields, resultFields });
       let retRows = [];
       let sum = result.rows.length;
       if (sum === 0) {
@@ -392,7 +386,7 @@ export default {
         exportSql,
       };
     } catch (e) {
-      console.log(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },

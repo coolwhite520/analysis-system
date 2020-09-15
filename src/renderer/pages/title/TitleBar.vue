@@ -40,6 +40,7 @@
 </template>
 
 <script>
+const log = require("@/utils/log");
 import { mapState } from "vuex";
 export default {
   data() {
@@ -47,12 +48,7 @@ export default {
       softVersion: this.$electron.remote.getGlobal("softVersion"),
     };
   },
-  mounted() {
-    // let bounds = this.$electron.remote.getGlobal("bounds");
-    // console.log(bounds);
-    // let height = bounds.height - 100 - 143 - 20 - 25; // titelbar tabbar footbar lineheight
-    // this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", height);
-  },
+  mounted() {},
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView"]),
     ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"]),
@@ -79,7 +75,6 @@ export default {
       this.$electron.ipcRenderer.send("move-to-zero");
     },
     async handleClickGotoHome() {
-      console.log("click");
       // 判断当前页面
       if (this.currentViewName === "main-page") {
         let result = await this.$electron.remote.dialog.showMessageBox(null, {
@@ -89,7 +84,6 @@ export default {
           buttons: ["确定", "取消"],
           defaultId: 0,
         });
-        console.log(result);
         if (result.response !== 0) {
           return;
         }

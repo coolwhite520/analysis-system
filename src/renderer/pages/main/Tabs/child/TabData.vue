@@ -334,7 +334,6 @@ export default {
           { name: "csv", extensions: ["csv"] },
         ],
       });
-      console.log(result);
       if (!result.canceled) {
         let exportSql = this.currentTableData.exportSql;
         let args = {

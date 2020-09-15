@@ -47,9 +47,7 @@ export default {
     "tab-about": TabAbout,
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
+    handleClick(tab, event) {},
   },
 };
 </script>

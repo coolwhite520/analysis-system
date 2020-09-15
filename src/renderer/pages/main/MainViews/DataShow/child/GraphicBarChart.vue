@@ -72,13 +72,7 @@ export default {
     this.draw();
   },
   methods: {
-    async handleMouseover(params) {
-      // console.log(params);
-      // let elTable = document.getElementById(this.tableData.uuid);
-      // elTable.scrollTop = params.dataIndex * 20;
-      // console.log(elTable);
-      // let row = this.tableData.rows[params.dataIndex];
-    },
+    async handleMouseover(params) {},
     async handleClickBar(params) {
       if (
         params.seriesName === "进账笔数" ||
@@ -93,7 +87,6 @@ export default {
           let linkMid = header.link_mid;
           let value = params.value;
           // 找到tableData对应的行
-          console.log(row, fieldename, linkMid, value);
           let newRow = {};
           for (let k in row) {
             newRow[k] = row[k].value;

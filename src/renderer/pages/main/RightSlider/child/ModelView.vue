@@ -731,15 +731,12 @@ export default {
     },
   },
   async beforeMount() {
-    console.log("childModel mouted.........");
-    console.log(this.renderData);
     // this.renderData.mpids = JSON.parse(
     //   JSON.stringify(this.currentTableData.renderData.mpids)
     // );
     this.selectCondition = JSON.parse(
       JSON.stringify(this.currentTableData.selectCondition)
     );
-    console.log(this.selectCondition);
     // 交易金额区间描述
     this.initMoneyIntervalDes();
     for (let i = 0; i < 24; i++) {
@@ -757,12 +754,10 @@ export default {
       }
     }
     this.listst_jyje = JSON.parse(JSON.stringify(this.list_condition));
-    console.log(this.listst_jyje);
     this.listst_jycs = JSON.parse(JSON.stringify(this.list_condition));
   },
   methods: {
     handleChangeThSelect(currentValue) {
-      console.log(this.list_thtype);
       for (let item of this.list_thtype) {
         if (item.ThId === currentValue) {
           this.selectCondition.SelectThType = JSON.parse(JSON.stringify(item));
@@ -791,9 +786,7 @@ export default {
       this.MoneyIntervalDes = text;
     },
     //
-    visibleChange(value) {
-      console.log(value);
-    },
+    visibleChange(value) {},
     async handleClickExecCondition() {
       // 先更新currentTable的过滤条件
       await this.$store.commit("ShowTable/UPDATE_MODEL_SELECTION", {
@@ -805,7 +798,6 @@ export default {
         offset: 0,
         count: 30,
       });
-      console.log(this.currentTableData);
     },
     handleClickSaveCondition() {},
     handleClickClose() {

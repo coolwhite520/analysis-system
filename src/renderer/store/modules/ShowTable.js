@@ -6,7 +6,7 @@ import Default from "@/utils/sql/Default.js";
 import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
-
+const log = require("@/utils/log");
 // 关系图设置的金额区间
 
 let graphicMoneySectionList = [
@@ -402,7 +402,6 @@ const actions = {
       offset,
       count
     );
-    console.log(data);
     if (data.success) {
       let { headers, rows, sum, exportSql } = data;
       if (pageIndex) {
@@ -441,7 +440,7 @@ const actions = {
       }
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
-      console.log("errr........");
+      log.info("errr........");
     }
   },
 
@@ -546,7 +545,7 @@ const actions = {
       }
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
-      console.log("errr...........");
+      log.info("errr...........");
     }
   },
   // 点击表格中的link跳转的页面查询, 每次点击link的时候需要传递当前页面的modelFilterStr;
@@ -564,8 +563,6 @@ const actions = {
         selectCondition,
         fieldename.toUpperCase()
       );
-      console.log({ tid, selectCondition, row, fieldename });
-      console.log(res.msg.str, res.msg.obj);
       await dispatch("showBaseTable", {
         tid: String(linkMid),
         count: 30,

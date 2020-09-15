@@ -595,7 +595,7 @@ const defaultSelection = {
   FiledsEmptyToNullCondition:
     " CASE WHEN CXZH='' THEN NULL ELSE CXZH END AS CXZH,CASE WHEN JYDFZKH='' THEN NULL ELSE JYDFZKH END AS JYDFZKH,CASE WHEN JDBZ='' THEN NULL ELSE JDBZ END AS JDBZ ",
 };
-export default {
+module.exports = {
   defaultSelection,
   getNowFormatDate,
   ReportTableDic,

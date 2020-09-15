@@ -14,7 +14,6 @@ export default {
         });
         if (bfind) indexList.push(i);
       }
-      console.log(fileColsName, fileInsertCols, indexList);
       let content = fs.readFileSync(filePathName, "utf-8");
       content = content.trimRight();
       let records = [];

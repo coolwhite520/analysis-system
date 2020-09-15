@@ -109,7 +109,6 @@ export default {
           properties: ["openFile", "multiSelections"],
         }
       );
-      console.log(filePathList);
       if (typeof filePathList === "undefined") return;
       this.parseFileCount = filePathList.length;
       if (typeof filePathList !== "undefined") {

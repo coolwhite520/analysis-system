@@ -35,9 +35,7 @@ import DataCenter from "@/pages/main/LeftSlider/DataCenter";
 import MainCenterView from "@/pages/main/MainViews/MainCenterView";
 import RightSlider from "@/pages/main/RightSlider/CapitalModelLib";
 export default {
-  mounted() {
-    // console.log({ showModelList: this.showModelList });
-  },
+  mounted() {},
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView", "showFieldsVisible"]),
     ...mapState("AppPageSwitch", ["mainViewHeight", "isCollapseLeftBar"]),

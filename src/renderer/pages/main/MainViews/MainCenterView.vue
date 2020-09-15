@@ -101,11 +101,8 @@ export default {
   },
   methods: {
     openContextMenu(e) {
-      console.log(e.srcElement);
       if (e.srcElement.id) {
-        console.log(e.clientX, e.clientY);
         let currentContextTabId = e.srcElement.id.split("-")[1];
-        console.log({ currentContextTabId });
         this.contextMenuVisible = true;
         this.$store.commit("ShowTable/SET_ACTIVEINDEX", currentContextTabId);
         //是否存在左边
@@ -157,7 +154,6 @@ export default {
       this.contextMenuVisible = false;
     },
     removeTab(targetName) {
-      console.log(targetName, this.activeIndex);
       this.$store.commit("ShowTable/REMOVE_TABLE_DATA_FROM_LIST", {
         pageIndex: String(targetName),
       });

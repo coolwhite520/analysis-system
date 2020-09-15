@@ -58,7 +58,7 @@ import ShowExistCaseView from "./child/ShowExistCaseView";
 import NewCaseView from "./child/NewCaseView";
 import CaseDetailView from "./child/CaseDetailView";
 import EditCaseView from "./child/EditCaseView";
-
+const log = require("@/utils/log");
 export default {
   data() {
     return {
@@ -97,11 +97,10 @@ export default {
           ],
         })
         .then((result) => {
-          console.log(result.canceled);
-          console.log(result.filePaths);
+          log.info(result.filePaths);
         })
         .catch((err) => {
-          console.log(err);
+          log.error(err);
         });
     },
   },

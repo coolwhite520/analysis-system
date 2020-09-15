@@ -8,18 +8,14 @@ export default {
   parseFileExampleSync: async function(filePathName) {
     const workbook = new excel.Workbook();
     workbook.calcProperties.fullCalcOnLoad = true;
-    let now = new Date().getSeconds();
     let resultList = [];
     let actualRowCount = 0;
     await workbook.xlsx.read(fs.createReadStream(filePathName));
     workbook.eachSheet(function(worksheet, id) {
-      let end = new Date().getSeconds();
-      console.log(end - now);
       let rows = [];
       let count = 0;
       actualRowCount = worksheet.actualRowCount;
       worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
-        console.log(row);
         if (count >= 3) return;
         row = row.values.filter((el, index) => index !== 0);
         for (let index = 0; index < row.length; index++) {
@@ -37,7 +33,6 @@ export default {
             minute = String(minute).length === 1 ? "0" + minute : minute;
             let sec = m.second();
             sec = String(sec).length === 1 ? "0" + sec : sec;
-            console.log({ year, month, day, hour, minute, sec });
             if (year === 1899) {
               row[index] = `${hour}:${minute}:${sec}`;
             } else {
@@ -45,7 +40,6 @@ export default {
             }
           }
         }
-        console.log(row);
         rows.push(row);
         count++;
       });
@@ -107,7 +101,6 @@ export default {
               minute = String(minute).length === 1 ? "0" + minute : minute;
               let sec = m.second();
               sec = String(sec).length === 1 ? "0" + sec : sec;
-              console.log({ year, month, day, hour, minute, sec });
               if (year === 1899) {
                 row[index] = `${hour}:${minute}:${sec}`;
               } else {
@@ -121,7 +114,6 @@ export default {
         });
       }
     });
-    console.log(rows);
     return rows.slice(1);
   },
   // parseFileExampleSync2: function(filePathName) {
@@ -131,10 +123,10 @@ export default {
   //   book.SheetNames.forEach(function(name) {
   //     //拿到当前 sheet 页对象
   //     let sheet = book.Sheets[name];
-  //     console.log(sheet);
+  //     log.info(sheet);
   //     //得到当前页内数据范围
   //     let range = xlsx.utils.decode_range(sheet["!ref"]);
-  //     console.log(range);
+  //     log.info(range);
   //     //保存数据范围数据
   //     let row_start = range.s.r;
   //     let row_end = range.e.r;
@@ -149,7 +141,7 @@ export default {
   //         var cell_address = { c: i, r: row_start };
   //         /* if an A1-style address is needed, encode the address */
   //         var addr = xlsx.utils.encode_cell(cell_address);
-  //         console.log(addr);
+  //         log.info(addr);
   //         // let addr =
   //         //   xlsx.utils.encode_col(i) + xlsx.utils.encode_row(row_start);
   //         let cell = sheet[addr];
@@ -162,7 +154,7 @@ export default {
   //           row_data.push(newValue);
   //         }
   //       }
-  //       console.log(row_data);
+  //       log.info(row_data);
   //       rows.push(row_data);
   //     }
   //     //保存当前页内的数据
@@ -175,7 +167,7 @@ export default {
   //     };
   //     resultList.push(result);
   //   });
-  //   console.log(resultList);
+  //   log.info(resultList);
   //   return resultList;
   // },
 
@@ -185,7 +177,7 @@ export default {
   //   fileColsName,
   //   fileInsertCols
   // ) {
-  //   console.log(filePathName, sheetName);
+  //   log.info(filePathName, sheetName);
   //   let book = xlsx.readFileSync(filePathName, { sheets: sheetName });
   //   let result = {};
   //   //拿到当前 sheet 页对象

@@ -65,22 +65,15 @@ export default {
         "ShowTable/SET_SHOWHAEDERS",
         this.currentTableData.headers
       );
-      // this.$nextTick(() => {
-      //   _this.$refs.tableShowData.doLayout();
-      // });
     },
     async handleClickNotSelectAll() {
       let _this = this;
       this.checked = false;
       this.checkList = [];
       await this.$store.commit("ShowTable/SET_SHOWHAEDERS", []);
-      // this.$nextTick(() => {
-      //   _this.$refs.tableShowData.doLayout();
-      // });
     },
     async handleChangeSelect(val) {
       let _this = this;
-      console.log(val);
       let newShowHeaders = [];
       for (let header of this.currentTableData.headers) {
         if (val.includes(header.fieldcname)) {
@@ -88,9 +81,6 @@ export default {
         }
       }
       await this.$store.commit("ShowTable/SET_SHOWHAEDERS", newShowHeaders);
-      // this.$nextTick(() => {
-      //   _this.$refs.tableShowData.doLayout();
-      // });
     },
   },
   data() {

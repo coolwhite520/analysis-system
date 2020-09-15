@@ -104,7 +104,6 @@ const actions = {
           let parentList = modelsDetailList.filter((item) => {
             return item.parentid_200 === -1;
           });
-          console.log(parentList);
           for (let father of parentList) {
             let childrenList = modelsDetailList.filter((item) => {
               return item.parentid_200 === father.mid;

@@ -52,9 +52,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  mounted() {
-    console.log(this.openeds);
-  },
+  mounted() {},
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight", "isCollapseLeftBar"]),
     ...mapState("Models", ["existModelsDetailList"]),
@@ -96,14 +94,9 @@ export default {
     };
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
+    handleOpen(key, keyPath) {},
+    handleClose(key, keyPath) {},
     async handleSelect(parentid, tableTid) {
-      console.log(parentid, tableTid);
       // 获取右侧的模型数据
       let tid = tableTid[1];
       // 判断是否已经展示了这个基础页面，如果已经展示了，那么需要进行active

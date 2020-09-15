@@ -1,5 +1,5 @@
 import Default from "./Default";
-
+const log = require("@/utils/log");
 class Dictionary {
   constructor() {
     this.datastore = new Array();
@@ -15,14 +15,12 @@ class Dictionary {
     for (var key in this.datastore) {
       str += key + " -> " + this.datastore[key] + "; ";
     }
-    console.log(str);
   }
   count() {
     var n = 0;
     for (var key in Object.keys(this.datastore)) {
       ++n;
     }
-    console.log(n);
     return n;
   }
   clear() {
@@ -121,7 +119,7 @@ function GetReplaceString(fieldname) {
       MatchDic.add(fieldname, concurrentDictionary);
     }
   } catch (e) {
-    console.log("数据替换的时候出错", e);
+    log.error("数据替换的时候出错", e);
   }
 }
 function ChangeField(text, fieldname) {
@@ -161,7 +159,7 @@ function ChangeField(text, fieldname) {
     }
     result = text;
   } catch (e) {
-    console.log("替换转化的时候失败");
+    log.error("替换转化的时候失败", e);
     result = text;
   }
   return result;
@@ -227,7 +225,7 @@ function CangeTime(strtime1) {
     }
     result = String(num);
   } catch (e) {
-    console.log("通话时间转化出错");
+    log.info("通话时间转化出错");
     result = strtime1;
   }
   return result;
@@ -306,7 +304,7 @@ function TestingHandle(
           }
         }
       } catch (e) {
-        console.log("开票月份读取出错", e);
+        log.error("开票月份读取出错", e);
       }
     }
     if (
@@ -413,7 +411,7 @@ function TestingHandle(
           dataRow["jdbz"] = "出";
         }
       } catch (e) {
-        console.log("借贷标志转，交易金额先关转化化出错");
+        log.error("借贷标志转，交易金额先关转化化出错", e);
       }
     }
     if (
@@ -552,7 +550,7 @@ function TestingHandle(
       }
     }
   } catch (e) {
-    console.log(e);
+    log.error(e);
   }
   return dataRow;
 }
@@ -565,7 +563,7 @@ function TestingHandle(
 //   "1",
 //   "0"
 // );
-// console.log(e);
+// log.info(e);
 
 export default {
   TestingHandle,

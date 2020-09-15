@@ -152,12 +152,10 @@ import path from "path";
 import { BrowserWindow } from "electron";
 export default {
   mounted() {
-    console.log("mounted....................");
     let _this = this;
     this.$electron.ipcRenderer.on(
       "parse-one-example-sheet-over",
       (event, data) => {
-        console.log("parse-one-example-sheet-over******************");
         if (!data.success) {
           const h = _this.$createElement;
           let message = `文件：[${data.filePathName}] 解析错误信息：${data.errormsg}`;
@@ -181,7 +179,6 @@ export default {
     );
   },
   destroyed() {
-    console.log("destroyed..............");
     this.$electron.ipcRenderer.removeAllListeners(
       "parse-one-example-sheet-over"
     );
@@ -206,7 +203,6 @@ export default {
   methods: {
     handleClickSubmit() {
       if (this.multipleSelection.length > 0) {
-        console.log("this.multipleSelection", this.multipleSelection.length);
         for (let data of this.multipleSelection) {
           if (data.bestMatchTemplate === "") {
             this.$notify.error({
@@ -318,7 +314,6 @@ export default {
     },
     // 选择模版下拉框
     handleChangeMatchTemplate(selValue, index, row) {
-      console.log(selValue, index, row);
       this.$store.dispatch("DataCollection/changeMatchList", {
         index,
         bestMatchTemplate: selValue,
@@ -335,17 +330,14 @@ export default {
     },
     // table表点击事件
     handleCurrentChange(val) {
-      console.log("handleCurrentChange:", val);
       this.currentRow = val;
     },
     // multipleSelection 代表当前选中的行数据
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log("handleSelectionChange:", this.multipleSelection);
     },
 
     async handleClickImportData(pdm) {
-      console.log(pdm);
       let mainWindow = this.$electron.remote.getGlobal("mainWindow");
       let filePathList = await this.$electron.remote.dialog.showOpenDialogSync(
         mainWindow,
@@ -358,7 +350,6 @@ export default {
           properties: ["openFile", "multiSelections"],
         }
       );
-      console.log(filePathList);
       if (typeof filePathList === "undefined") return;
       this.parseFileCount = filePathList.length;
       if (typeof filePathList !== "undefined") {

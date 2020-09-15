@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     handleTabRemove(tabIndex) {
-      console.log(tabIndex);
       //更新rightTabs的显示和隐藏
       this.$store.commit("ShowTable/SET_RIGHT_TAB_VISIBLE", {
         pageIndex: this.currentTableData.pageIndex,

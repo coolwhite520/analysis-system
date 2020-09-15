@@ -159,10 +159,10 @@
 
 <script>
 import { mapState } from "vuex";
-
 const UUID = require("uuid");
 export default {
   mounted() {
+    this.DefaultData = require("@/utils/sql/Default");
     let headerFirst = this.currentTableData.headers[0];
     if (this.currentTableData.modelFilterChildList.length === 0) {
       this.filterList.push({
@@ -197,7 +197,7 @@ export default {
   data() {
     return {
       rootNodeId: UUID.v1(),
-      DefaultData: require("@/utils/sql/Default"),
+      DefaultData: null,
       filterList: [],
       title: "数据筛选",
     };
@@ -233,7 +233,6 @@ export default {
       await this.$store.commit("DialogPopWnd/SET_FILTER_DIALOG_VISIBLE", false);
     },
     hanleClickRootAndOr(data, node) {
-      console.log(data, node);
       if (data.DisplayRelation === "AND") {
         data.DisplayRelation = "OR";
       } else {
@@ -243,7 +242,6 @@ export default {
     //root添加
     rootAppend(data, node) {
       const children = node.data.children;
-      console.log(children);
       let headerFirst = this.currentTableData.headers[0];
       let newItem = {
         id: UUID.v1(),
@@ -308,7 +306,6 @@ export default {
     // 叶子节点添加数据
     leafAppend(data, node) {
       let headerFirst = this.currentTableData.headers[0];
-      console.log(data, node);
       const parent = node.parent;
       const children = parent.data.children || parent.data;
       children.push({

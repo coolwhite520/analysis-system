@@ -30,9 +30,7 @@ import TableChart from "./child/TableChart";
 import GraphicBarChart from "./child/GraphicBarChart";
 import RelationChart from "./child/RelationChart";
 export default {
-  mounted() {
-    console.log(this.tableData);
-  },
+  mounted() {},
   data() {
     return {};
   },

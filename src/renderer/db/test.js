@@ -22,13 +22,4 @@ import cases from "./Cases";
     1,
     1
   );
-
-  // let res = await location.QueryProvince();
-  // console.log(res);
-  // let citys = await location.QueryCityByProvinceID(res[5].id);
-  // console.log(citys);
-  // let states = await cases.QueryCaseState();
-  // console.log(states);
-  // res = await schema.CreateNewSchema(1000, "baiyang");
-  // console.log(res);
 })();

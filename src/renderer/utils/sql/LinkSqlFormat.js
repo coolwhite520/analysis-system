@@ -33,7 +33,7 @@ CA_PageItemDetail为详细参数：
 */
 
 import Default from "./Default";
-
+const log = require("@/utils/log");
 String.prototype.startWith = function(str) {
   var reg = new RegExp("^" + str);
   return reg.test(this);
@@ -1288,7 +1288,7 @@ function AnalysePageGrid_OnLinkClick(
   ColumnName
 ) {
   /*if (cA_PageItemDetail.CurrCellVal == "'0'"){
-        console.log(cA_PageItemDetail.TabName+"没有可钻取的数据");
+        log.info(cA_PageItemDetail.TabName+"没有可钻取的数据");
         return;
     }*/
   cA_PageItemDetail.CurrentExeSql = CurrTabItem.Sql_Detail; //模型模板sql

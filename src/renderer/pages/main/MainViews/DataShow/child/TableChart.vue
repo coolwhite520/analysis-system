@@ -71,10 +71,8 @@
 
 <script>
 import { mapState } from "vuex";
-
 export default {
   mounted() {
-    console.log(this.tableData);
     for (let size = 1; size <= 60; size++) {
       this.optionsPageSize.push({
         label: String(size),
@@ -105,7 +103,6 @@ export default {
       this.currentPage = 1;
     },
     sortChange(column) {
-      console.log(column);
       //获取字段名称和排序类型
       let fieldName = column.prop;
       let sortingType = column.order;
@@ -137,7 +134,6 @@ export default {
       });
     },
     async handleClickTableCellLink(row, fieldename, linkMid, value) {
-      console.log(row, fieldename, linkMid, value);
       let newRow = {};
       for (let k in row) {
         newRow[k] = row[k].value;

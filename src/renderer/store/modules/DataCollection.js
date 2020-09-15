@@ -9,7 +9,6 @@ const state = {
 const mutations = {
   // 添加数据到整体数组中
   ADD_CSV_DATA_TO_LIST(state, data) {
-    console.log("push:", data);
     state.exampleDataList.push(data);
   },
   // 清空数据数组
@@ -205,7 +204,6 @@ const actions = {
       headers
     );
     if (result.success) {
-      console.log("queryDataFromTable", { result });
       let rowSum = await dataImport.queryRowsum(ajid, tableName);
       commit("SET_ROWSUM", {
         sheetIndex,

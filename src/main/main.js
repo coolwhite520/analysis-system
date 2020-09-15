@@ -7,6 +7,7 @@ import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
 import path from "path";
 import { ACHEME, LOAD_URL } from "./config";
+import log from "electron-log";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 /**
@@ -36,6 +37,7 @@ function createWindow() {
   /**
    * Initial window options
    */
+  global.log = log;
   global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
   let exePath = path.dirname(app.getPath("exe"));

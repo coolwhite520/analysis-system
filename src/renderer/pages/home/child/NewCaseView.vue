@@ -148,11 +148,7 @@ export default {
     ...mapGetters("PublicList", ["ajlbListWrapper"]),
     ...mapState("NewCase", ["city_list", "town_list", "createState"]),
   },
-  async mounted() {
-    // console.log(new Date().Format("yyyy-MM-dd"));
-    //await this.$store.dispatch("NewCase/makeNewAjbh");
-    //this.ruleForm.ajbh = this.ajbh;
-  },
+  async mounted() {},
   data() {
     return {
       ajlb: 0,
@@ -226,7 +222,6 @@ export default {
   },
   watch: {
     createState(newState, oldState) {
-      console.log(newState, oldState);
       if (newState === "success") {
         this.loading = false;
         this.$store.commit(
@@ -253,15 +248,12 @@ export default {
       this.$store.dispatch("NewCase/getCitylist", province_id);
       this.ruleForm.city = "";
       this.ruleForm.asjfsddxzqhdm = "";
-      console.log(this.ruleForm.province);
     },
     handleChangeCity(city_id) {
       this.$store.dispatch("NewCase/getTownlist", city_id);
       this.ruleForm.asjfsddxzqhdm = "";
-      console.log(this.ruleForm.city);
     },
     handleChangeTown(asjfsddxzqhdm) {
-      console.log(asjfsddxzqhdm);
       for (let item of this.town_list) {
         if (asjfsddxzqhdm === item.id) {
           this.asjfsddxzqmc = item.name;
@@ -277,7 +269,6 @@ export default {
           break;
         }
       }
-      console.log(this.ajlb, this.ajlbmc);
     },
     handleChangeState() {
       for (let item of this.zcjdmc_list) {
@@ -286,7 +277,6 @@ export default {
           break;
         }
       }
-      console.log(this.ruleForm.zcjddm, this.zcjdmc);
     },
     submitForm(formName) {
       let _this = this;
@@ -314,7 +304,6 @@ export default {
           _this.loading = true;
           _this.$store.dispatch("NewCase/createNewCase", obj);
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

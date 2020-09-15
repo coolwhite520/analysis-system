@@ -2,6 +2,7 @@ import fs from "fs";
 import aes from "../aes";
 import path from "path";
 import { remote } from "electron";
+const log = require("@/utils/log");
 const FILE_NAME = "dbconfig.cfg";
 
 class DbConfig {
@@ -22,7 +23,7 @@ class DbConfig {
       let configObj = JSON.parse(decodeContent);
       return configObj;
     } else {
-      throw new Error("not find cfg file.");
+      log.error("not find cfg file.");
     }
   }
   // 写入配置
@@ -33,7 +34,7 @@ class DbConfig {
       fs.writeFileSync(this.configFilePath, content);
       return { success: true };
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   }

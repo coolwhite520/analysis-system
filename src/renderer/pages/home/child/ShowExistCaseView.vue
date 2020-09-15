@@ -63,7 +63,6 @@ export default {
   },
   methods: {
     async handleClickCase(caseBase) {
-      console.log(caseBase);
       // 把数据提交
       this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");

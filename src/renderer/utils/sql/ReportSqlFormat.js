@@ -1,5 +1,5 @@
 import Default from "./Default";
-
+const log = require("@/utils/log");
 // let PageItem = {
 //   Index: 0, //页面ID
 //   CurrentExeSql: "", //模板sql
@@ -70,7 +70,7 @@ function GetReportSql(caseId, item, param) {
       .replace(/\$ZXJYJE\$/g, param.MIN_JYJE)
       .replace(/\$JYFSTS\$/g, param.JyfsSoftNo);
   } catch (e) {
-    console.log(e);
+    log.error(e);
     return null;
   }
 }

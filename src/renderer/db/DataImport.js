@@ -1,38 +1,49 @@
 import cases from "./Cases";
+const log = require("electron-log");
 
 export default {
   // 根据导入数据类型获取对应的匹配表
   QueryMatchTableListByPdm: async function(pdm) {
-    await cases.SwitchDefaultCase();
-    let sql = `select *  from  st_data_template  where pdm='${pdm}' order by MBMC;`;
-    const res = await global.db.query(sql);
-    console.log(sql, res);
-    return res.rows; // id, mbdm, mbmc, tablename ...
+    try {
+      await cases.SwitchDefaultCase();
+      let sql = `select *  from  st_data_template  where pdm='${pdm}' order by MBMC;`;
+      const res = await global.db.query(sql);
+      return res.rows; // id, mbdm, mbmc, tablename ...
+    } catch (e) {
+      log.error(e);
+    }
   },
   // 根据模版代码获取对应的列名称
   QueryColsNameByMbdm: async function(mbdm) {
-    await cases.SwitchDefaultCase();
-    let sql = `SELECT ID,MBDM,TABLEENAME,FIELDCNAME,FIELDENAME,FIELDTYPE,
-    fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
-    const res = await global.db.query(sql);
-    console.log(sql, res);
-    return res.rows; // id, fieldcname, fieldename, ...
+    try {
+      await cases.SwitchDefaultCase();
+      let sql = `SELECT ID,MBDM,TABLEENAME,FIELDCNAME,FIELDENAME,FIELDTYPE,
+      fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
+      const res = await global.db.query(sql);
+      return res.rows; // id, fieldcname, fieldename, ...
+    } catch (e) {
+      log.error(e);
+    }
   },
   // 根据模版代码获取log表对应的列名称
   QueryInfoFromLogMatchByMbdm: async function(mbdm) {
-    await cases.SwitchDefaultCase();
-    let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM gas_match_log where MBDM = '${mbdm}'`;
-    const res = await global.db.query(sql);
-    console.log(sql, res);
-    return res.rows; // id, fieldcname, fieldename, ...
+    try {
+      await cases.SwitchDefaultCase();
+      let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM gas_match_log where MBDM = '${mbdm}'`;
+      const res = await global.db.query(sql);
+      return res.rows; // id, fieldcname, fieldename, ...
+    } catch (e) {
+      log.error(e);
+    }
   },
   // 自动匹配字段
   // ,账号开户银行,账号开户日期,账号开户名称,银行账号,通信地址,联系电话,开户人证件类型,开户人证件号码,开户人国籍,开户联系方式,代理人电话,代理人,,
   QueryBestMatchMbdm: async function(pdm, fileField) {
-    await cases.SwitchDefaultCase();
-    let sql = "";
-    if (pdm.length > 0) {
-      sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
+    try {
+      await cases.SwitchDefaultCase();
+      let sql = "";
+      if (pdm.length > 0) {
+        sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
         st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
         st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
       (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
@@ -41,8 +52,8 @@ export default {
          AND tablecname is not null AND tablecname != '' and ishide='0' and     
         ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
          ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
-    } else {
-      sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
+      } else {
+        sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
         st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
         st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
       (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
@@ -50,22 +61,23 @@ export default {
          where tablecname is not null AND tablecname != '' and ishide='0' and     
         ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
          ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
-    }
-    let mbdm = "";
-    console.log(sql);
-    const res = await global.db.query(sql);
-    console.log(res);
-    if (res.rows.length > 0) {
-      mbdm = res.rows[0].mbdm;
-      if (pdm === "") {
-        sql = `select pdm from st_data_template where mbdm='${mbdm}'`;
-        console.log(sql);
-        let ret = await global.db.query(sql);
-        pdm = ret.rows[0].pdm;
       }
-      return { mbdm, pdm };
+      let mbdm = "";
+      const res = await global.db.query(sql);
+      res;
+      if (res.rows.length > 0) {
+        mbdm = res.rows[0].mbdm;
+        if (pdm === "") {
+          sql = `select pdm from st_data_template where mbdm='${mbdm}'`;
+          let ret = await global.db.query(sql);
+          pdm = ret.rows[0].pdm;
+        }
+        return { mbdm, pdm };
+      }
+      return "";
+    } catch (e) {
+      log.error(e);
     }
-    return "";
   },
   // fileExt --> 不包含.
   insertBatch: async function(
@@ -91,24 +103,26 @@ export default {
       ('', '00000000', '${now}', ${ajid}, '', '${ajmc}', '${fileExt}', '${filename}',
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
        '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
-      console.log(sql);
       const res = await global.db.query(sql);
-      console.log(res.rows);
+      res.rows;
       return res.rows[0].sjlyid;
     } catch (e) {
+      log.error(e);
       return false;
     }
   },
   // 查询scheme下的所有表名称
   showLikeTempTableCount: async function(ajid, like) {
-    let sql = `SELECT count(table_name)::int count FROM information_schema.tables
-     WHERE table_schema = 'icap_${ajid}' 
-     and table_name like '%${like}%' 
-     and POSITION ( '_temp' IN TABLE_NAME ) > 0;`;
-    console.log(sql);
-    const res = await global.db.query(sql);
-    console.log(res);
-    return res.rows[0].count;
+    try {
+      let sql = `SELECT count(table_name)::int count FROM information_schema.tables
+      WHERE table_schema = 'icap_${ajid}' 
+      and table_name like '%${like}%' 
+      and POSITION ( '_temp' IN TABLE_NAME ) > 0;`;
+      const res = await global.db.query(sql);
+      return res.rows[0].count;
+    } catch (e) {
+      log.error(e);
+    }
   },
   // 数据导入的时候创建临时表
   createTempTable: async function(ajid, tablecname, mbdm, fields) {
@@ -136,12 +150,10 @@ export default {
       await cases.SwitchCase(ajid);
       let sql = `DROP TABLE IF EXISTS ${createTableName};
       CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
-      console.log(sql);
       const res = await global.db.query(sql);
-      console.log(res);
       return createTableName;
     } catch (e) {
-      console.log(e.message);
+      log.error(e);
       return false;
     }
   },
@@ -149,22 +161,20 @@ export default {
   importOneRowData: async function(createdTableName, fields, data) {
     try {
       let sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
-      console.log(sql);
       const res = await global.db.query(sql);
       return true;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return false;
     }
   },
   importMultiRowData: async function(createdTableName, fields, datas) {
     try {
       let sql = `insert into ${createdTableName}(${fields}) VALUES ${datas}`;
-      console.log(sql);
       const res = await global.db.query(sql);
       return true;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return false;
     }
   },
@@ -187,7 +197,7 @@ export default {
       let sql = `select ${matchedFieldsNew} from ${tableName}`;
       if (filterList.length === 0) {
         sql = sql + ` limit ${limit} OFFSET ${beginIndex}`;
-        console.log(sql);
+
         const res = await global.db.query(sql);
         let rows = res.rows;
         for (let row of rows) {
@@ -206,7 +216,6 @@ export default {
           let arr = headers.filter((el) => el.fieldename === matchedField);
           if (arr.length === 0) continue;
           let item = arr[0];
-          console.log("loop&&&&&&&&&&&&&&", item);
           if (item.fieldtype === 1) {
             let temp = await this.QueryFieldExceedLengthRows(
               ajid,
@@ -319,7 +328,7 @@ export default {
       //格式化数据
       return { rows: newRows, success: true, errorFields };
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -328,11 +337,10 @@ export default {
     try {
       await cases.SwitchCase(ajid);
       let sql = `select count(*)::int count from ${tableName}`;
-      console.log(sql);
       const res = await global.db.query(sql);
       return res.rows[0].count;
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return 0;
     }
   },
@@ -353,7 +361,6 @@ export default {
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName}) `;
-      console.log(sql);
       res = await global.db.query(sqlCount);
       let count = res.rows[0].count;
       return {
@@ -362,7 +369,7 @@ export default {
         success,
       };
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -378,7 +385,7 @@ export default {
     try {
       // await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
-      console.log(sql);
+
       let res = await global.db.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
@@ -386,7 +393,7 @@ export default {
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -414,7 +421,7 @@ export default {
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -426,10 +433,10 @@ export default {
         return `'${el}'`;
       });
       let sql = `update ${tableName} set ${field} = '${newValue}' where rownum in (${rownums})`;
-      console.log(sql);
       const res = await global.db.query(sql);
       return { success: true };
     } catch (e) {
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -441,10 +448,10 @@ export default {
         return `'${el}'`;
       });
       let sql = `delete from ${tableName} where rownum in (${rownums})`;
-      console.log(sql);
       const res = await global.db.query(sql);
       return { success: true };
     } catch (e) {
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -1148,11 +1155,11 @@ export default {
         //进销项税务 gas_tax_records_150001
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
-      console.log(sql);
+      sql;
       await global.db.query(sql);
       return { success: true };
     } catch (e) {
-      console.log(e);
+      e;
       return { success: false, msg: e.message };
     }
   },
@@ -1195,7 +1202,7 @@ export default {
       }
       return { success: true, rows: resultList };
     } catch (e) {
-      console.log(sql, e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },
@@ -1255,7 +1262,6 @@ export default {
         let sql = `select ${selectList} from ${tempTableName}`;
         let limitSql = ` limit ${pageSize} OFFSET ${beginIndex}`;
         sql = sql + limitSql;
-        console.log(sql);
         let res = await global.db.query(sql);
         let sumRows = [];
 
@@ -1285,7 +1291,6 @@ export default {
         }
         sumRows = sumRows.join(",");
         let insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
-        console.log(insertSql);
         await global.db.query(insertSql);
         callback({ sumRow: loopCount, index });
       }
@@ -1293,7 +1298,7 @@ export default {
       callback({ sumRow: 100, index: 100 });
       return { success: true };
     } catch (e) {
-      console.log(e);
+      log.error(e);
       return { success: false, msg: e.message };
     }
   },

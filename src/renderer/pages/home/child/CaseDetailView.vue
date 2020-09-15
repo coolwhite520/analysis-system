@@ -154,11 +154,9 @@
 
 <script>
 import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog";
-
 import { mapState, mapGetters } from "vuex";
 export default {
   async beforeMount() {
-    console.log(this.caseBase);
     await this.$store.dispatch(
       "CaseDetail/queryEntityCount",
       this.caseBase.ajid
@@ -253,7 +251,6 @@ export default {
             }
           }
         }
-        console.log(tid);
         await this.$store.dispatch("ShowTable/showBaseTable", {
           tid,
           offset: 0,
@@ -290,7 +287,6 @@ export default {
             }
           }
         }
-        console.log(tid);
         await this.$store.dispatch("ShowTable/showBaseTable", {
           tid,
           offset: 0,
@@ -330,7 +326,6 @@ export default {
             }
           }
         }
-        console.log(tid);
         await this.$store.dispatch("ShowTable/showBaseTable", {
           tid,
           offset: 0,
@@ -344,7 +339,6 @@ export default {
     async handleClickBtnGroup(item) {
       // 获取右侧的模型数据
       let tid = item.tid;
-      console.log(tid);
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
       await this.$store.dispatch(
         "CaseDetail/queryCaseDataCenter",
@@ -368,7 +362,6 @@ export default {
         buttons: ["确定", "取消"],
         defaultId: 0,
       });
-      console.log(result);
       if (result.response === 0) {
         this.loading = true;
         this.$store.dispatch(

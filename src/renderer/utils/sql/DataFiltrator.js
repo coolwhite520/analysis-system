@@ -1,5 +1,5 @@
 import Default from "./Default";
-
+const log = require("@/utils/log");
 function BackFiltrateCondtion(
   condtion,
   vale,
@@ -377,7 +377,7 @@ ld[0].children[1].children[1].FiltrateFieldType = Default.GetTimeType(
 ld[0].children[1].children[1].FiltrateFieldEN = "jymc";
 ld[0].children[1].children[1].condtion = Default.FiltrateLogicID.EqualTo;
 let res = j_GetDataFiltrateStr(200, ld);
-console.log(res);
+// log.info(res);
 
 ////////////////////////////////////////////////////////////////数据处理/////////////////////////////////////////////////////////////////////////////////////////////////
 //获取根项默认sql,查找和执行  (无效数据，重复数据)
@@ -657,7 +657,7 @@ function findTBData(SecondInterval, list) {
 //   "1"
 // );
 // let listt = [obj1, obj2, obj3, obj4, obj5, obj6, obj7, obj8];
-// console.log(GetTBRepeatDataIDList(1, listt));
+// log.info(GetTBRepeatDataIDList(1, listt));
 
 export default {
   convertDataFilterToSqlStr: j_GetDataFiltrateStr,

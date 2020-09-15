@@ -81,6 +81,7 @@
   </div>
 </template>
 <script>
+const log = require("@/utils/log");
 import { Pool } from "pg";
 import { DbConfig } from "@/utils/config";
 export default {
@@ -125,7 +126,6 @@ export default {
       this.loading = false;
     },
     async handleClickSave() {
-      console.log(this.form);
       let wnd = this.$electron.remote.getGlobal("dbConfigWindow");
       let result = await this.$electron.remote.dialog.showMessageBox(wnd, {
         type: "warning",
@@ -134,7 +134,6 @@ export default {
         buttons: ["确定", "取消"],
         defaultId: 0,
       });
-      console.log(result);
       if (result.response === 0) {
         let { user, password, database, port, host } = this.form;
         let config = new DbConfig();
@@ -143,7 +142,7 @@ export default {
           this.$electron.ipcRenderer.send("hide-db-config");
           this.$electron.ipcRenderer.send("reloadApp");
         } catch (e) {
-          console.log(e);
+          log.error(e);
           this.$notify.error({
             title: "错误",
             message: `数据保存错误：${e.message}`,

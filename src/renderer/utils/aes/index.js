@@ -1,7 +1,7 @@
 import crypto from "crypto";
 const key = "qwemoQAPydFvWWLq";
 const iv = "wOzCypMUYVuiQO9f";
-
+const log = require("@/utils/log");
 export default {
   encrypt: function(data) {
     try {
@@ -11,7 +11,7 @@ export default {
       crypted = new Buffer(crypted, "binary").toString("base64");
       return crypted;
     } catch (e) {
-      console.log(e);
+      log.error(e);
     }
   },
   decrypt: function(crypted) {
@@ -22,7 +22,7 @@ export default {
       decoded += decipher.final("utf8");
       return decoded;
     } catch (e) {
-      console.log(e);
+      log.error(e);
     }
   },
 };

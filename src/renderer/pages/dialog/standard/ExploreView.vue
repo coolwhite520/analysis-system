@@ -260,10 +260,7 @@ export default {
     async onRecvImportMsg(e, args) {
       let { sumRow, index, tabIndex } = args;
       if (tabIndex !== this.activeName) return;
-      console.log({ sumRow, index });
       this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
-      console.log(this.currentPercentage);
-
       if (this.currentPercentage >= 100) {
         this.$electron.ipcRenderer.removeAllListeners(
           "import-one-table-process"
@@ -339,12 +336,8 @@ export default {
         externFields,
       });
     },
-    handleCheckChange(node, Checked, childrenChecked) {
-      console.log(node, Checked, childrenChecked);
-    },
-    handleNodeClick(data) {
-      console.log(data);
-    },
+    handleCheckChange(node, Checked, childrenChecked) {},
+    handleNodeClick(data) {},
     // 数据检查 1,字符串,2,小数,3整数,,4,日期,5,通话时长(没有用)
     async handleClickCheckData() {
       this.loadingText = "正在进行数据检测，请稍后...";
@@ -365,18 +358,14 @@ export default {
       this.isDataLoading = false;
     },
     handleClickBtnGroup(item) {
-      console.log(item);
       this.input = "";
       this.innerVisible = true;
       this.currentErrorField = item;
       this.innerDlgTitle = item.fieldcname;
     },
-    handleClickTab(index) {
-      console.log(index);
-    },
+    handleClickTab(index) {},
     // 需要根据查询过滤条件进行
     async handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       let tableName = this.sheetItem.tableName;
       let ajid = this.caseBase.ajid;
       let offset = (val - 1) * this.pageSize;
