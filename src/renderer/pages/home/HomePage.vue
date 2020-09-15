@@ -82,9 +82,16 @@ export default {
   methods: {
     handleClickNewCase() {
       //this.currentViewName = "new-case-view";
-      this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "new-case-view");
+      if (!global.db) {
+        this.$electron.ipcRenderer.send("show-db-config");
+      } else {
+        this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "new-case-view");
+      }
     },
     handleClickImportCase() {
+      if (!global.db) {
+        this.$electron.ipcRenderer.send("show-db-config");
+      }
       this.$electron.remote.dialog
         .showOpenDialog({
           title: "请选择数据文件",
