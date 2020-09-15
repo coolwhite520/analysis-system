@@ -36,7 +36,6 @@ function createWindow() {
   /**
    * Initial window options
    */
-  global.log = log;
   global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
   let exePath = path.dirname(app.getPath("exe"));
