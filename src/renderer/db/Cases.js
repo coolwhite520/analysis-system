@@ -27,7 +27,6 @@ export default {
       let scheamName = `icap_${ajid}`;
       let sql = `create SCHEMA if not exists ${scheamName} AUTHORIZATION ${userName}`;
       const res = await global.db.query(sql);
-      sql, res;
       return res.command === "CREATE" ? scheamName : "";
     } catch (e) {
       log.error(e);
@@ -132,7 +131,6 @@ export default {
       delete from icap_base.st_case_child where AJID=${ajid} ; 
       delete from icap_base.st_data_source where AJID=${ajid} ; `;
       let res = await global.db.query(sql);
-      sql, res;
       await this.SwitchDefaultCase();
       return true;
     } catch (e) {

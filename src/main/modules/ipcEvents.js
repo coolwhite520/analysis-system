@@ -1,10 +1,14 @@
 import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
-
+import createDataImportWindow from "./window/dataCollectionWindow";
+const log = require("electron-log");
 export default function() {
   // 通过主进称中转消息到calculate渲染进程
   // 发送读取所有文件示例的消息到mini窗口
   ipcMain.on("parse-all-example-file", (e, args) => {
-    global.miniWindow.webContents.send("parse-all-example-file", args);
+    global.dataCollectionWindow.webContents.send(
+      "parse-all-example-file",
+      args
+    );
   });
   // mini窗口发送一条解析sheet数据到mainWnd
   ipcMain.on("parse-one-example-sheet-over", (e, args) => {
@@ -16,7 +20,7 @@ export default function() {
   });
   // 发送读取开始的消息到mini窗口
   ipcMain.on("read-all-file", (e, args) => {
-    global.miniWindow.webContents.send("read-all-file", args);
+    global.dataCollectionWindow.webContents.send("read-all-file", args);
   });
   // mini窗口发送开始
   ipcMain.on("read-one-file-begin", (e, args) => {
@@ -37,7 +41,10 @@ export default function() {
 
   // main窗口发送导入请求
   ipcMain.on("import-one-table-begin", (e, args) => {
-    global.miniWindow.webContents.send("import-one-table-begin", args);
+    global.dataCollectionWindow.webContents.send(
+      "import-one-table-begin",
+      args
+    );
   });
   ipcMain.on("import-one-table-process", (e, args) => {
     global.mainWindow.webContents.send("import-one-table-process", args);
@@ -63,6 +70,22 @@ export default function() {
     global.dbConfigWindow.show();
   });
   //
+  // 打开数据采集窗口
+  ipcMain.on("data-collection-open", () => {
+    if (global.dataCollectionWindow) {
+      global.dataCollectionWindow.close();
+      global.dataCollectionWindow = null;
+    }
+    global.dataCollectionWindow = createDataImportWindow(BrowserWindow);
+    // global.dataCollectionWindow.show();
+  });
+  ipcMain.on("data-collection-close", () => {
+    if (global.dataCollectionWindow) {
+      global.dataCollectionWindow.close();
+      global.dataCollectionWindow = null;
+    }
+  });
+
   ipcMain.on("reloadApp", () => {
     global.mainWindow.webContents.send("reloadApp");
   });

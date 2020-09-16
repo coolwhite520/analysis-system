@@ -91,6 +91,7 @@ export default {
     handleClickImportCase() {
       if (!global.db) {
         this.$electron.ipcRenderer.send("show-db-config");
+        return;
       }
       this.$electron.remote.dialog
         .showOpenDialog({

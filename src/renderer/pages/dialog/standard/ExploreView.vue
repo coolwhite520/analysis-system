@@ -258,7 +258,17 @@ export default {
     },
     // 导入消息的回调
     async onRecvImportMsg(e, args) {
-      let { sumRow, index, tabIndex } = args;
+      let { sumRow, index, tabIndex, success, msg } = args;
+      if (!success) {
+        this.$notify.error({
+          title: "错误",
+          message: msg,
+        });
+        this.isDataLoading = false;
+        this.bClickBtnCheck = false;
+        this.currentPercentage = 0;
+        return;
+      }
       if (tabIndex !== this.activeName) return;
       this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
       if (this.currentPercentage >= 100) {

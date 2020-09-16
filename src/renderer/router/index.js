@@ -13,10 +13,10 @@ export default new Router({
       },
     },
     {
-      path: "/mini",
-      name: "mini",
+      path: "/dataCollection",
+      name: "dataCollection",
       component: function(resolve) {
-        require(["@/pages/mini/MiniView"], resolve);
+        require(["@/pages/mini/DataCollection"], resolve);
       },
     },
     {

@@ -1,7 +1,6 @@
 import { app, protocol, BrowserWindow, screen } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
-import createMiniWindow from "./modules/window/miniWindow";
 import createExportWindow from "./modules/window/exportWindow";
 import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
@@ -71,7 +70,6 @@ function createWindow() {
     mainWindow.show();
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
-    global.miniWindow = createMiniWindow(BrowserWindow);
     global.exportWindow = createExportWindow(BrowserWindow);
     global.dbConfigWindow = createDbConfigWindow(BrowserWindow);
     // if (isDevelopment) {

@@ -330,147 +330,153 @@ export default {
       // this.$store.commit("DataCollection/SET_CSV_LIST", data); // 如果需要多进程访问vuex，需要启用插件功能并所有的commit都需要改成dispatch
     },
     async readAllFile(e, args) {
-      let ryid = UUID.v1();
-      for (let sheetIndex = 0; sheetIndex < args.length; sheetIndex++) {
-        let data = args[sheetIndex];
-        let {
-          filePathName,
-          fileColsName,
-          batchCount,
-          bestMatchTemplate,
-          tablecname,
-          mbmc,
-          publicFields,
-          externFields,
-          caseBase,
-          fileName,
-          sheetName,
-        } = data;
-        let { ajid, ajmc } = caseBase;
-        let filepath = path.dirname(data.filePathName);
-        let fileExt = path.extname(fileName).slice(1);
+      try {
+        let ryid = UUID.v1();
+        for (let sheetIndex = 0; sheetIndex < args.length; sheetIndex++) {
+          let data = args[sheetIndex];
+          let {
+            filePathName,
+            fileColsName,
+            batchCount,
+            bestMatchTemplate,
+            tablecname,
+            mbmc,
+            publicFields,
+            externFields,
+            caseBase,
+            fileName,
+            sheetName,
+          } = data;
+          let { ajid, ajmc } = caseBase;
+          let filepath = path.dirname(data.filePathName);
+          let fileExt = path.extname(fileName).slice(1);
 
-        // 统计选中的列名称
-        let fields = [];
-        let matchedFields = [];
-        let fileInsertCols = [];
-        for (let item of data.dataList) {
-          if (item.matchedFieldName !== "") {
-            matchedFields.push(item.matchedFieldName);
-            fileInsertCols.push(item.fileColName);
+          // 统计选中的列名称
+          let fields = [];
+          let matchedFields = [];
+          let fileInsertCols = [];
+          for (let item of data.dataList) {
+            if (item.matchedFieldName !== "") {
+              matchedFields.push(item.matchedFieldName);
+              fileInsertCols.push(item.fileColName);
+            }
           }
-        }
-        fields = publicFields.concat(matchedFields).concat(externFields);
-        fields = fields.map((value) => {
-          return value.toLowerCase();
-        });
-        //插入到批次表中 会生成一个新的sjlyid自增
-        let sjlyid = await dataImport.insertBatch(
-          ajid,
-          ajmc,
-          fileExt,
-          fileName,
-          filepath,
-          bestMatchTemplate,
-          batchCount,
-          sheetName,
-          mbmc,
-          tablecname,
-          this.softVersion
-        );
-
-        this.$electron.ipcRenderer.send("read-one-file-begin", {
-          fileName,
-          sheetName,
-        });
-        // 解析数据并插入到库中
-        let resultList = [];
-        switch (fileExt) {
-          case "txt":
-            {
-            }
-            break;
-          case "csv":
-            {
-              resultList = await csvReader.parseFileAllSync(
-                filePathName,
-                fileColsName,
-                fileInsertCols
-              );
-            }
-            break;
-          case "xls":
-          case "xlsx":
-            {
-              resultList = await xlsReader.parseFileAllSync(
-                filePathName,
-                sheetName,
-                matchedFields,
-                fileColsName,
-                fileInsertCols
-              );
-            }
-            break;
-        }
-        // 创建temp表存储数据
-        let createdTableName = await dataImport.createTempTable(
-          ajid,
-          tablecname,
-          bestMatchTemplate,
-          fields
-        );
-
-        for (let i = 0; i < resultList.length; i++) {
-          let item = resultList[i];
-          let rownum = i + 1;
-          // 给公共字段进行赋值
-          let publicData = [
-            `${batchCount}`,
-            `采集录入`,
-            `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
-            `${ajid}`,
-            `${sjlyid}`, // st_data_source 自增的数据
-            `${rownum}`,
-          ];
-          // 分配扩展字段的值
-          let externData = [];
-          for (let extField of externFields) {
-            let value = await this.getValueOfMbdm(
-              ryid,
-              fileName,
-              bestMatchTemplate,
-              extField
-            );
-            externData.push(value);
-          }
-          item = publicData.concat(item).concat(externData);
-          let newData = item.map((el) => {
-            return `\'${el}\'`;
+          fields = publicFields.concat(matchedFields).concat(externFields);
+          fields = fields.map((value) => {
+            return value.toLowerCase();
           });
-          let successInsert = await dataImport.importOneRowData(
-            createdTableName,
-            fields,
-            newData
+          //插入到批次表中 会生成一个新的sjlyid自增
+          let sjlyid = await dataImport.insertBatch(
+            ajid,
+            ajmc,
+            fileExt,
+            fileName,
+            filepath,
+            bestMatchTemplate,
+            batchCount,
+            sheetName,
+            mbmc,
+            tablecname,
+            this.softVersion
           );
-          newData = null;
-          if (successInsert) {
-            let percentage = parseInt(parseFloat(i / resultList.length) * 100);
-            this.$electron.ipcRenderer.send("read-one-file-proccess", {
-              fileName,
-              sheetName,
-              percentage,
-            });
+
+          this.$electron.ipcRenderer.send("read-one-file-begin", {
+            fileName,
+            sheetName,
+          });
+          // 解析数据并插入到库中
+          let resultList = [];
+          switch (fileExt) {
+            case "txt":
+              {
+              }
+              break;
+            case "csv":
+              {
+                resultList = await csvReader.parseFileAllSync(
+                  filePathName,
+                  fileColsName,
+                  fileInsertCols
+                );
+              }
+              break;
+            case "xls":
+            case "xlsx":
+              {
+                resultList = await xlsReader.parseFileAllSync(
+                  filePathName,
+                  sheetName,
+                  matchedFields,
+                  fileColsName,
+                  fileInsertCols
+                );
+              }
+              break;
           }
+          // 创建temp表存储数据
+          let createdTableName = await dataImport.createTempTable(
+            ajid,
+            tablecname,
+            bestMatchTemplate,
+            fields
+          );
+
+          for (let i = 0; i < resultList.length; i++) {
+            let item = resultList[i];
+            let rownum = i + 1;
+            item["batch"] = `${batchCount}`;
+            item["sjlylx"] = `采集录入`;
+            item["crrq"] = `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`;
+            item["ajid"] = `${ajid}`;
+            item["sjlyid"] = `${sjlyid}`;
+            item["rownum"] = `${rownum}`;
+            // 分配扩展字段的值
+            for (let extField of externFields) {
+              let value = await this.getValueOfMbdm(
+                ryid,
+                fileName,
+                bestMatchTemplate,
+                extField
+              );
+              item[extField] = value;
+            }
+            let { success, msg } = await dataImport.importOneRowDataEx(
+              ajid,
+              createdTableName,
+              item
+            );
+            if (success) {
+              let percentage = parseInt(
+                parseFloat(i / resultList.length) * 100
+              );
+              this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                success,
+                fileName,
+                sheetName,
+                percentage,
+              });
+            } else {
+              this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                success,
+                fileName,
+                sheetName,
+                msg,
+              });
+              return;
+            }
+          }
+          resultList = null;
+          this.$electron.ipcRenderer.send("read-one-file-over", {
+            fileName,
+            sheetName,
+            sheetIndex,
+            tableName: createdTableName,
+          });
         }
-        resultList = null;
-        this.$electron.ipcRenderer.send("read-one-file-over", {
-          fileName,
-          sheetName,
-          sheetIndex,
-          tableName: createdTableName,
-        });
+        this.$electron.ipcRenderer.send("read-all-file-over", {});
+      } catch (e) {
+        log.info(e);
       }
-      this.$electron.ipcRenderer.send("read-all-file-over", {});
     },
     async copyTempDataToRealTable(e, args) {
       let _this = this;
@@ -492,11 +498,13 @@ export default {
         publicFields,
         matchedFields,
         externFields,
-        function ({ sumRow, index }) {
+        function ({ sumRow, index, success, msg }) {
           _this.$electron.ipcRenderer.send("import-one-table-process", {
             tabIndex,
             sumRow,
             index,
+            success,
+            msg,
           });
         }
       );

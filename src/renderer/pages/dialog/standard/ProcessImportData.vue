@@ -40,7 +40,14 @@ export default {
       _this.sheetName = sheetName;
     });
     this.$electron.ipcRenderer.on("read-one-file-proccess", (event, data) => {
-      const { fileName, sheetName, percentage } = data;
+      const { fileName, sheetName, percentage, success, msg } = data;
+      if (!success) {
+        _this.$notify.error({
+          title: "错误",
+          message: msg,
+        });
+        return;
+      }
       _this.fileName = fileName;
       _this.sheetName = sheetName;
       _this.percentage = percentage;

@@ -5,7 +5,7 @@
       :close-on-click-modal="false"
       class="standard-data-dialog"
       :visible.sync="standardDataVisible"
-      :width="exampleDataList.length > 0 ? '65%': '30%'"
+      :width="standardViewSwitch === 'process-import' || (standardViewSwitch === 'begin-import'&& exampleDataList.length === 0)? '30%': '65%'"
       :before-close="handleClose"
       :modal="false"
     >
@@ -43,11 +43,25 @@ export default {
     };
   },
   methods: {
-    handleClose() {
+    async handleClose() {
+      if (this.standardViewSwitch === "process-import") {
+        let result = await this.$electron.remote.dialog.showMessageBox(null, {
+          type: "warning",
+          title: "关闭",
+          message: `当前正在进行数据导入操作，您去定要关闭窗口吗？`,
+          buttons: ["确定", "取消"],
+          defaultId: 0,
+        });
+        if (result.response === 0) {
+        } else {
+          return;
+        }
+      }
       this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
       this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
       this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
       // this.$electron.ipcRenderer.removeAllListeners("read-csv-file-over");
+      await this.$electron.ipcRenderer.send("data-collection-close");
     },
   },
 };

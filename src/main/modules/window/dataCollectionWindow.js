@@ -1,18 +1,18 @@
 import { ipcRenderer } from "electron";
 import { LOAD_URL } from "../../config";
-
-const miniWinURL =
+const log = require("electron-log");
+const dataCollectionWinURL =
   process.env.NODE_ENV === "development"
-    ? `http://localhost:9080/#mini`
-    : `${LOAD_URL}#mini`;
+    ? `http://localhost:9080/#dataCollection`
+    : `${LOAD_URL}#dataCollection`;
 
-const createMiniWindow = function(BrowserWindow) {
+const createDataImportWindow = function(BrowserWindow) {
   let obj = {
     height: 100,
     width: 100,
     minWidth: 0,
     show: false,
-    frame: true,
+    frame: false,
     fullscreenable: false,
     skipTaskbar: true,
     resizable: true,
@@ -23,21 +23,23 @@ const createMiniWindow = function(BrowserWindow) {
       nodeIntegrationInWorker: true,
       backgroundThrottling: false,
       webSecurity: false,
+      enableRemoteModule: true,
     },
   };
 
   let miniWindow = new BrowserWindow(obj);
 
-  miniWindow.loadURL(miniWinURL);
+  miniWindow.loadURL(dataCollectionWinURL);
 
   miniWindow.on("closed", () => {
     miniWindow = null;
   });
   miniWindow.once("ready-to-show", () => {
+    log.info("hahahah");
     // miniWindow.showInactive();
     miniWindow.hide();
   });
 
   return miniWindow;
 };
-export default createMiniWindow;
+export default createDataImportWindow;

@@ -102,7 +102,7 @@ export default {
       let result = await this.$electron.remote.dialog.showMessageBox(null, {
         type: "warning",
         title: "关闭",
-        message: `是否要退出应用程序？`,
+        message: `确定要退出应用程序？`,
         buttons: ["确定", "取消"],
         defaultId: 0,
       });

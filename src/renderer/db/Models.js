@@ -11,7 +11,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows.length > 0 ? res.rows[0].model_mids : "";
     } catch (e) {
-      log.info(e);
+      log.error(e);
     }
   },
   // 根据模型库获取模型大列表
@@ -22,7 +22,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows;
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return null;
     }
   },
@@ -42,7 +42,7 @@ export default {
         describe: res.rows[0].describe,
       };
     } catch (e) {
-      log.info(e);
+      log.error(e);
       return { success: false };
     }
   },

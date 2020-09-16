@@ -10,6 +10,8 @@ const fs = require("fs");
       for await (const row of worksheetReader) {
         for (let index = 1; index <= row.actualCellCount; index++) {
           let cell = row.getCell(index);
+          console.log(cell);
+          break;
           // expect(cell.type).toEqual(ExcelJS.ValueType.Date);
         }
         // log.info(row.values.slice(1));

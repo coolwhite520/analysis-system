@@ -273,6 +273,7 @@ export default {
       this.$store.commit("ShowTable/SHOW_MODEL_VIEW");
     },
     async handleClickDataCollection() {
+      await this.$electron.ipcRenderer.send("data-collection-open");
       await this.$store.dispatch(
         "CaseDetail/queryBatchCount",
         this.caseBase.ajid

@@ -1,3 +1,4 @@
+import moment from "moment";
 import cases from "./Cases";
 const log = require("electron-log");
 
@@ -10,7 +11,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows; // id, mbdm, mbmc, tablename ...
     } catch (e) {
-      log.error(e);
+      log.info(e);
     }
   },
   // 根据模版代码获取对应的列名称
@@ -22,7 +23,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } catch (e) {
-      log.error(e);
+      log.info(e);
     }
   },
   // 根据模版代码获取log表对应的列名称
@@ -33,7 +34,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } catch (e) {
-      log.error(e);
+      log.info(e);
     }
   },
   // 自动匹配字段
@@ -64,7 +65,6 @@ export default {
       }
       let mbdm = "";
       const res = await global.db.query(sql);
-      res;
       if (res.rows.length > 0) {
         mbdm = res.rows[0].mbdm;
         if (pdm === "") {
@@ -76,7 +76,7 @@ export default {
       }
       return "";
     } catch (e) {
-      log.error(e);
+      log.info(e);
     }
   },
   // fileExt --> 不包含.
@@ -104,10 +104,9 @@ export default {
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
        '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
       const res = await global.db.query(sql);
-      res.rows;
       return res.rows[0].sjlyid;
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return false;
     }
   },
@@ -121,7 +120,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows[0].count;
     } catch (e) {
-      log.error(e);
+      log.info(e);
     }
   },
   // 数据导入的时候创建临时表
@@ -153,7 +152,7 @@ export default {
       const res = await global.db.query(sql);
       return createTableName;
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return false;
     }
   },
@@ -168,26 +167,37 @@ export default {
   },
   // 插入一条数据
   importOneRowData: async function(ajid, createdTableName, fields, data) {
+    let sql;
     try {
       await cases.SwitchCase(ajid);
-      let sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
+      sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
       const res = await global.db.query(sql);
       return true;
     } catch (e) {
-      log.error(e, sql);
+      log.info(e, sql);
       return false;
     }
   },
-  importMultiRowData: async function(createdTableName, fields, datas) {
+  // 插入对象
+  importOneRowDataEx: async function(ajid, createdTableName, row) {
+    let sql;
     try {
-      let sql = `insert into ${createdTableName}(${fields}) VALUES ${datas}`;
+      let fields = [];
+      let values = [];
+      for (let k in row) {
+        fields.push(`${k.toLowerCase()}`);
+        values.push(`\'${row[k]}\'`);
+      }
+      await cases.SwitchCase(ajid);
+      sql = `insert into ${createdTableName} (${fields}) VALUES(${values})`;
       const res = await global.db.query(sql);
-      return true;
+      return { success: true };
     } catch (e) {
-      log.error(e);
-      return false;
+      log.info(e, sql);
+      return { success: false, msg: e.message };
     }
   },
+
   // 查询temp表中的数据
   queryDataFromTable: async function(
     ajid,
@@ -338,7 +348,7 @@ export default {
       //格式化数据
       return { rows: newRows, success: true, errorFields };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -350,7 +360,7 @@ export default {
       const res = await global.db.query(sql);
       return res.rows[0].count;
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return 0;
     }
   },
@@ -379,7 +389,7 @@ export default {
         success,
       };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -403,7 +413,7 @@ export default {
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -431,7 +441,7 @@ export default {
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -446,7 +456,7 @@ export default {
       const res = await global.db.query(sql);
       return { success: true };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -461,7 +471,7 @@ export default {
       const res = await global.db.query(sql);
       return { success: true };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -1126,6 +1136,7 @@ export default {
                      THEN   '98'  ELSE '99' END sjlx 
     ,'1' sfdd from ${tempTableName}   
     where SJLYID IN('${sjlyid}') and bsrsfzh is not null and bsrsfzh!='' limit 200000 offset 0 ;`;
+    return sql;
   },
   extractDataByGas_tax_records: async function(tempTableName, sjlyid) {
     let sql = "";
@@ -1146,6 +1157,7 @@ export default {
     '1' sfdd 
     from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  and xfsh is not null and xfsh != '' limit 200000 offset 0 
     `;
+    return sql;
   },
   // 数据抽取
   extractDataFromTempTable: async function(ajid, tempTableName, mbdm, sjlyid) {
@@ -1165,20 +1177,18 @@ export default {
         //进销项税务 gas_tax_records_150001
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
-      sql;
       await global.db.query(sql);
       return { success: true };
     } catch (e) {
-      e;
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
   // 展示目标表的结构
   showTableStruct: async function(ajid, tableName) {
-    let sql = "";
     try {
       await cases.SwitchCase(ajid);
-      sql = `SELECT DISTINCT a.attnum,
+      let sql = `SELECT DISTINCT a.attnum,
       a.attname AS field,
       t.typname AS type,
       a.attlen AS length,
@@ -1209,20 +1219,19 @@ export default {
           row.type.includes("byte") ||
           row.type.includes("bool") ||
           row.type.includes("bit") ||
-          row.type.includes("money") ||
-          row.type.includes("timestamp")
+          row.type.includes("money")
         ) {
           obj.fieldtype = 2;
           obj.fieldename = row.field.toLowerCase();
-        } else {
-          obj.fieldtype = 1;
+        } else if (row.type.includes("timestamp")) {
+          obj.fieldtype = 4;
           obj.fieldename = row.field.toLowerCase();
         }
         resultList.push(obj);
       }
       return { success: true, rows: resultList };
     } catch (e) {
-      log.error(e);
+      log.info(e);
       return { success: false, msg: e.message };
     }
   },
@@ -1303,12 +1312,15 @@ export default {
             let obj = resFieldTypeList.find((el) => {
               return el.fieldename.toLowerCase() === k.toLowerCase();
             });
-            if (
-              obj.fieldtype === 1 ||
-              obj.fieldtype === 4 ||
-              obj.fieldtype === 6
-            ) {
+            if (obj.fieldtype === 1 || obj.fieldtype === 6) {
               values.push(`'${row[k].trim()}'`);
+            } else if (obj.fieldtype === 4) {
+              if (typeof row[k] === "string") {
+                // let ts = moment(row[k]).valueOf();
+                values.push(`to_date('${row[k]}','yyyy-MM-dd hh24:mi:ss')`);
+              } else {
+                values.push(row[k]);
+              }
             } else {
               let temValue = row[k].trim() ? row[k].trim() : 0;
               values.push(`${temValue}`);
@@ -1319,17 +1331,16 @@ export default {
         sumRows = sumRows.join(",");
         insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
         await global.db.query(insertSql);
-        callback({ sumRow: loopCount, index });
+        callback({ sumRow: loopCount, index, success: true });
       }
       if (loopCount > 0)
         await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);
       await this.deleteTempTable(ajid, tempTableName);
-      callback({ sumRow: 100, index: 100 });
-      return { success: true };
+      callback({ sumRow: 100, index: 100, success: true });
     } catch (e) {
-      await this.deleteTempTable(ajid, tempTableName);
+      // await this.deleteTempTable(ajid, tempTableName);
       log.info(insertSql, e);
-      return { success: false, msg: e.message };
+      callback({ success: false, msg: e.message });
     }
   },
 };
