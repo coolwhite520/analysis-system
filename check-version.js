@@ -3,7 +3,10 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const { exec } = require("child_process");
-const { name: projectName, version: versionCurrent } = require("../package");
+const {
+  name: projectName,
+  version: versionCurrent,
+} = require("./package.json");
 
 const regVersion = /^[1-9]{1}\d*\.\d+\.\d+$/; // 示例: 1.0.0
 // const regVersion = /^\d+\.\d+\.\d+$/ // 示例: 0.0.1 / 1.0.1
