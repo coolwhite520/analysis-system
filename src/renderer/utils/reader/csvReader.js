@@ -5,12 +5,12 @@ const { resolve } = path;
 
 export default {
   // 读取所有的行
-  parseFileAllSync: async function(filePathName, fileColsName, fileInsertCols) {
+  parseFileAllSync: async function(filePathName, fileAllCols, matchedFileCols) {
     return new Promise(function(resolve, reject) {
       let indexList = [];
-      for (let i = 0; i < fileColsName.length; i++) {
-        let bfind = fileInsertCols.find((el) => {
-          return el === fileColsName[i];
+      for (let i = 0; i < fileAllCols.length; i++) {
+        let bfind = matchedFileCols.find((el) => {
+          return el === fileAllCols[i];
         });
         if (bfind) indexList.push(i);
       }
@@ -28,9 +28,9 @@ export default {
         .on("readable", function() {
           let record;
           while ((record = this.read())) {
-            let temp = [];
+            let temp = {};
             for (let index of indexList) {
-              temp.push(record[index]);
+              // temp.push(record[index]);
             }
             records.push(temp);
           }
@@ -65,7 +65,7 @@ export default {
           let result = {
             fileName: path.basename(filePathName),
             sheetName: path.basename(filePathName),
-            fileColsName: records.length > 0 ? records[0] : [],
+            fileAllCols: records.length > 0 ? records[0] : [],
             ins1: records.length > 1 ? records[1] : [],
             ins2: records.length > 2 ? records[2] : [],
           };

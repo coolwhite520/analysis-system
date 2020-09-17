@@ -3,20 +3,19 @@ import path from "path";
 import fs from "fs";
 import excel from "exceljs";
 import moment from "moment";
-import { index } from "multispinner/lib/errs";
 const log = require("@/utils/log");
 
 export default {
+  // 基于流的读取
   parseFileExampleSync: async function(filePathName) {
-    const workbook = new excel.Workbook();
-    workbook.calcProperties.fullCalcOnLoad = true;
     let resultList = [];
-    await workbook.xlsx.read(fs.createReadStream(filePathName));
-    for (let worksheet of workbook.worksheets) {
+
+    const workbookReader = new excel.stream.xlsx.WorkbookReader(filePathName);
+    for await (const worksheetReader of workbookReader) {
       let rows = [];
-      for (let index = 1; index <= worksheet.rowCount; index++) {
-        let row = worksheet.getRow(index);
+      for await (const row of worksheetReader) {
         let newRow = [];
+        if (!row.hasValues) continue;
         for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
           let cell = row.getCell(cindex);
           if (cell.type === 4) {
@@ -48,19 +47,19 @@ export default {
         }
         if (newRow.length > 0) rows.push(newRow);
       }
-      console.log(rows);
       if (rows.length === 0) {
         continue;
       }
       let result = {
         fileName: path.basename(filePathName),
-        sheetName: worksheet.name,
-        fileColsName: rows.length > 0 ? rows[0] : [],
+        sheetName: worksheetReader.name,
+        fileAllCols: rows.length > 0 ? rows[0] : [],
         ins1: rows.length > 1 ? rows[1] : [],
         ins2: rows.length > 2 ? rows[2] : [],
-        sheetId: worksheet.id,
+        sheetId: worksheetReader.id,
       };
       resultList.push(result);
+      log.info(worksheetReader.rowCount);
     }
     return resultList;
   },
@@ -68,60 +67,202 @@ export default {
     filePathName,
     sheetName,
     matchedfields,
-    fileColsName,
-    fileInsertCols
+    fileAllCols,
+    matchedFileCols,
+    callback
   ) {
-    let indexList = [];
-    for (let i = 0; i < fileColsName.length; i++) {
-      let bfind = fileInsertCols.find((el) => {
-        return el === fileColsName[i];
-      });
-      if (bfind) indexList.push(i + 1);
+    let matchedColNumList = [];
+    let stats = fs.statSync(filePathName);
+    // for (let i = 0; i < fileAllCols.length; i++) {
+    //   let bfind = matchedFileCols.find((el) => {
+    //     return el === fileAllCols[i];
+    //   });
+    //   if (bfind) indexList.push(i + 1);
+    // }
+    for (let item of matchedFileCols) {
+      let f = fileAllCols.findIndex((el) => el === item);
+      if (f !== -1) {
+        matchedColNumList.push(f + 1);
+      }
     }
-    const workbook = new excel.Workbook();
-    let rows = [];
-    await workbook.xlsx.read(fs.createReadStream(filePathName));
-    for (let worksheet of workbook.worksheets) {
-      if (worksheet.name === sheetName) {
-        worksheet.eachRow({ includeEmpty: false }, function(row) {
-          let newRowValues = [];
-          row.eachCell({ includeEmpty: true }, function(cell, colNumber) {
-            if (indexList.includes(colNumber)) {
-              if (cell.type === 4) {
-                let cellDate = new Date(cell);
-                let m = moment(cellDate).utc();
-                let year = m.year();
-                let month = m.month() + 1;
-                month = String(month).length === 1 ? "0" + month : month;
-                let day = m.date();
-                day = String(day).length === 1 ? "0" + day : day;
-                let hour = m.hour();
-                hour = String(hour).length === 1 ? "0" + hour : hour;
-                let minute = m.minute();
-                minute = String(minute).length === 1 ? "0" + minute : minute;
-                let sec = m.second();
-                sec = String(sec).length === 1 ? "0" + sec : sec;
-                if (year === 1899) {
-                  cell = `${hour}:${minute}:${sec}`;
-                } else {
-                  cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
-                }
-              } else {
-                cell = cell.toString().trim();
-              }
-              newRowValues.push(cell);
+    let readSize = 0;
+    let fileSize = stats.size;
+    let bFirstRow = true;
+    const workbookReader = new excel.stream.xlsx.WorkbookReader(filePathName);
+    for await (const worksheetReader of workbookReader) {
+      if (worksheetReader.name !== sheetName) continue;
+      for await (const row of worksheetReader) {
+        if (!row.hasValues) continue;
+        if (bFirstRow) {
+          bFirstRow = false;
+          continue;
+        }
+        let rowDataValues = [];
+        for (let cindex of matchedColNumList) {
+          let cell = row.getCell(cindex);
+          if (cell.type === 4) {
+            let cellDate = new Date(cell);
+            let m = moment(cellDate).utc();
+            let year = m.year();
+            let month = m.month() + 1;
+            month = String(month).length === 1 ? "0" + month : month;
+            let day = m.date();
+            day = String(day).length === 1 ? "0" + day : day;
+            let hour = m.hour();
+            hour = String(hour).length === 1 ? "0" + hour : hour;
+            let minute = m.minute();
+            minute = String(minute).length === 1 ? "0" + minute : minute;
+            let sec = m.second();
+            sec = String(sec).length === 1 ? "0" + sec : sec;
+            if (year === 1899) {
+              cell = `${hour}:${minute}:${sec}`;
+            } else {
+              cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
             }
-          });
-          let newRow = {};
-          matchedfields.forEach((field, index) => {
-            newRow[field] = newRowValues[index];
-          });
-          rows.push(newRow);
+          } else {
+            cell = cell.toString().trim();
+          }
+          rowDataValues.push(cell);
+        }
+        log.info(matchedFileCols);
+        log.info(rowDataValues);
+        readSize += `${rowDataValues}`.length;
+        await callback({
+          rowDataValues,
+          readSize,
+          fileSize,
+          isOver: false,
         });
       }
     }
-    return rows.slice(1);
+    await callback({ isOver: true });
   },
+  // parseFileExampleSync: async function(filePathName) {
+  //   const workbook = new excel.Workbook();
+  //   let resultList = [];
+  //   try {
+  //     await workbook.xlsx.readFile(filePathName);
+  //   } catch (e) {
+  //     log.info(666, e);
+  //     return;
+  //   }
+  //   for (let worksheet of workbook.worksheets) {
+  //     let rows = [];
+  //     for (let index = 1; index <= worksheet.rowCount; index++) {
+  //       let row = worksheet.getRow(index);
+  //       let newRow = [];
+  //       for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
+  //         let cell = row.getCell(cindex);
+  //         if (cell.type === 4) {
+  //           let cellDate = new Date(cell);
+  //           let m = moment(cellDate).utc();
+  //           let year = m.year();
+  //           let month = m.month() + 1;
+  //           month = String(month).length === 1 ? "0" + month : month;
+  //           let day = m.date();
+  //           day = String(day).length === 1 ? "0" + day : day;
+  //           let hour = m.hour();
+  //           hour = String(hour).length === 1 ? "0" + hour : hour;
+  //           let minute = m.minute();
+  //           minute = String(minute).length === 1 ? "0" + minute : minute;
+  //           let sec = m.second();
+  //           sec = String(sec).length === 1 ? "0" + sec : sec;
+  //           if (year === 1899) {
+  //             cell = `${hour}:${minute}:${sec}`;
+  //           } else {
+  //             cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+  //           }
+  //         } else {
+  //           cell = cell.toString().trim();
+  //         }
+  //         newRow.push(cell);
+  //       }
+  //       if (rows.length === 3) {
+  //         break;
+  //       }
+  //       if (newRow.length > 0) rows.push(newRow);
+  //     }
+  //     console.log(rows);
+  //     if (rows.length === 0) {
+  //       continue;
+  //     }
+  //     let result = {
+  //       fileName: path.basename(filePathName),
+  //       sheetName: worksheet.name,
+  //       fileAllCols: rows.length > 0 ? rows[0] : [],
+  //       ins1: rows.length > 1 ? rows[1] : [],
+  //       ins2: rows.length > 2 ? rows[2] : [],
+  //       sheetId: worksheet.id,
+  //     };
+  //     resultList.push(result);
+  //   }
+  //   return resultList;
+  // },
+  // parseFileAllSync: async function(
+  //   filePathName,
+  //   sheetName,
+  //   matchedfields,
+  //   fileAllCols,
+  //   matchedFileCols,
+  //   callback
+  // ) {
+  //   let indexList = [];
+  //   for (let i = 0; i < fileAllCols.length; i++) {
+  //     let bfind = matchedFileCols.find((el) => {
+  //       return el === fileAllCols[i];
+  //     });
+  //     if (bfind) indexList.push(i + 1);
+  //   }
+  //   const workbook = new excel.Workbook();
+  //   await workbook.xlsx.readFile(filePathName);
+
+  //   for (let worksheet of workbook.worksheets) {
+  //     if (worksheet.name === sheetName) {
+  //       let rowNumber = 0;
+  //       let rowSum = worksheet.actualRowCount;
+  //       worksheet.eachRow({ includeEmpty: false }, function(row) {
+  //         if (!row.hasValues) return;
+  //         rowNumber++;
+  //         if (rowNumber === 1) {
+  //           return;
+  //         }
+  //         let newRowValues = [];
+  //         row.eachCell({ includeEmpty: true }, function(cell, colNumber) {
+  //           if (indexList.includes(colNumber)) {
+  //             if (cell.type === 4) {
+  //               let cellDate = new Date(cell);
+  //               let m = moment(cellDate).utc();
+  //               let year = m.year();
+  //               let month = m.month() + 1;
+  //               month = String(month).length === 1 ? "0" + month : month;
+  //               let day = m.date();
+  //               day = String(day).length === 1 ? "0" + day : day;
+  //               let hour = m.hour();
+  //               hour = String(hour).length === 1 ? "0" + hour : hour;
+  //               let minute = m.minute();
+  //               minute = String(minute).length === 1 ? "0" + minute : minute;
+  //               let sec = m.second();
+  //               sec = String(sec).length === 1 ? "0" + sec : sec;
+  //               if (year === 1899) {
+  //                 cell = `${hour}:${minute}:${sec}`;
+  //               } else {
+  //                 cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+  //               }
+  //             } else {
+  //               cell = cell.toString().trim();
+  //             }
+  //             newRowValues.push(cell);
+  //           }
+  //         });
+  //         let newRow = {};
+  //         matchedfields.forEach((field, index) => {
+  //           newRow[field] = newRowValues[index];
+  //         });
+  //         callback(newRow, rowNumber, rowSum);
+  //       });
+  //     }
+  //   }
+  // },
   // parseFileExampleSync2: function(filePathName) {
   //   let book = xlsx.readFileSync(filePathName, { sheetRows: 3 }); // 每个sheet只要三条数据
   //   let resultList = [];
@@ -167,7 +308,7 @@ export default {
   //     let result = {
   //       fileName: path.basename(filePathName),
   //       sheetName: name,
-  //       fileColsName: rows.length > 0 ? rows[0] : [],
+  //       fileAllCols: rows.length > 0 ? rows[0] : [],
   //       ins1: rows.length > 1 ? rows[1] : [],
   //       ins2: rows.length > 2 ? rows[2] : [],
   //     };
@@ -180,8 +321,8 @@ export default {
   // parseFileAllSync2: function(
   //   filePathName,
   //   sheetName,
-  //   fileColsName,
-  //   fileInsertCols
+  //   fileAllCols,
+  //   matchedFileCols
   // ) {
   //   log.info(filePathName, sheetName);
   //   let book = xlsx.readFileSync(filePathName, { sheets: sheetName });
@@ -212,8 +353,8 @@ export default {
   //       if (cell.l) {
   //         row_data.push({ text: cell.v, link: cell.l.Target });
   //       } else {
-  //         let colName = fileColsName[i];
-  //         let bfind = fileInsertCols.find((el) => {
+  //         let colName = fileAllCols[i];
+  //         let bfind = matchedFileCols.find((el) => {
   //           return el === colName;
   //         });
   //         if (bfind) {

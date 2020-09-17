@@ -326,7 +326,7 @@ export default {
       let {
         tableName,
         tablecname,
-        bestMatchTemplate,
+        matchedMbdm,
         matchedFields,
         publicFields,
         externFields,
@@ -340,7 +340,7 @@ export default {
         ajid,
         tableName,
         tablecname,
-        bestMatchTemplate,
+        matchedMbdm,
         publicFields,
         matchedFields,
         externFields,

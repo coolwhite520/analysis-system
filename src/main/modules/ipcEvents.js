@@ -77,7 +77,8 @@ export default function() {
       global.dataCollectionWindow = null;
     }
     global.dataCollectionWindow = createDataImportWindow(BrowserWindow);
-    // global.dataCollectionWindow.show();
+    if (process.env.NODE_ENV === "development")
+      global.dataCollectionWindow.show();
   });
   ipcMain.on("data-collection-close", () => {
     if (global.dataCollectionWindow) {

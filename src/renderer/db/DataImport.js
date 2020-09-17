@@ -18,8 +18,7 @@ export default {
   QueryColsNameByMbdm: async function(mbdm) {
     try {
       await cases.SwitchDefaultCase();
-      let sql = `SELECT ID,MBDM,TABLEENAME,FIELDCNAME,FIELDENAME,FIELDTYPE,
-      fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
+      let sql = `SELECT ID, MBDM, TABLEENAME, FIELDCNAME, FIELDENAME, FIELDTYPE, fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
       const res = await global.db.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } catch (e) {
@@ -39,7 +38,7 @@ export default {
   },
   // 自动匹配字段
   // ,账号开户银行,账号开户日期,账号开户名称,银行账号,通信地址,联系电话,开户人证件类型,开户人证件号码,开户人国籍,开户联系方式,代理人电话,代理人,,
-  QueryBestMatchMbdm: async function(pdm, fileField) {
+  QueryBestMatchMbdm: async function(pdm, fileFields) {
     try {
       await cases.SwitchDefaultCase();
       let sql = "";
@@ -52,7 +51,7 @@ export default {
          where pdm='${pdm}'
          AND tablecname is not null AND tablecname != '' and ishide='0' and     
         ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
-         ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
+         ) AND position(','||fieldcname||',' in '${fileFields}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
       } else {
         sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
         st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
@@ -61,7 +60,7 @@ export default {
         (upper(B.tablename)=upper(A.tablecname)  or upper(B.tablename||'_source')=upper(A.tablecname) ) 
          where tablecname is not null AND tablecname != '' and ishide='0' and     
         ('200'=any(regexp_split_to_array(B.menu_vids,','))=TRUE or '0'=any(regexp_split_to_array(B.menu_vids,','))=TRUE )  GROUP BY(mbdm,mbmc,pdm) ORDER BY pdm 
-         ) AND position(','||fieldcname||',' in '${fileField}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
+         ) AND position(','||fieldcname||',' in '${fileFields}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
       }
       let mbdm = "";
       const res = await global.db.query(sql);
@@ -74,7 +73,7 @@ export default {
         }
         return { mbdm, pdm };
       }
-      return "";
+      return { mbdm: "", pdm: "" };
     } catch (e) {
       log.info(e);
     }
@@ -150,7 +149,7 @@ export default {
       let sql = `DROP TABLE IF EXISTS ${createTableName};
       CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
       const res = await global.db.query(sql);
-      return createTableName;
+      return { createTableName, createFields };
     } catch (e) {
       log.info(e);
       return false;

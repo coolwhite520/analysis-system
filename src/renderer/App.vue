@@ -8,7 +8,7 @@
 
 <script>
 import { DbConfig } from "@/utils/config";
-import { Pool } from "pg";
+import { Pool, Client } from "pg";
 
 export default {
   name: "App",
@@ -45,6 +45,7 @@ export default {
     let config = new DbConfig();
     let dbCon = config.readDbConfig();
     try {
+      global.configParams = dbCon;
       global.db = new Pool(dbCon);
       await this.$store.dispatch("PublicList/getAJLBList");
       await this.$store.dispatch("PublicList/getZCJDMClist");

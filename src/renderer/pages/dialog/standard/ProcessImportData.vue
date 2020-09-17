@@ -1,12 +1,24 @@
 <template>
   <div>
-    <div style="margin-bottom:30px;">
-      <span>当前正在导入</span>
-      <span style="font-size:12px">[{{fileName}}]</span>
+    <div style="margin-bottom:10px;">
+      <span>正在导入</span>
+      <span style="font-size:12px;color:#0c4b03">[{{fileName}}]</span>
       <span>文件中的</span>
-      <span style="font-size:12px">[{{sheetName}}]</span>
-      <span>表中的数据...</span>
+      <span style="font-size:12px;color:#0c4b03">[{{sheetName}}]</span>
+      <span>表数据...</span>
     </div>
+    <el-row>
+      <div
+        :style="{fontSize:10 + 'px', textAlign: 'center' , color: percentage !== 99 ? '#96d558':'#b75438', marginBottom:10 + 'px'}"
+      >{{secondTitle}}</div>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <div
+          style="font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
+        >{{tip}}</div>
+      </el-col>
+    </el-row>
     <el-progress :percentage="percentage" :color="customColor"></el-progress>
   </div>
 </template>
@@ -22,7 +34,9 @@ export default {
       fileName: "",
       sheetName: "",
       percentage: 0,
+      secondTitle: "",
       customColor: "#f56c6c",
+      tip: "",
     };
   },
   destroyed() {
@@ -40,7 +54,14 @@ export default {
       _this.sheetName = sheetName;
     });
     this.$electron.ipcRenderer.on("read-one-file-proccess", (event, data) => {
-      const { fileName, sheetName, percentage, success, msg } = data;
+      const {
+        fileName,
+        sheetName,
+        percentage,
+        success,
+        msg,
+        secondTitle,
+      } = data;
       if (!success) {
         _this.$notify.error({
           title: "错误",
@@ -48,9 +69,11 @@ export default {
         });
         return;
       }
+      _this.secondTitle = secondTitle;
       _this.fileName = fileName;
       _this.sheetName = sheetName;
       _this.percentage = percentage;
+      this.tip = msg;
       if (percentage < 20) {
         _this.customColor = "#f56c6c";
       } else if (percentage > 20 && percentage < 40) {

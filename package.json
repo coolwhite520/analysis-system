@@ -66,6 +66,7 @@
     "moment": "^2.27.0",
     "officegen": "^0.6.4",
     "pg": "^8.2.1",
+    "pg-copy-streams": "^5.1.1",
     "uuid": "^8.3.0",
     "vue": "^2.6.11",
     "vue-electron": "^1.0.6",

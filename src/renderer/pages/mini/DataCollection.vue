@@ -3,9 +3,15 @@
 </template>
 <script>
 const log = require("@/utils/log");
+import fs from "fs";
+import excel from "exceljs";
+import moment from "moment";
+const copyFrom = require("pg-copy-streams").from;
 import csvReader from "@/utils/reader/csvReader";
 import xlsReader from "@/utils/reader/xlsReader";
 import dataImport from "../../db/DataImport";
+import cases from "../../db/Cases";
+import { Pool, Client } from "pg";
 import DataTypeList from "@/json/buttonGroup.json";
 const UUID = require("uuid");
 import path from "path";
@@ -16,6 +22,24 @@ export default {
     };
   },
   methods: {
+    formatExcelDate(numb) {
+      const time = new Date(new Date(1900, 0, numb));
+      const year = time.getFullYear() + "";
+      let month = time.getMonth() + 1 + "";
+      month = month.length === 1 ? "0" + month : month;
+      let date = time.getDate() - 1 + "";
+      date = date.length === 1 ? "0" + date : date;
+      return year + "-" + month + "-" + date;
+    },
+    formatExcelTime(numb) {
+      const time = new Date(new Date(1900, 0, 0, numb));
+      let hour = time.getHours() + 1 + "";
+      hour = hour.length === 1 ? "0" + hour : hour;
+      let min = time.getMinutes() - 1 + "";
+      min = min.length === 1 ? "0" + min : min;
+
+      return hour + ":" + min;
+    },
     async getValueOfMbdm(ryid, fileName, mbdm, extField) {
       let value = "";
       switch (mbdm) {
@@ -159,6 +183,7 @@ export default {
       }
       return value;
     },
+
     async readExampleFile(e, args) {
       let { filePathList, pdm, caseBase, batchCount } = args;
       let data = {};
@@ -187,18 +212,18 @@ export default {
             continue;
           }
           for (let result of resultList) {
-            let { fileName, sheetName, fileColsName, ins1, ins2 } = result;
+            let { fileName, sheetName, fileAllCols, ins1, ins2 } = result;
             // 文件的所有列名称去掉空格
-            fileColsName.forEach((element, index) => {
-              fileColsName[index] = element.trim();
+            fileAllCols.forEach((element, index) => {
+              fileAllCols[index] = element.trim();
             });
-            data.fileColsName = fileColsName;
+            data.fileAllCols = fileAllCols;
             let queryResult = await dataImport.QueryBestMatchMbdm(
               pdm,
-              fileColsName
+              fileAllCols
             );
 
-            let bestMatchTemplate = queryResult.mbdm;
+            let matchedMbdm = queryResult.mbdm;
             // 说明是自动匹配
             if (pdm === "") {
               pdm = queryResult.pdm;
@@ -215,17 +240,13 @@ export default {
             data.batchCount = batchCount;
 
             // 根据点击的按钮获取对应的模版表
-            let matchTemplates = await dataImport.QueryMatchTableListByPdm(pdm);
-            data.matchTemplates = matchTemplates;
-
-            // // 最佳匹配的模版（表）
-            // let bestMatchTemplate = await dataImport.QueryBestMatchMbdm(
-            //   pdm,
-            //   fileColsName
-            // );
+            let matchedMbdmList = await dataImport.QueryMatchTableListByPdm(
+              pdm
+            );
+            data.matchedMbdmList = matchedMbdmList;
             // 获取tablecname
-            let tabletemp = data.matchTemplates.filter((value) => {
-              return value.mbdm === bestMatchTemplate;
+            let tabletemp = data.matchedMbdmList.filter((value) => {
+              return value.mbdm === matchedMbdm;
             });
             let tablecname = tabletemp[0].tablecname;
 
@@ -246,20 +267,20 @@ export default {
             data.tablecname = tablecname;
             data.mbmc = mbmc;
             data.externFields = externFields;
-            data.bestMatchTemplate = bestMatchTemplate;
+            data.matchedMbdm = matchedMbdm;
             // 最佳匹配的模版对应的字段名称
             let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
-              bestMatchTemplate
+              matchedMbdm
             );
             data.templateToFieldObjList = templateToFieldObjList;
 
             // 读取log表中的匹配list
             let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
-              bestMatchTemplate
+              matchedMbdm
             );
             let dataList = [];
-            for (let i = 0; i < fileColsName.length; i++) {
-              let fileColName = fileColsName[i];
+            for (let i = 0; i < fileAllCols.length; i++) {
+              let fileColName = fileAllCols[i];
               // 这个地方需要参考log表进行匹配
               let bestArray = templateToFieldObjList.filter((ele) => {
                 return ele.fieldcname === fileColName;
@@ -270,6 +291,8 @@ export default {
                 ins2: ins2.length > 0 ? ins2[i] : "",
                 matchedFieldName:
                   bestArray.length > 0 ? bestArray[0].fieldename : "",
+                matchedFieldType:
+                  bestArray.length > 0 ? bestArray[0].fieldtype : "",
               };
               // 如果没有直接匹配上，那么和log表再次进行匹配。
               if (obj.matchedFieldName === "") {
@@ -285,6 +308,13 @@ export default {
                 } else {
                   obj.matchedFieldName = "";
                 }
+              }
+              if (obj.matchedFieldType === 4) {
+                obj.ins1 = this.formatExcelDate(obj.ins1);
+                obj.ins2 = this.formatExcelDate(obj.ins2);
+              } else if (obj.matchedFieldType === 5) {
+                obj.ins1 = this.formatExcelTime(obj.ins1);
+                obj.ins2 = this.formatExcelTime(obj.ins2);
               }
               dataList.push(obj);
             }
@@ -331,14 +361,15 @@ export default {
     },
     async readAllFile(e, args) {
       try {
+        let _this = this;
         let ryid = UUID.v1();
         for (let sheetIndex = 0; sheetIndex < args.length; sheetIndex++) {
           let data = args[sheetIndex];
           let {
             filePathName,
-            fileColsName,
+            fileAllCols,
             batchCount,
-            bestMatchTemplate,
+            matchedMbdm,
             tablecname,
             mbmc,
             publicFields,
@@ -354,13 +385,14 @@ export default {
           // 统计选中的列名称
           let fields = [];
           let matchedFields = [];
-          let fileInsertCols = [];
+          let matchedFileCols = [];
           for (let item of data.dataList) {
             if (item.matchedFieldName !== "") {
               matchedFields.push(item.matchedFieldName);
-              fileInsertCols.push(item.fileColName);
+              matchedFileCols.push(item.fileColName);
             }
           }
+          console.log(matchedFields, matchedFileCols);
           fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((value) => {
             return value.toLowerCase();
@@ -372,7 +404,7 @@ export default {
             fileExt,
             fileName,
             filepath,
-            bestMatchTemplate,
+            matchedMbdm,
             batchCount,
             sheetName,
             mbmc,
@@ -384,6 +416,16 @@ export default {
             fileName,
             sheetName,
           });
+          // 创建temp表存储数据
+          let {
+            createTableName,
+            createFields,
+          } = await dataImport.createTempTable(
+            ajid,
+            tablecname,
+            matchedMbdm,
+            fields
+          );
           // 解析数据并插入到库中
           let resultList = [];
           switch (fileExt) {
@@ -395,87 +437,199 @@ export default {
               {
                 resultList = await csvReader.parseFileAllSync(
                   filePathName,
-                  fileColsName,
-                  fileInsertCols
+                  fileAllCols,
+                  matchedFileCols
                 );
               }
               break;
             case "xls":
-            case "xlsx":
-              {
-                resultList = await xlsReader.parseFileAllSync(
-                  filePathName,
-                  sheetName,
-                  matchedFields,
-                  fileColsName,
-                  fileInsertCols
+            case "xlsx": {
+              let externFieldsValues = [];
+              for (let extField of externFields) {
+                let value = await _this.getValueOfMbdm(
+                  ryid,
+                  fileName,
+                  matchedMbdm,
+                  extField
                 );
+                externFieldsValues.push(value);
               }
-              break;
-          }
-          // 创建temp表存储数据
-          let createdTableName = await dataImport.createTempTable(
-            ajid,
-            tablecname,
-            bestMatchTemplate,
-            fields
-          );
-
-          for (let i = 0; i < resultList.length; i++) {
-            let item = resultList[i];
-            let rownum = i + 1;
-            item["batch"] = `${batchCount}`;
-            item["sjlylx"] = `采集录入`;
-            item["crrq"] = `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`;
-            item["ajid"] = `${ajid}`;
-            item["sjlyid"] = `${sjlyid}`;
-            item["rownum"] = `${rownum}`;
-            // 分配扩展字段的值
-            for (let extField of externFields) {
-              let value = await this.getValueOfMbdm(
-                ryid,
+              await this.parseExcelFile(
+                sheetIndex,
                 fileName,
-                bestMatchTemplate,
-                extField
-              );
-              item[extField] = value;
-            }
-            let { success, msg } = await dataImport.importOneRowDataEx(
-              ajid,
-              createdTableName,
-              item
-            );
-            if (success) {
-              let percentage = parseInt(
-                parseFloat(i / resultList.length) * 100
-              );
-              this.$electron.ipcRenderer.send("read-one-file-proccess", {
-                success,
-                fileName,
+                filePathName,
                 sheetName,
-                percentage,
-              });
-            } else {
-              this.$electron.ipcRenderer.send("read-one-file-proccess", {
-                success,
-                fileName,
-                sheetName,
-                msg,
-              });
-              return;
+                matchedFields,
+                fileAllCols,
+                publicFields,
+                matchedFileCols,
+                externFields,
+                externFieldsValues,
+                caseBase,
+                batchCount,
+                sjlyid,
+                createTableName
+              );
             }
           }
-          resultList = null;
-          this.$electron.ipcRenderer.send("read-one-file-over", {
-            fileName,
-            sheetName,
-            sheetIndex,
-            tableName: createdTableName,
-          });
         }
         this.$electron.ipcRenderer.send("read-all-file-over", {});
       } catch (e) {
         log.info(e);
+      }
+    },
+    async sleep(ms) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          resolve("done");
+        }, ms);
+      });
+    },
+    // 解析excel文件并通过异步bulk insert 流的方式进行数据导入。 存在的问题：exceljs模块无法获取row的条目数量和sheetname
+    async parseExcelFile(
+      sheetIndex,
+      fileName,
+      filePathName,
+      sheetName,
+      matchedFields,
+      fileAllCols,
+      publicFields,
+      matchedFileCols,
+      externFields,
+      externFieldsValues,
+      caseBase,
+      batchCount,
+      sjlyid,
+      createTableName
+    ) {
+      let _this = this;
+
+      try {
+        let { ajid } = caseBase;
+        let allFields = publicFields.concat(matchedFields).concat(externFields);
+        allFields = allFields.map((el) => el.toLowerCase());
+        let sqlStr = `COPY ${createTableName}(${allFields}) FROM STDIN`;
+        console.log(sqlStr);
+        let streamFrom;
+        let client = await global.db.connect();
+        let sql = `SET search_path TO icap_${ajid}`;
+        let res = await client.query(sql);
+        streamFrom = await client.query(copyFrom(sqlStr));
+        console.log(streamFrom);
+        streamFrom.on("error", function (e) {
+          console.log(e);
+        });
+        streamFrom.on("finish", function (e) {
+          log.info(e, "import finish .....");
+        });
+        let matchedColNumList = [];
+        let stats = fs.statSync(filePathName);
+        for (let item of matchedFileCols) {
+          let f = fileAllCols.findIndex((el) => el === item);
+          if (f !== -1) {
+            matchedColNumList.push(f + 1);
+          }
+        }
+
+        let rownum = 0;
+        let readSize = 0;
+        let fileSize = stats.size;
+        let bFirstRow = true;
+        const workbookReader = new excel.stream.xlsx.WorkbookReader(
+          filePathName
+        );
+        for await (const worksheetReader of workbookReader) {
+          if (worksheetReader.name !== sheetName) continue;
+          for await (const row of worksheetReader) {
+            if (!row.hasValues) continue;
+            if (bFirstRow) {
+              bFirstRow = false;
+              continue;
+            }
+            let rowDataValues = [];
+            for (let cindex of matchedColNumList) {
+              let cell = row.getCell(cindex);
+              if (cell.type === 4) {
+                let cellDate = new Date(cell);
+                let m = moment(cellDate).utc();
+                let year = m.year();
+                let month = m.month() + 1;
+                month = String(month).length === 1 ? "0" + month : month;
+                let day = m.date();
+                day = String(day).length === 1 ? "0" + day : day;
+                let hour = m.hour();
+                hour = String(hour).length === 1 ? "0" + hour : hour;
+                let minute = m.minute();
+                minute = String(minute).length === 1 ? "0" + minute : minute;
+                let sec = m.second();
+                sec = String(sec).length === 1 ? "0" + sec : sec;
+                if (year === 1899) {
+                  cell = `${hour}:${minute}:${sec}`;
+                } else {
+                  cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+                }
+              } else {
+                cell = cell.toString().trim();
+              }
+              rowDataValues.push(cell);
+            }
+            readSize += `${rowDataValues}`.length;
+            rownum++;
+            let publicValues = [
+              `${batchCount}`,
+              `采集录入`,
+              `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
+              `${ajid}`,
+              `${sjlyid}`,
+              `${rownum}`,
+            ];
+            let realValues = publicValues
+              .concat(rowDataValues)
+              .concat(externFieldsValues);
+            let insertStr = realValues.join("\t") + "\n";
+            // 写入流中
+            streamFrom.write(insertStr, function (err) {
+              if (!err) {
+                let percentage = parseInt(
+                  parseFloat(readSize / fileSize) * 100
+                );
+                let secondTitle = "";
+                if (percentage >= 60) {
+                  secondTitle = "文件较大，正在加速载入...";
+                }
+                if (percentage >= 99) {
+                  percentage = 99;
+                  secondTitle = "距离加载完毕已经不远了，请耐心等待...";
+                }
+                _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                  success: true,
+                  fileName,
+                  sheetName,
+                  percentage,
+                  secondTitle,
+                  msg: `载入条目：${rownum} ${rowDataValues}`,
+                });
+              } else {
+                _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                  success: false,
+                  fileName,
+                  sheetName,
+                  secondTitle: "出错了...",
+                  msg: err,
+                });
+              }
+            });
+          }
+        }
+        streamFrom.end();
+        _this.$electron.ipcRenderer.send("read-one-file-over", {
+          fileName,
+          sheetName,
+          sheetIndex,
+          tableName: createTableName,
+        });
+      } catch (e) {
+        log.error(e);
       }
     },
     async copyTempDataToRealTable(e, args) {
@@ -484,7 +638,7 @@ export default {
         ajid,
         tableName,
         tablecname,
-        bestMatchTemplate,
+        matchedMbdm,
         publicFields,
         matchedFields,
         externFields,
@@ -494,7 +648,7 @@ export default {
         ajid,
         tableName,
         tablecname,
-        bestMatchTemplate,
+        matchedMbdm,
         publicFields,
         matchedFields,
         externFields,

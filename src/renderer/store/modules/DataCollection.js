@@ -20,8 +20,8 @@ const mutations = {
     state.exampleDataList.splice(index, 1);
   },
   // 根据传递的索引修改最佳匹配的模版
-  MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, bestMatchTemplate }) {
-    state.exampleDataList[index].bestMatchTemplate = bestMatchTemplate;
+  MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, matchedMbdm }) {
+    state.exampleDataList[index].matchedMbdm = matchedMbdm;
   },
   // 通过传递索引、对应的template对应的列名、日志list重新修改匹配的列名称
   MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA(
@@ -116,8 +116,8 @@ const mutations = {
     state.exampleDataList[rowIndex].mc = value;
   },
   // 修改匹配的模版列表
-  MODIFY_MATCHTEMPLATE(state, { index, matchTemplates }) {
-    state.exampleDataList[index].matchTemplates = matchTemplates;
+  MODIFY_MATCHTEMPLATE(state, { index, matchedMbdmList }) {
+    state.exampleDataList[index].matchedMbdmList = matchedMbdmList;
   },
 
   // 设置导入的实例数组
@@ -143,12 +143,12 @@ const mutations = {
 const getters = {};
 
 const actions = {
-  async changeMatchList({ commit }, { index, bestMatchTemplate }) {
-    commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", { index, bestMatchTemplate });
-    let dbColsName = await dataImport.QueryColsNameByMbdm(bestMatchTemplate);
+  async changeMatchList({ commit }, { index, matchedMbdm }) {
+    commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", { index, matchedMbdm });
+    let dbColsName = await dataImport.QueryColsNameByMbdm(matchedMbdm);
     // 查询log表获取数据
     let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
-      bestMatchTemplate
+      matchedMbdm
     );
 
     commit("MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA", {
@@ -159,20 +159,20 @@ const actions = {
   },
   async modifyDataType({ commit, state }, { value, rowIndex }) {
     commit("MODIFY_DATA_TYPENAME", { value, rowIndex });
-    let matchTemplates = await dataImport.QueryMatchTableListByPdm(value);
-    commit("MODIFY_MATCHTEMPLATE", { index: rowIndex, matchTemplates });
-    let bestMatchTemplate = await dataImport.QueryBestMatchMbdm(
+    let matchedMbdmList = await dataImport.QueryMatchTableListByPdm(value);
+    commit("MODIFY_MATCHTEMPLATE", { index: rowIndex, matchedMbdmList });
+    let matchedMbdm = await dataImport.QueryBestMatchMbdm(
       value,
-      state.exampleDataList[rowIndex].fileColsName
+      state.exampleDataList[rowIndex].fileAllCols
     );
     commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", {
       index: rowIndex,
-      bestMatchTemplate,
+      matchedMbdm,
     });
-    let dbColsName = await dataImport.QueryColsNameByMbdm(bestMatchTemplate);
+    let dbColsName = await dataImport.QueryColsNameByMbdm(matchedMbdm);
     // 查询log表获取数据
     let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
-      bestMatchTemplate
+      matchedMbdm
     );
     commit("MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA", {
       index: rowIndex,

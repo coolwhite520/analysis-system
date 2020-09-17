@@ -1,8 +1,8 @@
 <template>
-  <div v-loading="loading" element-loading-text="拼命加载中，请耐心等待...">
-    <el-row>
+  <div v-loading="loading" :element-loading-text="loadingText">
+    <!-- <el-row>
       <span style="font-size:12px;">标准导入：</span>
-    </el-row>
+    </el-row>-->
     <el-row style="text-align:center;margin-top:10px;">
       <el-button-group>
         <el-button
@@ -19,13 +19,14 @@
 
     <el-row style="margin-top: 20px;"></el-row>
     <el-row>
-      <span style="font-size:12px;">自动导入：</span>
-      <el-tooltip effect="dark" content="可以自动分析文件字段并进行自动匹配" placement="top">
-        <el-button size="mini" @click="handleClickImportData('')">
-          <span class="mybutton iconfont">&#xe620;</span>
-          <span>智能文件导入</span>
-        </el-button>
-      </el-tooltip>
+      <!-- <span style="font-size:12px;">自动导入：</span> -->
+      <!-- <el-tooltip effect="dark" content="可以自动分析文件字段并进行自动匹配" placement="top"> -->
+      <el-button size="mini" @click="handleClickImportData('')">
+        <span class="mybutton iconfont">&#xe620;</span>
+        <span>智能文件导入</span>
+      </el-button>
+      <span style="font-size:10px;color:gray">可自动分析文件字段并进行自动匹配</span>
+      <!-- </el-tooltip> -->
     </el-row>
     <div style="margin-top:20px;" v-show="exampleDataList.length > 0">
       <span style="font-size:16px;">
@@ -45,7 +46,11 @@
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="序号" width="60" fixed type="index"></el-table-column>
         <el-table-column prop="fileName" label="工作簿（文件名）" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="sheetName" label="工作表（sheet）" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="sheetName" label="工作表（sheet）" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <el-input :value="scope.row.sheetName" size="mini" disabled></el-input>
+          </template>
+        </el-table-column>
         <el-table-column prop="mc" label="数据类型" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-select
@@ -75,13 +80,13 @@
           <template slot-scope="scope">
             <el-select
               filterable
-              :value="scope.row.bestMatchTemplate"
+              :value="scope.row.matchedMbdm"
               placeholder="请选择"
               size="mini"
               @change="((val)=>{handleChangeMatchTemplate(val, scope.$index)})"
             >
               <el-option
-                v-for="item in scope.row.matchTemplates"
+                v-for="item in scope.row.matchedMbdmList"
                 :key="item.id"
                 :label="item.mbmc"
                 :value="item.mbdm"
@@ -192,6 +197,7 @@ export default {
   },
   data() {
     return {
+      loadingText: "拼命加载中，请耐心等待...",
       loading: false,
       value: "",
       currentRow: null, // 其实是一个指针，指向了exampleDataList中的某条数据
@@ -204,7 +210,7 @@ export default {
     handleClickSubmit() {
       if (this.multipleSelection.length > 0) {
         for (let data of this.multipleSelection) {
-          if (data.bestMatchTemplate === "") {
+          if (data.matchedMbdm === "") {
             this.$notify.error({
               title: "错误",
               message: `[${data.fileName}]的[${data.sheetName}]没有匹配的目标表, 请修改后继续！`,
@@ -222,8 +228,8 @@ export default {
             }
             allFieldList.push(item.matchedFieldName);
           }
-          let matchedTemplateObj = data.matchTemplates.filter((el) => {
-            return el.mbdm === data.bestMatchTemplate;
+          let matchedTemplateObj = data.matchedMbdmList.filter((el) => {
+            return el.mbdm === data.matchedMbdm;
           });
           switch (matchedTemplateObj[0].tablecname) {
             case "gas_account_info":
@@ -316,7 +322,7 @@ export default {
     handleChangeMatchTemplate(selValue, index, row) {
       this.$store.dispatch("DataCollection/changeMatchList", {
         index,
-        bestMatchTemplate: selValue,
+        matchedMbdm: selValue,
       });
       this.$refs.multipleTable.setCurrentRow(this.exampleDataList[index]);
     },
@@ -336,8 +342,9 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-
+    // 导入数据
     async handleClickImportData(pdm) {
+      let _this = this;
       let mainWindow = this.$electron.remote.getGlobal("mainWindow");
       let filePathList = await this.$electron.remote.dialog.showOpenDialogSync(
         mainWindow,
@@ -360,6 +367,11 @@ export default {
           filePathList,
           pdm,
         });
+        setTimeout(function () {
+          if (_this.loading) {
+            _this.loadingText = "文件较大，拼命加载中，请耐心等待...";
+          }
+        }, 5 * 1000);
       }
     },
   },
