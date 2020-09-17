@@ -6,15 +6,14 @@ const log = require("@/utils/log");
 import fs from "fs";
 import excel from "exceljs";
 import moment from "moment";
-const copyFrom = require("pg-copy-streams").from;
-import csvReader from "@/utils/reader/csvReader";
-import xlsReader from "@/utils/reader/xlsReader";
 import dataImport from "../../db/DataImport";
 import cases from "../../db/Cases";
 import { Pool, Client } from "pg";
 import DataTypeList from "@/json/buttonGroup.json";
 const UUID = require("uuid");
 import path from "path";
+const copyFrom = require("pg-copy-streams").from;
+const csv = require("@fast-csv/parse");
 export default {
   data() {
     return {
@@ -183,9 +182,129 @@ export default {
       }
       return value;
     },
-
-    async readExampleFile(e, args) {
+    // 解析示例xlsx文件
+    async parseExampleExcelFile(filePathName) {
+      let resultList = [];
+      const workbookReader = new excel.stream.xlsx.WorkbookReader(filePathName);
+      for await (const worksheetReader of workbookReader) {
+        let rows = [];
+        for await (const row of worksheetReader) {
+          let newRow = [];
+          if (!row.hasValues) continue;
+          for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
+            let cell = row.getCell(cindex);
+            if (cell.type === 4) {
+              let cellDate = new Date(cell);
+              let m = moment(cellDate).utc();
+              let year = m.year();
+              let month = m.month() + 1;
+              month = String(month).length === 1 ? "0" + month : month;
+              let day = m.date();
+              day = String(day).length === 1 ? "0" + day : day;
+              let hour = m.hour();
+              hour = String(hour).length === 1 ? "0" + hour : hour;
+              let minute = m.minute();
+              minute = String(minute).length === 1 ? "0" + minute : minute;
+              let sec = m.second();
+              sec = String(sec).length === 1 ? "0" + sec : sec;
+              if (year === 1899) {
+                cell = `${hour}:${minute}:${sec}`;
+              } else {
+                cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+              }
+            } else {
+              cell = cell.toString().trim();
+            }
+            newRow.push(cell);
+          }
+          if (rows.length === 3) {
+            break;
+          }
+          if (newRow.length > 0) rows.push(newRow);
+        }
+        if (rows.length === 0) {
+          continue;
+        }
+        let result = {
+          fileName: path.basename(filePathName),
+          sheetName: worksheetReader.name,
+          fileAllCols: rows.length > 0 ? rows[0] : [],
+          ins1: rows.length > 1 ? rows[1] : [],
+          ins2: rows.length > 2 ? rows[2] : [],
+          sheetId: worksheetReader.id,
+        };
+        resultList.push(result);
+        log.info(worksheetReader.rowCount);
+      }
+      return resultList;
+    },
+    /**
+     * 解析示例csv文件
+     */
+    async parseExampleCsvFile(filePathName) {
+      return new Promise(function (resolve, reject) {
+        let rows = [];
+        fs.createReadStream(filePathName)
+          .pipe(
+            csv.parse({
+              trim: true,
+              headers: true,
+              objectMode: true,
+              ignoreEmpty: true,
+              maxRows: 2,
+            })
+          )
+          .on("error", (error) => {
+            console.error(error);
+            reject(error);
+          })
+          .on("data", (row) => {
+            console.log(row);
+            rows.push(row);
+          })
+          .on("end", (rowCount) => {
+            console.log(`Parsed ${rowCount} rows`);
+            if (rows.length < 2) {
+              resolve([]);
+              return;
+            }
+            let fileAllCols = [];
+            let ins1 = [];
+            let ins2 = [];
+            for (let row of rows) {
+              if (fileAllCols.length === 0) {
+                for (let k in row) {
+                  fileAllCols.push(k);
+                  ins1.push(row[k]);
+                }
+              } else {
+                for (let k in row) {
+                  ins2.push(row[k]);
+                }
+              }
+            }
+            let result = {
+              fileName: path.basename(filePathName),
+              sheetName: path.basename(filePathName),
+              fileAllCols,
+              ins1,
+              ins2,
+            };
+            resolve([result]);
+          });
+      });
+    },
+    // 事件响应函数
+    async onReadExampleFile(e, args) {
       let { filePathList, pdm, caseBase, batchCount } = args;
+      let publicFields = [
+        "batch",
+        "sjlylx",
+        "crrq",
+        "ajid",
+        "sjlyid",
+        "rownum",
+      ];
       let data = {};
       let resultList = [];
       for (let filePathName of filePathList) {
@@ -198,13 +317,13 @@ export default {
               break;
             case "csv":
               {
-                resultList = await csvReader.parseFileExampleSync(filePathName);
+                resultList = await this.parseExampleCsvFile(filePathName);
               }
               break;
             case "xls":
             case "xlsx":
               {
-                resultList = await xlsReader.parseFileExampleSync(filePathName);
+                resultList = await this.parseExampleExcelFile(filePathName);
               }
               break;
           }
@@ -254,15 +373,6 @@ export default {
               ? tabletemp[0].extern_field.split(",")
               : [];
             let mbmc = tabletemp[0].mbmc;
-
-            let publicFields = [
-              "batch",
-              "sjlylx",
-              "crrq",
-              "ajid",
-              "sjlyid",
-              "rownum",
-            ];
             data.publicFields = publicFields;
             data.tablecname = tablecname;
             data.mbmc = mbmc;
@@ -359,7 +469,8 @@ export default {
       this.$electron.ipcRenderer.send("parse-all-example-file-over", {});
       // this.$store.commit("DataCollection/SET_CSV_LIST", data); // 如果需要多进程访问vuex，需要启用插件功能并所有的commit都需要改成dispatch
     },
-    async readAllFile(e, args) {
+
+    async onReadAllFile(e, args) {
       try {
         let _this = this;
         let ryid = UUID.v1();
@@ -417,17 +528,24 @@ export default {
             sheetName,
           });
           // 创建temp表存储数据
-          let {
-            createTableName,
-            createFields,
-          } = await dataImport.createTempTable(
+          let { createTableName } = await dataImport.createTempTable(
             ajid,
             tablecname,
             matchedMbdm,
             fields
           );
           // 解析数据并插入到库中
-          let resultList = [];
+          let externFieldsValues = [];
+          for (let extField of externFields) {
+            let value = await _this.getValueOfMbdm(
+              ryid,
+              fileName,
+              matchedMbdm,
+              extField
+            );
+            externFieldsValues.push(value);
+          }
+
           switch (fileExt) {
             case "txt":
               {
@@ -435,25 +553,26 @@ export default {
               break;
             case "csv":
               {
-                resultList = await csvReader.parseFileAllSync(
+                await this.parseCsvFile(
+                  sheetIndex,
+                  fileName,
                   filePathName,
+                  sheetName,
+                  matchedFields,
                   fileAllCols,
-                  matchedFileCols
+                  publicFields,
+                  matchedFileCols,
+                  externFields,
+                  externFieldsValues,
+                  caseBase,
+                  batchCount,
+                  sjlyid,
+                  createTableName
                 );
               }
               break;
             case "xls":
             case "xlsx": {
-              let externFieldsValues = [];
-              for (let extField of externFields) {
-                let value = await _this.getValueOfMbdm(
-                  ryid,
-                  fileName,
-                  matchedMbdm,
-                  extField
-                );
-                externFieldsValues.push(value);
-              }
               await this.parseExcelFile(
                 sheetIndex,
                 fileName,
@@ -503,12 +622,11 @@ export default {
       createTableName
     ) {
       let _this = this;
-
       try {
         let { ajid } = caseBase;
-        let allFields = publicFields.concat(matchedFields).concat(externFields);
-        allFields = allFields.map((el) => el.toLowerCase());
-        let sqlStr = `COPY ${createTableName}(${allFields}) FROM STDIN`;
+        let fields = publicFields.concat(matchedFields).concat(externFields);
+        fields = fields.map((el) => el.toLowerCase());
+        let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
         console.log(sqlStr);
         let streamFrom;
         let client = await global.db.connect();
@@ -530,7 +648,6 @@ export default {
             matchedColNumList.push(f + 1);
           }
         }
-
         let rownum = 0;
         let readSize = 0;
         let fileSize = stats.size;
@@ -632,6 +749,132 @@ export default {
         log.error(e);
       }
     },
+    // 解析csv文件全部内容
+    async parseCsvFile(
+      sheetIndex,
+      fileName,
+      filePathName,
+      sheetName,
+      matchedFields,
+      fileAllCols,
+      publicFields,
+      matchedFileCols,
+      externFields,
+      externFieldsValues,
+      caseBase,
+      batchCount,
+      sjlyid,
+      createTableName
+    ) {
+      let _this = this;
+      return new Promise(async function (resolve, reject) {
+        try {
+          let { ajid } = caseBase;
+          let fields = publicFields.concat(matchedFields).concat(externFields);
+          fields = fields.map((el) => el.toLowerCase());
+          let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
+          console.log(sqlStr);
+          let streamFrom;
+          let client = await global.db.connect();
+          let sql = `SET search_path TO icap_${ajid}`;
+          let res = await client.query(sql);
+          streamFrom = await client.query(copyFrom(sqlStr));
+          console.log(streamFrom);
+          streamFrom.on("error", function (e) {
+            console.log(e);
+          });
+          streamFrom.on("finish", function (e) {
+            log.info(e, "import finish .....");
+          });
+          let matchedColNumList = [];
+          let stats = fs.statSync(filePathName);
+          let rownum = 0;
+          let readSize = 0;
+          let fileSize = stats.size;
+          let bFirstRow = true;
+          fs.createReadStream(filePathName)
+            .pipe(
+              csv.parse({
+                trim: true,
+                headers: true,
+                objectMode: true,
+                ignoreEmpty: true,
+              })
+            )
+            .on("error", (error) => {
+              console.error(error);
+            })
+            .on("data", (row) => {
+              let rowDataValues = [];
+              for (let k in row) {
+                if (matchedFileCols.includes(k)) {
+                  rowDataValues.push(row[k]);
+                }
+              }
+              readSize += `${rowDataValues}`.length;
+              rownum++;
+              let publicValues = [
+                `${batchCount}`,
+                `采集录入`,
+                `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
+                `${ajid}`,
+                `${sjlyid}`,
+                `${rownum}`,
+              ];
+              let realValues = publicValues
+                .concat(rowDataValues)
+                .concat(externFieldsValues);
+              let insertStr = realValues.join("\t") + "\n";
+              // 写入流中
+              streamFrom.write(insertStr, function (err) {
+                if (!err) {
+                  let percentage = parseInt(
+                    parseFloat(readSize / fileSize) * 100
+                  );
+                  let secondTitle = "";
+                  if (percentage >= 60) {
+                    secondTitle = "文件较大，正在加速载入...";
+                  }
+                  if (percentage >= 99) {
+                    percentage = 99;
+                    secondTitle = "距离加载完毕已经不远了，请耐心等待...";
+                  }
+                  _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                    success: true,
+                    fileName,
+                    sheetName,
+                    percentage,
+                    secondTitle,
+                    msg: `载入条目：${rownum} ${rowDataValues}`,
+                  });
+                } else {
+                  _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                    success: false,
+                    fileName,
+                    sheetName,
+                    secondTitle: "出错了...",
+                    msg: err,
+                  });
+                }
+              });
+            })
+            .on("end", (rowCount) => {
+              console.log(`Parsed ${rowCount} rows`);
+              streamFrom.end();
+              _this.$electron.ipcRenderer.send("read-one-file-over", {
+                fileName,
+                sheetName,
+                sheetIndex,
+                tableName: createTableName,
+              });
+              resolve("done");
+            });
+        } catch (e) {
+          log.error(e);
+          reject(e);
+        }
+      });
+    },
     async copyTempDataToRealTable(e, args) {
       let _this = this;
       let {
@@ -668,10 +911,10 @@ export default {
     this.softVersion = this.$electron.remote.getGlobal("softVersion");
   },
   mounted() {
-    this.$electron.ipcRenderer.on("read-all-file", this.readAllFile);
+    this.$electron.ipcRenderer.on("read-all-file", this.onReadAllFile);
     this.$electron.ipcRenderer.on(
       "parse-all-example-file",
-      this.readExampleFile
+      this.onReadExampleFile
     );
     this.$electron.ipcRenderer.on(
       "import-one-table-begin",

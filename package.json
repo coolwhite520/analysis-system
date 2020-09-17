@@ -63,6 +63,7 @@
     "element-theme": "^2.0.1",
     "element-ui": "^2.13.2",
     "exceljs": "^4.1.1",
+    "fast-csv": "^4.3.2",
     "moment": "^2.27.0",
     "officegen": "^0.6.4",
     "pg": "^8.2.1",

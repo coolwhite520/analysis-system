@@ -3,8 +3,41 @@ const fs = require("fs");
 const moment = require("moment");
 // let d = moment(43560);
 let filePathName = "/Users/baiyang/Desktop/15210864421张三.xlsx";
+let csvPathName = "/Users/baiyang/Desktop/未命名文件夹/交易明细汇总.csv";
 var { Pool } = require("pg");
 var copyFrom = require("pg-copy-streams").from;
+const csv = require("@fast-csv/parse");
+
+// path.resolve(__dirname, "assets", "parse.csv")
+let rows = (function parseCsvFile() {
+  let rows = [];
+  return new Promise(function(resolve, reject) {
+    fs.createReadStream(csvPathName)
+      .pipe(
+        csv.parse({
+          trim: true,
+          headers: true,
+          objectMode: true,
+          ignoreEmpty: true,
+          maxRows: 20,
+        })
+      )
+      .on("error", (error) => {
+        console.error(error);
+        reject(error);
+      })
+      .on("data", (row) => {
+        console.log(row);
+        rows.push(row);
+      })
+      .on("end", (rowCount) => {
+        console.log(`Parsed ${rowCount} rows`);
+        resolve(rows);
+      });
+  });
+})();
+console.log(rows);
+return;
 // "127.0.0.1", "gas_data", "", 5432
 var pool = new Pool({
   user: "baiyang",
@@ -60,6 +93,7 @@ pool.connect(async function(err, client, done) {
     }, ms);
   });
 })(1000000);
+
 return;
 function formatExcelDate(numb, format = "-") {
   const time = new Date(new Date(1900, 0, numb));
