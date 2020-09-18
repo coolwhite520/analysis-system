@@ -19,7 +19,8 @@ export default {
       const res = await global.pool.query(sql);
       return res.command === "SET" ? true : false;
     } catch (e) {
-      log.error(e);
+      log.info(e);
+      return false;
     }
   },
   CreateNewCaseSchema: async function(ajid, userName) {
@@ -28,6 +29,18 @@ export default {
       let sql = `create SCHEMA if not exists ${scheamName} AUTHORIZATION ${userName}`;
       const res = await global.pool.query(sql);
       return res.command === "CREATE" ? scheamName : "";
+    } catch (e) {
+      log.error(e);
+    }
+  },
+  DropAllCases: async function() {
+    try {
+      await this.SwitchDefaultCase();
+      let sql = `SELECT ID::int, ITEM_CODE, ITEM_NAME, DESCN FROM st_dictionary WHERE PARENT_ID = 5  ORDER BY thesort; `;
+      const res = await global.pool.query(sql);
+      for (let row of res.rows) {
+        await this.DropCaseByID(row.ajid);
+      }
     } catch (e) {
       log.error(e);
     }

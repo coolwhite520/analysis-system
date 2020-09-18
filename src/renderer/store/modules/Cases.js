@@ -11,7 +11,15 @@ const mutations = {
   ADD_CASE_TO_LIST(state, newCase) {
     state.existCaseList.push(newCase);
   },
-
+  DELETE_CASE_BYID(state, ajid) {
+    for (let index = 0; index < state.existCaseList.length; index++) {
+      let item = state.existCaseList[index];
+      if (item.ajid === ajid) {
+        state.existCaseList.splice(index, 1);
+        break;
+      }
+    }
+  },
   SET_INPUT_VALUE(state, newValue) {
     state.inputValue = newValue;
   },
@@ -29,6 +37,14 @@ const actions = {
   async getExistCaseAsync({ commit }) {
     let case_list = await cases.QueryExistCases();
     commit("GET_EXIST_CASE_LIST", case_list);
+  },
+  async deleteAllCase({ commit }) {
+    let case_list = await cases.QueryExistCases();
+    // case_list = [{ ajid: 1 }, { ajid: 2 }];
+    for (let item of case_list) {
+      await cases.DropCaseByID(item.ajid);
+      commit("DELETE_CASE_BYID", item.ajid);
+    }
   },
 };
 

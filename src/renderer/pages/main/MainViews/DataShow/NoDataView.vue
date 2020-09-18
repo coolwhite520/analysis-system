@@ -22,9 +22,15 @@
 <script>
 export default {
   methods: {
-    handleClickImportData() {
-      this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
-      this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
+    async handleClickImportData() {
+      await this.$electron.ipcRenderer.send("data-collection-open");
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+      await this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
+      await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
   },
 };

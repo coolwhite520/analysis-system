@@ -33,5 +33,12 @@ export default new Router({
         require(["@/pages/mini/DbconfigView"], resolve);
       },
     },
+    {
+      path: "/dbinit",
+      name: "dbinit",
+      component: function(resolve) {
+        require(["@/pages/mini/DbInitView"], resolve);
+      },
+    },
   ],
 });

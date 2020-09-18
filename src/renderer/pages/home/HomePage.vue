@@ -21,6 +21,13 @@
             @click="handleClickImportCase"
             round
           >&#xe61a; 导入案件</el-button>
+          <el-button
+            style="width:30%;"
+            class="iconfont"
+            type="danger"
+            @click="handleClickDeleteAllCase"
+            round
+          >&#xe652; 清空所有案件</el-button>
         </el-col>
         <el-col :span="1">&nbsp;</el-col>
         <el-col :span="4">
@@ -80,6 +87,27 @@ export default {
     "edit-case-view": EditCaseView,
   },
   methods: {
+    async handleClickDeleteAllCase() {
+      let parent = this.$electron.remote.getGlobal("mainWindow");
+      let result = await this.$electron.remote.dialog.showMessageBox(parent, {
+        type: "warning",
+        title: "关闭",
+        message: `真的这么确定要删除所有案件？你将丢失所有数据，请慎重！`,
+        buttons: ["确定", "取消"],
+        defaultId: 0,
+      });
+      if (result.response === 0) {
+        this.loading = true;
+        this.$store.dispatch("Cases/deleteAllCase");
+        this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
+      } else {
+        this.$message({
+          type: "info",
+          message: "已取消删除",
+        });
+      }
+    },
+
     handleClickNewCase() {
       //this.currentViewName = "new-case-view";
       if (!global.pool) {

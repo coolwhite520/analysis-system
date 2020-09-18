@@ -35,7 +35,6 @@ const createDataImportWindow = function(BrowserWindow) {
     miniWindow = null;
   });
   miniWindow.once("ready-to-show", () => {
-    log.info("hahahah");
     // miniWindow.showInactive();
     miniWindow.hide();
   });

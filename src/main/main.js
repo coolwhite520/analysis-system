@@ -1,6 +1,7 @@
 import { app, protocol, BrowserWindow, screen } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
+import createDbInitWindow from "./modules/window/initDbWindow";
 import createExportWindow from "./modules/window/exportWindow";
 import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
@@ -72,6 +73,7 @@ function createWindow() {
     global.mainWindow = mainWindow;
     global.exportWindow = createExportWindow(BrowserWindow);
     global.dbConfigWindow = createDbConfigWindow(BrowserWindow);
+    global.dbInitWindow = createDbInitWindow(BrowserWindow);
     // if (isDevelopment) {
     //   // 安装vue-devtools
     //   let extensions = BrowserWindow.getDevToolsExtensions();

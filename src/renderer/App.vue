@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { DbConfig } from "@/utils/config";
+import { DbConfig, OtherConfig } from "@/utils/config";
 import { Pool, Client } from "pg";
 
 export default {
@@ -42,8 +42,16 @@ export default {
       ContentViewHeight
     );
     this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", MainViewHeight);
-    let config = new DbConfig();
-    let dbCon = config.readDbConfig();
+
+    // let otherconfig = new OtherConfig();
+    // let other = otherconfig.readConfig();
+    // console.log(other);
+    // if (!other.hasOwnProperty("isInit")) {
+    //   this.$electron.ipcRenderer.send("show-db-init");
+    //   return;
+    // }
+    let dbconfig = new DbConfig();
+    let dbCon = dbconfig.readDbConfig();
     try {
       global.configParams = dbCon;
       global.pool = new Pool(dbCon);

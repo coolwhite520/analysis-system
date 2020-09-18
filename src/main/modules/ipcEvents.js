@@ -71,6 +71,15 @@ export default function() {
   ipcMain.on("show-db-config", () => {
     global.dbConfigWindow.show();
   });
+
+  // 数据库初始化操作窗口
+  ipcMain.on("hide-db-init", () => {
+    global.dbInitWindow.hide();
+  });
+  ipcMain.on("show-db-init", () => {
+    global.dbInitWindow.show();
+  });
+
   //
   // 打开数据采集窗口
   ipcMain.on("data-collection-open", () => {
