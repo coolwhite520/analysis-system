@@ -343,7 +343,7 @@ export default {
       worksheet.columns = columns;
       worksheet.properties.defaultRowHeight = 30;
       await cases.SwitchCase(ajid);
-      let { rows } = await global.db.query(exportSql);
+      let { rows } = await global.pool.query(exportSql);
       for (let index = 0; index < rows.length; index++) {
         worksheet.addRow(rows[index]).commit();
       }
@@ -417,7 +417,7 @@ export default {
       PageItem.CurrentExeSql = template;
       let sql = reportSqlFormat.GetReportSql(ajid, PageItem, this.ReportParams);
       await cases.SwitchCase(ajid);
-      let res = await global.db.query(sql);
+      let res = await global.pool.query(sql);
       let jyrs = res.rows[0].jyrs;
       let jyzhs = res.rows[0].jyzhs;
       let jyjls = res.rows[0].jyjls;

@@ -8,7 +8,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `select *  from  st_data_template  where pdm='${pdm}' order by MBMC;`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows; // id, mbdm, mbmc, tablename ...
     } catch (e) {
       log.info(e);
@@ -19,7 +19,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `SELECT ID, MBDM, TABLEENAME, FIELDCNAME, FIELDENAME, FIELDTYPE, fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } catch (e) {
       log.info(e);
@@ -30,7 +30,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM gas_match_log where MBDM = '${mbdm}'`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } catch (e) {
       log.info(e);
@@ -63,12 +63,12 @@ export default {
          ) AND position(','||fieldcname||',' in '${fileFields}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
       }
       let mbdm = "";
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       if (res.rows.length > 0) {
         mbdm = res.rows[0].mbdm;
         if (pdm === "") {
           sql = `select pdm from st_data_template where mbdm='${mbdm}'`;
-          let ret = await global.db.query(sql);
+          let ret = await global.pool.query(sql);
           pdm = ret.rows[0].pdm;
         }
         return { mbdm, pdm };
@@ -102,7 +102,7 @@ export default {
       ('', '00000000', '${now}', ${ajid}, '', '${ajmc}', '${fileExt}', '${filename}',
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
        '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows[0].sjlyid;
     } catch (e) {
       log.info(e);
@@ -116,7 +116,7 @@ export default {
       WHERE table_schema = 'icap_${ajid}' 
       and table_name like '%${like}%' 
       and POSITION ( '_temp' IN TABLE_NAME ) > 0;`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows[0].count;
     } catch (e) {
       log.info(e);
@@ -148,7 +148,7 @@ export default {
       await cases.SwitchCase(ajid);
       let sql = `DROP TABLE IF EXISTS ${createTableName};
       CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return { createTableName, createFields };
     } catch (e) {
       log.info(e);
@@ -159,7 +159,7 @@ export default {
     try {
       await cases.SwitchCase(ajid);
       let sql = `DROP TABLE IF EXISTS ${tempTableName};`;
-      await global.db.query(sql);
+      await global.pool.query(sql);
     } catch (e) {
       log.info(e);
     }
@@ -170,7 +170,7 @@ export default {
     try {
       await cases.SwitchCase(ajid);
       sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return true;
     } catch (e) {
       log.info(e, sql);
@@ -189,7 +189,7 @@ export default {
       }
       await cases.SwitchCase(ajid);
       sql = `insert into ${createdTableName} (${fields}) VALUES(${values})`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return { success: true };
     } catch (e) {
       log.info(e, sql);
@@ -217,7 +217,7 @@ export default {
       if (filterList.length === 0) {
         sql = sql + ` limit ${limit} OFFSET ${beginIndex}`;
 
-        const res = await global.db.query(sql);
+        const res = await global.pool.query(sql);
         let rows = res.rows;
         for (let row of rows) {
           let newRow = [];
@@ -356,7 +356,7 @@ export default {
     try {
       await cases.SwitchCase(ajid);
       let sql = `select count(*)::int count from ${tableName}`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows[0].count;
     } catch (e) {
       log.info(e);
@@ -376,11 +376,11 @@ export default {
       await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
-      let res = await global.db.query(sql);
+      let res = await global.pool.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName}) `;
-      res = await global.db.query(sqlCount);
+      res = await global.pool.query(sqlCount);
       let count = res.rows[0].count;
       return {
         rows,
@@ -405,10 +405,10 @@ export default {
       // await cases.SwitchCase(ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
 
-      let res = await global.db.query(sql);
+      let res = await global.pool.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
-      res = await global.db.query(sqlCount);
+      res = await global.pool.query(sqlCount);
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
@@ -430,13 +430,13 @@ export default {
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !=''; `; // 查找一个示例
-      let res = await global.db.query(sql);
+      let res = await global.pool.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} 
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' ; `;
-      res = await global.db.query(sqlCount);
+      res = await global.pool.query(sqlCount);
       let count = res.rows[0].count;
       return { rows, success, count };
     } catch (e) {
@@ -452,7 +452,7 @@ export default {
         return `'${el}'`;
       });
       let sql = `update ${tableName} set ${field} = '${newValue}' where rownum in (${rownums})`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return { success: true };
     } catch (e) {
       log.info(e);
@@ -467,7 +467,7 @@ export default {
         return `'${el}'`;
       });
       let sql = `delete from ${tableName} where rownum in (${rownums})`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return { success: true };
     } catch (e) {
       log.info(e);
@@ -1176,7 +1176,7 @@ export default {
         //进销项税务 gas_tax_records_150001
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
-      await global.db.query(sql);
+      await global.pool.query(sql);
       return { success: true };
     } catch (e) {
       log.info(e);
@@ -1204,7 +1204,7 @@ export default {
       and a.atttypid = t.oid
       ORDER BY a.attnum;`;
       let resultList = [];
-      let res = await global.db.query(sql);
+      let res = await global.pool.query(sql);
       for (let row of res.rows) {
         let obj = {};
         if (row.type.includes("char")) {
@@ -1277,7 +1277,7 @@ export default {
       }
       const pageSize = 100;
       let countSql = `select count(*)::int count from ${tempTableName}`;
-      let resCount = await global.db.query(countSql);
+      let resCount = await global.pool.query(countSql);
       let rowsCount = resCount.rows[0].count;
       let loopCount = 0;
       if (rowsCount === 0) {
@@ -1297,7 +1297,7 @@ export default {
         let sql = `select ${selectList} from ${tempTableName}`;
         let limitSql = ` limit ${pageSize} OFFSET ${beginIndex}`;
         sql = sql + limitSql;
-        let res = await global.db.query(sql);
+        let res = await global.pool.query(sql);
         let sumRows = [];
 
         for (let row of res.rows) {
@@ -1329,7 +1329,7 @@ export default {
         }
         sumRows = sumRows.join(",");
         insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
-        await global.db.query(insertSql);
+        await global.pool.query(insertSql);
         callback({ sumRow: loopCount, index, success: true });
       }
       if (loopCount > 0)

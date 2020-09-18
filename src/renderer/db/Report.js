@@ -7,7 +7,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `select modelname, gpsqltemplate, orderby, mpids, out_type::int, describe from layout_model_info where mid=${mid}`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return {
         success: true,
         title: res.rows[0].modelname,

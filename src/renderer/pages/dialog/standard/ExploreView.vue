@@ -267,58 +267,66 @@ export default {
         this.isDataLoading = false;
         this.bClickBtnCheck = false;
         this.currentPercentage = 0;
+        this.$electron.ipcRenderer.removeAllListeners(
+          "import-one-table-process"
+        );
+        this.$electron.ipcRenderer.removeAllListeners(
+          "import-one-table-complete"
+        );
         return;
       }
       if (tabIndex !== this.activeName) return;
       this.currentPercentage = parseInt(parseFloat(index / sumRow) * 100);
-      if (this.currentPercentage >= 100) {
-        this.$electron.ipcRenderer.removeAllListeners(
-          "import-one-table-process"
-        );
-        this.bClickBtnCheck = false;
-        this.currentPercentage = 0;
-        this.isDataLoading = false;
-
-        await this.$store.commit(
-          "DataCollection/DELETE_DATA_LIST_BY_INDEX",
-          this.activeName
-        );
-        await this.$store.dispatch(
-          "CaseDetail/queryCaseDataCenter",
-          this.caseBase.ajid
-        );
-
-        if (this.exampleDataList.length === 0) {
-          await this.$store.commit(
-            "DialogPopWnd/SET_STANDARDDATAVISIBLE",
-            false
-          );
-          await this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
-          // 更新当前的展示列表中的数据
-          for (let tableData of this.tableDataList) {
-            // 根据tableName获取表的数据
-            if (tableData.componentName !== "no-data-view") {
-              await this.$store.dispatch(tableData.dispatchName, {
-                ...tableData,
-                offset: 0,
-                count: 30,
-              });
-            }
+      if (this.currentPercentage >= 99) {
+        this.currentPercentage = 99;
+      }
+    },
+    async onRecvImportCompleteMsg() {
+      this.$electron.ipcRenderer.removeAllListeners("import-one-table-process");
+      this.bClickBtnCheck = false;
+      this.currentPercentage = 0;
+      this.isDataLoading = false;
+      await this.$store.commit(
+        "DataCollection/DELETE_DATA_LIST_BY_INDEX",
+        this.activeName
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      if (this.exampleDataList.length === 0) {
+        await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
+        await this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
+        // 更新当前的展示列表中的数据
+        for (let tableData of this.tableDataList) {
+          // 根据tableName获取表的数据
+          if (tableData.componentName !== "no-data-view") {
+            await this.$store.dispatch(tableData.dispatchName, {
+              ...tableData,
+              offset: 0,
+              count: 30,
+            });
           }
         }
-
-        // 导入成功，清理examplelist
-        this.$notify({
-          title: "成功",
-          message: `数据插入成功`,
-          type: "success",
-        });
       }
+      // 导入成功，清理examplelist
+      this.$notify({
+        title: "成功",
+        message: `数据插入成功`,
+        type: "success",
+      });
+      this.$electron.ipcRenderer.removeAllListeners(
+        "import-one-table-complete"
+      );
     },
     async handleClickImportCurrentData() {
       this.$electron.ipcRenderer.on(
         "import-one-table-process",
         this.onRecvImportMsg
+      );
+      this.$electron.ipcRenderer.on(
+        "import-one-table-complete",
+        this.onRecvImportCompleteMsg
       );
       this.loadingText = "正在进行数据导入，请稍后...";
       this.isDataLoading = true;

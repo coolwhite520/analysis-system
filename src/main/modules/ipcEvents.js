@@ -49,7 +49,9 @@ export default function() {
   ipcMain.on("import-one-table-process", (e, args) => {
     global.mainWindow.webContents.send("import-one-table-process", args);
   });
-
+  ipcMain.on("import-one-table-complete", (e, args) => {
+    global.mainWindow.webContents.send("import-one-table-complete", args);
+  });
   // 给export窗口发送开始
   ipcMain.on("export-one-file-begin", (e, args) => {
     global.exportWindow.webContents.send("export-one-file-begin", args);

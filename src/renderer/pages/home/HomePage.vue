@@ -82,14 +82,14 @@ export default {
   methods: {
     handleClickNewCase() {
       //this.currentViewName = "new-case-view";
-      if (!global.db) {
+      if (!global.pool) {
         this.$electron.ipcRenderer.send("show-db-config");
       } else {
         this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "new-case-view");
       }
     },
     handleClickImportCase() {
-      if (!global.db) {
+      if (!global.pool) {
         this.$electron.ipcRenderer.send("show-db-config");
         return;
       }

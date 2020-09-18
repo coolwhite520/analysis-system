@@ -8,7 +8,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = ` SELECT model_mids,product_code FROM layout_menu_model where length(model_mids)>0 and menu_tid='${tid}'`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows.length > 0 ? res.rows[0].model_mids : "";
     } catch (e) {
       log.error(e);
@@ -19,7 +19,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `SELECT * FROM layout_model_info_sort s, layout_model_info m WHERE m.mid<>600 AND s.mid=m.mid AND  m.mid  in (${mids}) ORDER BY  s.soft_200  ASC `;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows;
     } catch (e) {
       log.error(e);
@@ -31,7 +31,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `select modelname, gpsqltemplate, orderby, mpids, out_type::int, describe from layout_model_info where mid=${mid}`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return {
         success: true,
         title: res.rows[0].modelname,

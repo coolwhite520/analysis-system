@@ -46,12 +46,12 @@ export default {
     let dbCon = config.readDbConfig();
     try {
       global.configParams = dbCon;
-      global.db = new Pool(dbCon);
+      global.pool = new Pool(dbCon);
       await this.$store.dispatch("PublicList/getAJLBList");
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");
     } catch (e) {
-      global.db = null;
+      global.pool = null;
       this.$electron.ipcRenderer.send("show-db-config");
       log.error(e);
     }

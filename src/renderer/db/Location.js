@@ -4,7 +4,7 @@ export default {
   QueryProvince: async () => {
     try {
       await cases.SwitchDefaultCase();
-      const res = await global.db.query(
+      const res = await global.pool.query(
         "SELECT ID::int, PARENT_ID::int,NAME FROM st_location WHERE PARENT_ID = 0;"
       );
       return res.rows; //id , parent_id, name
@@ -17,7 +17,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `SELECT ID::int, PARENT_ID::int, NAME FROM st_location WHERE PARENT_ID = ${provinceID};`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows; //id , parent_id, name
     } catch (e) {
       log.error(e);
@@ -29,7 +29,7 @@ export default {
     try {
       await cases.SwitchDefaultCase();
       let sql = `SELECT ID::int, PARENT_ID::int, NAME FROM st_location WHERE PARENT_ID = ${cityID};`;
-      const res = await global.db.query(sql);
+      const res = await global.pool.query(sql);
       return res.rows; //id , parent_id, name
     } catch (e) {
       log.error(e);

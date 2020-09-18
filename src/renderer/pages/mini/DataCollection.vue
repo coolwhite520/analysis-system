@@ -8,12 +8,14 @@ import excel from "exceljs";
 import moment from "moment";
 import dataImport from "../../db/DataImport";
 import cases from "../../db/Cases";
-import { Pool, Client } from "pg";
+import { Pool, Client, Query } from "pg";
 import DataTypeList from "@/json/buttonGroup.json";
+import importModel from "@/utils/sql/ImportModel.js";
 const UUID = require("uuid");
 import path from "path";
 const copyFrom = require("pg-copy-streams").from;
 const csv = require("@fast-csv/parse");
+
 export default {
   data() {
     return {
@@ -22,22 +24,17 @@ export default {
   },
   methods: {
     formatExcelDate(numb) {
-      const time = new Date(new Date(1900, 0, numb));
-      const year = time.getFullYear() + "";
-      let month = time.getMonth() + 1 + "";
-      month = month.length === 1 ? "0" + month : month;
-      let date = time.getDate() - 1 + "";
-      date = date.length === 1 ? "0" + date : date;
-      return year + "-" + month + "-" + date;
-    },
-    formatExcelTime(numb) {
-      const time = new Date(new Date(1900, 0, 0, numb));
-      let hour = time.getHours() + 1 + "";
-      hour = hour.length === 1 ? "0" + hour : hour;
-      let min = time.getMinutes() - 1 + "";
-      min = min.length === 1 ? "0" + min : min;
-
-      return hour + ":" + min;
+      if (numb > 1) {
+        const time = new Date(new Date(1900, 0, numb));
+        const year = time.getFullYear() + "";
+        let month = time.getMonth() + 1 + "";
+        month = month.length === 1 ? "0" + month : month;
+        let date = time.getDate() - 1 + "";
+        date = date.length === 1 ? "0" + date : date;
+        return year + "-" + month + "-" + date;
+      } else {
+        return "00:00:00";
+      }
     },
     async getValueOfMbdm(ryid, fileName, mbdm, extField) {
       let value = "";
@@ -419,12 +416,13 @@ export default {
                   obj.matchedFieldName = "";
                 }
               }
-              if (obj.matchedFieldType === 4) {
+              if (
+                obj.matchedFieldType === 4 ||
+                obj.matchedFieldType === 5 ||
+                obj.matchedFieldType === 6
+              ) {
                 obj.ins1 = this.formatExcelDate(obj.ins1);
                 obj.ins2 = this.formatExcelDate(obj.ins2);
-              } else if (obj.matchedFieldType === 5) {
-                obj.ins1 = this.formatExcelTime(obj.ins1);
-                obj.ins2 = this.formatExcelTime(obj.ins2);
               }
               dataList.push(obj);
             }
@@ -554,6 +552,7 @@ export default {
             case "csv":
               {
                 await this.parseCsvFile(
+                  matchedMbdm,
                   sheetIndex,
                   fileName,
                   filePathName,
@@ -574,6 +573,7 @@ export default {
             case "xls":
             case "xlsx": {
               await this.parseExcelFile(
+                matchedMbdm,
                 sheetIndex,
                 fileName,
                 filePathName,
@@ -604,8 +604,10 @@ export default {
         }, ms);
       });
     },
-    // 解析excel文件并通过异步bulk insert 流的方式进行数据导入。 存在的问题：exceljs模块无法获取row的条目数量和sheetname
+    // 解析excel文件并通过异步bulk insert 流的方式进行数据导入。 存在的问题：exceljs模块无法获取row的条目数量和sheetname,
+    // 需要处理 日期、事件格式的转换
     async parseExcelFile(
+      matchedMbdm,
       sheetIndex,
       fileName,
       filePathName,
@@ -629,7 +631,7 @@ export default {
         let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
         console.log(sqlStr);
         let streamFrom;
-        let client = await global.db.connect();
+        let client = await global.pool.connect();
         let sql = `SET search_path TO icap_${ajid}`;
         let res = await client.query(sql);
         streamFrom = await client.query(copyFrom(sqlStr));
@@ -655,6 +657,9 @@ export default {
         const workbookReader = new excel.stream.xlsx.WorkbookReader(
           filePathName
         );
+        let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
+          matchedMbdm
+        );
         for await (const worksheetReader of workbookReader) {
           if (worksheetReader.name !== sheetName) continue;
           for await (const row of worksheetReader) {
@@ -664,6 +669,7 @@ export default {
               continue;
             }
             let rowDataValues = [];
+            let matchedFieldIndex = 0;
             for (let cindex of matchedColNumList) {
               let cell = row.getCell(cindex);
               if (cell.type === 4) {
@@ -685,9 +691,28 @@ export default {
                 } else {
                   cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
                 }
+              }
+              // 数字类型，由于模块存在类型的判定错误，把日期和时间也都转换为了number类型，所以需要重新转换
+              else if (cell.type === 2) {
+                let currentFieldName = matchedFields[
+                  matchedFieldIndex
+                ].toLowerCase();
+                let objType = templateToFieldObjList.find(
+                  (el) => el.fieldename.toLowerCase() === currentFieldName
+                );
+                if (
+                  objType.fieldtype === 4 ||
+                  objType.fieldtype === 5 ||
+                  objType.fieldtype === 6
+                ) {
+                  cell = this.formatExcelDate(cell.value);
+                } else {
+                  cell = cell.toString().trim();
+                }
               } else {
                 cell = cell.toString().trim();
               }
+              matchedFieldIndex++;
               rowDataValues.push(cell);
             }
             readSize += `${rowDataValues}`.length;
@@ -751,6 +776,7 @@ export default {
     },
     // 解析csv文件全部内容
     async parseCsvFile(
+      matchedMbdm,
       sheetIndex,
       fileName,
       filePathName,
@@ -775,7 +801,7 @@ export default {
           let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
           console.log(sqlStr);
           let streamFrom;
-          let client = await global.db.connect();
+          let client = await global.pool.connect();
           let sql = `SET search_path TO icap_${ajid}`;
           let res = await client.query(sql);
           streamFrom = await client.query(copyFrom(sqlStr));
@@ -875,36 +901,170 @@ export default {
         }
       });
     },
-    async copyTempDataToRealTable(e, args) {
+    // 从temp表格导入到真正的数据表
+    async onCopyTempDataToRealTable(e, args) {
       let _this = this;
       let {
         ajid,
-        tableName,
-        tablecname,
+        tableName, // temp表
+        tablecname, // 真实表
         matchedMbdm,
         publicFields,
         matchedFields,
         externFields,
         tabIndex,
       } = args;
-      await dataImport.importDataFromTempTableToRealTable(
-        ajid,
-        tableName,
-        tablecname,
-        matchedMbdm,
-        publicFields,
-        matchedFields,
-        externFields,
-        function ({ sumRow, index, success, msg }) {
+      let tempTableName = tableName;
+      let targetTableName = tablecname;
+      await new Promise(async function (resolve, rejcect) {
+        try {
+          await cases.SwitchCase(ajid);
+          let targetTableStruct = await dataImport.showTableStruct(
+            ajid,
+            targetTableName
+          );
+          let Columns = targetTableStruct.rows.map((el) => el.fieldename);
+          // 拼接当前temp表的所有字段
+          let sjlyid = 0;
+          let resFieldTypeList = [];
+          let selectList = [];
+          // 公共字段去除行号
+          publicFields = publicFields.filter(
+            (el) => el.toLowerCase() !== "rownum"
+          );
+          let fields = publicFields.concat(matchedFields).concat(externFields);
+          fields = fields.map((el) => {
+            return el.toLowerCase();
+          });
+          fields = fields.filter((el) => Columns.includes(el));
+          // 查询临时表的总条数
+          let index = 0;
+
+          let countSql = `select count(*)::int count from icap_${ajid}.${tempTableName}`;
+          let sumRow = await global.pool.query(countSql);
+          sumRow = sumRow.rows[0].count;
+
+          // 查询一行确定copyfrom的sql参数
+          let testRow = await global.pool.query(
+            `select ${fields} from ${tempTableName} limit 1 offset 0`
+          );
+          testRow = testRow.rows[0];
+          // 判断列名称是否存在与Columns中不存在需要清理
+          let newTestRow = {};
+          for (let k in testRow) {
+            if (Columns.includes(k)) {
+              newTestRow[k] = testRow[k];
+            }
+          }
+          newTestRow = importModel.TestingHandle(
+            Columns,
+            newTestRow,
+            targetTableName
+          );
+          console.log(Object.keys(newTestRow));
+          // 计算经过TestingHandle处理后的行
+          let postHandleFields = [];
+          for (let k in newTestRow) {
+            if (k === "sjlyid") {
+              sjlyid = newTestRow[k];
+            }
+            postHandleFields.push(k);
+          }
+          let client = await global.pool.connect();
+          let streamFrom = await client.query(
+            copyFrom(`COPY ${targetTableName}(${postHandleFields}) FROM STDIN`)
+          );
+          //异步方式读取
+          let sqlSelect = `select ${fields} from icap_${ajid}.${tempTableName}`;
+          console.log(sqlSelect);
+          const query = new Query(sqlSelect);
+          let client2 = await global.pool.connect();
+          client2.query(query);
+          query.on("row", (row) => {
+            index++;
+            row = importModel.TestingHandle(Columns, row, targetTableName);
+            let values = [];
+            for (let k of Object.keys(row)) {
+              let obj = targetTableStruct.rows.find(
+                (el) => el.fieldename.toLowerCase() === k
+              );
+              if (obj.fieldtype === 1 || obj.fieldtype === 6) {
+                values.push(`${row[k].trim()}`);
+              } else if (obj.fieldtype === 4) {
+                if (typeof row[k] === "string") {
+                  values.push(`to_date('${row[k]}','yyyy-MM-dd hh24:mi:ss')`);
+                } else {
+                  values.push(row[k]);
+                }
+              } else {
+                let temValue = row[k].trim() ? row[k].trim() : 0;
+                values.push(`${temValue}`);
+              }
+            }
+            let valueStr = values.join("\t") + "\n";
+            console.log(valueStr);
+            streamFrom.write(valueStr, function (err) {
+              if (!err) {
+                let data = {
+                  tabIndex,
+                  sumRow,
+                  index,
+                  success: true,
+                  msg: "success",
+                };
+                // log.info(data);
+                _this.$electron.ipcRenderer.send(
+                  "import-one-table-process",
+                  data
+                );
+              } else {
+                _this.$electron.ipcRenderer.send("import-one-table-process", {
+                  tabIndex,
+                  sumRow,
+                  index,
+                  success: false,
+                  msg: err,
+                });
+                rejcect(err);
+              }
+            });
+          });
+          query.on("end", async () => {
+            console.log("query done");
+            streamFrom.end();
+            await dataImport.extractDataFromTempTable(
+              ajid,
+              tempTableName,
+              matchedMbdm,
+              sjlyid
+            );
+            // await dataImport.deleteTempTable(ajid, tempTableName);
+            _this.$electron.ipcRenderer.send("import-one-table-complete", {
+              tabIndex,
+              success: true,
+              msg: "success",
+            });
+            resolve("done");
+          });
+          query.on("error", (err) => {
+            console.error(err.stack);
+            _this.$electron.ipcRenderer.send("import-one-table-process", {
+              tabIndex,
+              success: false,
+              msg: err.message,
+            });
+            rejcect(err);
+          });
+        } catch (e) {
+          log.info(e);
+          // await dataImport.deleteTempTable(ajid, tempTableName);
           _this.$electron.ipcRenderer.send("import-one-table-process", {
             tabIndex,
-            sumRow,
-            index,
-            success,
-            msg,
+            success: false,
+            msg: e.message,
           });
         }
-      );
+      });
     },
   },
   beforeMount() {
@@ -918,7 +1078,7 @@ export default {
     );
     this.$electron.ipcRenderer.on(
       "import-one-table-begin",
-      this.copyTempDataToRealTable
+      this.onCopyTempDataToRealTable
     );
   },
 };

@@ -48,7 +48,7 @@ export default {
       // 生成标题头
       worksheet.columns = columns;
       await cases.SwitchCase(ajid);
-      let { rows } = await global.db.query(exportSql);
+      let { rows } = await global.pool.query(exportSql);
       for (let index = 0; index < rows.length; index++) {
         worksheet.addRow(rows[index]).commit();
         let percentage = parseInt(parseFloat(index / rows.length) * 100);
