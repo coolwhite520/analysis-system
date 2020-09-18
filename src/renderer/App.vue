@@ -9,7 +9,8 @@
 <script>
 import { DbConfig, OtherConfig } from "@/utils/config";
 import { Pool, Client } from "pg";
-
+import base from "@/db/Base.js";
+import log from "electron-log";
 export default {
   name: "App",
   data() {
@@ -42,26 +43,41 @@ export default {
       ContentViewHeight
     );
     this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", MainViewHeight);
-
-    // let otherconfig = new OtherConfig();
-    // let other = otherconfig.readConfig();
-    // console.log(other);
-    // if (!other.hasOwnProperty("isInit")) {
-    //   this.$electron.ipcRenderer.send("show-db-init");
-    //   return;
-    // }
-    let dbconfig = new DbConfig();
-    let dbCon = dbconfig.readDbConfig();
     try {
-      global.configParams = dbCon;
-      global.pool = new Pool(dbCon);
-      await this.$store.dispatch("PublicList/getAJLBList");
-      await this.$store.dispatch("PublicList/getZCJDMClist");
-      await this.$store.dispatch("PublicList/getProvincelist");
+      let dbconfig = new DbConfig();
+      let dbCon = dbconfig.readDbConfig();
+      let pool = new Pool(dbCon);
+      let connFlag = await new Promise(function (resolve, reject) {
+        pool.connect((err) => {
+          if (err) {
+            log.info(err);
+            reject(false);
+          } else {
+            console.log("connected");
+            resolve(true);
+          }
+        });
+      });
+      // 判断是否连接到了Postgres
+      if (!connFlag) {
+        this.$electron.ipcRenderer.send("show-db-config");
+        return;
+      }
+      global.pool = pool;
+      // 判断是否存在gas_data数据库
+      if (!(await base.existGasDataBase())) {
+        this.$electron.ipcRenderer.send("show-db-init");
+      } else {
+        dbCon["database"] = "gas_data";
+        global.pool = new Pool(dbCon);
+        await this.$store.dispatch("PublicList/getAJLBList");
+        await this.$store.dispatch("PublicList/getZCJDMClist");
+        await this.$store.dispatch("PublicList/getProvincelist");
+      }
     } catch (e) {
       global.pool = null;
       this.$electron.ipcRenderer.send("show-db-config");
-      log.error(e);
+      console.log(e);
     }
   },
 };

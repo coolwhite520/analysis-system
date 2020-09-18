@@ -114,11 +114,7 @@ export default {
       const { OtherConfig } = require("@/utils/config");
       let otherConfig = new OtherConfig();
       let other = otherConfig.readConfig();
-      if (other.hasOwnProperty("isInit")) {
-        this.$electron.ipcRenderer.send("show-db-config");
-      } else {
-        this.$electron.ipcRenderer.send("show-db-init");
-      }
+      this.$electron.ipcRenderer.send("show-db-config");
     },
   },
 };
