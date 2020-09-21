@@ -75,11 +75,17 @@ const mutations = {
       )
     ) {
       Vue.set(tableData, "graphicMoneySectionList", graphicMoneySectionList);
+      Vue.set(tableData, "fullScrrenFlag", false);
     }
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
     state.activeIndex = state.pageIndex;
     state.currentTableData = tableData;
+  },
+  // 放大到全屏 缩小
+  UPDATE_FULLSCRRENFLAG(state) {
+    let flag = state.currentTableData.fullScrrenFlag;
+    Vue.set(state.currentTableData, "fullScrrenFlag", !flag);
   },
   // 修改金额区间的选定状态
   MODIFY_MONDY_SECTION_CHECKED(state, id) {

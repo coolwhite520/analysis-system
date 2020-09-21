@@ -9,9 +9,16 @@
       <div>这里是个图</div>
     </div>
     <div v-else-if="tableData.showType === 3">
-      <table-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2 - 47"></table-chart>
+      <table-chart
+        v-show="!tableData.fullScrrenFlag"
+        :tableData="tableData"
+        :limitHeight="(contentViewHeight-126)/2"
+      ></table-chart>
       <!-- <div>这里是个关系图</div> -->
-      <relation-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2"></relation-chart>
+      <relation-chart
+        :tableData="tableData"
+        :limitHeight="tableData.fullScrrenFlag?(contentViewHeight-87):(contentViewHeight-126)/2"
+      ></relation-chart>
     </div>
     <div v-else-if="tableData.showType === 4">
       <table-chart :tableData="tableData" :limitHeight="(contentViewHeight-80)/2 - 47"></table-chart>
@@ -30,7 +37,9 @@ import TableChart from "./child/TableChart";
 import GraphicBarChart from "./child/GraphicBarChart";
 import RelationChart from "./child/RelationChart";
 export default {
-  mounted() {},
+  mounted() {
+    console.log(this.tableData);
+  },
   data() {
     return {};
   },

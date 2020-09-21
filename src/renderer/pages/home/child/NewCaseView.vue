@@ -234,6 +234,7 @@ export default {
           message: `新建案件[${this.ruleForm.ajmc}]成功!`,
           type: "success",
         });
+        this.$store.dispatch("Cases/getExistCaseAsync");
       } else if (newState === "failed") {
         this.loading = false;
         this.$notify.error({

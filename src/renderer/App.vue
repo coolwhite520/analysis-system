@@ -73,6 +73,7 @@ export default {
         await this.$store.dispatch("PublicList/getAJLBList");
         await this.$store.dispatch("PublicList/getZCJDMClist");
         await this.$store.dispatch("PublicList/getProvincelist");
+        await this.$store.dispatch("Cases/getExistCaseAsync");
       }
     } catch (e) {
       global.pool = null;

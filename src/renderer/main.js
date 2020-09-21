@@ -6,7 +6,7 @@ import router from "./router";
 import store from "./store";
 import ElementUI from "element-ui";
 import "./assets/theme/index.css";
-import "./assets/css/iconfont.css";
+import "./assets/css/iconfont/iconfont.css";
 import "./assets/css/animate.css";
 import "echarts";
 import "./utils/dialog";
@@ -19,7 +19,8 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
 Vue.prototype.$echarts = echarts;
-
+import G6 from "@antv/g6";
+Vue.prototype.$G6 = G6;
 /* eslint-disable no-new */
 new Vue({
   components: { App },

@@ -101,9 +101,7 @@ export default {
       }
     },
   },
-  mounted() {
-    if (global.pool) this.$store.dispatch("Cases/getExistCaseAsync");
-  },
+  mounted() {},
 };
 </script>
 

@@ -370,6 +370,7 @@ export default {
         );
         this.$store.commit("CaseDetail/RESET_ALL_DATA");
         this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
+        this.$store.dispatch("Cases/getExistCaseAsync");
       } else {
         this.$message({
           type: "info",

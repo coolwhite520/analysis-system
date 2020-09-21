@@ -20,7 +20,11 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState("CaseDetail", ["caseBase"]),
+  },
   methods: {
     async handleClickImportData() {
       await this.$electron.ipcRenderer.send("data-collection-open");
