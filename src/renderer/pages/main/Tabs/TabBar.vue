@@ -5,9 +5,9 @@
         <el-tab-pane label="数据" name="first">
           <tab-data></tab-data>
         </el-tab-pane>
-        <!-- <el-tab-pane label="可视化" name="second"> -->
-        <!-- <tab-visible></tab-visible> -->
-        <!-- </el-tab-pane> -->
+        <el-tab-pane label="可视化" name="second">
+          <tab-visible></tab-visible>
+        </el-tab-pane>
         <el-tab-pane label="分析报告" name="third">
           <tab-report></tab-report>
         </el-tab-pane>

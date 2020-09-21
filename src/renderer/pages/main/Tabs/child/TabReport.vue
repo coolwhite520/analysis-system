@@ -1,12 +1,17 @@
 <template>
   <div class="TabReport">
-    <el-row>
+    <el-row style="text-align:center;">
       <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
         <el-button type="text" class="ctrl-button" @click="handleClickNewReport">
           <span class="iconfont selfIcont">&#xe630;</span>
           <br />
           <span class="title-content">新建报告</span>
         </el-button>
+      </el-col>
+    </el-row>
+    <el-row style="font-size:8px;color:gray;text-align: center;">
+      <el-col :span="1" style="border-right:1px solid #e5e7ec;">
+        <div>报告</div>
       </el-col>
     </el-row>
     <analysis-report></analysis-report>
