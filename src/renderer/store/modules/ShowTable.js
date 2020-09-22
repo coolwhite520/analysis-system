@@ -322,6 +322,11 @@ const mutations = {
       }
     }
   },
+  // 设置graph
+  SET_RELATION_GRAPH_ID(state, graphid) {
+    console.log("SET_RELATION_GRAPH_ID");
+    Vue.set(state.currentTableData, "graphid", graphid);
+  },
 };
 
 const getters = {};

@@ -2,7 +2,10 @@
   <div></div>
 </template>
 <script>
+const string2fileStream = require("string-to-file-stream");
+const jschardet = require("jschardet");
 const log = require("@/utils/log");
+const iconv = require("iconv-lite");
 import fs from "fs";
 import excel from "exceljs";
 import moment from "moment";
@@ -235,33 +238,52 @@ export default {
       }
       return resultList;
     },
+
+    testEncoding(fReadName) {
+      return new Promise(function (resolve, reject) {
+        let readableStream = fs.createReadStream(fReadName);
+        readableStream.on("data", function (chunk) {
+          console.log(`接收到 ${chunk.length} 个字节的数据`);
+          let res = jschardet.detect(chunk);
+          log.info(res);
+          var str = iconv.decode(chunk, res.encoding);
+          console.log(str); //得到无乱码的内容
+          resolve(str);
+          readableStream.close();
+        });
+        readableStream.on("close", function () {
+          console.log("close file");
+        });
+      });
+    },
+
     /**
      * 解析示例csv文件
      */
     async parseExampleCsvFile(filePathName) {
       return new Promise(function (resolve, reject) {
         let rows = [];
-        fs.createReadStream(filePathName)
-          .pipe(
-            csv.parse({
-              trim: true,
-              headers: true,
-              objectMode: true,
-              ignoreEmpty: true,
-              maxRows: 2,
-            })
-          )
+        let writeableStream = csv.parse({
+          trim: true,
+          headers: true,
+          objectMode: true,
+          ignoreEmpty: true,
+          maxRows: 2,
+        });
+        writeableStream
           .on("error", (error) => {
-            console.error(error);
+            log.info(error);
+            readableStream.close();
             reject(error);
           })
           .on("data", (row) => {
-            console.log(row);
+            log.info(row);
             rows.push(row);
           })
           .on("end", (rowCount) => {
             console.log(`Parsed ${rowCount} rows`);
             if (rows.length < 2) {
+              readableStream.close();
               resolve([]);
               return;
             }
@@ -288,6 +310,23 @@ export default {
               ins2,
             };
             resolve([result]);
+            readableStream.close();
+          });
+        let readableStream = fs.createReadStream(filePathName);
+        readableStream
+          .on("data", function (chuck) {
+            let res = jschardet.detect(chuck);
+            let str = iconv.decode(chuck, res.encoding);
+            string2fileStream(str).pipe(writeableStream);
+          })
+          .on("close", function () {
+            log.info("file parse close");
+          })
+          .on("error", (error) => {
+            log.info("file parse", error);
+          })
+          .on("end", function () {
+            log.info("file parse end.");
           });
       });
     },

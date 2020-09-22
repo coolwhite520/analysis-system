@@ -6429,6 +6429,11 @@ jsbn@~0.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
 
+jschardet@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/jschardet/-/jschardet-2.2.1.tgz#03b0264669a90c7a5c436a68c5a7d4e4cb0c9823"
+  integrity sha512-Ks2JNuUJoc7PGaZ7bVFtSEvOcr0rBq6Q1J5/7+zKWLT+g+4zziL63O0jg7y2jxhzIa1LVsHUbPXrbaWmz9iwDw==
+
 jsesc@^1.3.0:
   version "1.3.0"
   resolved "https://registry.npm.taobao.org/jsesc/download/jsesc-1.3.0.tgz#46c3fec8c1892b12b0833db9bc7622176dbab34b"
@@ -10038,6 +10043,11 @@ strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/strict-uri-encode/download/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
   integrity sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=
+
+string-to-file-stream@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/string-to-file-stream/-/string-to-file-stream-1.2.0.tgz#278674163b5d480591cd3292cbe81908ccd25471"
+  integrity sha512-fsYZxP8L2xC/LkWsEOZ36r3rAfCQ0Bw3bn8ZS6Q//k0AdMcZLihh59y/qWk7q/7F87jlYzmwNy8FCu4t/RDGWg==
 
 string-width@^1.0.1:
   version "1.0.2"

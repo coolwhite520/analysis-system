@@ -33,7 +33,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <div :ref="id" :id="id" :style="{ height:limitHeight-26+'px', width: '100%'}"></div>
+      <div :ref="graphid" :id="graphid" :style="{ height:limitHeight-26+'px', width: '100%'}"></div>
     </el-row>
 
     <el-row style="background-color: #f5f7fa;border: 1px solid #dddfe5;font-size:10px;">
@@ -113,7 +113,7 @@ export default {
     return {
       data: null,
       graph: null,
-      id: uuid.v1(),
+      graphid: uuid.v1(),
       toolBarID: uuid.v1(),
       miniMapID: uuid.v1(),
       fisheye: null,
@@ -138,7 +138,7 @@ export default {
   methods: {
     resize() {
       console.log("resize");
-      let { clientWidth, clientHeight } = this.$refs[this.id];
+      let { clientWidth, clientHeight } = this.$refs[this.graphid];
       console.log({ clientWidth, clientHeight });
       this.graph.changeSize(clientWidth, clientHeight);
       this.graph.fitView(20);
@@ -280,6 +280,8 @@ export default {
     `
       );
     },
+    // 当返回null的时候不绘制这条线
+    calculateLineColorByJinE() {},
     makeData() {
       let nodes = [];
       let edges = [];
@@ -290,44 +292,11 @@ export default {
         let jydfmc = row["jydfmc"].value;
         let data1 = {
           id: cxkh + "\n" + jymc,
-          label: cxkh + "\n" + jymc,
-          // type: "rect-jsx",
-          labelCfg: {
-            // 标签配置属性
-            positions: "bottom", // 标签的属性，标签在元素中的位置
-            style: {
-              // 包裹标签样式属性的字段 style 与标签其他属性在数据结构上并行
-              // fontSize: 12, // 标签的样式属性，文字字体大小
-              // ...            // 标签的其他样式属性
-            },
-          },
-          // style: {
-          //   // 包裹样式属性的字段 style 与其他属性在数据结构上并行
-          //   fill: "#000", // 样式属性，元素的填充色
-          //   stroke: "#888", // 样式属性，元素的描边色
-          //   // ...              // 其他样式属性
-          // },
+          type: "circle",
         };
         let data2 = {
           id: jydfzkh + "\n" + jydfmc,
-          label: jydfzkh + "\n" + jydfmc,
-
-          // type: "rect-jsx",
-          labelCfg: {
-            // 标签配置属性
-            positions: "bottom", // 标签的属性，标签在元素中的位置
-            style: {
-              // 包裹标签样式属性的字段 style 与标签其他属性在数据结构上并行
-              // fontSize: 12, // 标签的样式属性，文字字体大小
-              // ...            // 标签的其他样式属性
-            },
-          },
-          // style: {
-          //   // 包裹样式属性的字段 style 与其他属性在数据结构上并行
-          //   fill: "#000", // 样式属性，元素的填充色
-          //   stroke: "#888", // 样式属性，元素的描边色
-          //   // ...              // 其他样式属性
-          // },
+          type: "circle",
         };
         let bFindData1 = false;
         let bFindData2 = false;
@@ -351,18 +320,31 @@ export default {
           label: "",
           style: {
             endArrow: true,
-            startArrow: true,
+            // endArrow: {
+            //   path: this.$G6.Arrow.triangle(10, 20, 25),
+            //   d: 25,
+            //   fill: "#f00",
+            //   stroke: "#f00",
+            //   opacity: 0.5,
+            //   lineWidth: 3,
+            // },
           },
         };
         edges.push(link1);
-
         let link2 = {
           target: cxkh + "\n" + jymc,
           source: jydfzkh + "\n" + jydfmc,
           label: "",
           style: {
             endArrow: true,
-            startArrow: true,
+            // endArrow: {
+            //   path: this.$G6.Arrow.triangle(10, 20, 25),
+            //   d: 25,
+            //   fill: "#f00",
+            //   stroke: "#f00",
+            //   opacity: 0.5,
+            //   lineWidth: 3,
+            // },
           },
         };
         edges.push(link2);
@@ -374,18 +356,32 @@ export default {
   mounted() {
     let _this = this;
     const erd = elementResizeDetectorMaker();
-    erd.listenTo(document.getElementById(this.id), function (element) {
+    erd.listenTo(document.getElementById(this.graphid), function (element) {
       _this.resize();
     });
-    let { clientWidth, clientHeight } = this.$refs[this.id];
+    let { clientWidth, clientHeight } = this.$refs[this.graphid];
     let option = {
       width: clientWidth,
       height: clientHeight,
-      container: this.id, // 指定挂载容器
+      container: this.graphid, // 指定挂载容器
       fitView: true,
       animate: true,
+      // linkCenter: true,
+      nodeStateStyles: {
+        active: {
+          opacity: 1,
+        },
+        inactive: {
+          opacity: 0.2,
+        },
+      },
       modes: {
-        default: ["drag-canvas", "zoom-canvas", "drag-node"], // 允许拖拽画布、放缩画布、拖拽节点
+        default: [
+          "drag-canvas",
+          "zoom-canvas",
+          "drag-node",
+          "activate-relations",
+        ], // 允许拖拽画布、放缩画布、拖拽节点
         defaultEdge: {
           size: 1,
           style: {
@@ -412,6 +408,16 @@ export default {
     this.initPlugins();
     this.graph.data(this.makeData()); // 加载数据
     this.graph.render(); // 渲染
+    this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
+    this.$bus.$on("swichLayout", (data) => {
+      let { graphid, layout } = data;
+      if (graphid !== _this.graphid) return;
+      console.log(layout, typeof layout);
+      _this.graph.updateLayout(layout);
+      _this.graph.data(_this.makeData()); // 加载数据
+      _this.graph.render(); // 渲染
+      _this.graph.fitView();
+    });
   },
 };
 </script>

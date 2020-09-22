@@ -21,6 +21,7 @@ Vue.use(ElementUI);
 Vue.prototype.$echarts = echarts;
 import G6 from "@antv/g6";
 Vue.prototype.$G6 = G6;
+Vue.prototype.$bus = new Vue();
 /* eslint-disable no-new */
 new Vue({
   components: { App },
