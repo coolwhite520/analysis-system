@@ -2,7 +2,6 @@
   <div></div>
 </template>
 <script>
-const string2fileStream = require("string-to-file-stream");
 const jschardet = require("jschardet");
 const log = require("@/utils/log");
 const iconv = require("iconv-lite");
@@ -239,19 +238,21 @@ export default {
       return resultList;
     },
 
-    testEncoding(fReadName) {
+    getFileEncoding(filePathName) {
       return new Promise(function (resolve, reject) {
-        let readableStream = fs.createReadStream(fReadName);
-        readableStream.on("data", function (chunk) {
-          console.log(`接收到 ${chunk.length} 个字节的数据`);
-          let res = jschardet.detect(chunk);
-          log.info(res);
-          var str = iconv.decode(chunk, res.encoding);
-          console.log(str); //得到无乱码的内容
-          resolve(str);
-          readableStream.close();
+        let readFileStream = fs.createReadStream(filePathName);
+        readFileStream.on("data", function (chunk) {
+          let { encoding, confidence } = jschardet.detect(chunk);
+          if (confidence > 0.6) {
+            log.info({ filePathName, confidence, encoding });
+            resolve(encoding);
+          } else {
+            resolve("UTF-8");
+            log.info({ filePathName, confidence, encoding });
+          }
+          readFileStream.close();
         });
-        readableStream.on("close", function () {
+        readFileStream.on("close", function () {
           console.log("close file");
         });
       });
@@ -261,29 +262,36 @@ export default {
      * 解析示例csv文件
      */
     async parseExampleCsvFile(filePathName) {
+      let encoding = await this.getFileEncoding(filePathName);
       return new Promise(function (resolve, reject) {
         let rows = [];
-        let writeableStream = csv.parse({
+        let csvParseStream = csv.parse({
           trim: true,
           headers: true,
           objectMode: true,
           ignoreEmpty: true,
           maxRows: 2,
         });
-        writeableStream
+        let readFileStream = fs.createReadStream(filePathName);
+
+        csvParseStream
           .on("error", (error) => {
             log.info(error);
-            readableStream.close();
+            readFileStream.close();
             reject(error);
           })
           .on("data", (row) => {
             log.info(row);
             rows.push(row);
+            if (rows.length >= 2) {
+              readFileStream.close();
+              csvParseStream.end();
+            }
           })
           .on("end", (rowCount) => {
-            console.log(`Parsed ${rowCount} rows`);
+            log.info(`Parsed ${rowCount} rows`);
             if (rows.length < 2) {
-              readableStream.close();
+              readFileStream.close();
               resolve([]);
               return;
             }
@@ -310,24 +318,20 @@ export default {
               ins2,
             };
             resolve([result]);
-            readableStream.close();
+            readFileStream.close();
           });
-        let readableStream = fs.createReadStream(filePathName);
-        readableStream
-          .on("data", function (chuck) {
-            let res = jschardet.detect(chuck);
-            let str = iconv.decode(chuck, res.encoding);
-            string2fileStream(str).pipe(writeableStream);
-          })
-          .on("close", function () {
-            log.info("file parse close");
-          })
-          .on("error", (error) => {
-            log.info("file parse", error);
-          })
-          .on("end", function () {
-            log.info("file parse end.");
+        // 判断编码格式并进行转换
+        if (encoding !== "UTF-8") {
+          readFileStream.on("data", function (chuck) {
+            let str = iconv.decode(chuck, encoding);
+            csvParseStream.write(Buffer.from(str));
           });
+        } else {
+          readFileStream.pipe(csvParseStream);
+        }
+        readFileStream.on("end", function () {
+          csvParseStream.end();
+        });
       });
     },
     // 事件响应函数
@@ -377,7 +381,7 @@ export default {
               pdm,
               fileAllCols
             );
-
+            log.info(fileName, queryResult);
             let matchedMbdm = queryResult.mbdm;
             // 说明是自动匹配
             if (pdm === "") {
@@ -403,12 +407,12 @@ export default {
             let tabletemp = data.matchedMbdmList.filter((value) => {
               return value.mbdm === matchedMbdm;
             });
-            let tablecname = tabletemp[0].tablecname;
+            let tablecname =
+              tabletemp.length > 0 ? tabletemp[0].tablecname : "";
 
-            let externFields = tabletemp[0].extern_field
-              ? tabletemp[0].extern_field.split(",")
-              : [];
-            let mbmc = tabletemp[0].mbmc;
+            let externFields =
+              tabletemp.length > 0 ? tabletemp[0].extern_field.split(",") : [];
+            let mbmc = tabletemp.length > 0 ? tabletemp[0].mbmc : "";
             data.publicFields = publicFields;
             data.tablecname = tablecname;
             data.mbmc = mbmc;
@@ -832,6 +836,7 @@ export default {
       createTableName
     ) {
       let _this = this;
+      let encoding = await this.getFileEncoding(filePathName);
       return new Promise(async function (resolve, reject) {
         try {
           let { ajid } = caseBase;
@@ -857,83 +862,98 @@ export default {
           let readSize = 0;
           let fileSize = stats.size;
           let bFirstRow = true;
-          fs.createReadStream(filePathName)
-            .pipe(
-              csv.parse({
-                trim: true,
-                headers: true,
-                objectMode: true,
-                ignoreEmpty: true,
-              })
-            )
-            .on("error", (error) => {
-              console.error(error);
-            })
-            .on("data", (row) => {
-              let rowDataValues = [];
-              for (let k in row) {
-                if (matchedFileCols.includes(k)) {
-                  rowDataValues.push(row[k]);
-                }
+          let readFileStream = fs.createReadStream(filePathName);
+
+          let csvParseStream = csv.parse({
+            trim: true,
+            headers: true,
+            objectMode: true,
+            ignoreEmpty: true,
+          });
+          csvParseStream.on("error", (error) => {
+            log.error(error);
+            readFileStream.close();
+          });
+          csvParseStream.on("data", (row) => {
+            log.info(row);
+            let rowDataValues = [];
+            for (let k in row) {
+              if (matchedFileCols.includes(k)) {
+                rowDataValues.push(row[k]);
               }
-              readSize += `${rowDataValues}`.length;
-              rownum++;
-              let publicValues = [
-                `${batchCount}`,
-                `采集录入`,
-                `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
-                `${ajid}`,
-                `${sjlyid}`,
-                `${rownum}`,
-              ];
-              let realValues = publicValues
-                .concat(rowDataValues)
-                .concat(externFieldsValues);
-              let insertStr = realValues.join("\t") + "\n";
-              // 写入流中
-              streamFrom.write(insertStr, function (err) {
-                if (!err) {
-                  let percentage = parseInt(
-                    parseFloat(readSize / fileSize) * 100
-                  );
-                  let secondTitle = "";
-                  if (percentage >= 60) {
-                    secondTitle = "文件较大，正在加速载入...";
-                  }
-                  if (percentage >= 99) {
-                    percentage = 99;
-                    secondTitle = "距离加载完毕已经不远了，请耐心等待...";
-                  }
-                  _this.$electron.ipcRenderer.send("read-one-file-proccess", {
-                    success: true,
-                    fileName,
-                    sheetName,
-                    percentage,
-                    secondTitle,
-                    msg: `载入条目：${rownum} ${rowDataValues}`,
-                  });
-                } else {
-                  _this.$electron.ipcRenderer.send("read-one-file-proccess", {
-                    success: false,
-                    fileName,
-                    sheetName,
-                    secondTitle: "出错了...",
-                    msg: err,
-                  });
+            }
+            readSize += `${rowDataValues}`.length;
+            rownum++;
+            let publicValues = [
+              `${batchCount}`,
+              `采集录入`,
+              `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
+              `${ajid}`,
+              `${sjlyid}`,
+              `${rownum}`,
+            ];
+            let realValues = publicValues
+              .concat(rowDataValues)
+              .concat(externFieldsValues);
+            let insertStr = realValues.join("\t") + "\n";
+            // 写入流中
+            streamFrom.write(insertStr, function (err) {
+              if (!err) {
+                let percentage = parseInt(
+                  parseFloat(readSize / fileSize) * 100
+                );
+                let secondTitle = "";
+                if (percentage >= 60) {
+                  secondTitle = "文件较大，正在加速载入...";
                 }
-              });
-            })
-            .on("end", (rowCount) => {
-              console.log(`Parsed ${rowCount} rows`);
-              streamFrom.end();
-              _this.$electron.ipcRenderer.send("read-one-file-over", {
-                fileName,
-                sheetName,
-                sheetIndex,
-                tableName: createTableName,
-              });
-              resolve("done");
+                if (percentage >= 99) {
+                  percentage = 99;
+                  secondTitle = "距离加载完毕已经不远了，请耐心等待...";
+                }
+                _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                  success: true,
+                  fileName,
+                  sheetName,
+                  percentage,
+                  secondTitle,
+                  msg: `载入条目：${rownum} ${rowDataValues}`,
+                });
+              } else {
+                _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                  success: false,
+                  fileName,
+                  sheetName,
+                  secondTitle: "出错了...",
+                  msg: err,
+                });
+                readFileStream.close();
+              }
             });
+          });
+          csvParseStream.on("end", (rowCount) => {
+            console.log(`Parsed ${rowCount} rows`);
+            streamFrom.end();
+            _this.$electron.ipcRenderer.send("read-one-file-over", {
+              fileName,
+              sheetName,
+              sheetIndex,
+              tableName: createTableName,
+            });
+            resolve("done");
+            readFileStream.close();
+          });
+          // 判断编码格式并进行转换
+          if (encoding !== "UTF-8") {
+            readFileStream.on("data", function (chuck) {
+              let str = iconv.decode(chuck, encoding);
+              csvParseStream.write(Buffer.from(str));
+            });
+          } else {
+            readFileStream.pipe(csvParseStream);
+          }
+          readFileStream.on("end", function () {
+            csvParseStream.end();
+          });
         } catch (e) {
           log.error(e);
           reject(e);

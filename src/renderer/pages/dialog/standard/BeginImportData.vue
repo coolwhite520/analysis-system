@@ -170,6 +170,9 @@ export default {
           });
         } else {
           _this.$store.commit("DataCollection/ADD_CSV_DATA_TO_LIST", data);
+          if (data.matchedMbdm.length > 0) {
+            _this.$refs.multipleTable.toggleRowSelection(data, true);
+          }
         }
       }
     );
@@ -179,7 +182,6 @@ export default {
         _this.loading = false;
         _this.currentRow =
           _this.exampleDataList[_this.exampleDataList.length - 1];
-        _this.$refs.multipleTable.toggleAllSelection();
       }
     );
   },

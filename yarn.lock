@@ -10044,11 +10044,6 @@ strict-uri-encode@^1.0.0:
   resolved "https://registry.npm.taobao.org/strict-uri-encode/download/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
   integrity sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=
 
-string-to-file-stream@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/string-to-file-stream/-/string-to-file-stream-1.2.0.tgz#278674163b5d480591cd3292cbe81908ccd25471"
-  integrity sha512-fsYZxP8L2xC/LkWsEOZ36r3rAfCQ0Bw3bn8ZS6Q//k0AdMcZLihh59y/qWk7q/7F87jlYzmwNy8FCu4t/RDGWg==
-
 string-width@^1.0.1:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/string-width/download/string-width-1.0.2.tgz#118bdf5b8cdc51a2a7e70d211e07e2b0b9b107d3"
