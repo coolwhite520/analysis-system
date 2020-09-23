@@ -281,7 +281,7 @@ export default {
             reject(error);
           })
           .on("data", (row) => {
-            log.info(row);
+            // log.info(row);
             rows.push(row);
             if (rows.length >= 2) {
               readFileStream.close();
