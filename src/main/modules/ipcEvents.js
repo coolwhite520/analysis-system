@@ -91,6 +91,9 @@ export default function() {
     if (process.env.NODE_ENV === "development")
       global.dataCollectionWindow.show();
   });
+  ipcMain.on("data-collection-open-complete", () => {
+    global.mainWindow.webContents.send("data-collection-open-complete");
+  });
   ipcMain.on("data-collection-close", () => {
     if (global.dataCollectionWindow) {
       global.dataCollectionWindow.close();

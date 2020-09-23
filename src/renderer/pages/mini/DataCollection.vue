@@ -1139,6 +1139,7 @@ export default {
       "import-one-table-begin",
       this.onCopyTempDataToRealTable
     );
+    this.$electron.ipcRenderer.send("data-collection-open-complete");
   },
 };
 </script>
