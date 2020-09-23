@@ -28,13 +28,27 @@ export default {
   methods: {
     async handleClickImportData() {
       await this.$electron.ipcRenderer.send("data-collection-open");
-      await this.$store.dispatch(
-        "CaseDetail/queryBatchCount",
-        this.caseBase.ajid
+      this.$electron.ipcRenderer.on(
+        "data-collection-open-complete",
+        async () => {
+          await this.$store.dispatch(
+            "CaseDetail/queryBatchCount",
+            this.caseBase.ajid
+          );
+          await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
+          await this.$store.commit(
+            "DialogPopWnd/SET_STANDARDVIEW",
+            "begin-import"
+          );
+          await this.$store.commit(
+            "DialogPopWnd/SET_STANDARDDATAVISIBLE",
+            true
+          );
+          this.$electron.ipcRenderer.removeAllListeners(
+            "data-collection-open-complete"
+          );
+        }
       );
-      await this.$store.commit("CaseDetail/ADD_BATCHTOUNT");
-      await this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
-      await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", true);
     },
   },
 };
