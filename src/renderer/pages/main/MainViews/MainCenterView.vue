@@ -206,7 +206,7 @@ export default {
   margin: 0;
   border: 1px solid #ccc;
   background: #fff;
-  z-index: 3000;
+  z-index: 200;
   position: absolute;
   list-style-type: none;
   padding: 0;
