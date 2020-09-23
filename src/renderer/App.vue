@@ -64,17 +64,17 @@ export default {
         return;
       }
       global.pool = pool;
-      // 判断是否存在gas_data数据库
-      if (!(await base.existGasDataBase())) {
-        this.$electron.ipcRenderer.send("show-db-init");
-      } else {
-        dbCon["database"] = "gas_data";
-        global.pool = new Pool(dbCon);
-        await this.$store.dispatch("PublicList/getAJLBList");
-        await this.$store.dispatch("PublicList/getZCJDMClist");
-        await this.$store.dispatch("PublicList/getProvincelist");
-        await this.$store.dispatch("Cases/getExistCaseAsync");
-      }
+      await this.$store.dispatch("PublicList/getAJLBList");
+      await this.$store.dispatch("PublicList/getZCJDMClist");
+      await this.$store.dispatch("PublicList/getProvincelist");
+      await this.$store.dispatch("Cases/getExistCaseAsync");
+      // // 判断是否存在gas_data数据库
+      // if (!(await base.existGasDataBase())) {
+      //   this.$electron.ipcRenderer.send("show-db-init");
+      // } else {
+      //   dbCon["database"] = "gas_data";
+      //   global.pool = new Pool(dbCon);
+      // }
     } catch (e) {
       global.pool = null;
       this.$electron.ipcRenderer.send("show-db-config");

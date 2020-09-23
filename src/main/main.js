@@ -73,7 +73,7 @@ function createWindow() {
     global.mainWindow = mainWindow;
     global.exportWindow = createExportWindow(BrowserWindow);
     global.dbConfigWindow = createDbConfigWindow(BrowserWindow);
-    global.dbInitWindow = createDbInitWindow(BrowserWindow);
+    // global.dbInitWindow = createDbInitWindow(BrowserWindow);
     // if (isDevelopment) {
     //   // 安装vue-devtools
     //   let extensions = BrowserWindow.getDevToolsExtensions();
