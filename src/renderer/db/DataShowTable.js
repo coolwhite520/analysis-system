@@ -219,7 +219,7 @@ export default {
   // 根据tid获取显示的列名称list
   QueryTableShowCFields: async function(tid) {
     try {
-      await cases.SwitchDefaultCase();
+      // await cases.SwitchDefaultCase();
       let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type, link_mid::int, data_type FROM icap_base.layout_table_column
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;

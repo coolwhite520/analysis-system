@@ -6,8 +6,8 @@ export default {
   // 查询当前tid对应的模型库model_mids , product_code（不同产品进行区分模型）
   QueryModelmidsByTid: async function(tid) {
     try {
-      await cases.SwitchDefaultCase();
-      let sql = ` SELECT model_mids,product_code FROM layout_menu_model where length(model_mids)>0 and menu_tid='${tid}'`;
+      // await cases.SwitchDefaultCase();
+      let sql = ` SELECT model_mids,product_code FROM icap_base.layout_menu_model where length(model_mids)>0 and menu_tid='${tid}'`;
       const res = await global.pool.query(sql);
       return res.rows.length > 0 ? res.rows[0].model_mids : "";
     } catch (e) {

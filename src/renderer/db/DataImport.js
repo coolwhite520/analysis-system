@@ -1176,6 +1176,7 @@ export default {
         //进销项税务 gas_tax_records_150001
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
+      await cases.SwitchCase(ajid);
       await global.pool.query(sql);
       return { success: true };
     } catch (e) {

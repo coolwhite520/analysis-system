@@ -151,6 +151,7 @@
 <script>
 import { mapState } from "vuex";
 import dataImport from "../../../db/DataImport";
+import log from "electron-log";
 export default {
   props: ["sheetItem", "activeName"],
   data() {
@@ -283,6 +284,9 @@ export default {
     },
     async onRecvImportCompleteMsg() {
       this.$electron.ipcRenderer.removeAllListeners("import-one-table-process");
+      this.$electron.ipcRenderer.removeAllListeners(
+        "import-one-table-complete"
+      );
       this.bClickBtnCheck = false;
       this.currentPercentage = 0;
       this.isDataLoading = false;
@@ -290,14 +294,21 @@ export default {
         "DataCollection/DELETE_DATA_LIST_BY_INDEX",
         this.activeName
       );
-      await this.$store.dispatch(
-        "CaseDetail/queryCaseDataCenter",
-        this.caseBase.ajid
-      );
+      // 导入成功，清理examplelist
+      this.$notify({
+        title: "成功",
+        message: `数据插入成功`,
+        type: "success",
+      });
+      log.info("length:", this.exampleDataList.length);
       if (this.exampleDataList.length === 0) {
-        await this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
-        await this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
-        // 更新当前的展示列表中的数据
+        this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
+        this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
+        await this.$store.dispatch(
+          "CaseDetail/queryCaseDataCenter",
+          this.caseBase.ajid
+        );
+        // 更新当前的展示列表中的数据;
         for (let tableData of this.tableDataList) {
           // 根据tableName获取表的数据
           if (tableData.componentName !== "no-data-view") {
@@ -309,15 +320,6 @@ export default {
           }
         }
       }
-      // 导入成功，清理examplelist
-      this.$notify({
-        title: "成功",
-        message: `数据插入成功`,
-        type: "success",
-      });
-      this.$electron.ipcRenderer.removeAllListeners(
-        "import-one-table-complete"
-      );
     },
     async handleClickImportCurrentData() {
       this.$electron.ipcRenderer.on(

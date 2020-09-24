@@ -324,6 +324,7 @@ export default {
         if (encoding !== "UTF-8") {
           readFileStream.on("data", function (chuck) {
             let str = iconv.decode(chuck, encoding);
+            log.info(str);
             csvParseStream.write(Buffer.from(str));
           });
         } else {
@@ -682,8 +683,8 @@ export default {
         streamFrom.on("error", function (e) {
           console.log(e);
         });
-        streamFrom.on("finish", function (e) {
-          log.info(e, "import finish .....");
+        streamFrom.on("finish", function () {
+          log.info("import finish .....");
         });
         let matchedColNumList = [];
         let stats = fs.statSync(filePathName);
@@ -853,8 +854,8 @@ export default {
           streamFrom.on("error", function (e) {
             console.log(e);
           });
-          streamFrom.on("finish", function (e) {
-            log.info(e, "import finish .....");
+          streamFrom.on("finish", function () {
+            log.info("import finish .....");
           });
           let matchedColNumList = [];
           let stats = fs.statSync(filePathName);
@@ -1039,7 +1040,7 @@ export default {
           const query = new Query(sqlSelect);
           let client2 = await global.pool.connect();
           client2.query(query);
-          query.on("row", (row) => {
+          query.on("row", async (row) => {
             index++;
             row = importModel.TestingHandle(Columns, row, targetTableName);
             let values = [];
@@ -1061,7 +1062,7 @@ export default {
               }
             }
             let valueStr = values.join("\t") + "\n";
-            console.log(valueStr);
+            // console.log(valueStr);
             streamFrom.write(valueStr, function (err) {
               if (!err) {
                 let data = {
@@ -1087,31 +1088,28 @@ export default {
                 rejcect(err);
               }
             });
+            if (index >= sumRow) {
+              streamFrom.end();
+              await dataImport.extractDataFromTempTable(
+                ajid,
+                tempTableName,
+                matchedMbdm,
+                sjlyid
+              );
+              // await dataImport.deleteTempTable(ajid, tempTableName);
+              _this.$electron.ipcRenderer.send("import-one-table-complete", {
+                tabIndex,
+                success: true,
+                msg: "success",
+              });
+              resolve("done");
+            }
           });
           query.on("end", async () => {
             console.log("query done");
-            streamFrom.end();
-            await dataImport.extractDataFromTempTable(
-              ajid,
-              tempTableName,
-              matchedMbdm,
-              sjlyid
-            );
-            // await dataImport.deleteTempTable(ajid, tempTableName);
-            _this.$electron.ipcRenderer.send("import-one-table-complete", {
-              tabIndex,
-              success: true,
-              msg: "success",
-            });
-            resolve("done");
           });
           query.on("error", (err) => {
-            console.error(err.stack);
-            _this.$electron.ipcRenderer.send("import-one-table-process", {
-              tabIndex,
-              success: false,
-              msg: err.message,
-            });
+            log.info(err);
             rejcect(err);
           });
         } catch (e) {
