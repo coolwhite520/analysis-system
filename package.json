@@ -73,6 +73,7 @@
     "officegen": "^0.6.4",
     "pg": "^8.2.1",
     "pg-copy-streams": "^5.1.1",
+    "pg-query-stream": "^3.2.3",
     "through2": "^4.0.2",
     "uuid": "^8.3.0",
     "vue": "^2.6.11",

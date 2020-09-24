@@ -5,42 +5,46 @@ const log = require("electron-log");
 export default {
   // 根据导入数据类型获取对应的匹配表
   QueryMatchTableListByPdm: async function(pdm) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchDefaultCase();
+      await cases.SwitchDefaultCase(client);
       let sql = `select *  from  st_data_template  where pdm='${pdm}' order by MBMC;`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows; // id, mbdm, mbmc, tablename ...
-    } catch (e) {
-      log.info(e);
+    } finally {
+      client.release();
     }
   },
   // 根据模版代码获取对应的列名称
   QueryColsNameByMbdm: async function(mbdm) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchDefaultCase();
+      await cases.SwitchDefaultCase(client);
       let sql = `SELECT ID, MBDM, TABLEENAME, FIELDCNAME, FIELDENAME, FIELDTYPE, fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
-    } catch (e) {
-      log.info(e);
+    } finally {
+      client.release();
     }
   },
   // 根据模版代码获取log表对应的列名称
   QueryInfoFromLogMatchByMbdm: async function(mbdm) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchDefaultCase();
+      await cases.SwitchDefaultCase(client);
       let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM gas_match_log where MBDM = '${mbdm}'`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
-    } catch (e) {
-      log.info(e);
+    } finally {
+      client.release();
     }
   },
   // 自动匹配字段
   // ,账号开户银行,账号开户日期,账号开户名称,银行账号,通信地址,联系电话,开户人证件类型,开户人证件号码,开户人国籍,开户联系方式,代理人电话,代理人,,
   QueryBestMatchMbdm: async function(pdm, fileFields) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchDefaultCase();
+      await cases.SwitchDefaultCase(client);
       let sql = "";
       if (pdm.length > 0) {
         sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
@@ -63,19 +67,19 @@ export default {
          ) AND position(','||fieldcname||',' in '${fileFields}' )> 0 ORDER BY tableename)B GROUP BY B.mbdm ORDER BY count desc;`;
       }
       let mbdm = "";
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       if (res.rows.length > 0) {
         mbdm = res.rows[0].mbdm;
         if (pdm === "") {
           sql = `select pdm from st_data_template where mbdm='${mbdm}'`;
-          let ret = await global.pool.query(sql);
+          let ret = await client.query(sql);
           pdm = ret.rows[0].pdm;
         }
         return { mbdm, pdm };
       }
       return { mbdm: "", pdm: "" };
-    } catch (e) {
-      log.info(e);
+    } finally {
+      client.release();
     }
   },
   // fileExt --> 不包含.
@@ -92,8 +96,9 @@ export default {
     tablecname,
     softVersion
   ) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchDefaultCase();
+      await cases.SwitchDefaultCase(client);
       ajid = parseInt(ajid);
       let now = new Date().Format("yyyy-MM-dd hh:mm:ss");
       let sql = `INSERT INTO "icap_base"."st_data_source"("sjly", "jh", "drrq", "ajid", "jgid", 
@@ -102,28 +107,29 @@ export default {
       ('', '00000000', '${now}', ${ajid}, '', '${ajmc}', '${fileExt}', '${filename}',
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
        '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].sjlyid;
-    } catch (e) {
-      log.info(e);
-      return false;
+    } finally {
+      client.release();
     }
   },
   // 查询scheme下的所有表名称
   showLikeTempTableCount: async function(ajid, like) {
+    const client = await global.pool.connect();
     try {
       let sql = `SELECT count(table_name)::int count FROM information_schema.tables
       WHERE table_schema = 'icap_${ajid}' 
       and table_name like '%${like}%' 
       and POSITION ( '_temp' IN TABLE_NAME ) > 0;`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].count;
-    } catch (e) {
-      log.info(e);
+    } finally {
+      client.release();
     }
   },
   // 数据导入的时候创建临时表
   createTempTable: async function(ajid, tablecname, mbdm, fields) {
+    const client = await global.pool.connect();
     try {
       if (tablecname.endsWith("_source")) {
         tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
@@ -131,9 +137,8 @@ export default {
       let like = `${tablecname}_${mbdm}`;
       let valueName = (await this.showLikeTempTableCount(ajid, like)) + 1;
       let createTableName = `${like}_${valueName}_temp`;
-
       // 查询全字段
-      await cases.SwitchDefaultCase();
+      await cases.SwitchDefaultCase(client);
       let createFields = JSON.parse(JSON.stringify(fields));
       let allFieldRows = await this.QueryColsNameByMbdm(mbdm);
       for (let fieldRow of allFieldRows) {
@@ -145,55 +150,23 @@ export default {
         return `"${item}" varchar(1000)`;
       });
       let fieldsStr = newFields.join(",");
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `DROP TABLE IF EXISTS ${createTableName};
       CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return { createTableName, createFields };
-    } catch (e) {
-      log.info(e);
-      return false;
+    } finally {
+      client.release();
     }
   },
   deleteTempTable: async function(ajid, tempTableName) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `DROP TABLE IF EXISTS ${tempTableName};`;
-      await global.pool.query(sql);
-    } catch (e) {
-      log.info(e);
-    }
-  },
-  // 插入一条数据
-  importOneRowData: async function(ajid, createdTableName, fields, data) {
-    let sql;
-    try {
-      await cases.SwitchCase(ajid);
-      sql = `insert into ${createdTableName}(${fields}) VALUES(${data})`;
-      const res = await global.pool.query(sql);
-      return true;
-    } catch (e) {
-      log.info(e, sql);
-      return false;
-    }
-  },
-  // 插入对象
-  importOneRowDataEx: async function(ajid, createdTableName, row) {
-    let sql;
-    try {
-      let fields = [];
-      let values = [];
-      for (let k in row) {
-        fields.push(`${k.toLowerCase()}`);
-        values.push(`\'${row[k]}\'`);
-      }
-      await cases.SwitchCase(ajid);
-      sql = `insert into ${createdTableName} (${fields}) VALUES(${values})`;
-      const res = await global.pool.query(sql);
-      return { success: true };
-    } catch (e) {
-      log.info(e, sql);
-      return { success: false, msg: e.message };
+      await client.query(sql);
+    } finally {
+      client.release();
     }
   },
 
@@ -207,17 +180,17 @@ export default {
     filterList,
     headers // 包含字段的所有属性
   ) {
+    const client = await global.pool.connect();
     // 展示的时候需要行号， 所以查询的时候需要添加到select中
     let matchedFieldsNew = ["rownum"].concat(matchedFields);
     let newRows = [];
     let errorFields = [];
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `select ${matchedFieldsNew} from ${tableName}`;
       if (filterList.length === 0) {
         sql = sql + ` limit ${limit} OFFSET ${beginIndex}`;
-
-        const res = await global.pool.query(sql);
+        const res = await client.query(sql);
         let rows = res.rows;
         for (let row of rows) {
           let newRow = [];
@@ -346,21 +319,20 @@ export default {
       }
       //格式化数据
       return { rows: newRows, success: true, errorFields };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 查询条目数量
   queryRowsum: async function(ajid, tableName) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `select count(*)::int count from ${tableName}`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].count;
-    } catch (e) {
-      log.info(e);
-      return 0;
+    } finally {
+      client.release();
     }
   },
 
@@ -371,25 +343,25 @@ export default {
     matchedFields,
     fieldName
   ) {
+    const client = await global.pool.connect();
     let success = true;
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
-      let res = await global.pool.query(sql);
+      let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName}) `;
-      res = await global.pool.query(sqlCount);
+      res = await client.query(sqlCount);
       let count = res.rows[0].count;
       return {
         rows,
         count,
         success,
       };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 查询字段的长度不合法的条目
@@ -400,20 +372,19 @@ export default {
     fieldName,
     fieldLength
   ) {
+    const client = await global.pool.connect();
     let success = true;
     try {
-      // await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
-
-      let res = await global.pool.query(sql);
+      let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
-      res = await global.pool.query(sqlCount);
+      res = await client.query(sqlCount);
       let count = res.rows[0].count;
       return { rows, success, count };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 查询字段非日期的条目
@@ -423,55 +394,55 @@ export default {
     matchedFields,
     fieldName
   ) {
+    const client = await global.pool.connect();
     let success = true;
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} 
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !=''; `; // 查找一个示例
-      let res = await global.pool.query(sql);
+      let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} 
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' ; `;
-      res = await global.pool.query(sqlCount);
+      res = await client.query(sqlCount);
       let count = res.rows[0].count;
       return { rows, success, count };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 更新错误的数据
   updateErrorRows: async function(ajid, tableName, field, newValue, rownums) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       rownums = rownums.map((el) => {
         return `'${el}'`;
       });
       let sql = `update ${tableName} set ${field} = '${newValue}' where rownum in (${rownums})`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return { success: true };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // delete错误的数据
   deleteErrorRows: async function(ajid, tableName, rownums) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       rownums = rownums.map((el) => {
         return `'${el}'`;
       });
       let sql = `delete from ${tableName} where rownum in (${rownums})`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return { success: true };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 根据通用模版抽取数据到别的表中。
@@ -1160,8 +1131,9 @@ export default {
   },
   // 数据抽取
   extractDataFromTempTable: async function(ajid, tempTableName, mbdm, sjlyid) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = "";
       if (mbdm === "110002") {
         // 通用模版
@@ -1176,18 +1148,17 @@ export default {
         //进销项税务 gas_tax_records_150001
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
-      await cases.SwitchCase(ajid);
-      await global.pool.query(sql);
+      await client.query(sql);
       return { success: true };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 展示目标表的结构
   showTableStruct: async function(ajid, tableName) {
+    const client = await global.pool.connect();
     try {
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let sql = `SELECT DISTINCT a.attnum,
       a.attname AS field,
       t.typname AS type,
@@ -1205,7 +1176,7 @@ export default {
       and a.atttypid = t.oid
       ORDER BY a.attnum;`;
       let resultList = [];
-      let res = await global.pool.query(sql);
+      let res = await client.query(sql);
       for (let row of res.rows) {
         let obj = {};
         if (row.type.includes("char")) {
@@ -1230,117 +1201,8 @@ export default {
         resultList.push(obj);
       }
       return { success: true, rows: resultList };
-    } catch (e) {
-      log.info(e);
-      return { success: false, msg: e.message };
-    }
-  },
-  importDataFromTempTableToRealTable: async function(
-    ajid,
-    tempTableName,
-    tableName,
-    mbdm,
-    publicFields,
-    matchedFields,
-    externFields,
-    // templateAllFields,
-    callback
-  ) {
-    log.info(
-      "importDataFromTempTableToRealTable:",
-      ajid,
-      tempTableName,
-      tableName
-    );
-    let insertSql;
-    try {
-      let targetTableStruct = await this.showTableStruct(ajid, tableName);
-      if (!targetTableStruct.success)
-        return { success: false, msg: "select table struct error" };
-      // 先查询所有数据
-      await cases.SwitchCase(ajid);
-      // 拼接当前temp表的所有字段
-      let sjlyid = 0;
-      let resFieldTypeList = [];
-      let selectList = [];
-      let fields = publicFields.concat(matchedFields).concat(externFields);
-      fields = fields.map((el) => {
-        return el.toLowerCase();
-      });
-      for (let field of fields) {
-        let f = targetTableStruct.rows.find((item) => {
-          return item.fieldename === field;
-        });
-        if (f) {
-          resFieldTypeList.push(f);
-          selectList.push(field);
-        }
-      }
-      const pageSize = 100;
-      let countSql = `select count(*)::int count from ${tempTableName}`;
-      let resCount = await global.pool.query(countSql);
-      let rowsCount = resCount.rows[0].count;
-      let loopCount = 0;
-      if (rowsCount === 0) {
-        loopCount = 0;
-      } else if (rowsCount < pageSize) {
-        loopCount = 1;
-      } else {
-        if (rowsCount % pageSize === 0) {
-          loopCount = parseInt(rowsCount / pageSize);
-        } else {
-          loopCount = parseInt(rowsCount / pageSize + 1);
-        }
-      }
-      // 每次查询30条记录，然后格式化插入
-      for (let index = 0; index < loopCount; index++) {
-        let beginIndex = index * pageSize;
-        let sql = `select ${selectList} from ${tempTableName}`;
-        let limitSql = ` limit ${pageSize} OFFSET ${beginIndex}`;
-        sql = sql + limitSql;
-        let res = await global.pool.query(sql);
-        let sumRows = [];
-
-        for (let row of res.rows) {
-          // row = importModel.TestingHandle(templateAllFields, row, tableName);
-          let values = [];
-          for (let k in row) {
-            if (k.toLowerCase() === "sjlyid") {
-              sjlyid = row[k];
-            }
-            // 需要特殊判定ajid
-            let obj = resFieldTypeList.find((el) => {
-              return el.fieldename.toLowerCase() === k.toLowerCase();
-            });
-            if (obj.fieldtype === 1 || obj.fieldtype === 6) {
-              values.push(`'${row[k].trim()}'`);
-            } else if (obj.fieldtype === 4) {
-              if (typeof row[k] === "string") {
-                // let ts = moment(row[k]).valueOf();
-                values.push(`to_date('${row[k]}','yyyy-MM-dd hh24:mi:ss')`);
-              } else {
-                values.push(row[k]);
-              }
-            } else {
-              let temValue = row[k].trim() ? row[k].trim() : 0;
-              values.push(`${temValue}`);
-            }
-          }
-          sumRows.push(`(${values})`);
-        }
-        sumRows = sumRows.join(",");
-        insertSql = `insert into ${tableName} (${selectList}) values ${sumRows}`;
-        await global.pool.query(insertSql);
-        callback({ sumRow: loopCount, index, success: true });
-      }
-      if (loopCount > 0)
-        await this.extractDataFromTempTable(ajid, tempTableName, mbdm, sjlyid);
-      await this.deleteTempTable(ajid, tempTableName);
-      callback({ sumRow: 100, index: 100, success: true });
-    } catch (e) {
-      // await this.deleteTempTable(ajid, tempTableName);
-      log.info(insertSql, e);
-      callback({ success: false, msg: e.message });
+    } finally {
+      client.release();
     }
   },
 };

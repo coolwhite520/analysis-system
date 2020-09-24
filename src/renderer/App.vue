@@ -10,7 +10,7 @@
 import { DbConfig, OtherConfig } from "@/utils/config";
 import { Pool, Client } from "pg";
 import base from "@/db/Base.js";
-import log from "electron-log";
+const log = require("electron-log");
 export default {
   name: "App",
   data() {

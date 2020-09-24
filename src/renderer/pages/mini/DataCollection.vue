@@ -5,12 +5,14 @@
 const jschardet = require("jschardet");
 const log = require("@/utils/log");
 const iconv = require("iconv-lite");
+const through2 = require("through2");
 import fs from "fs";
 import excel from "exceljs";
 import moment from "moment";
 import dataImport from "../../db/DataImport";
 import cases from "../../db/Cases";
 import { Pool, Client, Query } from "pg";
+const QueryStream = require("pg-query-stream");
 import DataTypeList from "@/json/buttonGroup.json";
 import importModel from "@/utils/sql/ImportModel.js";
 const UUID = require("uuid");
@@ -632,7 +634,9 @@ export default {
                 batchCount,
                 sjlyid,
                 createTableName
-              );
+              ).catch((err) => {
+                log.info(err);
+              });
             }
           }
         }
@@ -668,6 +672,7 @@ export default {
       createTableName
     ) {
       let _this = this;
+      let client = await global.pool.connect();
       try {
         let { ajid } = caseBase;
         let fields = publicFields.concat(matchedFields).concat(externFields);
@@ -675,13 +680,11 @@ export default {
         let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
         console.log(sqlStr);
         let streamFrom;
-        let client = await global.pool.connect();
-        let sql = `SET search_path TO icap_${ajid}`;
-        let res = await client.query(sql);
+        await cases.SwitchCase(client, ajid);
         streamFrom = await client.query(copyFrom(sqlStr));
         console.log(streamFrom);
         streamFrom.on("error", function (e) {
-          console.log(e);
+          log.info(e);
         });
         streamFrom.on("finish", function () {
           log.info("import finish .....");
@@ -814,8 +817,8 @@ export default {
           sheetIndex,
           tableName: createTableName,
         });
-      } catch (e) {
-        log.error(e);
+      } finally {
+        client.release();
       }
     },
     // 解析csv文件全部内容
@@ -837,6 +840,7 @@ export default {
       createTableName
     ) {
       let _this = this;
+      let client = await global.pool.connect();
       let encoding = await this.getFileEncoding(filePathName);
       return new Promise(async function (resolve, reject) {
         try {
@@ -846,13 +850,12 @@ export default {
           let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
           console.log(sqlStr);
           let streamFrom;
-          let client = await global.pool.connect();
-          let sql = `SET search_path TO icap_${ajid}`;
-          let res = await client.query(sql);
+          await cases.SwitchCase(client, ajid);
           streamFrom = await client.query(copyFrom(sqlStr));
           console.log(streamFrom);
           streamFrom.on("error", function (e) {
-            console.log(e);
+            log.info(e);
+            reject(e);
           });
           streamFrom.on("finish", function () {
             log.info("import finish .....");
@@ -874,6 +877,7 @@ export default {
           csvParseStream.on("error", (error) => {
             log.error(error);
             readFileStream.close();
+            reject(error);
           });
           csvParseStream.on("data", (row) => {
             // log.info(row);
@@ -955,9 +959,8 @@ export default {
           readFileStream.on("end", function () {
             csvParseStream.end();
           });
-        } catch (e) {
-          log.error(e);
-          reject(e);
+        } finally {
+          client.release();
         }
       });
     },
@@ -974,110 +977,122 @@ export default {
         externFields,
         tabIndex,
       } = args;
-      let tempTableName = tableName;
-      let targetTableName = tablecname;
-      await new Promise(async function (resolve, rejcect) {
-        try {
-          await cases.SwitchCase(ajid);
-          let targetTableStruct = await dataImport.showTableStruct(
-            ajid,
-            targetTableName
-          );
-          let Columns = targetTableStruct.rows.map((el) => el.fieldename);
-          // 拼接当前temp表的所有字段
-          let sjlyid = 0;
-          let resFieldTypeList = [];
-          let selectList = [];
-          // 公共字段去除行号
-          publicFields = publicFields.filter(
-            (el) => el.toLowerCase() !== "rownum"
-          );
-          let fields = publicFields.concat(matchedFields).concat(externFields);
-          fields = fields.map((el) => {
-            return el.toLowerCase();
-          });
-          fields = fields.filter((el) => Columns.includes(el));
-          // 查询临时表的总条数
-          let index = 0;
-
-          let countSql = `select count(*)::int count from icap_${ajid}.${tempTableName}`;
-          let sumRow = await global.pool.query(countSql);
-          sumRow = sumRow.rows[0].count;
-
-          // 查询一行确定copyfrom的sql参数
-          let testRow = await global.pool.query(
-            `select ${fields} from ${tempTableName} limit 1 offset 0`
-          );
-          testRow = testRow.rows[0];
-          // 判断列名称是否存在与Columns中不存在需要清理
-          let newTestRow = {};
-          for (let k in testRow) {
-            if (Columns.includes(k)) {
-              newTestRow[k] = testRow[k];
-            }
-          }
-          newTestRow = importModel.TestingHandle(
-            Columns,
-            newTestRow,
-            targetTableName
-          );
-          console.log(Object.keys(newTestRow));
-          // 计算经过TestingHandle处理后的行
-          let postHandleFields = [];
-          for (let k in newTestRow) {
-            if (k === "sjlyid") {
-              sjlyid = newTestRow[k];
-            }
-            postHandleFields.push(k);
-          }
+      try {
+        let tempTableName = tableName;
+        let targetTableName = tablecname;
+        await new Promise(async function (resolve, rejcect) {
           let client = await global.pool.connect();
-          let streamFrom = await client.query(
-            copyFrom(`COPY ${targetTableName}(${postHandleFields}) FROM STDIN`)
-          );
-          //异步方式读取
-          let sqlSelect = `select ${fields} from icap_${ajid}.${tempTableName}`;
-          console.log(sqlSelect);
-          const query = new Query(sqlSelect);
           let client2 = await global.pool.connect();
-          client2.query(query);
-          query.on("row", async (row) => {
-            index++;
-            row = importModel.TestingHandle(Columns, row, targetTableName);
-            let values = [];
-            for (let k of Object.keys(row)) {
-              let obj = targetTableStruct.rows.find(
-                (el) => el.fieldename.toLowerCase() === k
-              );
-              if (obj.fieldtype === 1 || obj.fieldtype === 6) {
-                values.push(`${row[k].trim()}`);
-              } else if (obj.fieldtype === 4) {
-                if (typeof row[k] === "string") {
-                  values.push(`to_date('${row[k]}','yyyy-MM-dd hh24:mi:ss')`);
-                } else {
-                  values.push(row[k]);
-                }
-              } else {
-                let temValue = row[k].trim() ? row[k].trim() : 0;
-                values.push(`${temValue}`);
+          try {
+            await cases.SwitchCase(client, ajid);
+            await cases.SwitchCase(client2, ajid);
+            let targetTableStruct = await dataImport.showTableStruct(
+              ajid,
+              targetTableName
+            );
+            let Columns = targetTableStruct.rows.map((el) => el.fieldename);
+            // 拼接当前temp表的所有字段
+            let sjlyid = 0;
+            let resFieldTypeList = [];
+            let selectList = [];
+            // 公共字段去除行号
+            publicFields = publicFields.filter(
+              (el) => el.toLowerCase() !== "rownum"
+            );
+            let fields = publicFields
+              .concat(matchedFields)
+              .concat(externFields);
+            fields = fields.map((el) => {
+              return el.toLowerCase();
+            });
+            fields = fields.filter((el) => Columns.includes(el));
+            // 查询临时表的总条数
+            let index = 0;
+
+            let countSql = `select count(*)::int count from ${tempTableName}`;
+            let sumRow = await client.query(countSql);
+            sumRow = sumRow.rows[0].count;
+            // 查询一行确定copyfrom的sql参数
+            let testRow = await client.query(
+              `select ${fields} from ${tempTableName} limit 1 offset 0`
+            );
+            testRow = testRow.rows[0];
+            // 判断列名称是否存在与Columns中不存在需要清理
+            let newTestRow = {};
+            for (let k in testRow) {
+              if (Columns.includes(k)) {
+                newTestRow[k] = testRow[k];
               }
             }
-            let valueStr = values.join("\t") + "\n";
-            // console.log(valueStr);
-            streamFrom.write(valueStr, function (err) {
-              if (!err) {
-                let data = {
+            newTestRow = importModel.TestingHandle(
+              Columns,
+              newTestRow,
+              targetTableName
+            );
+            console.log(Object.keys(newTestRow));
+            // 计算经过TestingHandle处理后的行
+            let postHandleFields = [];
+            for (let k in newTestRow) {
+              if (k === "sjlyid") {
+                sjlyid = newTestRow[k];
+              }
+              postHandleFields.push(k);
+            }
+            let streamFrom = await client2.query(
+              copyFrom(
+                `COPY ${targetTableName}(${postHandleFields}) FROM STDIN`
+              )
+            );
+            //异步方式读取
+            let sqlSelect = `select ${fields} from ${tempTableName}`;
+            const query = new QueryStream(sqlSelect);
+            const stream = client.query(query);
+            stream
+              .pipe(
+                through2.obj(function (row, enc, callback) {
+                  row = importModel.TestingHandle(
+                    Columns,
+                    row,
+                    targetTableName
+                  );
+                  let values = [];
+                  for (let k of Object.keys(row)) {
+                    let obj = targetTableStruct.rows.find(
+                      (el) => el.fieldename.toLowerCase() === k
+                    );
+                    if (obj.fieldtype === 1 || obj.fieldtype === 6) {
+                      values.push(`${row[k].trim()}`);
+                    } else if (obj.fieldtype === 4) {
+                      if (typeof row[k] === "string") {
+                        values.push(
+                          `to_date('${row[k]}','yyyy-MM-dd hh24:mi:ss')`
+                        );
+                      } else {
+                        values.push(row[k]);
+                      }
+                    } else {
+                      let temValue = row[k].trim() ? row[k].trim() : 0;
+                      values.push(`${temValue}`);
+                    }
+                  }
+                  let valueStr = values.join("\t") + "\n";
+                  this.push(valueStr);
+                  callback();
+                })
+              )
+              .on("data", (data) => {
+                log.info(data);
+                index++;
+                streamFrom.write(data);
+                _this.$electron.ipcRenderer.send("import-one-table-process", {
                   tabIndex,
                   sumRow,
                   index,
                   success: true,
                   msg: "success",
-                };
-                // log.info(data);
-                _this.$electron.ipcRenderer.send(
-                  "import-one-table-process",
-                  data
-                );
-              } else {
+                });
+              })
+              .on("error", () => {
                 _this.$electron.ipcRenderer.send("import-one-table-process", {
                   tabIndex,
                   sumRow,
@@ -1086,42 +1101,32 @@ export default {
                   msg: err,
                 });
                 rejcect(err);
-              }
-            });
-            if (index >= sumRow) {
-              streamFrom.end();
-              await dataImport.extractDataFromTempTable(
-                ajid,
-                tempTableName,
-                matchedMbdm,
-                sjlyid
-              );
-              // await dataImport.deleteTempTable(ajid, tempTableName);
-              _this.$electron.ipcRenderer.send("import-one-table-complete", {
-                tabIndex,
-                success: true,
-                msg: "success",
+              })
+              .on("end", async () => {
+                log.info("end");
+                streamFrom.end();
+                await dataImport.extractDataFromTempTable(
+                  ajid,
+                  tempTableName,
+                  matchedMbdm,
+                  sjlyid
+                );
+                // await dataImport.deleteTempTable(ajid, tempTableName);
+                _this.$electron.ipcRenderer.send("import-one-table-complete", {
+                  tabIndex,
+                  success: true,
+                  msg: "success",
+                });
+                resolve("done");
               });
-              resolve("done");
-            }
-          });
-          query.on("end", async () => {
-            console.log("query done");
-          });
-          query.on("error", (err) => {
-            log.info(err);
-            rejcect(err);
-          });
-        } catch (e) {
-          log.info(e);
-          // await dataImport.deleteTempTable(ajid, tempTableName);
-          _this.$electron.ipcRenderer.send("import-one-table-process", {
-            tabIndex,
-            success: false,
-            msg: e.message,
-          });
-        }
-      });
+          } finally {
+            client.release();
+            client2.release();
+          }
+        });
+      } catch (e) {
+        log.info(e);
+      }
     },
   },
   beforeMount() {

@@ -8511,6 +8511,11 @@ pg-copy-streams@^5.1.1:
   dependencies:
     obuf "^1.1.2"
 
+pg-cursor@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.3.3.tgz#f2ae9508f47bf6a667b9d3883466cbafcab47bf0"
+  integrity sha512-0hwZEd+gjDGgN42BFYOp2fVLyKUbk8jjDyO/PLU34W19shoh/qnCDAUzfa4+IhUGjAgN0r/xIT3pANT946zaFg==
+
 pg-int8@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
@@ -8525,6 +8530,13 @@ pg-protocol@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.2.4.tgz#3139cac0e51347f1e21e03954b1bb9fe2c20962e"
   integrity sha512-/8L/G+vW/VhWjTGXpGh8XVkXOFx1ZDY+Yuz//Ab8CfjInzFkreI+fDG3WjCeSra7fIZwAFxzbGptNbm8xSXenw==
+
+pg-query-stream@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-3.2.3.tgz#a511ec48cc2088ba24c447b6713791e643086337"
+  integrity sha512-Ul0l5X9Sn9zl2zpIvIIB5R7jG4eqkIRvxyE+VnRk7r1Ke54vnC1+k3v0aBSV5f5o5xCF4J9C3wBHFypfYdRv9w==
+  dependencies:
+    pg-cursor "^2.3.3"
 
 pg-types@^2.1.0:
   version "2.2.0"

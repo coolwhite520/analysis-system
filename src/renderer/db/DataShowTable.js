@@ -218,16 +218,16 @@ WHERE
 export default {
   // 根据tid获取显示的列名称list
   QueryTableShowCFields: async function(tid) {
+    const client = await global.pool.connect();
     try {
-      // await cases.SwitchDefaultCase();
+      // await cases.SwitchDefaultCase(client);
       let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type, link_mid::int, data_type FROM icap_base.layout_table_column
        WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
-      let result = await global.pool.query(sql);
+      let result = await client.query(sql);
       return { success: true, rows: result.rows };
-    } catch (e) {
-      log.error(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
 
@@ -240,6 +240,7 @@ export default {
     offset,
     count
   ) {
+    const client = await global.pool.connect();
     try {
       let ret = await this.QueryTableShowCFields(tid);
       let headers = ret.rows;
@@ -247,7 +248,7 @@ export default {
       for (let item of headers) {
         showFields.push(item.fieldename.toLowerCase());
       }
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
 
       let querySqlTemp = "";
       let countSqlTemp = "";
@@ -300,7 +301,7 @@ export default {
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$TABLENAME\$/g, tableename);
 
-      let result = await global.pool.query(querySql);
+      let result = await client.query(querySql);
       // 数据过滤
       let retRows = [];
       for (let row of result.rows) {
@@ -316,19 +317,19 @@ export default {
       }
 
       // 查询结果集的总量
-      let resultCount = await global.pool.query(countSql);
+      let resultCount = await client.query(countSql);
       let sum = 0;
       if (resultCount.rows.length > 0) {
         sum = resultCount.rows[0].count;
       }
       return { success: true, headers, rows: retRows, sum, exportSql };
-    } catch (e) {
-      log.error(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
   // 执行模型并获取结果集
   QueryDataTableBySql: async function(ajid, tid, sql, offset, count) {
+    const client = await global.pool.connect();
     try {
       let { rows } = await this.QueryTableShowCFields(tid);
       let headers = rows;
@@ -336,9 +337,9 @@ export default {
       for (let item of headers) {
         showFields.push(item.fieldename.toLowerCase());
       }
-      await cases.SwitchCase(ajid);
+      await cases.SwitchCase(client, ajid);
       let exportSql = sql;
-      let result = await global.pool.query(sql);
+      let result = await client.query(sql);
       // 数据过滤
       let resultFields = [];
       for (let item of result.fields) {
@@ -385,9 +386,8 @@ export default {
         sum,
         exportSql,
       };
-    } catch (e) {
-      log.error(e);
-      return { success: false, msg: e.message };
+    } finally {
+      client.release();
     }
   },
 };

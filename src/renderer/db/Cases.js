@@ -1,22 +1,24 @@
-const fs = require("fs");
-const log = require("@/utils/log");
+import fs from "fs";
+import log from "@/utils/log";
+import { finished } from "stream";
+
 // 小写字母转换设定快捷键 cmd+alt+s
 // 获取案件相关的内容
 export default {
   // 切换Schema， 一个schema 可以认为是一个案件
-  SwitchCase: async function(ajid) {
+  SwitchCase: async function(client, ajid) {
     try {
       let sql = `SET search_path TO icap_${ajid}`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.command === "SET" ? true : false;
     } catch (e) {
       log.error(e);
     }
   },
-  SwitchDefaultCase: async function() {
+  SwitchDefaultCase: async function(client) {
     try {
       let sql = `SET search_path TO icap_base`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.command === "SET" ? true : false;
     } catch (e) {
       log.info(e);
@@ -24,31 +26,34 @@ export default {
     }
   },
   CreateNewCaseSchema: async function(ajid, userName) {
+    const client = await global.pool.connect();
     try {
       let scheamName = `icap_${ajid}`;
       let sql = `create SCHEMA if not exists ${scheamName} AUTHORIZATION ${userName}`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.command === "CREATE" ? scheamName : "";
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   DropAllCases: async function() {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchDefaultCase();
+      await this.SwitchDefaultCase(client);
       let sql = `SELECT ID::int, ITEM_CODE, ITEM_NAME, DESCN FROM st_dictionary WHERE PARENT_ID = 5  ORDER BY thesort; `;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       for (let row of res.rows) {
         await this.DropCaseByID(row.ajid);
       }
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 删除案件
   DropCaseByID: async function(ajid) {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchCase(ajid);
+      await this.SwitchCase(client, ajid);
       let sql = `drop table if exists bk_fk_dtcx; 
       drop table if exists bk_fk_dtcxsj; 
       drop table if exists bk_fk_gyyxq; 
@@ -143,77 +148,76 @@ export default {
       delete from icap_base.st_case where AJID=${ajid} ;
       delete from icap_base.st_case_child where AJID=${ajid} ; 
       delete from icap_base.st_data_source where AJID=${ajid} ; `;
-      let res = await global.pool.query(sql);
-      await this.SwitchDefaultCase();
+      let res = await client.query(sql);
       return true;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 查询案件状态列表下拉信息
   QueryCaseState: async function() {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchDefaultCase();
-      let sql = `SELECT ID::int, ITEM_CODE, ITEM_NAME, DESCN FROM st_dictionary WHERE PARENT_ID = 5  ORDER BY thesort; `;
-      const res = await global.pool.query(sql);
+      let sql = `SELECT ID::int, ITEM_CODE, ITEM_NAME, DESCN FROM icap_base.st_dictionary WHERE PARENT_ID = 5  ORDER BY thesort; `;
+      const res = await client.query(sql);
       return res.rows; // id, item_code, item_name,
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 获取案件类别下拉信息
   QueryCaseCategory: async function() {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchDefaultCase();
-      let sql = `SELECT chargeid::int, parent_id::int, leaf_flag::int, chargename FROM st_charge ORDER BY thesort DESC `;
-      const res = await global.pool.query(sql);
+      let sql = `SELECT chargeid::int, parent_id::int, leaf_flag::int, chargename FROM icap_base.st_charge ORDER BY thesort DESC `;
+      const res = await client.query(sql);
       return res.rows;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 获取已经存在的case
   QueryExistCases: async function() {
+    const client = await global.pool.connect();
     try {
-      // await this.SwitchDefaultCase();
       let sql = `SELECT * FROM icap_base.st_case WHERE CJR in('00000000','00000000') AND SFSC='0'  ORDER  BY AJID DESC `;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 根据id获取案件详细信息
   QueryCaseDetailByID: async function(ajid) {
+    const client = await global.pool.connect();
     try {
-      // await this.SwitchDefaultCase();
       let sql = `SELECT * FROM icap_base.st_case WHERE CJR in('00000000','00000000') AND SFSC='0' AND AJID=${ajid}  ORDER  BY AJID DESC `;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0];
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   //根据子案件id获取父案件的id
   QueryParentAjidByChildID: async function(childAjid) {
+    const client = await global.pool.connect();
     try {
-      // await this.SwitchDefaultCase();
       let sql = `SELECT parent_id::int FROM icap_base.st_charge where chargeid=${childAjid}`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].parent_id;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 查询最大案件编号
   QueryCaseMaxCount: async function() {
+    const client = await global.pool.connect();
     try {
-      // await this.SwitchDefaultCase();
       let sql = `SELECT MAX(AJID)::int FROM icap_base.st_case`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].max === null ? 0 : res.rows[0].max;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   updateCaseBase: async function(
@@ -255,15 +259,15 @@ export default {
       sfbdwkj,
       sjlx,
     ];
+    const client = await global.pool.connect();
     try {
-      // await this.SwitchDefaultCase();
       let sql = `UPDATE icap_base.st_case SET
       AJBH=$1, AJMC=$2, AJLB=$3, AJLBMC=$4, ZCJDDM=$5, ZCJDMC=$6, CJSJ=$7, JJSJ=$8, XGSJ=$9,
       ASJFSDDXZQHDM=$10,ASJFSDDXZQMC=$11,JYAQ=$12,ZHAQ=$13,CJR=$14,SFSC=$15,SFBDWKJ=$16,SJLX=$17 where AJID=${ajid};`;
-      let res = await global.pool.query(sql, params);
+      await client.query(sql, params);
       return true;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 创建一个新的案件
@@ -286,6 +290,7 @@ export default {
     sfbdwkj,
     sjlx
   ) {
+    const client = await global.pool.connect();
     try {
       let ajid = (await this.QueryCaseMaxCount()) + 1;
       let scheamName = await this.CreateNewCaseSchema(ajid, "baiyang");
@@ -8318,8 +8323,8 @@ export default {
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           `;
-        await this.SwitchCase(ajid);
-        await global.pool.query(content);
+        await this.SwitchCase(client, ajid);
+        await client.query(content);
         let params = [
           ajid,
           ajbh,
@@ -8346,21 +8351,20 @@ export default {
         }
         let paramsString = paramsArray.join(",");
         let sql = `INSERT INTO icap_base.st_case(AJID,AJBH,AJMC,AJLB,AJLBMC,ZCJDDM,ZCJDMC,CJSJ,JJSJ,XGSJ,ASJFSDDXZQHDM,ASJFSDDXZQMC,JYAQ,ZHAQ,CJR,SFSC,SFBDWKJ,SJLX) VALUES(${paramsString})`;
-        // await this.SwitchDefaultCase();
-        await global.pool.query(sql, params);
+        await client.query(sql, params);
       } else {
         log.error("exist");
       }
       return true;
-    } catch (e) {
-      log.error(e);
-      return false;
+    } finally {
+      client.release();
     }
   },
   // 获取实体数量
   QueryEntityCount: async function(ajid) {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchCase(ajid);
+      await this.SwitchCase(client, ajid);
       let sql = `select sum(count)::int 
       from ( 
          SELECT count(*) FROM  gas_person  WHERE (ckztlb='02' OR ZZLX='dz1') AND ajid = ${ajid}    
@@ -8369,38 +8373,40 @@ export default {
           ) 
        as gas_person_ 
      `;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].sum;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 获取批次数量
   QueryBatchCount: async function(ajid) {
+    const client = await global.pool.connect();
     try {
       let sql = `select count( DISTINCT batch)::int count from icap_base.st_data_source where ajid=${ajid}`;
-      // await this.SwitchDefaultCase();
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].count;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 获取调单数量
   QueryAwaitTaskCount: async function(ajid) {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchCase(ajid);
+      await this.SwitchCase(client, ajid);
       let sql = `select count(id)::int count from gas_awaittask`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows[0].count;
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
   // 查询数据中心列表信息
   QueryDataCenterTableInfo: async function(ajid) {
+    const client = await global.pool.connect();
     try {
-      await this.SwitchCase(ajid);
+      await this.SwitchCase(client, ajid);
       let sql = ` with m as 
          ( 
          SELECT a.* FROM icap_base.layout_table_info AS a join(select distinct relname from pg_class where relkind = 'r' and relnamespace in (select oid from pg_namespace where nspname in ('icap_${ajid}', 'icap_base'))) pc on pc.relname = a.tablename and a.isenable::bool=true 
@@ -8413,7 +8419,7 @@ export default {
          select* from n as lt 
          LEFT JOIN icap_base.layout_menu_model AS lm  ON lt.tid =lm.menu_tid and lm.product_code='200' ORDER BY tid,title`;
       let dataSum = 0;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       let list = [];
       for (let item of res.rows) {
         if (
@@ -8434,7 +8440,7 @@ export default {
           } else {
             sql = `select count(1)::int count from ${item.tablename} where 1=1`;
           }
-          const res = await global.pool.query(sql);
+          const res = await client.query(sql);
           if (res.rows.length > 0) {
             dataSum += res.rows[0].count;
           }
@@ -8456,20 +8462,20 @@ export default {
         list.push(obj);
       }
       return { list, dataSum };
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
 
   // 查询当前tid对应的模型库model_mids , product_code（不同产品进行区分模型）
   QueryModelmidsByTid: async function(tid) {
+    const client = await global.pool.connect();
     try {
-      // await this.SwitchDefaultCase();
       let sql = ` SELECT model_mids,product_code FROM icap_base.layout_menu_model where length(model_mids)>0 and menu_tid='${tid}'`;
-      const res = await global.pool.query(sql);
+      const res = await client.query(sql);
       return res.rows.length > 0 ? res.rows[0].model_mids : "";
-    } catch (e) {
-      log.error(e);
+    } finally {
+      client.release();
     }
   },
 

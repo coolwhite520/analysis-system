@@ -8,6 +8,21 @@ var { Pool } = require("pg");
 var copyFrom = require("pg-copy-streams").from;
 const csv = require("@fast-csv/parse");
 
+try {
+  console.log("hahahaha");
+  return;
+} finally {
+  console.log("bbbbbb");
+}
+
+(async function sleep(ms) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      resolve("done");
+    }, ms);
+  });
+})(1000000);
+
 // path.resolve(__dirname, "assets", "parse.csv")
 let rows = (function parseCsvFile() {
   let rows = [];
@@ -19,7 +34,7 @@ let rows = (function parseCsvFile() {
           headers: true,
           objectMode: true,
           ignoreEmpty: true,
-          maxRows: 20,
+          maxRows: 2,
         })
       )
       .on("error", (error) => {
@@ -85,14 +100,6 @@ pool.connect(async function(err, client, done) {
   }
   streamFrom.end();
 });
-
-(async function sleep(ms) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      resolve("done");
-    }, ms);
-  });
-})(1000000);
 
 return;
 function formatExcelDate(numb, format = "-") {
