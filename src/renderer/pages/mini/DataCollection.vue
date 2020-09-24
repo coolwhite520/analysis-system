@@ -355,9 +355,6 @@ export default {
           let ext = path.extname(filePathName).slice(1);
           switch (ext) {
             case "txt":
-              {
-              }
-              break;
             case "csv":
               {
                 resultList = await this.parseExampleCsvFile(filePathName);
@@ -592,9 +589,6 @@ export default {
 
           switch (fileExt) {
             case "txt":
-              {
-              }
-              break;
             case "csv":
               {
                 await this.parseCsvFile(

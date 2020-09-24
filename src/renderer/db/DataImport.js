@@ -204,118 +204,138 @@ export default {
           newRows.push(newRow);
         }
       } else {
+        let taskArray = [];
         for (let matchedField of matchedFields) {
           let arr = headers.filter((el) => el.fieldename === matchedField);
           if (arr.length === 0) continue;
           let item = arr[0];
           if (item.fieldtype === 1) {
-            let temp = await this.QueryFieldExceedLengthRows(
-              ajid,
-              tableName,
-              matchedFieldsNew,
-              item.fieldename,
-              item.fieldlength
-            );
-            if (temp.success && temp.rows.length > 0) {
-              let rownums = [];
-              for (let row of temp.rows) {
-                let newRow = [];
-                rownums.push(row["rownum"]);
-                if (rownums.length === 1) {
-                  for (let k in row) {
-                    let value = row[k];
-                    let key = k;
-                    let error =
-                      key.toLowerCase() === item.fieldename.toLowerCase()
-                        ? true
-                        : false; //这个地方需要判定
+            taskArray.push(
+              (async () => {
+                let temp = await this.QueryFieldExceedLengthRows(
+                  ajid,
+                  tableName,
+                  matchedFieldsNew,
+                  item.fieldename,
+                  item.fieldlength
+                );
+                if (temp.success && temp.rows.length > 0) {
+                  let rownums = [];
+                  for (let row of temp.rows) {
+                    let newRow = [];
+                    rownums.push(row["rownum"]);
+                    if (rownums.length === 1) {
+                      for (let k in row) {
+                        let value = row[k];
+                        let key = k;
+                        let error =
+                          key.toLowerCase() === item.fieldename.toLowerCase()
+                            ? true
+                            : false; //这个地方需要判定
 
-                    let cell = { key, value, error };
-                    newRow.push(cell);
+                        let cell = { key, value, error };
+                        newRow.push(cell);
+                      }
+                      newRows.push(newRow);
+                    }
                   }
-                  newRows.push(newRow);
+                  return {
+                    filterName: "exceedLen",
+                    fieldcname: item.fieldcname,
+                    fieldlength: item.fieldlength,
+                    fieldename: item.fieldename.toLowerCase(),
+                    rownums,
+                  };
                 }
-              }
-              errorFields.push({
-                filterName: "exceedLen",
-                fieldcname: item.fieldcname,
-                fieldlength: item.fieldlength,
-                fieldename: item.fieldename.toLowerCase(),
-                rownums,
-              });
-            }
+                return null;
+              })()
+            );
           } else if (item.fieldtype === 2 || item.fieldtype === 3) {
             // continue;
-            let temp = await this.QueryFieldNotNumberRows(
-              ajid,
-              tableName,
-              matchedFieldsNew,
-              item.fieldename
-            );
-            if (temp.success && temp.rows.length > 0) {
-              let rownums = [];
-              for (let row of temp.rows) {
-                let newRow = [];
-                rownums.push(row["rownum"]);
-                if (rownums.length === 1) {
-                  // 只要一行示例错误
-                  for (let k in row) {
-                    let value = row[k];
-                    let key = k;
-                    let error =
-                      key.toLowerCase() === item.fieldename.toLowerCase()
-                        ? true
-                        : false; //这个地方需要判定
+            taskArray.push(
+              (async () => {
+                let temp = await this.QueryFieldNotNumberRows(
+                  ajid,
+                  tableName,
+                  matchedFieldsNew,
+                  item.fieldename
+                );
+                if (temp.success && temp.rows.length > 0) {
+                  let rownums = [];
+                  for (let row of temp.rows) {
+                    let newRow = [];
+                    rownums.push(row["rownum"]);
+                    if (rownums.length === 1) {
+                      // 只要一行示例错误
+                      for (let k in row) {
+                        let value = row[k];
+                        let key = k;
+                        let error =
+                          key.toLowerCase() === item.fieldename.toLowerCase()
+                            ? true
+                            : false; //这个地方需要判定
 
-                    let cell = { key, value, error };
-                    newRow.push(cell);
+                        let cell = { key, value, error };
+                        newRow.push(cell);
+                      }
+                      newRows.push(newRow);
+                    }
                   }
-                  newRows.push(newRow);
+                  return {
+                    filterName: "notNum",
+                    fieldcname: item.fieldcname,
+                    fieldename: item.fieldename.toLowerCase(),
+                    rownums,
+                  };
                 }
-              }
-              errorFields.push({
-                filterName: "notNum",
-                fieldcname: item.fieldcname,
-                fieldename: item.fieldename.toLowerCase(),
-                rownums,
-              });
-            }
+                return null;
+              })()
+            );
           } else if (item.fieldtype === 4 /*|| item.fieldtype === 6*/) {
-            let temp = await this.QueryFieldNotDateRows(
-              ajid,
-              tableName,
-              matchedFieldsNew,
-              item.fieldename
-            );
-            if (temp.success && temp.rows.length > 0) {
-              let rownums = [];
-              for (let row of temp.rows) {
-                rownums.push(row["rownum"]);
-                if (rownums.length === 1) {
-                  let newRow = [];
-                  for (let k in row) {
-                    let value = row[k];
-                    let key = k;
-                    let error =
-                      key.toLowerCase() === item.fieldename.toLowerCase()
-                        ? true
-                        : false; //这个地方需要判定
+            taskArray.push(
+              (async () => {
+                let temp = await this.QueryFieldNotDateRows(
+                  ajid,
+                  tableName,
+                  matchedFieldsNew,
+                  item.fieldename
+                );
+                if (temp.success && temp.rows.length > 0) {
+                  let rownums = [];
+                  for (let row of temp.rows) {
+                    rownums.push(row["rownum"]);
+                    if (rownums.length === 1) {
+                      let newRow = [];
+                      for (let k in row) {
+                        let value = row[k];
+                        let key = k;
+                        let error =
+                          key.toLowerCase() === item.fieldename.toLowerCase()
+                            ? true
+                            : false; //这个地方需要判定
 
-                    let cell = { key, value, error };
-                    newRow.push(cell);
+                        let cell = { key, value, error };
+                        newRow.push(cell);
+                      }
+                      newRows.push(newRow);
+                    }
                   }
-                  newRows.push(newRow);
+                  return {
+                    filterName: "notDate",
+                    fieldcname: item.fieldcname,
+                    fieldename: item.fieldename.toLowerCase(),
+                    rownums,
+                  };
                 }
-              }
-              errorFields.push({
-                filterName: "notDate",
-                fieldcname: item.fieldcname,
-                fieldename: item.fieldename.toLowerCase(),
-                rownums,
-              });
-            }
+                return null;
+              })()
+            );
           }
         }
+        console.log(taskArray.length);
+        errorFields = await Promise.all(taskArray);
+        errorFields = errorFields.filter((el) => el !== null);
+        log.info(errorFields);
       }
       //格式化数据
       return { rows: newRows, success: true, errorFields };
