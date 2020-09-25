@@ -522,125 +522,133 @@ export default {
 
     // 点击生成
     async handleClickGenerateReport() {
-      const uuid = require("uuid");
-      this.loading = true;
-      this.buttonDisabled = true;
-      let { ajid, ajmc } = this.caseBase;
-      let PageItem = {
-        Index: 0, //页面ID
-        CurrentExeSql: "", //模板sql
-        Tb_Name: "", //页面表名，目前报告中没有该参数
-      };
-      let homedir = os.homedir();
-      homedir = path.join(homedir, "Desktop", ajid + "-" + ajmc);
-      fs.mkdirSync(homedir, { recursive: true });
+      try {
+        const uuid = require("uuid");
+        this.loading = true;
+        this.buttonDisabled = true;
+        let { ajid, ajmc } = this.caseBase;
+        let PageItem = {
+          Index: 0, //页面ID
+          CurrentExeSql: "", //模板sql
+          Tb_Name: "", //页面表名，目前报告中没有该参数
+        };
+        let homedir = os.homedir();
+        homedir = path.join(homedir, "Desktop", ajid + "-" + ajmc);
+        fs.mkdirSync(homedir, { recursive: true });
 
-      let docfilePath = path.join(
-        homedir,
-        ajid + "-" + ajmc + uuid.v1() + ".docx"
-      );
-      // 引用officegen
-      const officegen = require("officegen");
-      let docx = officegen("docx");
-      docx.on("finalize", function (written) {
-        log.info("Finish to create a Microsoft Word document.");
-      });
-      docx.on("error", function (err) {
-        log.error(err);
-      });
-      // 添加页眉 页脚
-      let headerFontSytle = {
-        font_face: "仿宋",
-        font_size: 6,
-        color: "A4A5A5",
-      };
-      let header = docx.getHeader().createP({ align: "center" });
-      header.addText("北京繁复科技有限公司制作", headerFontSytle);
-      // 添加文档主标题
-      let pObj = docx.createP({ align: "center" });
-      pObj.addText("智能分析报告", { font_face: "黑体", font_size: 25 });
-      // 添加文档副标题
-      pObj = docx.createP({ align: "right" });
-      pObj.addText("--" + this.caseBase.ajlbmc, {
-        font_face: "宋体",
-        font_size: 10,
-      });
-      // 定义正文标题字体和字号
-      let mainTitleFontStyle = {
-        font_face: "黑体",
-        font_size: 18,
-      };
-      let subTitleFontSylte = {
-        font_face: "宋体",
-        font_size: 13,
-      };
-      // 定义正文字体和字号
-      let mainPageFontSytle = { font_face: "仿宋", font_size: 8 };
-      pObj = docx.createP();
-      pObj.addText("一、基本情况", mainTitleFontStyle);
-      pObj = docx.createP();
-      let text = await this.formatCaseBaseInfo(ajid, ajmc);
-      pObj.addText(text, mainPageFontSytle);
+        let docfilePath = path.join(
+          homedir,
+          ajid + "-" + ajmc + uuid.v1() + ".docx"
+        );
+        // 引用officegen
+        const officegen = require("officegen");
+        let docx = officegen("docx");
+        docx.on("finalize", function (written) {
+          log.info("Finish to create a Microsoft Word document.");
+        });
+        docx.on("error", function (err) {
+          log.error(err);
+        });
+        // 添加页眉 页脚
+        let headerFontSytle = {
+          font_face: "仿宋",
+          font_size: 6,
+          color: "A4A5A5",
+        };
+        let header = docx.getHeader().createP({ align: "center" });
+        header.addText("北京繁复科技有限公司制作", headerFontSytle);
+        // 添加文档主标题
+        let pObj = docx.createP({ align: "center" });
+        pObj.addText("智能分析报告", { font_face: "黑体", font_size: 25 });
+        // 添加文档副标题
+        pObj = docx.createP({ align: "right" });
+        pObj.addText("--" + this.caseBase.ajlbmc, {
+          font_face: "宋体",
+          font_size: 10,
+        });
+        // 定义正文标题字体和字号
+        let mainTitleFontStyle = {
+          font_face: "黑体",
+          font_size: 18,
+        };
+        let subTitleFontSylte = {
+          font_face: "宋体",
+          font_size: 13,
+        };
+        // 定义正文字体和字号
+        let mainPageFontSytle = { font_face: "仿宋", font_size: 8 };
+        pObj = docx.createP();
+        pObj.addText("一、基本情况", mainTitleFontStyle);
+        pObj = docx.createP();
+        let text = await this.formatCaseBaseInfo(ajid, ajmc);
+        pObj.addText(text, mainPageFontSytle);
 
-      for (let item of this.IsCheckedArray) {
-        if (item.value) {
-          this.loadingText = `正在生成[${item.label}]相关数据...`;
-          let data = await Report.QueryReportTemplateByMid(item.id);
-          let template = await aes.decrypt(data.pgsqltemplate);
-          PageItem.Index = item.id;
-          PageItem.CurrentExeSql = template;
-          let sql = reportSqlFormat.GetReportSql(
-            ajid,
-            PageItem,
-            this.ReportParams
-          );
-          let tableDic = Default.ReportTableDic[item.id];
-          let filePath = path.join(homedir, item.label + ".xls");
-          let dataResult = await this.WriteToExcelFile(
-            ajid,
-            item,
-            filePath,
-            tableDic,
-            sql
-          );
+        for (let item of this.IsCheckedArray) {
+          if (item.value) {
+            this.loadingText = `正在生成[${item.label}]相关数据...`;
+            let data = await Report.QueryReportTemplateByMid(item.id);
+            let template = await aes.decrypt(data.pgsqltemplate);
+            PageItem.Index = item.id;
+            PageItem.CurrentExeSql = template;
+            let sql = reportSqlFormat.GetReportSql(
+              ajid,
+              PageItem,
+              this.ReportParams
+            );
+            let tableDic = Default.ReportTableDic[item.id];
+            let filePath = path.join(homedir, item.label + ".xls");
+            let dataResult = await this.WriteToExcelFile(
+              ajid,
+              item,
+              filePath,
+              tableDic,
+              sql
+            );
 
-          let { tableDataRows, subTitle, p, mainTitle } = dataResult;
-          if (mainTitle.length !== 0) {
-            let title = this.convertNumToCh(this.activeStep);
-            pObj = docx.createP();
-            pObj.addText(title + mainTitle, mainTitleFontStyle);
+            let { tableDataRows, subTitle, p, mainTitle } = dataResult;
+            if (mainTitle.length !== 0) {
+              let title = this.convertNumToCh(this.activeStep);
+              pObj = docx.createP();
+              pObj.addText(title + mainTitle, mainTitleFontStyle);
+            }
+            if (subTitle.length !== 0) {
+              pObj = docx.createP();
+              pObj.addText(subTitle, subTitle);
+            }
+            if (p.length !== 0) {
+              pObj = docx.createP();
+              pObj.addText(p, mainPageFontSytle);
+            }
+            let { resultTable, tableStyle } = await this.makeTableDataToWord(
+              tableDataRows,
+              tableDic
+            );
+            pObj = docx.createTable(resultTable, tableStyle);
+            this.activeStep++;
           }
-          if (subTitle.length !== 0) {
-            pObj = docx.createP();
-            pObj.addText(subTitle, subTitle);
-          }
-          if (p.length !== 0) {
-            pObj = docx.createP();
-            pObj.addText(p, mainPageFontSytle);
-          }
-          let { resultTable, tableStyle } = await this.makeTableDataToWord(
-            tableDataRows,
-            tableDic
-          );
-          pObj = docx.createTable(resultTable, tableStyle);
-          this.activeStep++;
         }
-      }
-      let out = fs.createWriteStream(docfilePath);
-      out.on("error", function (err) {
-        log.error(err);
-      });
-      docx.generate(out);
+        let out = fs.createWriteStream(docfilePath);
+        out.on("error", function (err) {
+          log.error(err);
+        });
+        docx.generate(out);
 
-      this.loading = false;
-      this.buttonDisabled = false;
-      this.$notify({
-        title: "成功",
-        message: "生成报告成功，保存在目录：" + homedir,
-        type: "success",
-      });
-      this.activeStep = 0;
-      this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", true);
+        this.loading = false;
+        this.buttonDisabled = false;
+        this.$notify({
+          title: "成功",
+          message: "生成报告成功，保存在目录：" + homedir,
+          type: "success",
+        });
+        this.activeStep = 0;
+        this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", false);
+      } catch (e) {
+        log.info(e);
+        this.$notify.error({
+          title: "失败",
+          message: "生成报告失败，错误信息：" + e.message,
+        });
+      }
     },
   },
 };
