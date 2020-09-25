@@ -138,7 +138,7 @@ export default {
         let { user, password, database, port, host } = this.form;
         let config = new DbConfig();
         try {
-          config.writeDbConfig(user, host, database, password, port);
+          config.writeDbConfig({ user, host, database, password, port });
           this.$electron.ipcRenderer.send("hide-db-config");
           this.$electron.ipcRenderer.send("reloadApp");
         } catch (e) {
