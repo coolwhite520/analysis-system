@@ -204,6 +204,11 @@ export default {
           newRows.push(newRow);
         }
       } else {
+        log.info({
+          totalCount: global.pool.totalCount,
+          idleCount: global.pool.idleCount,
+          waitingCount: global.pool.waitingCount,
+        });
         let taskArray = [];
         for (let matchedField of matchedFields) {
           let arr = headers.filter((el) => el.fieldename === matchedField);
@@ -335,7 +340,11 @@ export default {
         console.log(taskArray.length);
         errorFields = await Promise.all(taskArray);
         errorFields = errorFields.filter((el) => el !== null);
-        log.info(errorFields);
+        log.info({
+          totalCount: global.pool.totalCount,
+          idleCount: global.pool.idleCount,
+          waitingCount: global.pool.waitingCount,
+        });
       }
       //格式化数据
       return { rows: newRows, success: true, errorFields };
