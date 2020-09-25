@@ -9,8 +9,17 @@ class DbConfig {
   constructor() {
     let configPath = remote.getGlobal("configPath");
     this.configFilePath = path.join(configPath, DB_FILE_NAME);
+    log.info(this.configFilePath);
     if (!fs.existsSync(this.configFilePath)) {
-      this.writeDbConfig("", "127.0.0.1", "gas_data", "", 5432);
+      let obj = {
+        user: "",
+        host: "127.0.0.1",
+        database: "gas_data",
+        password: "",
+        port: 5432,
+        max: 100,
+      };
+      this.writeDbConfig(obj);
     }
   }
   /**
@@ -27,9 +36,8 @@ class DbConfig {
     }
   }
   // 写入配置
-  writeDbConfig(user, host, database, password, port) {
+  writeDbConfig(configObj) {
     try {
-      let configObj = { user, host, database, password, port };
       let content = aes.encrypt(JSON.stringify(configObj));
       fs.writeFileSync(this.configFilePath, content);
       return { success: true };

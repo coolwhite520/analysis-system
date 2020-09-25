@@ -369,6 +369,7 @@ export default {
       await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
+      log.info(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
@@ -397,6 +398,7 @@ export default {
     try {
       await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
+      log.info(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
@@ -422,6 +424,7 @@ export default {
       WHERE not icap_base.istimestamp(TRIM(both '  ' FROM ${fieldName})) 
       and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !=''; `; // 查找一个示例
+      log.info(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} 

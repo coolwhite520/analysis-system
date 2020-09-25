@@ -752,7 +752,7 @@ export default {
                     objType.fieldtype === 5 ||
                     objType.fieldtype === 6
                   ) {
-                    cell = this.formatExcelDate(cell.value);
+                    cell = _this.formatExcelDate(cell.value);
                   } else {
                     cell = cell.toString().trim();
                   }
@@ -1067,13 +1067,7 @@ export default {
                   if (obj.fieldtype === 1 || obj.fieldtype === 6) {
                     values.push(`${row[k].trim()}`);
                   } else if (obj.fieldtype === 4) {
-                    if (typeof row[k] === "string") {
-                      values.push(
-                        `to_date('${row[k]}','yyyy-MM-dd hh24:mi:ss')`
-                      );
-                    } else {
-                      values.push(row[k]);
-                    }
+                    values.push(row[k]);
                   } else {
                     let temValue = row[k].trim() ? row[k].trim() : 0;
                     values.push(`${temValue}`);
