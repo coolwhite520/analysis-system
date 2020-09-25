@@ -4,7 +4,7 @@
     <div style="height:100px;"></div>
     <component :is="currentViewName"></component>
     <div style="height:20px;"></div>
-    <div class="state-bar">
+    <div class="state-bar" :style="{ top: stateBarTop - 20 + 'px'}">
       <el-row v-if="exportProcessVisible">
         <el-progress :percentage="percentage" :color="customColor"></el-progress>
       </el-row>
@@ -53,6 +53,7 @@ export default {
       ContentViewHeight
     );
     this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", MainViewHeight);
+    this.stateBarTop = height;
     try {
       let dbconfig = new DbConfig();
       let dbCon = dbconfig.readDbConfig();
@@ -83,7 +84,6 @@ export default {
       );
       log.info(msg);
       global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
-
       await this.$store.dispatch("PublicList/getAJLBList");
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");
@@ -96,6 +96,7 @@ export default {
   },
   data() {
     return {
+      stateBarTop: 0,
       percentage: 0,
       customColor: "#75d083",
     };
@@ -122,6 +123,5 @@ export default {
   z-index: 999;
   width: 100%;
   left: 0px;
-  bottom: 0px;
 }
 </style>
