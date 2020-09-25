@@ -16,6 +16,9 @@ export default {
       });
     },
     async exportCsvAndExcel(ajid, filePath, headers, exportSql) {
+      if (!global.pool) {
+        global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
+      }
       let client = await global.pool.connect();
       try {
         let extName = path.extname(filePath);
@@ -69,7 +72,6 @@ export default {
 
   async mounted() {
     let _this = this;
-    global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
     this.$electron.ipcRenderer.on(
       "export-one-file-begin",
       async (event, data) => {
