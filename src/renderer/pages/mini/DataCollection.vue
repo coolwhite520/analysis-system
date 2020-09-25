@@ -1048,6 +1048,15 @@ export default {
           });
           streamFrom.on("finish", async () => {
             log.info("streamFrom.finish");
+            // 数据抽取
+            await dataImport.extractDataFromTempTable(
+              ajid,
+              tempTableName,
+              matchedMbdm,
+              sjlyid
+            );
+            // 清理temp表
+            await dataImport.deleteTempTable(ajid, tempTableName);
             resolve("done");
           });
           streamFrom.on("drain", () => {
@@ -1107,7 +1116,7 @@ export default {
   },
   async beforeMount() {
     this.softVersion = this.$electron.remote.getGlobal("softVersion");
-    // 每个子进程自己创建一个pool
+    // 每个子进程自己一个pool
     global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
   },
   mounted() {

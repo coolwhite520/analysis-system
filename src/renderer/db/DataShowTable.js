@@ -328,7 +328,7 @@ export default {
     }
   },
   // 执行模型并获取结果集
-  QueryDataTableBySql: async function(ajid, tid, sql, offset, count) {
+  QueryModelDataTableBySql: async function(ajid, tid, sql, offset, count) {
     const client = await global.pool.connect();
     try {
       let { rows } = await this.QueryTableShowCFields(tid);
@@ -383,6 +383,7 @@ export default {
         success: true,
         headers: newHeaders,
         rows: retRows,
+        allrows: result.rows,
         sum,
         exportSql,
       };

@@ -98,8 +98,9 @@ export default {
       });
       if (result.response === 0) {
         this.loading = true;
-        this.$store.dispatch("Cases/deleteAllCase");
-        this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
+        await this.$store.dispatch("Cases/deleteAllCase");
+        await this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
+        await this.$store.dispatch("Cases/getExistCaseAsync");
       } else {
         this.$message({
           type: "info",

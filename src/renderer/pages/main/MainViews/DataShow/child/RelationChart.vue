@@ -40,19 +40,19 @@
       <el-col :span="3">
         <div class="tips">
           实体数量：
-          <span>{{1}}</span>
+          <span>{{entityCount}}</span>
         </div>
       </el-col>
       <el-col :span="3">
         <div class="tips">
           连接数量：
-          <span>{{1}}</span>
+          <span>{{linkCount}}</span>
         </div>
       </el-col>
       <el-col :span="3">
         <div class="tips">
           明细数量：
-          <span>{{1}}</span>
+          <span>{{detailCount}}</span>
         </div>
       </el-col>
       <el-col :span="5">&nbsp;</el-col>
@@ -118,6 +118,9 @@ export default {
       miniMapID: uuid.v1(),
       fisheye: null,
       enableFish: false,
+      entityCount: 0,
+      linkCount: 0,
+      detailCount: 0,
     };
   },
   components: {
@@ -131,7 +134,9 @@ export default {
   },
   watch: {
     tableData: {
-      handler(newValue, oldValue) {},
+      handler(newValue, oldValue) {
+        this.graph.changeData(this.makeData()); // 加载数据
+      },
       deep: true,
     },
   },
@@ -141,7 +146,7 @@ export default {
       let { clientWidth, clientHeight } = this.$refs[this.graphid];
       console.log({ clientWidth, clientHeight });
       this.graph.changeSize(clientWidth, clientHeight);
-      this.graph.fitView(20);
+      this.graph.fitCenter();
     },
     calLabel(item, preItem) {
       let label = "";
@@ -179,7 +184,7 @@ export default {
       this.graph.zoom(0.8);
     },
     handleClickLocation() {
-      this.graph.fitView(20);
+      this.graph.fitCenter();
     },
     handleClickFullScreen() {
       this.$store.commit("ShowTable/UPDATE_FULLSCRRENFLAG");
@@ -280,21 +285,70 @@ export default {
     `
       );
     },
-    // 当返回null的时候不绘制这条线
-    calculateLineColorByJinE() {},
+    // 当返回""的时候不绘制这条线
+    calculateLineColorByJinE(jinE) {
+      let moneyList = this.tableData.graphicMoneySectionList;
+      for (let i = 0; i < moneyList.length; i++) {
+        let item = moneyList[i];
+        let value = item.value * 10000;
+        if (item.id === "1") {
+          if (jinE < value) {
+            return item.selected ? item.color : "";
+          }
+        } else if (item.id === "4") {
+          if (jinE > value) {
+            return item.selected ? item.color : "";
+          }
+        } else {
+          let preItem = moneyList[i - 1];
+          let nextItem = moneyList[i + 1];
+          let preValue = preItem.value * 10000;
+          let nextValue = nextItem.value * 10000;
+          if (jinE > preValue && jinE <= value) {
+            return item.selected ? item.color : "";
+          }
+          if (jinE > value && jinE <= nextValue) {
+            return nextItem.selected ? nextItem.color : "";
+          }
+        }
+      }
+    },
     makeData() {
       let nodes = [];
       let edges = [];
-      this.tableData.rows.forEach((row) => {
-        let cxkh = row["cxkh"].value;
-        let jymc = row["jymc"].value;
-        let jydfzkh = row["jydfzkh"].value;
-        let jydfmc = row["jydfmc"].value;
+      this.tableData.allrows.forEach((row) => {
+        // 序号(++)，
+        // 交易卡号(cxkh)，
+        // 交易名称(jymc)，
+        // 交易证件号码(jyzjhm)，
+        // 对手账号(jydfzkh)，
+        // 对手名称(jydfmc)，
+        // 对手身份证号(jydfzjhm)，
+        // 交易总金额(jyzje)，
+        // 交易总笔数(jyzbs)，
+        // 出账金额(czje)，
+        // 出账笔数(czbs)，
+        // 进账金额(jzje)，
+        // 进账笔数(jzbs)，
+        // 进出帐差额(jczce)，
+        // 最早交易日期(zzjyrq)，
+        // 最晚交易日期(zwjyrq)
+        let cxkh = row["cxkh"];
+        let jymc = row["jymc"];
+        let jydfzkh = row["jydfzkh"];
+        let jydfmc = row["jydfmc"];
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+
         let data1 = {
+          size: 30,
           id: cxkh + "\n" + jymc,
           type: "circle",
         };
         let data2 = {
+          size: 30,
           id: jydfzkh + "\n" + jydfmc,
           type: "circle",
         };
@@ -305,56 +359,69 @@ export default {
             bFindData1 = true;
           }
         }
-        if (!bFindData1) nodes.push(data1);
-
         for (let item of nodes) {
           if (item.id === data2.id) {
             bFindData2 = true;
           }
         }
-        if (!bFindData2) nodes.push(data2);
-
-        let link1 = {
-          source: cxkh + "\n" + jymc,
-          target: jydfzkh + "\n" + jydfmc,
-          label: "",
-          style: {
-            endArrow: true,
-            // endArrow: {
-            //   path: this.$G6.Arrow.triangle(10, 20, 25),
-            //   d: 25,
-            //   fill: "#f00",
-            //   stroke: "#f00",
-            //   opacity: 0.5,
-            //   lineWidth: 3,
-            // },
-          },
-        };
-        edges.push(link1);
-        let link2 = {
-          target: cxkh + "\n" + jymc,
-          source: jydfzkh + "\n" + jydfmc,
-          label: "",
-          style: {
-            endArrow: true,
-            // endArrow: {
-            //   path: this.$G6.Arrow.triangle(10, 20, 25),
-            //   d: 25,
-            //   fill: "#f00",
-            //   stroke: "#f00",
-            //   opacity: 0.5,
-            //   lineWidth: 3,
-            // },
-          },
-        };
-        edges.push(link2);
+        // 画线
+        let tempEdges = [];
+        if (czje > 0) {
+          let lineColor = this.calculateLineColorByJinE(czje);
+          let link1 = {
+            source: cxkh + "\n" + jymc,
+            target: jydfzkh + "\n" + jydfmc,
+            label: "" + czje,
+            labelCfg: {
+              autoRotate: true,
+              style: {
+                fontSize: 10,
+              },
+            },
+            style: {
+              endArrow: true,
+              stroke: lineColor,
+              lineWidth: 2,
+            },
+          };
+          if (lineColor !== "") tempEdges.push(link1);
+        }
+        if (jzje > 0) {
+          let lineColor = this.calculateLineColorByJinE(jzje);
+          let link2 = {
+            target: cxkh + "\n" + jymc,
+            source: jydfzkh + "\n" + jydfmc,
+            label: "" + jzje,
+            labelCfg: {
+              autoRotate: true,
+              style: {
+                fontSize: 10,
+              },
+            },
+            style: {
+              endArrow: true,
+              stroke: lineColor,
+              lineWidth: 2,
+            },
+          };
+          if (lineColor !== "") tempEdges.push(link2);
+        }
+        if (tempEdges.length > 0) {
+          if (!bFindData1) nodes.push(data1);
+          if (!bFindData2) nodes.push(data2);
+          edges.push(...tempEdges);
+        }
       });
       this.$G6.Util.processParallelEdges(edges);
+      this.entityCount = nodes.length;
+      this.linkCount = edges.length;
+      this.detailCount = this.entityCount + this.linkCount;
       return { nodes, edges };
     },
   },
   mounted() {
     let _this = this;
+    console.log(this.tableData.allrows);
     const erd = elementResizeDetectorMaker();
     erd.listenTo(document.getElementById(this.graphid), function (element) {
       _this.resize();
@@ -364,17 +431,14 @@ export default {
       width: clientWidth,
       height: clientHeight,
       container: this.graphid, // 指定挂载容器
-      fitView: true,
+      // fitView: true,
       animate: true,
-      // linkCenter: true,
-      nodeStateStyles: {
-        active: {
-          opacity: 1,
-        },
-        inactive: {
-          opacity: 0.2,
-        },
+      layout: {
+        type: "random",
+        preventOverlap: true, // 防止节点重叠
+        nodeSize: 30,
       },
+      // linkCenter: true,
       modes: {
         default: [
           "drag-canvas",
@@ -408,6 +472,7 @@ export default {
     this.initPlugins();
     this.graph.data(this.makeData()); // 加载数据
     this.graph.render(); // 渲染
+    // 监听布局切换
     this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
     this.$bus.$on("swichLayout", (data) => {
       let { graphid, layout } = data;
@@ -416,7 +481,7 @@ export default {
       _this.graph.updateLayout(layout);
       _this.graph.data(_this.makeData()); // 加载数据
       _this.graph.render(); // 渲染
-      _this.graph.fitView();
+      // _this.graph.fitView();
     });
   },
 };

@@ -92,7 +92,10 @@
               <div style="margin-top:3px;">&nbsp;&nbsp;{{item.label}}</div>
             </el-col>
           </el-row>
-          <el-row style="margin-top:30px;">
+          <el-row>
+            <el-button type="text" size="mini" @click="handleClickResetDefaultColor">恢复默认值</el-button>
+          </el-row>
+          <el-row style="margin-top:20px;" v-show="false">
             <el-col :span="4">&nbsp;</el-col>
             <el-col :span="16" style="text-align:center">
               <el-button type="primary" size="medium" @click="handleClickColorTab">确定</el-button>
@@ -151,6 +154,42 @@ export default {
       this.$store.commit("DialogPopWnd/SET_GRAPHICSETTINGVISIBLE", false);
     },
     handleClickColorTab() {},
+
+    handleClickResetDefaultColor() {
+      let graphicMoneySectionList = [
+        {
+          value: 10,
+          label: `万元以下`,
+          id: "1",
+          color: "#9cdcfe",
+          selected: true,
+        },
+        {
+          value: 100,
+          label: `万元`,
+          id: "2",
+          color: "#6a9955",
+          selected: true,
+        },
+        {
+          value: 1000,
+          label: `万元`,
+          id: "3",
+          color: "#edad40",
+          selected: true,
+        },
+        {
+          value: 1000,
+          label: `万元以上`,
+          id: "4",
+          color: "#ee6b5f",
+          selected: true,
+        },
+      ];
+      this.myGraphicMoneySectionList = JSON.parse(
+        JSON.stringify(graphicMoneySectionList)
+      );
+    },
   },
 };
 </script>

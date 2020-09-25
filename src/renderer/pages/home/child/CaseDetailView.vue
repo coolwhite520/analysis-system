@@ -364,13 +364,13 @@ export default {
       });
       if (result.response === 0) {
         this.loading = true;
-        this.$store.dispatch(
+        await this.$store.dispatch(
           "CaseDetail/deleteCase",
           parseInt(this.caseBase.ajid)
         );
-        this.$store.commit("CaseDetail/RESET_ALL_DATA");
-        this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
-        this.$store.dispatch("Cases/getExistCaseAsync");
+        await this.$store.commit("CaseDetail/RESET_ALL_DATA");
+        await this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
+        await this.$store.dispatch("Cases/getExistCaseAsync");
       } else {
         this.$message({
           type: "info",

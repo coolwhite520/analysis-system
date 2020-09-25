@@ -61,6 +61,14 @@ const state = {
 };
 
 const mutations = {
+  // 恢复默认金额颜色
+  RESETDEFAULTCOLOR(state, graphicMoneySectionList) {
+    Vue.set(
+      state.currentTableData,
+      "graphicMoneySectionList",
+      graphicMoneySectionList
+    );
+  },
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
     const uuid = require("uuid");
@@ -74,7 +82,11 @@ const mutations = {
         tableData.tid
       )
     ) {
-      Vue.set(tableData, "graphicMoneySectionList", graphicMoneySectionList);
+      Vue.set(
+        tableData,
+        "graphicMoneySectionList",
+        JSON.parse(JSON.stringify(graphicMoneySectionList))
+      );
       Vue.set(tableData, "fullScrrenFlag", false);
     }
     state.tableDataList.push(tableData);
@@ -179,7 +191,7 @@ const mutations = {
   },
 
   // 跟新table的数据
-  UPDATE_TABLE_DATA(state, { pageIndex, rows, headers, sum }) {
+  UPDATE_TABLE_DATA(state, { pageIndex, rows, headers, sum, allrows }) {
     for (let index = 0; index < state.tableDataList.length; index++) {
       let tableData = state.tableDataList[index];
       if (tableData.pageIndex === pageIndex) {
@@ -189,6 +201,8 @@ const mutations = {
           Vue.set(state.tableDataList[index], "sum", sum);
         if (typeof headers !== "undefined")
           Vue.set(state.tableDataList[index], "headers", headers);
+        if (typeof allrows !== "undefined")
+          Vue.set(state.tableDataList[index], "allrows", allrows);
         // 判断显示、隐藏状态进行显示
         if (state.currentTableData.hideEmptyField) {
           let newShowHeaders = [];
@@ -508,7 +522,7 @@ const actions = {
       modelFilterStr,
       filterChildStr
     );
-    let data = await showTable.QueryDataTableBySql(
+    let data = await showTable.QueryModelDataTableBySql(
       ajid,
       tid,
       sql,
@@ -516,11 +530,11 @@ const actions = {
       count
     );
     if (data.success) {
-      let { headers, rows, sum, exportSql } = data;
+      let { headers, rows, sum, exportSql, allrows } = data;
       // 判断是否add，还是update
       if (pageIndex) {
         // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
-        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows, sum });
+        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows, sum, allrows });
       } else {
         let obj = {
           tid,
@@ -542,6 +556,7 @@ const actions = {
           rightTabs: [],
           orderby,
           exportSql,
+          allrows,
         };
         if (mpids && mpids.length > 0) {
           obj.rightTabs.push({
