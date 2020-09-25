@@ -71,23 +71,11 @@ function createWindow() {
     mainWindow.show();
     mainWindow.setResizable(false);
     global.mainWindow = mainWindow;
+  });
+  mainWindow.once("show", () => {
+    initIpcEvent();
     global.exportWindow = createExportWindow(BrowserWindow);
     global.dbConfigWindow = createDbConfigWindow(BrowserWindow);
-    // global.dbInitWindow = createDbInitWindow(BrowserWindow);
-    // if (isDevelopment) {
-    //   // 安装vue-devtools
-    //   let extensions = BrowserWindow.getDevToolsExtensions();
-    //   if (!extensions["Vue.js devtools"]) {
-    //     BrowserWindow.addDevToolsExtension(
-    //       path.resolve(__dirname, "./../../src/main/vue-devtools")
-    //     );
-    //   }
-    //   // 打开调试窗口
-    //   // mainWindow.webContents.openDevTools()
-    // }
-    // mainWindow.webContents.openDevTools();
-    // 初始化进程之间事件监听
-    initIpcEvent();
   });
 }
 app.on("activate", () => {

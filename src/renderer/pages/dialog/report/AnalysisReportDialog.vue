@@ -411,37 +411,49 @@ export default {
     },
 
     async formatCaseBaseInfo(ajid, ajmc) {
-      let PageItem = {
-        Index: 0, //页面ID
-        CurrentExeSql: "", //模板sql
-        Tb_Name: "", //页面表名，目前报告中没有该参数
-      };
-      let data = await Report.QueryReportTemplateByMid(602);
-      let template = await aes.decrypt(data.pgsqltemplate);
-      PageItem.Index = 602;
-      PageItem.CurrentExeSql = template;
-      let sql = reportSqlFormat.GetReportSql(ajid, PageItem, this.ReportParams);
-      await cases.SwitchCase(client, ajid);
-      let res = await client.query(sql);
-      let jyrs = res.rows[0].jyrs;
-      let jyzhs = res.rows[0].jyzhs;
-      let jyjls = res.rows[0].jyjls;
-      let jydszhs = res.rows[0].jydszhs;
-      let zrje = res.rows[0].zrje;
-      let zcje = res.rows[0].zcje;
-      let tip = "";
-      if (this.IsCheckedArray.filter((el) => el.value).length === 0) {
-        tip =
-          "本次仅分析了【调取银行卡交易记录情况】和【调取人员交易进出情况】。";
+      const client = await global.pool.connect();
+      try {
+        let PageItem = {
+          Index: 0, //页面ID
+          CurrentExeSql: "", //模板sql
+          Tb_Name: "", //页面表名，目前报告中没有该参数
+        };
+        let data = await Report.QueryReportTemplateByMid(602);
+        let template = await aes.decrypt(data.pgsqltemplate);
+        PageItem.Index = 602;
+        PageItem.CurrentExeSql = template;
+        let sql = reportSqlFormat.GetReportSql(
+          ajid,
+          PageItem,
+          this.ReportParams
+        );
+        await cases.SwitchCase(client, ajid);
+        let res = await client.query(sql);
+        let jyrs = res.rows[0].jyrs;
+        let jyzhs = res.rows[0].jyzhs;
+        let jyjls = res.rows[0].jyjls;
+        let jydszhs = res.rows[0].jydszhs;
+        let zrje = res.rows[0].zrje;
+        let zcje = res.rows[0].zcje;
+        let tip = "";
+        if (this.IsCheckedArray.filter((el) => el.value).length === 0) {
+          tip =
+            "本次仅分析了【调取银行卡交易记录情况】和【调取人员交易进出情况】。";
+        }
+        let str =
+          "案件【" +
+          ajmc +
+          "】分析报告包含了【资金交易明细】的筛选条件：" +
+          "无";
+        // let text8 = selectCondons[1];
+        // if (string.IsNullOrWhiteSpace(text8)) {
+        //   text8 = "无";
+        // }
+        let baseInfo = `涉案主体数量：${jyrs}个，银行卡数量：${jyzhs}张，交易记录共计：${jyjls}条，涉及交易对手账号：${jydszhs}条，涉及转出金额：${zcje}元，涉及转入金额：${zrje}元。${tip}本次根据条件生成的报告，可点击【预览报告】查看内容。本次报告的详细数据，可点击【预览数据文件夹】预览全部数据。`;
+        return str + "\n" + baseInfo;
+      } finally {
+        client.release();
       }
-      let str =
-        "案件【" + ajmc + "】分析报告包含了【资金交易明细】的筛选条件：" + "无";
-      // let text8 = selectCondons[1];
-      // if (string.IsNullOrWhiteSpace(text8)) {
-      //   text8 = "无";
-      // }
-      let baseInfo = `涉案主体数量：${jyrs}个，银行卡数量：${jyzhs}张，交易记录共计：${jyjls}条，涉及交易对手账号：${jydszhs}条，涉及转出金额：${zcje}元，涉及转入金额：${zrje}元。${tip}本次根据条件生成的报告，可点击【预览报告】查看内容。本次报告的详细数据，可点击【预览数据文件夹】预览全部数据。`;
-      return str + "\n" + baseInfo;
     },
     convertNumToCh(num) {
       switch (num) {
@@ -624,10 +636,11 @@ export default {
       this.buttonDisabled = false;
       this.$notify({
         title: "成功",
-        message: "生成报告成功",
+        message: "生成报告成功，保存在目录：" + homedir,
         type: "success",
       });
       this.activeStep = 0;
+      this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", true);
     },
   },
 };

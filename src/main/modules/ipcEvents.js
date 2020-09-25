@@ -1,7 +1,13 @@
 import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 import createDataImportWindow from "./window/dataCollectionWindow";
+import { Pool } from "pg";
 const log = require("electron-log");
 export default function() {
+  ipcMain.on("set-global-pool-config", (e, args) => {
+    let { dbCon } = args;
+    global.dbCon = dbCon;
+    e.returnValue = "set-global-pool-config success";
+  });
   // 通过主进称中转消息到calculate渲染进程
   // 发送读取所有文件示例的消息到mini窗口
   ipcMain.on("parse-all-example-file", (e, args) => {

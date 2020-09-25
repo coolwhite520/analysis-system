@@ -10,7 +10,7 @@ const createMiniWindow = function(BrowserWindow) {
     height: 100,
     width: 100,
     minWidth: 0,
-    show: false,
+    show: process.env.NODE_ENV === "development" ? true : false,
     frame: true,
     fullscreenable: false,
     skipTaskbar: true,
@@ -34,7 +34,7 @@ const createMiniWindow = function(BrowserWindow) {
   });
   miniWindow.once("ready-to-show", () => {
     // miniWindow.showInactive();
-    miniWindow.hide();
+    // miniWindow.hide();
   });
 
   return miniWindow;

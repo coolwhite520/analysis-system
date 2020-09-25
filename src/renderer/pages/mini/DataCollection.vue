@@ -1105,8 +1105,10 @@ export default {
       }
     },
   },
-  beforeMount() {
+  async beforeMount() {
     this.softVersion = this.$electron.remote.getGlobal("softVersion");
+    // 每个子进程自己创建一个pool
+    global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
   },
   mounted() {
     this.$electron.ipcRenderer.on("read-all-file", this.onReadAllFile);
@@ -1119,6 +1121,10 @@ export default {
       this.onCopyTempDataToRealTable
     );
     this.$electron.ipcRenderer.send("data-collection-open-complete");
+    console.log(global.pool);
+  },
+  destroyed() {
+    log.info("datacollection destroyed.");
   },
 };
 </script>

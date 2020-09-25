@@ -4,6 +4,7 @@
 
 <script>
 import path from "path";
+import { Pool, Client, Query } from "pg";
 import cases from "@/db/Cases.js";
 export default {
   methods: {
@@ -66,8 +67,9 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     let _this = this;
+    global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
     this.$electron.ipcRenderer.on(
       "export-one-file-begin",
       async (event, data) => {
