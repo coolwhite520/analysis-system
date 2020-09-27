@@ -13,7 +13,13 @@
             type="primary"
             @click="handleClickNewCase"
             round
-          >&#xe6a3; 新增案件</el-button>
+          >
+            &#xe6a3; 新增案件
+            <!-- <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-nv" />
+            </svg>
+            新增案件-->
+          </el-button>
           <el-button
             style="width:30%;"
             class="iconfont"

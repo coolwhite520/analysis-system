@@ -7,6 +7,7 @@ import store from "./store";
 import ElementUI from "element-ui";
 import "./assets/theme/index.css";
 import "./assets/css/iconfont/iconfont.css";
+import "./assets/css/iconfont/iconfont.js";
 import "./assets/css/animate.css";
 import "echarts";
 import "./utils/dialog";

@@ -21,24 +21,6 @@
               @click="handleClickSwitchLayout('dagre')"
             >&#xe737;&nbsp;层次布局</el-button>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding:4px;font-size:12px;"
-              class="iconfont"
-              @click="handleClickSwitchLayout('force')"
-            >&#xe63f;&nbsp;力导向布局</el-button>
-          </el-col>-->
-          <!-- <el-col :span="6">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding:4px;font-size:12px;"
-              class="iconfont"
-              @click="handleClickSwitchLayout('mds')"
-            >&#xe92b;&nbsp;高维数据布局</el-button>
-          </el-col>-->
           <el-col :span="8">
             <el-button
               size="mini"
@@ -46,8 +28,17 @@
               style="padding:4px;font-size:12px;"
               class="iconfont"
               @click="handleClickSwitchLayout('circular')"
-            >&#xe609;&nbsp;环形布局</el-button>
+            >&#xe609;&nbsp;圆形布局</el-button>
           </el-col>
+          <!-- <el-col :span="6">
+            <el-button
+              size="mini"
+              type="text"
+              style="padding:4px;font-size:12px;"
+              class="iconfont"
+              @click="handleClickSwitchLayout('circular2')"
+            >&#xe609;&nbsp;螺旋布局</el-button>
+          </el-col>-->
         </el-row>
         <el-row>
           <el-col :span="8">
@@ -77,13 +68,10 @@
               @click="handleClickSwitchLayout('radial')"
             >&#xe7bb;&nbsp;辐射状布局</el-button>
           </el-col>
-          <!-- <el-col :span="6">
-            <el-button size="mini" type="text">高维数据降维算法布局</el-button>
-          </el-col>-->
         </el-row>
       </el-col>
 
-      <el-col :span="3" style="border-right: 1px solid  #e5e7ec;">
+      <!-- <el-col :span="3" style="border-right: 1px solid  #e5e7ec;">
         <el-row>
           <el-col :span="12">
             <el-button
@@ -120,15 +108,15 @@
             >&#xe60a;&nbsp;脑图布局</el-button>
           </el-col>
         </el-row>
-      </el-col>
+      </el-col>-->
     </el-row>
     <el-row style="font-size:8px;color:gray;text-align: center;">
       <el-col :span="4" style="border-right:1px solid #e5e7ec;">
-        <div>基本布局</div>
+        <div>布局</div>
       </el-col>
-      <el-col :span="3" style="text-align:center;border-right:1px solid #e5e7ec;">
+      <!-- <el-col :span="3" style="text-align:center;border-right:1px solid #e5e7ec;">
         <div>树形布局</div>
-      </el-col>
+      </el-col>-->
     </el-row>
   </div>
 </template>
@@ -146,7 +134,6 @@ export default {
           layout = {
             type: "random", // 指定为力导向布局
             preventOverlap: true, // 防止节点重叠
-            nodeSize: 30,
           };
           break;
         // case "force":
@@ -161,19 +148,28 @@ export default {
         case "dagre": //层次
           layout = {
             type: "dagre",
-            ranksep: 70,
-            controlPoints: true,
-            nodeSize: 30,
+            preventOverlap: true,
           };
           break;
         case "circular": // 圆形
           layout = {
+            preventOverlap: true,
+            ordering: "degree",
             type: "circular",
           };
           break;
+        // case "circular2": // 螺旋
+        //   layout = {
+        //     preventOverlap: true,
+        //     type: "circular",
+        //     startRadius: 10,
+        //     endRadius: 300,
+        //   };
+        //   break;
         case "grid": // 网格
           layout = {
             type: "grid",
+            preventOverlap: true,
             begin: [20, 20],
           };
           break;
@@ -182,6 +178,8 @@ export default {
             type: "radial",
             unitRadius: 50,
             preventOverlap: true,
+            nodeSpacing: 20,
+            strictRadial: true,
             maxPreventOverlapIteration: 100,
           };
           break;
@@ -190,6 +188,7 @@ export default {
             type: "concentric",
             maxLevelDiff: 0.5,
             sortBy: "degree",
+            preventOverlap: true,
           };
           break;
         // case "mds":
@@ -199,11 +198,17 @@ export default {
         //   };
         //   break;
       }
-
-      this.$bus.$emit("swichLayout", {
+      // if (["compactBox"].includes(layout.type)) {
+      //   this.$bus.$emit("swichTreeLayout", {
+      //     graphid: this.currentTableData.graphid,
+      //     layout,
+      //   });
+      // } else {
+      this.$bus.$emit("swichNormalLayout", {
         graphid: this.currentTableData.graphid,
         layout,
       });
+      // }
     },
   },
 };

@@ -93,12 +93,12 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-button type="text" size="mini" @click="handleClickResetDefaultColor">恢复默认值</el-button>
+            <el-button type="text" size="mini" @click="handleClickSET_NEW_MONEY_SPAN_COLOR">恢复默认值</el-button>
           </el-row>
-          <el-row style="margin-top:20px;" v-show="false">
+          <el-row style="margin-top:20px;" v-show="true">
             <el-col :span="4">&nbsp;</el-col>
             <el-col :span="16" style="text-align:center">
-              <el-button type="primary" size="medium" @click="handleClickColorTab">确定</el-button>
+              <el-button type="primary" size="medium" @click="handleClickColorConfirm">确定</el-button>
               <el-button size="medium" @click="handleClose">取消</el-button>
             </el-col>
             <el-col :span="4">&nbsp;</el-col>
@@ -112,7 +112,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  beforeMount() {
+  mounted() {
     this.myGraphicMoneySectionList = JSON.parse(
       JSON.stringify(this.currentTableData.graphicMoneySectionList)
     );
@@ -121,27 +121,29 @@ export default {
     ...mapState("DialogPopWnd", ["graphicSettingVisible"]),
     ...mapState("ShowTable", ["currentTableData"]),
   },
-  watch: {
-    myGraphicMoneySectionList: {
-      handler(newValue, oldValue) {
-        // 因为第四个的值依赖第三个
-        let item3;
-        for (let item of newValue) {
-          if (item.id === "3") {
-            item3 = JSON.parse(JSON.stringify(item));
-          }
-          if (item.id === "4") {
-            item.value = item3.value;
-          }
-        }
-        this.$store.commit(
-          "ShowTable/MOIDFY_GRAPHICMONEYSECTIONLIST",
-          JSON.parse(JSON.stringify(newValue))
-        );
-      },
-      deep: true,
-    },
-  },
+  // watch: {
+  //   myGraphicMoneySectionList: {
+  //     handler(newValue, oldValue) {
+  //       if (JSON.stringify(newValue) === JSON.stringify(oldValue)) return;
+  //       console.log("myGraphicMoneySectionList", newValue, oldValue);
+  //       // 因为第四个的值依赖第三个
+  //       let item3;
+  //       for (let item of newValue) {
+  //         if (item.id === "3") {
+  //           item3 = JSON.parse(JSON.stringify(item));
+  //         }
+  //         if (item.id === "4") {
+  //           item.value = item3.value;
+  //         }
+  //       }
+  //       this.$store.commit(
+  //         "ShowTable/MOIDFY_GRAPHICMONEYSECTIONLIST",
+  //         JSON.parse(JSON.stringify(newValue))
+  //       );
+  //     },
+  //     deep: true,
+  //   },
+  // },
   data() {
     return {
       myGraphicMoneySectionList: null,
@@ -153,9 +155,14 @@ export default {
     handleClose() {
       this.$store.commit("DialogPopWnd/SET_GRAPHICSETTINGVISIBLE", false);
     },
-    handleClickColorTab() {},
+    handleClickColorConfirm() {
+      this.$store.commit(
+        "ShowTable/SET_NEW_MONEY_SPAN_COLOR",
+        this.myGraphicMoneySectionList
+      );
+    },
 
-    handleClickResetDefaultColor() {
+    handleClickSET_NEW_MONEY_SPAN_COLOR() {
       let graphicMoneySectionList = [
         {
           value: 10,
@@ -188,6 +195,10 @@ export default {
       ];
       this.myGraphicMoneySectionList = JSON.parse(
         JSON.stringify(graphicMoneySectionList)
+      );
+      this.$store.commit(
+        "ShowTable/SET_NEW_MONEY_SPAN_COLOR",
+        this.myGraphicMoneySectionList
       );
     },
   },

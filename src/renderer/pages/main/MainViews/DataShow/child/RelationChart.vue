@@ -27,14 +27,13 @@
       </el-col>
     </el-row>
 
-    <el-row>
-      <el-col :span="12">
-        <div :id="miniMapID"></div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <div :ref="graphid" :id="graphid" :style="{ height:limitHeight-26+'px', width: '100%'}"></div>
-    </el-row>
+    <!-- <div :id="miniMapID" style="width:100px;"></div> -->
+    <div
+      :ref="graphid"
+      style="position: relative;"
+      :id="graphid"
+      :style="{ height:limitHeight-26+'px', width: '100%'}"
+    ></div>
 
     <el-row style="background-color: #f5f7fa;border: 1px solid #dddfe5;font-size:10px;">
       <el-col :span="3">
@@ -146,7 +145,7 @@ export default {
       let { clientWidth, clientHeight } = this.$refs[this.graphid];
       console.log({ clientWidth, clientHeight });
       this.graph.changeSize(clientWidth, clientHeight);
-      this.graph.fitCenter();
+      this.graph.fitView();
     },
     calLabel(item, preItem) {
       let label = "";
@@ -184,7 +183,7 @@ export default {
       this.graph.zoom(0.8);
     },
     handleClickLocation() {
-      this.graph.fitCenter();
+      this.graph.fitView(20);
     },
     handleClickFullScreen() {
       this.$store.commit("ShowTable/UPDATE_FULLSCRRENFLAG");
@@ -193,28 +192,27 @@ export default {
     initPlugins() {
       if (this.enableFish) {
         this.fisheye = new this.$G6.Fisheye({
-          d: 2,
+          d: 3,
           r: 200,
           showLabel: true,
         });
         this.graph.addPlugin(this.fisheye);
       }
 
-      // const minimap = new this.$G6.Minimap({
-      //   size: [100, 100],
-      //   className: "minimap",
-      //   type: "delegate",
-      //   // container: document.getElementById(this.miniMapID),
-      // });
-      // insertCss(`
-      //   .g6-minimap-container {
-      //     border: 1px solid #e2e2e2;
-      //   }
-      //   .g6-minimap-viewport {
-      //     border: 2px solid rgb(25, 128, 255);
-      //   }
-      // `);
-      // this.graph.addPlugin(minimap);
+      const minimap = new this.$G6.Minimap({
+        size: [100, 100],
+      });
+      insertCss(`
+      
+        .g6-minimap-container {
+          border: 1px solid #e2e2e2;
+        }
+        .g6-minimap-viewport {
+          border: 2px solid rgb(25, 128, 255);
+        }
+      `);
+      this.graph.addPlugin(minimap);
+
       const menu = new this.$G6.Menu({
         offsetX: 6,
         offsetX: 10,
@@ -240,50 +238,57 @@ export default {
       this.graph.addPlugin(menu);
     },
     customResigterNode() {
-      // 自定义节点
-      this.$G6.registerNode(
-        "rect-jsx",
-        (cfg) => `
-    <group>
-      <rect>
-        <rect style={{
-          width: 150,
-          height: 40,
-          fill: ${cfg.color},
-          radius: [6, 6, 0, 0],
-          cursor: 'move'，
-          stroke: ${cfg.color}
-        }} draggable="true">
-          <text style={{
-            marginTop: 2,
-            marginLeft: 75,
-            textAlign: 'center',
-            fontWeight: 'bold',
-            fill: '#fff' }} draggable="true">{{label}}</text>
-        </rect>
-        <rect style={{
-          width: 150,
-          height: 55,
-          stroke: ${cfg.color},
-          fill: #ffffff,
-          radius: [0, 0, 6, 6],
-        }}>
-          <text style={{ marginTop: 5, marginLeft: 3, fill: '#333', marginLeft: 4 }}>描述: {{description}}</text>
-          <text style={{ marginTop: 10, marginLeft: 3, fill: '#333', marginLeft: 4 }}>创建者: {{meta.creatorName}}</text>
-        </rect>
-      </rect>
-      <circle style={{
-        stroke: ${cfg.color},
-        r: 10,
-        fill: '#fff',
-        marginLeft: 75,
-        cursor: 'pointer'
-      }} name="circle">
-        <image style={{ img: 'https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png', width: 12, height: 12,  marginLeft: 70,  marginTop: -5 }} />
-      </circle>
-    </group>
-    `
-      );
+      this.$G6.registerNode("iconfont", {
+        draw(cfg, group) {
+          const {
+            backgroundConfig: backgroundStyle,
+            style,
+            labelCfg: labelStyle,
+          } = cfg;
+
+          if (backgroundStyle) {
+            group.addShape("circle", {
+              attrs: {
+                x: 0,
+                y: 0,
+                r: cfg.size,
+                ...backgroundStyle,
+              },
+              // must be assigned in G6 3.3 and later versions. it can be any value you want
+              name: "circle-shape",
+            });
+          }
+
+          const keyShape = group.addShape("text", {
+            attrs: {
+              x: 0,
+              y: 0,
+              fontFamily: "iconfont", // 对应css里面的font-family: "iconfont";
+              textAlign: "center",
+              textBaseline: "middle",
+              text: cfg.text,
+              fontSize: cfg.size,
+              ...style,
+            },
+            // must be assigned in G6 3.3 and later versions. it can be any value you want
+            name: "text-shape1",
+          });
+          const labelY = backgroundStyle ? cfg.size * 2 : cfg.size;
+
+          group.addShape("text", {
+            attrs: {
+              x: 0,
+              y: labelY,
+              textAlign: "center",
+              text: cfg.label,
+              ...labelStyle.style,
+            },
+            // must be assigned in G6 3.3 and later versions. it can be any value you want
+            name: "text-shape1",
+          });
+          return keyShape;
+        },
+      });
     },
     // 当返回""的时候不绘制这条线
     calculateLineColorByJinE(jinE) {
@@ -343,14 +348,14 @@ export default {
         let jzbs = parseInt(row["jzbs"]);
 
         let data1 = {
-          size: 30,
           id: cxkh + "\n" + jymc,
-          type: "circle",
+          name: jymc,
+          label: cxkh + "\n" + jymc,
         };
         let data2 = {
-          size: 30,
           id: jydfzkh + "\n" + jydfmc,
-          type: "circle",
+          name: jydfmc,
+          label: jydfzkh + "\n" + jydfmc,
         };
         let bFindData1 = false;
         let bFindData2 = false;
@@ -371,17 +376,13 @@ export default {
           let link1 = {
             source: cxkh + "\n" + jymc,
             target: jydfzkh + "\n" + jydfmc,
-            label: "" + czje,
-            labelCfg: {
-              autoRotate: true,
-              style: {
-                fontSize: 10,
-              },
-            },
+            label: `${czje}元（${czbs}笔）`,
             style: {
-              endArrow: true,
+              endArrow: {
+                path: "M 0,0 L 8,4 L 8,-4 Z",
+                fill: lineColor,
+              },
               stroke: lineColor,
-              lineWidth: 2,
             },
           };
           if (lineColor !== "") tempEdges.push(link1);
@@ -391,17 +392,13 @@ export default {
           let link2 = {
             target: cxkh + "\n" + jymc,
             source: jydfzkh + "\n" + jydfmc,
-            label: "" + jzje,
-            labelCfg: {
-              autoRotate: true,
-              style: {
-                fontSize: 10,
-              },
-            },
+            label: `${jzje}元（${jzbs}笔）`,
             style: {
-              endArrow: true,
+              endArrow: {
+                path: "M 0,0 L 8,4 L 8,-4 Z",
+                fill: lineColor,
+              },
               stroke: lineColor,
-              lineWidth: 2,
             },
           };
           if (lineColor !== "") tempEdges.push(link2);
@@ -431,12 +428,53 @@ export default {
       width: clientWidth,
       height: clientHeight,
       container: this.graphid, // 指定挂载容器
-      // fitView: true,
       animate: true,
-      layout: {
-        type: "random",
-        preventOverlap: true, // 防止节点重叠
-        nodeSize: 30,
+      defaultNode: {
+        type: "circle",
+        style: {
+          fill: "#d9dce1",
+          stroke: "#3c4e6b",
+        },
+        icon: {
+          show: true,
+          img: "/static/images/yinhangka.png",
+          width: 15,
+          height: 15,
+        },
+        labelCfg: {
+          position: "bottom",
+          offset: 0,
+          style: {
+            fontSize: 5,
+          },
+        },
+      },
+      defaultEdge: {
+        labelCfg: {
+          autoRotate: true,
+          style: {
+            fontSize: 5,
+          },
+        },
+        style: {
+          lineWidth: 1,
+        },
+      },
+      nodeStateStyles: {
+        active: {
+          opacity: 1,
+        },
+        inactive: {
+          opacity: 0.2,
+        },
+      },
+      edgeStateStyles: {
+        active: {
+          opacity: 1,
+        },
+        inactive: {
+          opacity: 0.2,
+        },
       },
       // linkCenter: true,
       modes: {
@@ -445,58 +483,47 @@ export default {
           "zoom-canvas",
           "drag-node",
           "activate-relations",
-        ], // 允许拖拽画布、放缩画布、拖拽节点
-        defaultEdge: {
-          size: 1,
-          style: {
-            stroke: "#e2e2e2",
-            lineAppendWidth: 2,
-          },
-        },
-        nodeStateStyles: {
-          active: {
-            opacity: 1,
-          },
-          inactive: {
-            opacity: 0.2,
-          },
-        },
-        edgeStateStyles: {
-          active: {
-            stroke: "#999",
-          },
-        },
+        ],
       },
     };
     this.graph = new this.$G6.Graph(option);
     this.initPlugins();
     this.graph.data(this.makeData()); // 加载数据
     this.graph.render(); // 渲染
+
     // 监听布局切换
     this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
-    this.$bus.$on("swichLayout", (data) => {
+    this.$bus.$on("swichNormalLayout", (data) => {
       let { graphid, layout } = data;
       if (graphid !== _this.graphid) return;
       console.log(layout, typeof layout);
       _this.graph.updateLayout(layout);
-      _this.graph.data(_this.makeData()); // 加载数据
-      _this.graph.render(); // 渲染
-      // _this.graph.fitView();
+      _this.graph.changeData(_this.makeData()); // 加载数据
     });
   },
 };
 </script>
+
+<style >
+.g6-minimap {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  background-color: #fff;
+}
+</style>
 
 <style scoped>
 .tips {
   font-size: 10px;
   margin-top: 7px;
 }
+
 .g6-tooltip {
   border: 1px solid #e2e2e2;
   border-radius: 4px;
   font-size: 12px;
-  color: #545454;
+  color: #000;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 10px 8px;
   box-shadow: rgb(174, 174, 174) 0px 0px 10px;

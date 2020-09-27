@@ -62,7 +62,7 @@ const state = {
 
 const mutations = {
   // 恢复默认金额颜色
-  RESETDEFAULTCOLOR(state, graphicMoneySectionList) {
+  SET_NEW_MONEY_SPAN_COLOR(state, graphicMoneySectionList) {
     Vue.set(
       state.currentTableData,
       "graphicMoneySectionList",
