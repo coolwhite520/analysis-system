@@ -13,6 +13,9 @@ import "echarts";
 import "./utils/dialog";
 import echarts from "echarts";
 import "./utils/extern";
+const lodash = require("lodash");
+
+Vue.prototype.$lodash = lodash;
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;
@@ -20,6 +23,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
 Vue.prototype.$echarts = echarts;
+
 import G6 from "@antv/g6";
 Vue.prototype.$G6 = G6;
 Vue.prototype.$bus = new Vue();

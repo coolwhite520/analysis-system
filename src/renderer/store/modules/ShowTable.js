@@ -69,6 +69,16 @@ const mutations = {
       graphicMoneySectionList
     );
   },
+  // 设置关系表中的实体list
+  SET_ENTITY_LIST(state, entityList) {
+    for (let item of state.currentTableData.rightTabs) {
+      if (item.componentName === "entity-view") {
+        Vue.set(item, "entityList", JSON.parse(JSON.stringify(entityList)));
+        Vue.set(state.currentTableData, "rightActive", "entity-view");
+        break;
+      }
+    }
+  },
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
     const uuid = require("uuid");
@@ -88,6 +98,12 @@ const mutations = {
         JSON.parse(JSON.stringify(graphicMoneySectionList))
       );
       Vue.set(tableData, "fullScrrenFlag", false);
+      tableData.rightTabs.push({
+        title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
+        entityList: [],
+        componentName: "entity-view",
+        visible: true,
+      });
     }
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
@@ -454,7 +470,6 @@ const actions = {
         };
         if (modelTreeList && modelTreeList.length > 0) {
           obj.rightTabs.push({
-            tabIndex: "0",
             title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
             modelTreeList,
             componentName: "model-list-view",
@@ -560,7 +575,6 @@ const actions = {
         };
         if (mpids && mpids.length > 0) {
           obj.rightTabs.push({
-            tabIndex: "0",
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
             mpids,
             componentName: "model-view",

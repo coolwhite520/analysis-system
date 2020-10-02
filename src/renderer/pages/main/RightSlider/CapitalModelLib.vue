@@ -3,7 +3,7 @@
     <el-tabs
       class="rightTab"
       tab-position="bottom"
-      type="card"
+      type="border-card"
       closable
       :style="{ height: contentViewHeight + 'px'}"
       @tab-remove="handleTabRemove"
@@ -24,6 +24,7 @@
 import { mapState, mapGetters } from "vuex";
 import ModelView from "./child/ModelView";
 import ModelListView from "./child/ModelListView";
+import EntityListView from "./child/EntityListView";
 export default {
   mounted() {},
   computed: {
@@ -33,6 +34,7 @@ export default {
   components: {
     "model-list-view": ModelListView,
     "model-view": ModelView,
+    "entity-view": EntityListView,
   },
   methods: {
     handleTabRemove(tabIndex) {

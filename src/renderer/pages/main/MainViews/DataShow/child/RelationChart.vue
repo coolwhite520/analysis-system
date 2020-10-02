@@ -23,7 +23,7 @@
         ></el-button>
       </el-col>
       <el-col :span="7">
-        <el-input size="mini"></el-input>
+        <el-input size="mini" v-model="inputValue"></el-input>
       </el-col>
     </el-row>
 
@@ -110,6 +110,7 @@ export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      inputValue: "",
       data: null,
       graph: null,
       graphid: uuid.v1(),
@@ -130,12 +131,43 @@ export default {
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
     },
+    graphicMoneySectionList() {
+      return this.tableData.graphicMoneySectionList;
+    },
   },
   watch: {
-    tableData: {
+    inputValue(newValue, oldValue) {
+      if (newValue === "") {
+        let allNodes = this.graph.getNodes();
+        allNodes.forEach((node) => {
+          this.graph.setItemState(node, "hover", false);
+        });
+        return;
+      }
+      const nodes = this.graph.findAll("node", (node) => {
+        return (
+          node.get("model").name.includes(newValue) ||
+          node.get("model").kh.includes(newValue)
+        );
+      });
+
+      if (nodes.length > 0) {
+        let allNodes = this.graph.getNodes();
+        allNodes.forEach((node) => {
+          this.graph.setItemState(node, "hover", false);
+        });
+        nodes.forEach((node) => {
+          this.graph.setItemState(node, "hover", true);
+        });
+      }
+    },
+    // 通过计算属性获取对象的属性值，然后通过深度watch
+    graphicMoneySectionList: {
       handler(newValue, oldValue) {
         this.graph.changeData(this.makeData()); // 加载数据
+        this.updateEntityList();
       },
+      immediate: false,
       deep: true,
     },
   },
@@ -178,9 +210,11 @@ export default {
     },
     handleClickEnlarge() {
       this.graph.zoom(1.2);
+      this.graph.fitCenter();
     },
     handleClickReduce() {
       this.graph.zoom(0.8);
+      this.graph.fitCenter();
     },
     handleClickLocation() {
       this.graph.fitView(20);
@@ -203,7 +237,6 @@ export default {
         size: [100, 100],
       });
       insertCss(`
-      
         .g6-minimap-container {
           border: 1px solid #e2e2e2;
         }
@@ -215,7 +248,7 @@ export default {
 
       const menu = new this.$G6.Menu({
         offsetX: 6,
-        offsetX: 10,
+        offsetX: 0,
         itemTypes: ["node"],
         getContent(e) {
           const outDiv = document.createElement("div");
@@ -236,59 +269,6 @@ export default {
         },
       });
       this.graph.addPlugin(menu);
-    },
-    customResigterNode() {
-      this.$G6.registerNode("iconfont", {
-        draw(cfg, group) {
-          const {
-            backgroundConfig: backgroundStyle,
-            style,
-            labelCfg: labelStyle,
-          } = cfg;
-
-          if (backgroundStyle) {
-            group.addShape("circle", {
-              attrs: {
-                x: 0,
-                y: 0,
-                r: cfg.size,
-                ...backgroundStyle,
-              },
-              // must be assigned in G6 3.3 and later versions. it can be any value you want
-              name: "circle-shape",
-            });
-          }
-
-          const keyShape = group.addShape("text", {
-            attrs: {
-              x: 0,
-              y: 0,
-              fontFamily: "iconfont", // 对应css里面的font-family: "iconfont";
-              textAlign: "center",
-              textBaseline: "middle",
-              text: cfg.text,
-              fontSize: cfg.size,
-              ...style,
-            },
-            // must be assigned in G6 3.3 and later versions. it can be any value you want
-            name: "text-shape1",
-          });
-          const labelY = backgroundStyle ? cfg.size * 2 : cfg.size;
-
-          group.addShape("text", {
-            attrs: {
-              x: 0,
-              y: labelY,
-              textAlign: "center",
-              text: cfg.label,
-              ...labelStyle.style,
-            },
-            // must be assigned in G6 3.3 and later versions. it can be any value you want
-            name: "text-shape1",
-          });
-          return keyShape;
-        },
-      });
     },
     // 当返回""的时候不绘制这条线
     calculateLineColorByJinE(jinE) {
@@ -317,6 +297,115 @@ export default {
           }
         }
       }
+    },
+    // 注册一个节点继承circle
+    registerNode() {
+      const Util = this.$G6.Util;
+      this.$G6.registerNode(
+        "inner-animate",
+        {
+          setState(name, value, item) {
+            let group = item.getContainer();
+            let cfg = {
+              id: "node2",
+              x: 300,
+              y: 200,
+              type: "background-animate",
+              color: "#40a9ff",
+              size: 20,
+              label: "Background Animation",
+              labelCfg: {
+                position: "left",
+                offset: 10,
+              },
+            };
+            if (name === "selected") {
+              if (value) {
+                const r = cfg.size / 2;
+                const back1 = group.addShape("circle", {
+                  zIndex: -3,
+                  attrs: {
+                    x: 0,
+                    y: 0,
+                    r,
+                    fill: cfg.color,
+                    opacity: 0.6,
+                  },
+                  name: "back1-shape",
+                });
+                const back2 = group.addShape("circle", {
+                  zIndex: -2,
+                  attrs: {
+                    x: 0,
+                    y: 0,
+                    r,
+                    fill: cfg.color,
+                    opacity: 0.6,
+                  },
+                  name: "back2-shape",
+                });
+                const back3 = group.addShape("circle", {
+                  zIndex: -1,
+                  attrs: {
+                    x: 0,
+                    y: 0,
+                    r,
+                    fill: cfg.color,
+                    opacity: 0.6,
+                  },
+                  name: "back3-shape",
+                });
+                group.sort(); // Sort according to the zIndex
+                back1.animate(
+                  {
+                    // Magnifying and disappearing
+                    r: r + 10,
+                    opacity: 0.1,
+                  },
+                  {
+                    duration: 3000,
+                    easing: "easeCubic",
+                    delay: 0,
+                    repeat: true, // repeat
+                  }
+                ); // no delay
+                back2.animate(
+                  {
+                    // Magnifying and disappearing
+                    r: r + 10,
+                    opacity: 0.1,
+                  },
+                  {
+                    duration: 3000,
+                    easing: "easeCubic",
+                    delay: 1000,
+                    repeat: true, // repeat
+                  }
+                ); // 1s delay
+                back3.animate(
+                  {
+                    // Magnifying and disappearing
+                    r: r + 10,
+                    opacity: 0.1,
+                  },
+                  {
+                    duration: 3000,
+                    easing: "easeCubic",
+                    delay: 2000,
+                    repeat: true, // repeat
+                  }
+                ); // 3s delay
+              } else {
+                if (item.isAnimating()) {
+                  item.stopAnimate();
+                }
+              }
+            } else if (name === "") {
+            }
+          },
+        },
+        "circle"
+      );
     },
     makeData() {
       let nodes = [];
@@ -349,11 +438,13 @@ export default {
 
         let data1 = {
           id: cxkh + "\n" + jymc,
+          kh: cxkh,
           name: jymc,
           label: cxkh + "\n" + jymc,
         };
         let data2 = {
           id: jydfzkh + "\n" + jydfmc,
+          kh: jydfzkh,
           name: jydfmc,
           label: jydfzkh + "\n" + jydfmc,
         };
@@ -415,10 +506,29 @@ export default {
       this.detailCount = this.entityCount + this.linkCount;
       return { nodes, edges };
     },
+    // 更新实体列表
+    updateEntityList() {
+      const nodes = this.graph.getNodes();
+      let entityList = nodes.map((node) => {
+        let { model } = node._cfg;
+        let edges = node.getEdges();
+        return {
+          id: model.id,
+          kh: model.kh,
+          name: model.name,
+          relationCount: edges.length,
+        };
+      });
+      entityList = entityList.sort(function (a, b) {
+        return b.relationCount - a.relationCount;
+      });
+      this.$store.commit("ShowTable/SET_ENTITY_LIST", entityList);
+    },
   },
   mounted() {
     let _this = this;
     console.log(this.tableData.allrows);
+    // this.registerNode();
     const erd = elementResizeDetectorMaker();
     erd.listenTo(document.getElementById(this.graphid), function (element) {
       _this.resize();
@@ -461,6 +571,10 @@ export default {
         },
       },
       nodeStateStyles: {
+        hover: {
+          fillOpacity: 0.1,
+          lineWidth: 3,
+        },
         active: {
           opacity: 1,
         },
@@ -479,10 +593,12 @@ export default {
       // linkCenter: true,
       modes: {
         default: [
-          "drag-canvas",
+          {
+            type: "drag-node",
+          },
           "zoom-canvas",
-          "drag-node",
           "activate-relations",
+          "click-select",
         ],
       },
     };
@@ -490,15 +606,25 @@ export default {
     this.initPlugins();
     this.graph.data(this.makeData()); // 加载数据
     this.graph.render(); // 渲染
-
+    this.updateEntityList();
     // 监听布局切换
     this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
+    this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
+    // 画布消息监听click
+    this.graph.on("node:click", (ev) => {
+      const shape = ev.target;
+      const node = ev.item;
+      console.log(node._cfg.model);
+    });
+    // 画布监听keydown
+    this.graph.on("keydown", (ev) => {});
     this.$bus.$on("swichNormalLayout", (data) => {
       let { graphid, layout } = data;
       if (graphid !== _this.graphid) return;
       console.log(layout, typeof layout);
       _this.graph.updateLayout(layout);
       _this.graph.changeData(_this.makeData()); // 加载数据
+      this.updateEntityList();
     });
   },
 };
