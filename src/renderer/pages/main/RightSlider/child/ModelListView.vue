@@ -10,11 +10,14 @@
         <span @click="handleClickClose" class="close iconfont">&#xe634;</span>
       </el-col>
     </el-row>
-    <div class="capital-right-slider" :style="{ height: (contentViewHeight - 40*2 -15) + 'px'}">
+    <div
+      class="capital-right-slider"
+      :style="{ height: contentViewHeight - 40 * 2 - 15 + 'px' }"
+    >
       <el-menu
         @select="handleSelect"
         :default-openeds="openeds"
-        :style="{ height: (contentViewHeight - 200) + 'px'}"
+        :style="{ height: contentViewHeight - 200 + 'px' }"
       >
         <el-submenu
           v-for="father of renderData.modelTreeList"
@@ -23,7 +26,7 @@
         >
           <template slot="title">
             <i class="iconfont">&#xe61c;</i>
-            <span slot="title">{{father.modelname}}</span>
+            <span slot="title">{{ father.modelname }}</span>
           </template>
 
           <el-menu-item
@@ -33,7 +36,7 @@
             class="menu-item iconfont"
           >
             <el-tooltip
-              :disabled="child.describe===null"
+              :disabled="child.describe === null"
               class="item"
               effect="dark"
               :content="child.describe"
@@ -42,7 +45,7 @@
               :open-delay="1000"
               :hide-after="10000"
             >
-              <div>{{child.modelname}}</div>
+              <div>{{ child.modelname }}</div>
             </el-tooltip>
           </el-menu-item>
         </el-submenu>
@@ -119,10 +122,9 @@ export default {
       });
     },
     handleClickClose() {
-      this.$store.commit("ShowTable/SET_RIGHT_TAB_VISIBLE", {
-        pageIndex: this.currentTableData.pageIndex,
-        tabIndex: this.renderData.tabIndex,
-        visible: false,
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "model-list-view",
+        action: "remove",
       });
     },
   },

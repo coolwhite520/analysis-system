@@ -1288,7 +1288,7 @@ function AnalysePageGrid_OnLinkClick(
   ColumnName
 ) {
   /*if (cA_PageItemDetail.CurrCellVal == "'0'"){
-        log.info(cA_PageItemDetail.TabName+"没有可钻取的数据");
+        log.info(cA_PageItemDetail.componentName+"没有可钻取的数据");
         return;
     }*/
   cA_PageItemDetail.CurrentExeSql = CurrTabItem.Sql_Detail; //模型模板sql

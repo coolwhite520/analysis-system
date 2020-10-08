@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="entityView" :style="{ height: (contentViewHeight - 40 -15) + 'px'}">
+    <div
+      class="entityView"
+      :style="{ height: contentViewHeight - 40 - 15 + 'px' }"
+    >
       <el-row class="title">
         <el-col :span="22">
           <div>
@@ -15,12 +18,24 @@
         size="mini"
         :data="renderData.entityList"
         style="width: 100%"
-        :height="contentViewHeight - 40 -40 - 5"
+        :height="contentViewHeight - 40 - 40 - 5"
       >
         <el-table-column label="序号" fixed type="index"></el-table-column>
-        <el-table-column prop="kh" label="实体" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="relationCount" label="关联数量" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          prop="kh"
+          label="实体"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="relationCount"
+          label="关联数量"
+          show-overflow-tooltip
+        ></el-table-column>
       </el-table>
     </div>
   </div>
@@ -36,10 +51,9 @@ export default {
   },
   methods: {
     handleClickClose() {
-      this.$store.commit("ShowTable/SET_RIGHT_TAB_VISIBLE", {
-        pageIndex: this.currentTableData.pageIndex,
-        tabIndex: this.renderData.tabIndex,
-        visible: false,
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "entity-view",
+        action: "remove",
       });
     },
   },

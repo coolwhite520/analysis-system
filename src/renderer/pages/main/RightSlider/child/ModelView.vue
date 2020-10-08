@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="childModel" :style="{ height: (contentViewHeight - 40 -15) + 'px'}">
+    <div
+      class="childModel"
+      :style="{ height: contentViewHeight - 40 - 15 + 'px' }"
+    >
       <el-row class="title">
         <el-col :span="22">
           <div>
@@ -13,26 +16,30 @@
       </el-row>
       <el-row>
         <div class="modelTitle">模型名称：</div>
-        <div class="modelDescribe">{{title}}</div>
+        <div class="modelDescribe">{{ title }}</div>
       </el-row>
       <el-row>
         <div class="modelTitle">模型用途：</div>
-        <div class="modelDescribe">{{describe}}</div>
+        <div class="modelDescribe">{{ describe }}</div>
       </el-row>
       <el-row>
         <div class="modelTitle">模型数据：</div>
-        <div class="modelDescribe">根据筛选条件,取得{{resultRowCount}}条记录。</div>
+        <div class="modelDescribe">
+          根据筛选条件,取得{{ resultRowCount }}条记录。
+        </div>
       </el-row>
 
       <el-row>
-        <div v-show="renderData.mpids.length>0" class="modelTitle">参数设置：</div>
+        <div v-show="renderData.mpids.length > 0" class="modelTitle">
+          参数设置：
+        </div>
         <div class="modelDescribe">
           <div v-show="renderData.mpids.includes('1')">
             <div class="childTitle">交易账卡号：</div>
             <div>
               <el-input
                 placeholder="请输入交易账卡号"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.KEY_PERSIONS_JYZKH"
               ></el-input>
@@ -44,7 +51,7 @@
             <div>
               <el-input
                 placeholder="请输入对方交易账卡号"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.KEY_PERSIONS_JYDFZKH"
               ></el-input>
@@ -67,7 +74,7 @@
             <div>
               <el-input
                 placeholder="请输入对方交易名称"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.KEY_PERSIONS_DFMC"
               ></el-input>
@@ -79,7 +86,7 @@
             <div>
               <el-input
                 placeholder="请输入交易证照号码"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.KEY_PERSIONS_JYZJHM"
               ></el-input>
@@ -91,7 +98,7 @@
             <div>
               <el-input
                 placeholder="请输入交易对手证照号码"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.KEY_PERSIONS_JYDFZJHM"
               ></el-input>
@@ -104,7 +111,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入获利金额"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.HLJE"
               ></el-input>
@@ -115,7 +122,7 @@
             <div>
               <el-input
                 placeholder="请输入关联账户数阀值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.GLDDZHS"
               ></el-input>
@@ -126,7 +133,7 @@
             <div>
               <el-input
                 placeholder="请输入最小交易额"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JYZE_MINValue"
               ></el-input>
@@ -141,7 +148,7 @@
                 v-model="selectCondition.JYZEConditionAccord"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:40%;"
+                style="width: 40%"
               >
                 <el-option
                   v-for="item in listst_jyje"
@@ -152,7 +159,7 @@
               </el-select>
               <el-input
                 size="mini"
-                style="width:40%;"
+                style="width: 40%"
                 placeholder="请输入交易金额"
                 v-model="selectCondition.JYZEValue"
               ></el-input>
@@ -167,7 +174,7 @@
                 v-model="selectCondition.JYZEConditionAccord"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:40%;"
+                style="width: 40%"
               >
                 <el-option
                   v-for="item in listst_jyje"
@@ -178,7 +185,7 @@
               </el-select>
               <el-input
                 size="mini"
-                style="width:40%;"
+                style="width: 40%"
                 placeholder="请输入交易总额"
                 v-model="selectCondition.JYZEValue"
               ></el-input>
@@ -190,7 +197,7 @@
             <div class="childSelection">
               <el-select
                 size="mini"
-                style="width:40%;"
+                style="width: 40%"
                 v-model="selectCondition.JYCSConditionAccord"
                 placeholder="请选择"
               >
@@ -203,7 +210,7 @@
               </el-select>
               <el-input
                 size="mini"
-                style="width:40%;"
+                style="width: 40%"
                 placeholder="请输入交易笔数"
                 v-model="selectCondition.JYCSValue"
               ></el-input>
@@ -215,7 +222,7 @@
             <div>
               <el-input
                 placeholder="请输入时间间隔"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JC_SJJG"
               ></el-input>
@@ -230,7 +237,7 @@
                 v-model="selectCondition.SJD"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:40%;"
+                style="width: 40%"
               >
                 <el-option
                   v-for="item in list_sjds"
@@ -246,7 +253,7 @@
             <div>
               <el-input
                 placeholder="请输入最小值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JYSJ_START"
               ></el-input>
@@ -255,7 +262,7 @@
             <div>
               <el-input
                 placeholder="请输入最大值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JYSJ_END"
               ></el-input>
@@ -266,7 +273,7 @@
             <div>
               <el-input
                 placeholder="请输入最小值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JCB_MIN"
               ></el-input>
@@ -275,7 +282,7 @@
             <div>
               <el-input
                 placeholder="请输入最大值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JCB_MAX"
               ></el-input>
@@ -287,7 +294,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入公司数量"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.ZCDDGLGSSL"
               ></el-input>
@@ -299,7 +306,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入公司数量"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.BSRGLGSSL"
               ></el-input>
@@ -311,7 +318,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入公司数量"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.CWFZRGLGSSL"
               ></el-input>
@@ -323,7 +330,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入金额合计"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.XXSJEHJ"
               ></el-input>
@@ -334,7 +341,7 @@
             <div>
               <el-input
                 placeholder="请输入可疑主体证照号码"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.KYZT"
               ></el-input>
@@ -346,7 +353,7 @@
               <span>大于等于</span>
               <el-input
                 placeholder="请输入收付金额占比"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.SFJEZB"
               ></el-input>
@@ -358,7 +365,7 @@
               <span>最小值：</span>
               <el-input
                 placeholder="请输入最小值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JCZCSB_MIN"
               ></el-input>
@@ -367,7 +374,7 @@
               <span>最大值：</span>
               <el-input
                 placeholder="请输入最大值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JCZCSB_MAX"
               ></el-input>
@@ -379,7 +386,7 @@
               <span>最小值：</span>
               <el-input
                 placeholder="请输入最小值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.SFJEB_MIN"
               ></el-input>
@@ -388,7 +395,7 @@
               <span>最大值：</span>
               <el-input
                 placeholder="请输入最大值"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.SFJEB_MAX"
               ></el-input>
@@ -400,7 +407,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入公司数量"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.GFSHSL"
               ></el-input>
@@ -412,7 +419,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入公司数量"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.XFSHSL"
               ></el-input>
@@ -424,7 +431,7 @@
               <span>大于</span>
               <el-input
                 placeholder="请输入存续最小开票时间"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.ZXKPSJ"
               ></el-input>
@@ -438,27 +445,42 @@
                 v-model="selectCondition.MINH"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:25%;"
+                style="width: 25%"
               >
-                <el-option v-for="item in HourList" :key="item" :label="item" :value="item"></el-option>
+                <el-option
+                  v-for="item in HourList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
               </el-select>
               <el-select
                 size="mini"
                 v-model="selectCondition.MINM"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:25%;"
+                style="width: 25%"
               >
-                <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+                <el-option
+                  v-for="item in MinuteList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
               </el-select>
               <el-select
                 size="mini"
                 v-model="selectCondition.MINS"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:25%;"
+                style="width: 25%"
               >
-                <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+                <el-option
+                  v-for="item in MinuteList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
               </el-select>
             </div>
             <span>至</span>
@@ -468,27 +490,42 @@
                 v-model="selectCondition.MAXH"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:25%;"
+                style="width: 25%"
               >
-                <el-option v-for="item in HourList" :key="item" :label="item" :value="item"></el-option>
+                <el-option
+                  v-for="item in HourList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
               </el-select>
               <el-select
                 size="mini"
                 v-model="selectCondition.MAXM"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:25%;"
+                style="width: 25%"
               >
-                <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+                <el-option
+                  v-for="item in MinuteList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
               </el-select>
               <el-select
                 size="mini"
                 v-model="selectCondition.MAXS"
                 placeholder="请选择"
                 @visible-change="visibleChange"
-                style="width:25%;"
+                style="width: 25%"
               >
-                <el-option v-for="item in MinuteList" :key="item" :label="item" :value="item"></el-option>
+                <el-option
+                  v-for="item in MinuteList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
               </el-select>
             </div>
           </div>
@@ -498,7 +535,7 @@
               <span>大于等于</span>
               <el-input
                 placeholder="请输入交易金额"
-                style="width:40%;"
+                style="width: 40%"
                 size="mini"
                 v-model="selectCondition.JYZEValue"
               ></el-input>
@@ -506,7 +543,7 @@
           </div>
           <!-- 30 这个是个？ ？？？？？？？下面的不是哦-->
           <div v-show="renderData.mpids.includes('30')" class="selectionItem">
-            <div class="childTitle">{{MoneyIntervalDes}}</div>
+            <div class="childTitle">{{ MoneyIntervalDes }}</div>
             <el-button type="text" size="mini">区间设置</el-button>
           </div>
 
@@ -517,11 +554,11 @@
               v-model="selectCondition.MinDate"
               type="date"
               placeholder="选择日期"
-              style="width:60%"
+              style="width: 60%"
             ></el-date-picker>
             <span>至</span>
             <el-date-picker
-              style="width:60%"
+              style="width: 60%"
               size="mini"
               v-model="selectCondition.MaxDate"
               type="date"
@@ -537,7 +574,7 @@
                 v-model="selectCondition.SelectThType.ThId"
                 placeholder="请选择"
                 @change="handleChangeThSelect"
-                style="width:80%;"
+                style="width: 80%"
               >
                 <el-option
                   v-for="item in list_thtype"
@@ -549,11 +586,27 @@
             </div>
           </div>
           <!-- 33、34这个是个？ ？？？？？？？下面的不是哦-->
-          <div v-show="renderData.mpids.includes('33')" class="selectionItem"></div>
-          <div v-show="renderData.mpids.includes('34')" class="selectionItem"></div>
-          <div v-show="renderData.mpids.length>0" style="margin-top:40px;text-align:center;">
-            <el-button size="mini" @click="handleClickSaveCondition">保存条件</el-button>
-            <el-button size="mini" type="primary" @click="handleClickExecCondition">执行条件</el-button>
+          <div
+            v-show="renderData.mpids.includes('33')"
+            class="selectionItem"
+          ></div>
+          <div
+            v-show="renderData.mpids.includes('34')"
+            class="selectionItem"
+          ></div>
+          <div
+            v-show="renderData.mpids.length > 0"
+            style="margin-top: 40px; text-align: center"
+          >
+            <el-button size="mini" @click="handleClickSaveCondition"
+              >保存条件</el-button
+            >
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleClickExecCondition"
+              >执行条件</el-button
+            >
           </div>
         </div>
       </el-row>
@@ -801,10 +854,9 @@ export default {
     },
     handleClickSaveCondition() {},
     handleClickClose() {
-      this.$store.commit("ShowTable/SET_RIGHT_TAB_VISIBLE", {
-        pageIndex: this.currentTableData.pageIndex,
-        tabIndex: this.renderData.tabIndex,
-        visible: false,
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "model-view",
+        action: "remove",
       });
     },
     getNowFormatDate(type = 0) {

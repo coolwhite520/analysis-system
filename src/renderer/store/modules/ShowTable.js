@@ -6,6 +6,7 @@ import Default from "@/utils/sql/Default.js";
 import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
+import { stat } from "fs";
 const log = require("@/utils/log");
 // 关系图设置的金额区间
 
@@ -73,7 +74,10 @@ const mutations = {
   SET_ENTITY_LIST(state, entityList) {
     for (let item of state.currentTableData.rightTabs) {
       if (item.componentName === "entity-view") {
-        Vue.set(item, "entityList", JSON.parse(JSON.stringify(entityList)));
+        state.currentTableData.entityList = JSON.parse(
+          JSON.stringify(entityList)
+        );
+        Vue.set(item, "entityList", state.currentTableData.entityList);
         Vue.set(state.currentTableData, "rightActive", "entity-view");
         break;
       }
@@ -102,8 +106,8 @@ const mutations = {
         title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
         entityList: [],
         componentName: "entity-view",
-        visible: true,
       });
+      tableData.rightActiveName = "entity-view";
     }
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
@@ -143,28 +147,8 @@ const mutations = {
       let tableData = state.tableDataList[index];
       if (tableData.pageIndex === state.activeIndex) {
         state.currentTableData = tableData;
-        for (let tab of state.currentTableData.rightTabs) {
-          tab.visible = true;
-        }
       }
     }
-  },
-  // 都是针对的当前的操作窗口
-  ADD_TABVIEW_TO_RIGHT_TABS(state, newTab) {
-    let nextTabIndex = 0;
-    for (let tab of state.currentTableData.rightTabs) {
-      let valueIndex = parseInt(tab.tabIndex);
-      if (valueIndex >= nextTabIndex) {
-        nextTabIndex = valueIndex;
-      }
-    }
-    nextTabIndex++;
-    tab.tabIndex = String(nextTabIndex);
-    state.currentTableData.rightTabs.push(newTab);
-  },
-  // 隐藏右侧的模型界面
-  HIDE_CURRENT_TABLE_RIGHT_VIEW(state) {
-    Vue.set(state.currentTableData, "showRightView", false);
   },
   // 设置隐藏列或者显示隐藏列
   SET_HIDEEMPTYFIELD(state, { hideEmptyField }) {
@@ -322,33 +306,61 @@ const mutations = {
       state.currentTableData = null;
     }
   },
+  // 设置active
+  SET_RIGHT_TAB_ACTIVE(state, componentName) {
+    state.currentTableData.rightActiveName = componentName;
+  },
 
-  // 主要负责关闭时候的隐藏
-  SET_RIGHT_TAB_VISIBLE(state, { pageIndex, tabIndex, visible }) {
-    for (let index = 0; index < state.tableDataList.length; index++) {
-      let tableData = state.tableDataList[index];
-      if (tableData.pageIndex === pageIndex) {
-        for (let tab of tableData.rightTabs) {
-          if (tab.tabIndex === tabIndex) {
-            tab.visible = visible;
-          }
+  ADD_OR_REMOVE_RIGHT_TAB(state, { componentName, action }) {
+    let tabs = state.currentTableData.rightTabs;
+    if (action === "add") {
+      for (let tab of tabs) {
+        if (tab.componentName === componentName) {
+          state.currentTableData.rightActiveName = componentName;
+          return;
         }
       }
-    }
-  },
-  // 显示模型库
-  SHOW_MODEL_LIB_VIEW(state) {
-    for (let tab of state.currentTableData.rightTabs) {
-      if (tab.componentName === "model-list-view") {
-        tab.visible = true;
+      switch (componentName) {
+        case "model-list-view":
+          let modelTreeList = state.currentTableData.modelTreeList;
+          state.currentTableData.rightTabs.push({
+            title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
+            modelTreeList,
+            componentName: "model-list-view",
+          });
+          break;
+        case "model-view":
+          let mpids = state.currentTableData.mpids;
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
+            mpids,
+            componentName: "model-view",
+          });
+          break;
+        case "entity-view":
+          let entityList = state.currentTableData.entityList;
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
+            entityList,
+            componentName: "entity-view",
+          });
+          break;
       }
-    }
-  },
-  // 显示模型
-  SHOW_MODEL_VIEW(state) {
-    for (let tab of state.currentTableData.rightTabs) {
-      if (tab.componentName === "model-view") {
-        tab.visible = true;
+      state.currentTableData.rightActiveName = componentName;
+      return;
+    } else {
+      for (let index = 0; index < tabs.length; index++) {
+        let currentTab = state.currentTableData.rightTabs[index];
+        if (currentTab.componentName === componentName) {
+          state.currentTableData.rightTabs.splice(index, 1);
+          if (state.currentTableData.rightTabs.length > 0) {
+            state.currentTableData.rightActiveName =
+              state.currentTableData.rightTabs[
+                state.currentTableData.rightTabs.length - 1
+              ].componentName;
+          }
+          break;
+        }
       }
     }
   },
@@ -469,12 +481,13 @@ const actions = {
           exportSql,
         };
         if (modelTreeList && modelTreeList.length > 0) {
+          obj.modelTreeList = modelTreeList;
           obj.rightTabs.push({
             title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
             modelTreeList,
             componentName: "model-list-view",
-            visible: true,
           });
+          obj.rightActiveName = "model-list-view";
         }
         commit("ADD_TABLE_DATA_TO_LIST", obj);
       }
@@ -574,12 +587,13 @@ const actions = {
           allrows,
         };
         if (mpids && mpids.length > 0) {
+          obj.mpids = mpids;
           obj.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
             mpids,
             componentName: "model-view",
-            visible: true,
           });
+          obj.rightActiveName = "model-view";
         }
         commit("ADD_TABLE_DATA_TO_LIST", obj);
       }

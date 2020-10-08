@@ -1,27 +1,40 @@
 <template>
-  <div class="main-page" :style="{ height: mainViewHeight + 'px'}">
+  <div class="main-page" :style="{ height: mainViewHeight + 'px' }">
     <el-row>
       <tab-bar v-show="showTabBarView"></tab-bar>
     </el-row>
     <!-- <el-button type="text" @click="handleClickOpenNewWin">open new win</el-button> -->
 
     <el-row>
-      <el-col :span="isCollapseLeftBar?1:3">
+      <el-col :span="isCollapseLeftBar ? 1 : 3">
         <data-center></data-center>
       </el-col>
       <el-col
-        :span="( (currentTableData && 
-        currentTableData.rightTabs && currentTableData.rightTabs.filter( obj=> obj.visible === true).length > 0 )  ? 17:21) + (isCollapseLeftBar? 2:0)"
+        :span="
+          (currentTableData &&
+          currentTableData.rightTabs &&
+          currentTableData.rightTabs.length > 0
+            ? 17
+            : 21) + (isCollapseLeftBar ? 2 : 0)
+        "
       >
         <main-center-view></main-center-view>
       </el-col>
       <el-col
-        :span="(currentTableData && 
-        currentTableData.rightTabs && currentTableData.rightTabs.filter( obj=> obj.visible === true).length > 0  ) ? 4:0"
+        :span="
+          currentTableData &&
+          currentTableData.rightTabs &&
+          currentTableData.rightTabs.length > 0
+            ? 4
+            : 0
+        "
       >
         <right-slider
-          v-if="currentTableData && 
-        currentTableData.rightTabs && currentTableData.rightTabs.filter( obj=> obj.visible === true).length > 0 "
+          v-if="
+            currentTableData &&
+            currentTableData.rightTabs &&
+            currentTableData.rightTabs.length > 0
+          "
         ></right-slider>
       </el-col>
     </el-row>

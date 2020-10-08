@@ -1,8 +1,12 @@
 <template>
   <div class="TabData">
     <el-row>
-      <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
-        <el-button type="text" class="ctrl-button" @click="handleClickDataCollection">
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          @click="handleClickDataCollection"
+        >
           <span class="iconfont selfIcont">&#xe6a1;</span>
           <br />
           <span class="title-content">数据采集</span>
@@ -12,7 +16,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!isNotNoDataPage"
           @click="handleClickFilter"
         >
           <span class="iconfont selfIcont">&#xe815;</span>
@@ -25,7 +29,12 @@
           type="text"
           class="ctrl-button"
           @click="handleClickClearFilter"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' && currentTableData.modelFilterChildList.length>0)"
+          :disabled="
+            !(
+              isNotNoDataPage &&
+              currentTableData.modelFilterChildList.length > 0
+            )
+          "
         >
           <span class="iconfont selfIcont">&#xe606;</span>
           <br />
@@ -38,66 +47,56 @@
           type="text"
           class="ctrl-button"
           @click="handleClickShowField"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!isNotNoDataPage"
         >
           <span class="iconfont selfIcont">&#xe600;</span>
           <br />
           <span class="title-content">选择显示列</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
         <el-button
           type="text"
           class="ctrl-button"
           @click="handleClickHideEmptyField"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!isNotNoDataPage"
         >
           <span class="iconfont selfIcont">&#xe677;</span>
           <br />
-          <span
-            class="title-content"
-          >{{ (currentTableData && currentTableData.hideEmptyField) ? "显示空列" : "隐藏空列" }}</span>
+          <span class="title-content">{{
+            currentTableData && currentTableData.hideEmptyField
+              ? "显示空列"
+              : "隐藏空列"
+          }}</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe89a;</span>
           <br />
           <span class="title-content">查找替换</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe669;</span>
           <br />
           <span class="title-content">特殊字符</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe61d;</span>
           <br />
           <span class="title-content">无效数据</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col" style="border-right:1px solid #e5e7ec;">
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
         <el-button
           type="text"
           class="ctrl-button"
           @click="handleClickDataDiff"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!isNotNoDataPage"
         >
           <span class="iconfont selfIcont">&#xe6ff;</span>
           <br />
@@ -105,33 +104,21 @@
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe62c;</span>
           <br />
           <span class="title-content">同交易去重</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe602;</span>
           <br />
           <span class="title-content">数据补全</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe652;</span>
           <br />
           <span class="title-content">数据重置</span>
@@ -139,11 +126,7 @@
       </el-col>
 
       <el-col :span="1">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
-        >
+        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
           <span class="iconfont selfIcont">&#xe629;</span>
           <br />
           <span class="title-content">分组</span>
@@ -153,8 +136,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  
-          currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!isModelLibVisible"
           @click="handleClickShowModelLib"
         >
           <span class="iconfont selfIcont">&#xe60f;</span>
@@ -166,8 +148,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  
-          currentTableData.componentName !== 'no-data-view' )"
+          :disabled="!isModelVisible"
           @click="handleClickShowModel"
         >
           >
@@ -176,11 +157,16 @@
           <span class="title-content">模型参数</span>
         </el-button>
       </el-col>
-      <el-col :span="1" style="border-right:1px solid #e5e7ec;">
+      <el-col :span="1" style="border-right: 1px solid #e5e7ec">
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="
+            !(
+              currentTableData &&
+              currentTableData.componentName !== 'no-data-view'
+            )
+          "
         >
           <span class="iconfont selfIcont">&#xe607;</span>
           <br />
@@ -192,7 +178,12 @@
           type="text"
           class="ctrl-button"
           @click="handleClickExportData"
-          :disabled="!(currentTableData &&  currentTableData.componentName !== 'no-data-view' )"
+          :disabled="
+            !(
+              currentTableData &&
+              currentTableData.componentName !== 'no-data-view'
+            )
+          "
         >
           <span class="iconfont selfIcont">&#xe637;</span>
           <br />
@@ -201,17 +192,26 @@
       </el-col>
     </el-row>
 
-    <el-row style="font-size:8px;color:gray;">
-      <el-col :span="1" style="border-right:1px solid #e5e7ec;">
+    <el-row style="font-size: 8px; color: gray">
+      <el-col :span="1" style="border-right: 1px solid #e5e7ec">
         <div>采集</div>
       </el-col>
-      <el-col :span="4" style="text-align:center;border-right:1px solid #e5e7ec;">
+      <el-col
+        :span="4"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
         <div>显示</div>
       </el-col>
-      <el-col :span="4" style="text-align:center;border-right:1px solid #e5e7ec;">
+      <el-col
+        :span="4"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
         <div>清洗</div>
       </el-col>
-      <el-col :span="7" style="text-align:center;border-right:1px solid #e5e7ec;">
+      <el-col
+        :span="7"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
         <div>分析</div>
       </el-col>
       <el-col :span="1">
@@ -264,13 +264,36 @@ export default {
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
+    isNotNoDataPage() {
+      return (
+        this.currentTableData &&
+        this.currentTableData.componentName !== "no-data-view"
+      );
+    },
+    isModelLibVisible() {
+      return (
+        this.currentTableData &&
+        this.currentTableData.hasOwnProperty("modelTreeList")
+      );
+    },
+    isModelVisible() {
+      return (
+        this.currentTableData && this.currentTableData.hasOwnProperty("mpids")
+      );
+    },
   },
   methods: {
     async handleClickShowModelLib() {
-      this.$store.commit("ShowTable/SHOW_MODEL_LIB_VIEW");
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "model-list-view",
+        action: "add",
+      });
     },
     async handleClickShowModel() {
-      this.$store.commit("ShowTable/SHOW_MODEL_VIEW");
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "model-view",
+        action: "add",
+      });
     },
     async handleClickDataCollection() {
       await this.$electron.ipcRenderer.send("data-collection-open");

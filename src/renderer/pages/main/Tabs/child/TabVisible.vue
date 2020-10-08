@@ -1,34 +1,37 @@
 <template>
   <div class="TabVisible">
-    <el-row style="text-align:center">
-      <el-col :span="4" style="border-right: 1px solid  #e5e7ec;">
+    <el-row style="text-align: center">
+      <el-col :span="4" style="border-right: 1px solid #e5e7ec">
         <el-row>
           <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('random')"
-            >&#xe6cd;&nbsp;随机布局</el-button>
+              >&#xe6cd;&nbsp;随机布局</el-button
+            >
           </el-col>
           <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('dagre')"
-            >&#xe737;&nbsp;层次布局</el-button>
+              >&#xe737;&nbsp;层次布局</el-button
+            >
           </el-col>
           <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('circular')"
-            >&#xe609;&nbsp;圆形布局</el-button>
+              >&#xe609;&nbsp;圆形布局</el-button
+            >
           </el-col>
           <!-- <el-col :span="6">
             <el-button
@@ -45,49 +48,54 @@
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('concentric')"
-            >&#xe605;&nbsp;同心圆布局</el-button>
+              >&#xe605;&nbsp;同心圆布局</el-button
+            >
           </el-col>
           <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('grid')"
-            >&#xe667;&nbsp;网格布局</el-button>
+              >&#xe667;&nbsp;网格布局</el-button
+            >
           </el-col>
           <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('radial')"
-            >&#xe7bb;&nbsp;辐射状布局</el-button>
+              >&#xe7bb;&nbsp;辐射状布局</el-button
+            >
           </el-col>
         </el-row>
       </el-col>
 
-      <!-- <el-col :span="3" style="border-right: 1px solid  #e5e7ec;">
+      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
         <el-row>
           <el-col :span="12">
             <el-button
               size="mini"
               type="text"
               class="iconfont"
-              style="padding:4px;font-size:12px;"
-            >&#xe601;&nbsp;紧凑树布局</el-button>
+              style="padding: 4px; font-size: 12px"
+              >&#xe601;&nbsp;紧凑树布局</el-button
+            >
           </el-col>
           <el-col :span="12">
             <el-button
               size="mini"
               type="text"
               class="iconfont"
-              style="padding:4px;font-size:12px;"
-            >&#xe6b1;&nbsp;树状布局</el-button>
+              style="padding: 4px; font-size: 12px"
+              >&#xe6b1;&nbsp;树状布局</el-button
+            >
           </el-col>
         </el-row>
         <el-row>
@@ -96,27 +104,82 @@
               size="mini"
               type="text"
               class="iconfont"
-              style="padding:4px;font-size:12px;"
-            >&#xe610;&nbsp;缩进布局</el-button>
+              style="padding: 4px; font-size: 12px"
+              >&#xe610;&nbsp;缩进布局</el-button
+            >
           </el-col>
           <el-col :span="12">
             <el-button
               size="mini"
               type="text"
               class="iconfont"
-              style="padding:4px;font-size:12px;"
-            >&#xe60a;&nbsp;脑图布局</el-button>
+              style="padding: 4px; font-size: 12px"
+              >&#xe60a;&nbsp;脑图布局</el-button
+            >
           </el-col>
         </el-row>
-      </el-col>-->
+      </el-col>
+
+      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
+        <el-row>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              @click="handleClickShowEntityListView"
+              >&#xe601;&nbsp;显示实体列表</el-button
+            >
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              >&#xe6b1;&nbsp;显示实体列表</el-button
+            >
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              >&#xe610;&nbsp;显示实体列表</el-button
+            >
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              >&#xe60a;&nbsp;显示实体列表</el-button
+            >
+          </el-col>
+        </el-row>
+      </el-col>
     </el-row>
-    <el-row style="font-size:8px;color:gray;text-align: center;">
-      <el-col :span="4" style="border-right:1px solid #e5e7ec;">
+    <el-row style="font-size: 8px; color: gray; text-align: center">
+      <el-col :span="4" style="border-right: 1px solid #e5e7ec">
         <div>布局</div>
       </el-col>
-      <!-- <el-col :span="3" style="text-align:center;border-right:1px solid #e5e7ec;">
+      <el-col
+        :span="3"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
         <div>树形布局</div>
-      </el-col>-->
+      </el-col>
+      <el-col
+        :span="3"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
+        <div>操作</div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -127,6 +190,12 @@ export default {
     ...mapState("ShowTable", ["currentTableData"]),
   },
   methods: {
+    handleClickShowEntityListView() {
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "entity-view",
+        action: "add",
+      });
+    },
     handleClickSwitchLayout(layoutName) {
       let layout;
       switch (layoutName) {
