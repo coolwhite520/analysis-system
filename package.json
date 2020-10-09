@@ -70,6 +70,7 @@
     "insert-css": "^2.0.0",
     "jschardet": "^2.2.1",
     "lodash": "^4.17.20",
+    "md5-node": "^1.0.1",
     "moment": "^2.27.0",
     "officegen": "^0.6.4",
     "pg": "^8.2.1",

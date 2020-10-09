@@ -192,7 +192,7 @@ export default {
   methods: {
     handleClickShowEntityListView() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-view",
+        componentName: "entity-list-view",
         action: "add",
       });
     },

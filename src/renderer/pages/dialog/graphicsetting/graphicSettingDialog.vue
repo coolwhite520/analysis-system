@@ -12,8 +12,8 @@
       :modal="false"
     >
       <div slot="title" class="dialog-title">
-        <i class="iconfont" style="color: white;font-size:30px;">&#xe815;</i>
-        <span class="title-text" style="color: white;">{{title}}</span>
+        <i class="iconfont" style="color: white; font-size: 30px">&#xe815;</i>
+        <span class="title-text" style="color: white">{{ title }}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
         </div>
@@ -26,10 +26,13 @@
             justify="center"
           >
             <el-col :span="2">
-              <div style="margin-top:3px;">{{item.id}}级</div>
+              <div style="margin-top: 3px">{{ item.id }}级</div>
             </el-col>
             <el-col :span="2">
-              <el-color-picker v-model="item.color" size="mini"></el-color-picker>
+              <el-color-picker
+                v-model="item.color"
+                size="mini"
+              ></el-color-picker>
             </el-col>
             <template v-if="item.id === '1'">
               <el-col :span="7">
@@ -38,23 +41,27 @@
                   v-model="item.value"
                   type="number"
                   :min="1"
-                  :max="myGraphicMoneySectionList[index+1].value-1"
+                  :max="myGraphicMoneySectionList[index + 1].value - 1"
                 ></el-input-number>
               </el-col>
             </template>
             <template v-else-if="item.id === '2'">
               <el-col :span="5">
-                <el-input size="mini" v-model="myGraphicMoneySectionList[index-1].value" disabled></el-input>
+                <el-input
+                  size="mini"
+                  v-model="myGraphicMoneySectionList[index - 1].value"
+                  disabled
+                ></el-input>
               </el-col>
               <el-col :span="2">
-                <div style="margin-top:3px;">&nbsp;&nbsp;至&nbsp;&nbsp;</div>
+                <div style="margin-top: 3px">&nbsp;&nbsp;至&nbsp;&nbsp;</div>
               </el-col>
               <el-col :span="7">
                 <el-input-number
                   size="mini"
                   v-model="item.value"
                   :min="myGraphicMoneySectionList[index - 1].value + 1"
-                  :max="myGraphicMoneySectionList[index+1].value - 1"
+                  :max="myGraphicMoneySectionList[index + 1].value - 1"
                 ></el-input-number>
               </el-col>
             </template>
@@ -62,13 +69,13 @@
               <el-col :span="5">
                 <el-input
                   size="mini"
-                  v-model="myGraphicMoneySectionList[index-1].value"
+                  v-model="myGraphicMoneySectionList[index - 1].value"
                   disabled
                   type="number"
                 ></el-input>
               </el-col>
               <el-col :span="2">
-                <div style="margin-top:3px;">&nbsp;&nbsp;至&nbsp;&nbsp;</div>
+                <div style="margin-top: 3px">&nbsp;&nbsp;至&nbsp;&nbsp;</div>
               </el-col>
               <el-col :span="7">
                 <el-input-number
@@ -82,23 +89,33 @@
               <el-col :span="5">
                 <el-input
                   size="mini"
-                  v-model="myGraphicMoneySectionList[index-1].value"
+                  v-model="myGraphicMoneySectionList[index - 1].value"
                   disabled
                   type="number"
                 ></el-input>
               </el-col>
             </template>
             <el-col :span="6">
-              <div style="margin-top:3px;">&nbsp;&nbsp;{{item.label}}</div>
+              <div style="margin-top: 3px">&nbsp;&nbsp;{{ item.label }}</div>
             </el-col>
           </el-row>
           <el-row>
-            <el-button type="text" size="mini" @click="handleClickSET_NEW_MONEY_SPAN_COLOR">恢复默认值</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              @click="handleClickSET_NEW_MONEY_SPAN_COLOR"
+              >恢复默认值</el-button
+            >
           </el-row>
-          <el-row style="margin-top:20px;" v-show="true">
+          <el-row style="margin-top: 20px" v-show="true">
             <el-col :span="4">&nbsp;</el-col>
-            <el-col :span="16" style="text-align:center">
-              <el-button type="primary" size="medium" @click="handleClickColorConfirm">确定</el-button>
+            <el-col :span="16" style="text-align: center">
+              <el-button
+                type="primary"
+                size="medium"
+                @click="handleClickColorConfirm"
+                >确定</el-button
+              >
               <el-button size="medium" @click="handleClose">取消</el-button>
             </el-col>
             <el-col :span="4">&nbsp;</el-col>
@@ -111,6 +128,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import Default from "@/utils/sql/Default.js";
 export default {
   mounted() {
     this.myGraphicMoneySectionList = JSON.parse(
@@ -158,43 +176,13 @@ export default {
     handleClickColorConfirm() {
       this.$store.commit(
         "ShowTable/SET_NEW_MONEY_SPAN_COLOR",
-        this.myGraphicMoneySectionList
+        JSON.parse(JSON.stringify(this.myGraphicMoneySectionList))
       );
+      this.$store.commit("DialogPopWnd/SET_GRAPHICSETTINGVISIBLE", false);
     },
-
     handleClickSET_NEW_MONEY_SPAN_COLOR() {
-      let graphicMoneySectionList = [
-        {
-          value: 10,
-          label: `万元以下`,
-          id: "1",
-          color: "#9cdcfe",
-          selected: true,
-        },
-        {
-          value: 100,
-          label: `万元`,
-          id: "2",
-          color: "#6a9955",
-          selected: true,
-        },
-        {
-          value: 1000,
-          label: `万元`,
-          id: "3",
-          color: "#edad40",
-          selected: true,
-        },
-        {
-          value: 1000,
-          label: `万元以上`,
-          id: "4",
-          color: "#ee6b5f",
-          selected: true,
-        },
-      ];
       this.myGraphicMoneySectionList = JSON.parse(
-        JSON.stringify(graphicMoneySectionList)
+        JSON.stringify(Default.graphicMoneySectionList)
       );
       this.$store.commit(
         "ShowTable/SET_NEW_MONEY_SPAN_COLOR",

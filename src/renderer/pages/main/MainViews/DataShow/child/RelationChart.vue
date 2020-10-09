@@ -120,6 +120,7 @@
 </template>
 
 <script>
+const md5 = require("md5-node");
 import { mapState } from "vuex";
 import GraphicSetting from "@/pages/dialog/graphicsetting/graphicSettingDialog";
 const uuid = require("uuid");
@@ -140,6 +141,8 @@ export default {
       entityCount: 0,
       linkCount: 0,
       detailCount: 0,
+      tempAllRowsStrMd5: "",
+      tempgraphicMoneySectionStrMd5: "",
     };
   },
   components: {
@@ -149,12 +152,6 @@ export default {
     ...mapState("DialogPopWnd", ["graphicSettingVisible"]),
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
-    },
-    graphicMoneySectionList() {
-      return this.tableData.graphicMoneySectionList;
-    },
-    allrows() {
-      return this.tableData.allrows;
     },
   },
   watch: {
@@ -183,19 +180,37 @@ export default {
         });
       }
     },
-    // 通过计算属性获取对象的属性值，然后通过深度watch
-    graphicMoneySectionList: {
+    "tableData.graphicMoneySectionList": {
       handler(newValue, oldValue) {
-        this.graph.changeData(this.makeData()); // 加载数据
-        this.updateEntityList();
+        // 因为监听的是对象，所以新旧两个值是一样的，都是同一个地址的引用对象
+        if (this.tempgraphicMoneySectionStrMd5 === "") {
+          this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
+        } else {
+          if (
+            this.tempgraphicMoneySectionStrMd5 !== md5(JSON.stringify(newValue))
+          ) {
+            console.log("tableData.graphicMoneySectionList");
+            this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
+            this.graph.changeData(this.makeData()); // 加载数据
+            this.updateEntityList();
+          }
+        }
       },
       immediate: false,
       deep: true,
     },
-    allrows: {
+    "tableData.allrows": {
       handler(newValue, oldValue) {
-        this.graph.changeData(this.makeData()); // 加载数据
-        this.updateEntityList();
+        if (this.tempAllRowsStrMd5 === "") {
+          this.tempAllRowsStrMd5 = md5(JSON.stringify(newValue));
+        } else {
+          if (this.tempAllRowsStrMd5 !== md5(JSON.stringify(newValue))) {
+            this.tempAllRowsStrMd5 = md5(JSON.stringify(newValue));
+            console.log("tableData.allrows");
+            this.graph.changeData(this.makeData()); // 加载数据
+            this.updateEntityList();
+          }
+        }
       },
       immediate: false,
       deep: true,
@@ -537,31 +552,28 @@ export default {
       return { nodes, edges };
     },
     // 更新实体列表
-    async updateEntityList() {
+    updateEntityList() {
       const nodes = this.graph.getNodes();
       let entityList = nodes.map((node) => {
-        let { model } = node._cfg;
+        let model = node.get("model");
         let edges = node.getEdges();
         return {
-          id: model.id,
-          kh: model.kh,
-          name: model.name,
+          ...model,
           relationCount: edges.length,
         };
       });
       entityList = entityList.sort(function (a, b) {
         return b.relationCount - a.relationCount;
       });
-      await this.$store.commit("ShowTable/UPDATE_ENTITY_LIST", entityList);
-      await this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-view",
+      this.$store.commit("ShowTable/UPDATE_ENTITY_LIST", entityList);
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "entity-list-view",
         action: "add",
       });
     },
   },
   mounted() {
     let _this = this;
-    console.log(this.tableData.allrows);
     // this.registerNode();
     const erd = elementResizeDetectorMaker();
     erd.listenTo(document.getElementById(this.graphid), function (element) {
@@ -644,11 +656,19 @@ export default {
     // 监听布局切换
     this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
     this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
+
     // 画布消息监听click
     this.graph.on("node:click", (ev) => {
       const shape = ev.target;
       const node = ev.item;
-      console.log(node._cfg.model);
+      let nodeModel = node.get("model");
+      console.log(nodeModel);
+      let entity = {};
+      this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "entity-view",
+        action: "add",
+      });
     });
     // 画布监听keydown
     this.graph.on("keydown", (ev) => {});

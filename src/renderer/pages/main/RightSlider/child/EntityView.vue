@@ -14,30 +14,6 @@
           <span @click="handleClickClose" class="close iconfont">&#xe634;</span>
         </el-col>
       </el-row>
-      <el-table
-        size="mini"
-        :data="renderData.entityList"
-        style="width: 100%"
-        :height="contentViewHeight - 40 - 40 - 5"
-        @row-click="handleClickRow"
-      >
-        <el-table-column label="序号" fixed type="index"></el-table-column>
-        <el-table-column
-          prop="kh"
-          label="实体"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="relationCount"
-          label="关联数量"
-          show-overflow-tooltip
-        ></el-table-column>
-      </el-table>
     </div>
   </div>
 </template>
@@ -53,19 +29,8 @@ export default {
   methods: {
     handleClickClose() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-list-view",
-        action: "remove",
-      });
-    },
-    handleClickRow(row, column, event) {
-      // console.log(row, column, event);
-      let entity = {
-        ...row,
-      };
-      this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "entity-view",
-        action: "add",
+        action: "remove",
       });
     },
   },

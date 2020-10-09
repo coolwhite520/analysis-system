@@ -31,6 +31,7 @@ import { mapState, mapGetters } from "vuex";
 import ModelView from "./child/ModelView";
 import ModelListView from "./child/ModelListView";
 import EntityListView from "./child/EntityListView";
+import EntityView from "./child/EntityView";
 export default {
   mounted() {},
   computed: {
@@ -42,15 +43,15 @@ export default {
       },
       set: function (newValue) {
         console.log({ newValue });
-        if (typeof newValue === "string")
-          this.$store.commit("ShowTable/SET_RIGHT_TAB_ACTIVE", newValue);
+        this.$store.commit("ShowTable/SET_RIGHT_TAB_ACTIVE", newValue);
       },
     },
   },
   components: {
     "model-list-view": ModelListView,
     "model-view": ModelView,
-    "entity-view": EntityListView,
+    "entity-list-view": EntityListView,
+    "entity-view": EntityView,
   },
   methods: {
     handleTabRemove(componentName) {

@@ -595,6 +595,49 @@ const defaultSelection = {
   FiledsEmptyToNullCondition:
     " CASE WHEN CXZH='' THEN NULL ELSE CXZH END AS CXZH,CASE WHEN JYDFZKH='' THEN NULL ELSE JYDFZKH END AS JYDFZKH,CASE WHEN JDBZ='' THEN NULL ELSE JDBZ END AS JDBZ ",
 };
+
+let graphicMoneySectionList = [
+  {
+    value: 10,
+    label: `万元以下`,
+    id: "1",
+    color: "#9cdcfe",
+    selected: true,
+  },
+  {
+    value: 100,
+    label: `万元`,
+    id: "2",
+    color: "#6a9955",
+    selected: true,
+  },
+  {
+    value: 1000,
+    label: `万元`,
+    id: "3",
+    color: "#edad40",
+    selected: true,
+  },
+  {
+    value: 1000,
+    label: `万元以上`,
+    id: "4",
+    color: "#ee6b5f",
+    selected: true,
+  },
+  // {
+  //   label: "离散实体",
+  //   id: "5",
+  //   color: "#dddfe5",
+  //   selected: false,
+  // },
+  // {
+  //   label: "线宽",
+  //   id: "6",
+  //   color: "#dddfe5",
+  //   selected: false,
+  // },
+];
 module.exports = {
   defaultSelection,
   getNowFormatDate,
@@ -613,6 +656,7 @@ module.exports = {
   DataRuleType,
   DataRule,
   GetTimeType,
+  graphicMoneySectionList,
 };
 // module.exports.getNowFormatDate = getNowFormatDate;
 // module.exports.ReportTableDic = ReportTableDic;

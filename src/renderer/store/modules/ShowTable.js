@@ -10,49 +10,6 @@ import { stat } from "fs";
 const log = require("@/utils/log");
 // 关系图设置的金额区间
 
-let graphicMoneySectionList = [
-  {
-    value: 10,
-    label: `万元以下`,
-    id: "1",
-    color: "#9cdcfe",
-    selected: true,
-  },
-  {
-    value: 100,
-    label: `万元`,
-    id: "2",
-    color: "#6a9955",
-    selected: true,
-  },
-  {
-    value: 1000,
-    label: `万元`,
-    id: "3",
-    color: "#edad40",
-    selected: true,
-  },
-  {
-    value: 1000,
-    label: `万元以上`,
-    id: "4",
-    color: "#ee6b5f",
-    selected: true,
-  },
-  // {
-  //   label: "离散实体",
-  //   id: "5",
-  //   color: "#dddfe5",
-  //   selected: false,
-  // },
-  // {
-  //   label: "线宽",
-  //   id: "6",
-  //   color: "#dddfe5",
-  //   selected: false,
-  // },
-];
-
 const state = {
   activeIndex: "", // 当前active的tab索引
   tableDataList: [], // 存放每个表的数据结构 { title: "标准采集" name: tid, componentName: "no-data-view", data: data}
@@ -77,8 +34,18 @@ const mutations = {
       "entityList",
       JSON.parse(JSON.stringify(entityList))
     );
-    Vue.set(state.currentTableData, "rightActive", "entity-view");
+    Vue.set(state.currentTableData, "rightActiveName", "entity-list-view");
   },
+  // 设置关系表中当前显示的实体信息
+  UPDATE_ENTITY(state, entity) {
+    Vue.set(
+      state.currentTableData,
+      "entity",
+      JSON.parse(JSON.stringify(entity))
+    );
+    Vue.set(state.currentTableData, "rightActiveName", "entity-view");
+  },
+
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
     const uuid = require("uuid");
@@ -95,7 +62,7 @@ const mutations = {
       Vue.set(
         tableData,
         "graphicMoneySectionList",
-        JSON.parse(JSON.stringify(graphicMoneySectionList))
+        JSON.parse(JSON.stringify(Default.graphicMoneySectionList))
       );
       Vue.set(tableData, "fullScrrenFlag", false);
     }
@@ -307,11 +274,19 @@ const mutations = {
       for (let index = 0; index < tabs.length; index++) {
         let tab = tabs[index];
         if (tab.componentName === componentName) {
-          if (componentName === "entity-view") {
+          if (componentName === "entity-list-view") {
             let entityList = state.currentTableData.entityList;
             state.currentTableData.rightTabs.splice(index, 1, {
               title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
               entityList,
+              componentName: "entity-list-view",
+            });
+          }
+          if (componentName === "entity-view") {
+            let entity = state.currentTableData.entity;
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体信息",
+              entity,
               componentName: "entity-view",
             });
           }
@@ -319,6 +294,7 @@ const mutations = {
           return;
         }
       }
+      state.currentTableData.rightActiveName = componentName;
       switch (componentName) {
         case "model-list-view":
           let modelTreeList = state.currentTableData.modelTreeList;
@@ -336,16 +312,23 @@ const mutations = {
             componentName: "model-view",
           });
           break;
-        case "entity-view":
+        case "entity-list-view":
           let entityList = state.currentTableData.entityList;
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
             entityList,
+            componentName: "entity-list-view",
+          });
+          break;
+        case "entity-view":
+          let entity = state.currentTableData.entity;
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体信息",
+            entity,
             componentName: "entity-view",
           });
           break;
       }
-      state.currentTableData.rightActiveName = componentName;
       return;
     } else {
       for (let index = 0; index < tabs.length; index++) {
