@@ -64,6 +64,9 @@ export default {
   /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
   -webkit-user-select: none;
 }
+.close {
+  font-size: 10px;
+}
 .title {
   height: 40px;
   text-align: center;

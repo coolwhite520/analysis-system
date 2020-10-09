@@ -71,17 +71,13 @@ const mutations = {
     );
   },
   // 设置关系表中的实体list
-  SET_ENTITY_LIST(state, entityList) {
-    for (let item of state.currentTableData.rightTabs) {
-      if (item.componentName === "entity-view") {
-        state.currentTableData.entityList = JSON.parse(
-          JSON.stringify(entityList)
-        );
-        Vue.set(item, "entityList", state.currentTableData.entityList);
-        Vue.set(state.currentTableData, "rightActive", "entity-view");
-        break;
-      }
-    }
+  UPDATE_ENTITY_LIST(state, entityList) {
+    Vue.set(
+      state.currentTableData,
+      "entityList",
+      JSON.parse(JSON.stringify(entityList))
+    );
+    Vue.set(state.currentTableData, "rightActive", "entity-view");
   },
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
@@ -102,12 +98,6 @@ const mutations = {
         JSON.parse(JSON.stringify(graphicMoneySectionList))
       );
       Vue.set(tableData, "fullScrrenFlag", false);
-      tableData.rightTabs.push({
-        title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
-        entityList: [],
-        componentName: "entity-view",
-      });
-      tableData.rightActiveName = "entity-view";
     }
     state.tableDataList.push(tableData);
     state.pageIndex = String(newId);
@@ -314,8 +304,17 @@ const mutations = {
   ADD_OR_REMOVE_RIGHT_TAB(state, { componentName, action }) {
     let tabs = state.currentTableData.rightTabs;
     if (action === "add") {
-      for (let tab of tabs) {
+      for (let index = 0; index < tabs.length; index++) {
+        let tab = tabs[index];
         if (tab.componentName === componentName) {
+          if (componentName === "entity-view") {
+            let entityList = state.currentTableData.entityList;
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
+              entityList,
+              componentName: "entity-view",
+            });
+          }
           state.currentTableData.rightActiveName = componentName;
           return;
         }

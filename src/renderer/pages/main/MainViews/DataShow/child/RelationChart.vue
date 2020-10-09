@@ -1,16 +1,24 @@
 <template>
-  <div style="width:100%; height:100%">
-    <el-row style="background-color: #fff;padding: 5px;border: 1px solid #dddfe5;">
+  <div style="width: 100%; height: 100%">
+    <el-row
+      style="background-color: #fff; padding: 5px; border: 1px solid #dddfe5"
+    >
       <el-col :span="16">
         <el-button-group>
           <el-button
             size="mini"
             v-for="(item, index) of tableData.graphicMoneySectionList"
             :key="item.id"
-            :style="{ color: item.selected ? item.color:'#1e1e1e' }"
-            :icon="item.selected?'el-icon-success':'el-icon-error'"
+            :style="{ color: item.selected ? item.color : '#1e1e1e' }"
+            :icon="item.selected ? 'el-icon-success' : 'el-icon-error'"
             @click="handleClick(item.id)"
-          >{{calLabel(item, index >0 ? tableData.graphicMoneySectionList[index-1]:null)}}</el-button>
+            >{{
+              calLabel(
+                item,
+                index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
+              )
+            }}</el-button
+          >
         </el-button-group>
       </el-col>
       <el-col :span="1">
@@ -30,69 +38,80 @@
     <!-- <div :id="miniMapID" style="width:100px;"></div> -->
     <div
       :ref="graphid"
-      style="position: relative;"
+      style="position: relative"
       :id="graphid"
-      :style="{ height:limitHeight-26+'px', width: '100%'}"
+      :style="{ height: limitHeight - 26 + 'px', width: '100%' }"
     ></div>
 
-    <el-row style="background-color: #f5f7fa;border: 1px solid #dddfe5;font-size:10px;">
+    <el-row
+      style="
+        background-color: #f5f7fa;
+        border: 1px solid #dddfe5;
+        font-size: 10px;
+      "
+    >
       <el-col :span="3">
         <div class="tips">
           实体数量：
-          <span>{{entityCount}}</span>
+          <span>{{ entityCount }}</span>
         </div>
       </el-col>
       <el-col :span="3">
         <div class="tips">
           连接数量：
-          <span>{{linkCount}}</span>
+          <span>{{ linkCount }}</span>
         </div>
       </el-col>
       <el-col :span="3">
         <div class="tips">
           明细数量：
-          <span>{{detailCount}}</span>
+          <span>{{ detailCount }}</span>
         </div>
       </el-col>
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5">&nbsp;</el-col>
-      <el-col :span="5" style="text-align:right">
+      <el-col :span="5" style="text-align: right">
         <el-button
           type="text"
           size="mini"
           class="iconfont"
-          style="padding-left:10px;border-left: 1px solid #dddfe5;"
+          style="padding-left: 10px; border-left: 1px solid #dddfe5"
           @click="handleClickFish"
-        >{{ !enableFish ? '&#xe730;': '&#xe62a;'}}</el-button>
+          >{{ !enableFish ? "&#xe730;" : "&#xe62a;" }}</el-button
+        >
 
         <el-button
           type="text"
           size="mini"
           class="iconfont"
-          style="padding:0;"
+          style="padding: 0"
           @click="handleClickEnlarge"
-        >&#xe622;</el-button>
+          >&#xe622;</el-button
+        >
         <el-button
           type="text"
           size="mini"
           class="iconfont"
-          style="padding:0;"
+          style="padding: 0"
           @click="handleClickReduce"
-        >&#xe623;</el-button>
+          >&#xe623;</el-button
+        >
         <el-button
           type="text"
           size="mini"
           class="iconfont"
-          style="padding:0;"
+          style="padding: 0"
           @click="handleClickLocation"
-        >&#xe649;</el-button>
+          >&#xe649;</el-button
+        >
         <el-button
           type="text"
           size="mini"
           class="iconfont"
-          style="margin-right:10px;"
+          style="margin-right: 10px"
           @click="handleClickFullScreen"
-        >{{ !fullScrrenFlag ?'&#xe6cc;':'&#xe6db;'}}</el-button>
+          >{{ !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button
+        >
       </el-col>
     </el-row>
     <!-- 设置popwnd -->
@@ -134,6 +153,9 @@ export default {
     graphicMoneySectionList() {
       return this.tableData.graphicMoneySectionList;
     },
+    allrows() {
+      return this.tableData.allrows;
+    },
   },
   watch: {
     inputValue(newValue, oldValue) {
@@ -163,6 +185,14 @@ export default {
     },
     // 通过计算属性获取对象的属性值，然后通过深度watch
     graphicMoneySectionList: {
+      handler(newValue, oldValue) {
+        this.graph.changeData(this.makeData()); // 加载数据
+        this.updateEntityList();
+      },
+      immediate: false,
+      deep: true,
+    },
+    allrows: {
       handler(newValue, oldValue) {
         this.graph.changeData(this.makeData()); // 加载数据
         this.updateEntityList();
@@ -507,7 +537,7 @@ export default {
       return { nodes, edges };
     },
     // 更新实体列表
-    updateEntityList() {
+    async updateEntityList() {
       const nodes = this.graph.getNodes();
       let entityList = nodes.map((node) => {
         let { model } = node._cfg;
@@ -522,7 +552,11 @@ export default {
       entityList = entityList.sort(function (a, b) {
         return b.relationCount - a.relationCount;
       });
-      this.$store.commit("ShowTable/SET_ENTITY_LIST", entityList);
+      await this.$store.commit("ShowTable/UPDATE_ENTITY_LIST", entityList);
+      await this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "entity-view",
+        action: "add",
+      });
     },
   },
   mounted() {
