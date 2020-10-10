@@ -116,13 +116,57 @@
     </el-row>
     <!-- 设置popwnd -->
     <graphic-setting v-if="graphicSettingVisible"></graphic-setting>
+    <combine-node
+      v-if="nodeCombineVisible"
+      :nodes="currentSelectedNodes"
+    ></combine-node>
+    <div v-show="menuVisible">
+      <div id="menu" class="menu">
+        <div v-if="currentSelectedNodes.length === 1">
+          <div>
+            <el-button
+              type="text"
+              size="small"
+              @click="handleClickLockOrUnlock"
+              class="iconfont menuItem"
+              v-html="lockOrUnlock"
+            >
+            </el-button>
+          </div>
+        </div>
+        <div v-if="currentSelectedNodes.length > 1">
+          <div>
+            <el-button
+              type="text"
+              size="small"
+              @click="handleClickCombineNodes"
+              class="iconfont menuItem"
+              v-html="combineOrUncombine"
+            >
+            </el-button>
+          </div>
+        </div>
+        <div>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleClickDeleteNodes"
+            class="iconfont menuItem"
+            v-html="deleteTips"
+          >
+          </el-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 const md5 = require("md5-node");
 import { mapState } from "vuex";
 import GraphicSetting from "@/pages/dialog/graphicsetting/graphicSettingDialog";
+import NodeCombine from "@/pages/dialog/nodeCombine/nodeCombineDialog";
 const uuid = require("uuid");
 const elementResizeDetectorMaker = require("element-resize-detector");
 import insertCss from "insert-css";
@@ -130,6 +174,7 @@ export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      menuVisible: false,
       inputValue: "",
       data: null,
       graph: null,
@@ -143,41 +188,65 @@ export default {
       detailCount: 0,
       tempAllRowsStrMd5: "",
       tempgraphicMoneySectionStrMd5: "",
+      currentSelectedNodes: [],
     };
   },
   components: {
     "graphic-setting": GraphicSetting,
+    "combine-node": NodeCombine,
   },
   computed: {
-    ...mapState("DialogPopWnd", ["graphicSettingVisible"]),
+    ...mapState("DialogPopWnd", [
+      "graphicSettingVisible",
+      "nodeCombineVisible",
+    ]),
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
+    },
+    lockOrUnlock() {
+      let node = this.currentSelectedNodes[0];
+      if (node.hasLocked()) {
+        return "&nbsp;&nbsp;&nbsp;&nbsp;&#xe60e;&nbsp;&nbsp;取消锁定";
+      } else {
+        return "&nbsp;&nbsp;&nbsp;&nbsp;&#xe60d;&nbsp;&nbsp;锁定节点";
+      }
+    },
+    combineOrUncombine() {
+      return `&nbsp;&nbsp;&nbsp;&nbsp;&#xe629;&nbsp;&nbsp;将选中的${this.currentSelectedNodes.length}个节点添加到分组`;
+    },
+    deleteTips() {
+      if (this.currentSelectedNodes.length > 1) {
+        return `&nbsp;&nbsp;&nbsp;&nbsp;&#xe62c;&nbsp;&nbsp;删除选中的${this.currentSelectedNodes.length}个节点`;
+      }
+      return `&nbsp;&nbsp;&nbsp;&nbsp;&#xe62c;&nbsp;&nbsp;删除节点`;
     },
   },
   watch: {
     inputValue(newValue, oldValue) {
+      console.log(newValue, oldValue);
+      this.currentSelectedNodes = [];
       if (newValue === "") {
         let allNodes = this.graph.getNodes();
         allNodes.forEach((node) => {
-          this.graph.setItemState(node, "hover", false);
+          this.graph.setItemState(node, "searchLikeOrSelected", false);
         });
         return;
       }
       const nodes = this.graph.findAll("node", (node) => {
         return (
-          node.get("model").name.includes(newValue) ||
-          node.get("model").kh.includes(newValue)
+          node.get("model").name.indexOf(newValue) !== -1 ||
+          node.get("model").kh.indexOf(newValue) !== -1
         );
       });
-
+      let allNodes = this.graph.getNodes();
+      allNodes.forEach((node) => {
+        this.graph.setItemState(node, "searchLikeOrSelected", false);
+      });
       if (nodes.length > 0) {
-        let allNodes = this.graph.getNodes();
-        allNodes.forEach((node) => {
-          this.graph.setItemState(node, "hover", false);
-        });
         nodes.forEach((node) => {
-          this.graph.setItemState(node, "hover", true);
+          this.graph.setItemState(node, "searchLikeOrSelected", true);
         });
+        this.currentSelectedNodes = nodes;
       }
     },
     "tableData.graphicMoneySectionList": {
@@ -217,6 +286,36 @@ export default {
     },
   },
   methods: {
+    handleClickLockOrUnlock() {
+      let node = this.currentSelectedNodes[0];
+      this.graph.clearItemStates(node, "searchLikeOrSelected");
+      if (node.hasLocked()) {
+        const model = node.get("model");
+        model.label = model.id;
+        model.style.lineDash = [1, 1];
+        node.update(model);
+        node.unlock();
+      } else {
+        const model = node.get("model");
+        model.label = model.id + "(已锁定)";
+        model.style.lineDash = [1, 0];
+        node.update(model);
+        node.lock();
+      }
+
+      this.menuVisible = false;
+    },
+    handleClickCombineNodes() {
+      this.menuVisible = false;
+      this.$store.commit("DialogPopWnd/SET_NODECOMBINEVISIBLE", true);
+    },
+    handleClickDeleteNodes() {
+      this.currentSelectedNodes.forEach((item) => {
+        this.graph.removeItem(item);
+      });
+      this.currentSelectedNodes = [];
+      this.menuVisible = false;
+    },
     resize() {
       console.log("resize");
       let { clientWidth, clientHeight } = this.$refs[this.graphid];
@@ -255,11 +354,9 @@ export default {
     },
     handleClickEnlarge() {
       this.graph.zoom(1.2);
-      this.graph.fitCenter();
     },
     handleClickReduce() {
       this.graph.zoom(0.8);
-      this.graph.fitCenter();
     },
     handleClickLocation() {
       this.graph.fitView(20);
@@ -292,28 +389,44 @@ export default {
       this.graph.addPlugin(minimap);
 
       const menu = new this.$G6.Menu({
-        offsetX: 6,
         offsetX: 0,
-        itemTypes: ["node"],
+        offsetX: 0,
+        itemTypes: ["node", "combo"],
         getContent(e) {
           const outDiv = document.createElement("div");
           outDiv.id = uuid.v1();
           outDiv.style.width = "180px";
-          // outDiv.style.zIndex = 999;
-          outDiv.innerHTML = `<ul>
-        <li>测试01</li>
-        <li>测试01</li>
-        <li>测试01</li>
-        <li>测试01</li>
-        <li>测试01</li>
-      </ul>`;
+          outDiv.style.zIndex = 999;
+          outDiv.innerHTML = `<ul clase="menu">
+                                <li class="menu__item">
+                                合并所有选中节点
+                                </li class="menu__item">
+                                <li class="menu__item">分离所有节点</li>
+                                <li class="menu__item">锁定节点</li>
+                                <li class="menu__item">测试01</li>
+                                <li class="menu__item">测试01</li>
+                              </ul>`;
+          insertCss(`
+            .menu__item {
+              display: block;
+            }
+            .menu {
+              border-radius: 10px;
+              border: 1px solid #999999;
+              background-color: #f4f4f4;
+            }
+            li:hover {
+              background-color: #1790ff;
+              color: white;
+            }
+          `);
           return outDiv;
         },
         handleMenuClick(target, item) {
           console.log(target, item);
         },
       });
-      this.graph.addPlugin(menu);
+      // this.graph.addPlugin(menu);
     },
     // 当返回""的时候不绘制这条线
     calculateLineColorByJinE(jinE) {
@@ -346,111 +459,7 @@ export default {
     // 注册一个节点继承circle
     registerNode() {
       const Util = this.$G6.Util;
-      this.$G6.registerNode(
-        "inner-animate",
-        {
-          setState(name, value, item) {
-            let group = item.getContainer();
-            let cfg = {
-              id: "node2",
-              x: 300,
-              y: 200,
-              type: "background-animate",
-              color: "#40a9ff",
-              size: 20,
-              label: "Background Animation",
-              labelCfg: {
-                position: "left",
-                offset: 10,
-              },
-            };
-            if (name === "selected") {
-              if (value) {
-                const r = cfg.size / 2;
-                const back1 = group.addShape("circle", {
-                  zIndex: -3,
-                  attrs: {
-                    x: 0,
-                    y: 0,
-                    r,
-                    fill: cfg.color,
-                    opacity: 0.6,
-                  },
-                  name: "back1-shape",
-                });
-                const back2 = group.addShape("circle", {
-                  zIndex: -2,
-                  attrs: {
-                    x: 0,
-                    y: 0,
-                    r,
-                    fill: cfg.color,
-                    opacity: 0.6,
-                  },
-                  name: "back2-shape",
-                });
-                const back3 = group.addShape("circle", {
-                  zIndex: -1,
-                  attrs: {
-                    x: 0,
-                    y: 0,
-                    r,
-                    fill: cfg.color,
-                    opacity: 0.6,
-                  },
-                  name: "back3-shape",
-                });
-                group.sort(); // Sort according to the zIndex
-                back1.animate(
-                  {
-                    // Magnifying and disappearing
-                    r: r + 10,
-                    opacity: 0.1,
-                  },
-                  {
-                    duration: 3000,
-                    easing: "easeCubic",
-                    delay: 0,
-                    repeat: true, // repeat
-                  }
-                ); // no delay
-                back2.animate(
-                  {
-                    // Magnifying and disappearing
-                    r: r + 10,
-                    opacity: 0.1,
-                  },
-                  {
-                    duration: 3000,
-                    easing: "easeCubic",
-                    delay: 1000,
-                    repeat: true, // repeat
-                  }
-                ); // 1s delay
-                back3.animate(
-                  {
-                    // Magnifying and disappearing
-                    r: r + 10,
-                    opacity: 0.1,
-                  },
-                  {
-                    duration: 3000,
-                    easing: "easeCubic",
-                    delay: 2000,
-                    repeat: true, // repeat
-                  }
-                ); // 3s delay
-              } else {
-                if (item.isAnimating()) {
-                  item.stopAnimate();
-                }
-              }
-            } else if (name === "") {
-            }
-          },
-        },
-        "circle"
-      );
+      this.$G6.registerNode("mycircle", "circle");
     },
     makeData() {
       let nodes = [];
@@ -581,13 +590,20 @@ export default {
     });
     let { clientWidth, clientHeight } = this.$refs[this.graphid];
     let option = {
+      groupByTypes: false,
       width: clientWidth,
       height: clientHeight,
       container: this.graphid, // 指定挂载容器
       animate: true,
+      defaultCombo: {
+        type: "circle", // Combo 类型
+        // ... 其他配置
+      },
       defaultNode: {
         type: "circle",
         style: {
+          // 默认是虚线
+          lineDash: [1, 1],
           fill: "#d9dce1",
           stroke: "#3c4e6b",
         },
@@ -617,9 +633,9 @@ export default {
         },
       },
       nodeStateStyles: {
-        hover: {
-          fillOpacity: 0.1,
-          lineWidth: 3,
+        searchLikeOrSelected: {
+          shadowColor: "red",
+          shadowBlur: 10,
         },
         active: {
           opacity: 1,
@@ -639,12 +655,19 @@ export default {
       // linkCenter: true,
       modes: {
         default: [
-          {
-            type: "drag-node",
-          },
+          "drag-node",
+          "drag-combo",
           "zoom-canvas",
           "activate-relations",
-          "click-select",
+          { type: "click-select", trigger: "ctrl" }, //点选
+          {
+            // 框选
+            type: "brush-select",
+            fillOpacity: 0.1,
+            lineWidth: 2,
+            stroke: "red",
+            trigger: "drag",
+          },
         ],
       },
     };
@@ -656,28 +679,75 @@ export default {
     // 监听布局切换
     this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
     this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
-
-    // 画布消息监听click
-    this.graph.on("node:click", (ev) => {
-      const shape = ev.target;
-      const node = ev.item;
-      let nodeModel = node.get("model");
-      console.log(nodeModel);
-      let entity = {};
-      this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-view",
-        action: "add",
+    // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
+    this.graph.on("nodeselectchange", (e) => {
+      const selectedNodes = this.graph.findAllByState(
+        "node",
+        "searchLikeOrSelected"
+      );
+      console.log(selectedNodes);
+      selectedNodes.forEach((cn) => {
+        this.graph.setItemState(cn, "searchLikeOrSelected", false);
       });
+      if (e.select) {
+        e.selectedItems.nodes.forEach((cn) => {
+          this.graph.setItemState(cn, "searchLikeOrSelected", true); // 设置当前节点的 click 状态为 true
+        });
+        this.currentSelectedNodes = e.selectedItems.nodes;
+      } else {
+        this.currentSelectedNodes = [];
+      }
+      // 单个节点的select
+      let node = e.target;
+      if (node) {
+        let nodeModel = node.get("model");
+        const states = node.getStates();
+        console.log(states);
+        this.$store.commit("ShowTable/UPDATE_ENTITY", nodeModel);
+        this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+          componentName: "entity-view",
+          action: "add",
+        });
+      }
+    });
+    // 右键菜单
+    this.graph.on("node:contextmenu", (evt) => {
+      let node = evt.item;
+      console.log(evt);
+      let nodeid = node.get("model").id;
+      let filterNodes = this.currentSelectedNodes.filter((n) => {
+        let nId = n.get("model").id;
+        return nId === nodeid;
+      });
+      if (filterNodes.length === 0) {
+        this.currentSelectedNodes.forEach((cn) => {
+          this.graph.setItemState(cn, "searchLikeOrSelected", false);
+        });
+        this.graph.setItemState(node, "searchLikeOrSelected", true);
+        this.currentSelectedNodes = [];
+        this.currentSelectedNodes.push(node);
+      }
+      //当前节点定位
+      this.menuVisible = false; // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
+      this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
+      let menu = document.querySelector("#menu");
+      menu.style.left = evt.clientX + "px";
+      menu.style.top = evt.clientY + "px";
+      console.log("右键被点击的event:", evt);
+    });
+
+    this.graph.on("node:mouseleave", (evt) => {
+      this.menuVisible = false;
     });
     // 画布监听keydown
-    this.graph.on("keydown", (ev) => {});
+    this.graph.on("keydown", (ev) => {
+      console.log(ev);
+    });
     this.$bus.$on("swichNormalLayout", (data) => {
       let { graphid, layout } = data;
       if (graphid !== _this.graphid) return;
       console.log(layout, typeof layout);
       _this.graph.updateLayout(layout);
-      _this.graph.changeData(_this.makeData()); // 加载数据
       this.updateEntityList();
     });
   },
@@ -710,5 +780,19 @@ export default {
 }
 .g6-component-toolbar {
   position: relative;
+}
+.menu {
+  color: #202124;
+  width: 200px;
+  position: fixed;
+  border-radius: 4px;
+  background-color: #ffffff;
+  z-index: 999;
+  border: 1px solid #b6b6bb;
+  box-shadow: 5px 5px 10px 5px #b6b6bb,
+    -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
+}
+.menuItem {
+  font-size: 10px;
 }
 </style>

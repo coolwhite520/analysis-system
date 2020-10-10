@@ -138,7 +138,7 @@
               type="text"
               class="iconfont"
               style="padding: 4px; font-size: 12px"
-              >&#xe6b1;&nbsp;显示实体列表</el-button
+              >&#xe6b1;&nbsp;锁定节点</el-button
             >
           </el-col>
         </el-row>

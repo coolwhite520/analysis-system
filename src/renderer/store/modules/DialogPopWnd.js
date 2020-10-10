@@ -8,6 +8,7 @@ const state = {
   showCollectionRecordVisible: false,
   showReportVisible: false,
   graphicSettingVisible: false,
+  nodeCombineVisible: false,
 };
 
 const mutations = {
@@ -36,6 +37,9 @@ const mutations = {
   },
   SET_GRAPHICSETTINGVISIBLE(state, graphicSettingVisible) {
     state.graphicSettingVisible = graphicSettingVisible;
+  },
+  SET_NODECOMBINEVISIBLE(state, nodeCombineVisible) {
+    state.nodeCombineVisible = nodeCombineVisible;
   },
 };
 
