@@ -46,12 +46,14 @@ const mutations = {
     );
     Vue.set(state.currentTableData, "rightActiveName", "entity-list-view");
   },
-  UPDATE_COMBO_ENTITY_LIST(state, { comboName, comboentityList }) {
-    Vue.set(state.currentTableData, "comboName", comboName);
+  UPDATE_COMBO_ENTITY_LIST(
+    state,
+    { comboName, comboentityList, comboTableData }
+  ) {
     Vue.set(
       state.currentTableData,
-      "comboentityList",
-      JSON.parse(JSON.stringify(comboentityList))
+      "comboInfo",
+      JSON.parse(JSON.stringify({ comboName, comboentityList, comboTableData }))
     );
     Vue.set(
       state.currentTableData,
@@ -311,10 +313,10 @@ const mutations = {
             });
           }
           if (componentName === "combo-entity-list-view") {
-            let comboentityList = state.currentTableData.comboentityList;
+            let comboInfo = state.currentTableData.comboInfo;
             state.currentTableData.rightTabs.splice(index, 1, {
               title: "&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表",
-              comboentityList,
+              comboInfo,
               componentName: "combo-entity-list-view",
             });
           }
@@ -349,10 +351,10 @@ const mutations = {
           });
           break;
         case "combo-entity-list-view":
-          let comboentityList = state.currentTableData.comboentityList;
+          let comboInfo = state.currentTableData.comboInfo;
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表",
-            comboentityList,
+            comboInfo,
             componentName: "combo-entity-list-view",
           });
           break;

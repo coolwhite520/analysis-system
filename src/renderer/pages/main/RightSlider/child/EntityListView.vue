@@ -25,19 +25,20 @@
       >
         <el-table-column label="序号" fixed type="index"></el-table-column>
         <el-table-column
-          prop="kh"
-          label="实体"
+          prop="name"
+          label="姓名"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
+          prop="kh"
+          label="卡号"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="relationCount"
           label="关联数量"
           show-overflow-tooltip
+          fixed="right"
         ></el-table-column>
       </el-table>
     </div>

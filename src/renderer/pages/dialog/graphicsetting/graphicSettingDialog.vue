@@ -132,14 +132,16 @@
             </el-switch
           ></el-row>
           <el-row style="margin-top: 20px; text-align: center">
+            <span>划分标准：</span>
             <el-radio v-model="radioCatgray" label="je">按交易金额</el-radio>
             <el-radio v-model="radioCatgray" label="bs">按交易笔数</el-radio>
           </el-row>
 
           <el-row style="margin-top: 20px; text-align: center">
-            <el-radio v-model="radioCeng" label="1">3层</el-radio>
-            <el-radio v-model="radioCeng" label="2">6层</el-radio>
-            <el-radio v-model="radioCeng" label="3">9层</el-radio>
+            <span> 线宽种类： </span>
+            <el-radio v-model="radioCeng" label="1">3种</el-radio>
+            <el-radio v-model="radioCeng" label="2">6种</el-radio>
+            <el-radio v-model="radioCeng" label="3">9种</el-radio>
           </el-row>
 
           <el-row style="margin-top: 20px" v-show="true">

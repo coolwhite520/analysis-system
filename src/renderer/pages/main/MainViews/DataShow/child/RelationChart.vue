@@ -25,7 +25,7 @@
         <el-tooltip
           class="item"
           effect="dark"
-          content="线宽设置快捷开关"
+          :content="switchButtonTip"
           placement="top-start"
           ><el-switch
             v-model="bOpen"
@@ -36,13 +36,20 @@
         </el-tooltip>
       </el-col>
       <el-col :span="1">
-        <el-button
-          size="mini"
-          type="primary"
-          icon="el-icon-s-tools"
-          @click="handleClickSetting"
-          circle
-        ></el-button>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="连接线条过滤设置"
+          placement="top-start"
+        >
+          <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-s-tools"
+            @click="handleClickSetting"
+            circle
+          ></el-button>
+        </el-tooltip>
       </el-col>
       <el-col :span="6">
         <el-input size="mini" v-model="inputValue"></el-input>
@@ -133,7 +140,7 @@
     <combine-node
       v-if="nodeCombineVisible"
       v-on:confirmCombine="confirmCombine"
-      v-on:onUpdateNodesClearState="onUpdateNodesClearState"
+      v-on:updateCombineNodes="onUpdateNodesClearState"
       :nodes="currentSelectedNodes"
     ></combine-node>
     <div v-show="menuVisible">
@@ -153,7 +160,7 @@
           </div>
         </div>
         <div v-if="rightClickType === 'node'">
-          <div v-if="nodeBelongCombo">
+          <div v-if="false && nodeBelongCombo">
             <div>
               <el-button
                 type="text"
@@ -267,6 +274,17 @@ export default {
         return `&nbsp;&nbsp;&nbsp;&nbsp;&#xe62c;&nbsp;&nbsp;删除选中的${this.currentSelectedNodes.length}个节点`;
       }
       return `&nbsp;&nbsp;&nbsp;&nbsp;&#xe62c;&nbsp;&nbsp;删除节点`;
+    },
+    switchButtonTip() {
+      if (this.tableData.xianKuanSetting.open) {
+        let tipFilterName =
+          this.tableData.xianKuanSetting.category === "je"
+            ? "交易金额"
+            : "交易笔数";
+        let levelNum = this.tableData.xianKuanSetting.levelNum;
+        return `线宽设置快捷开关(当前以${tipFilterName}为基准，分${levelNum}种线宽进行展示)`;
+      }
+      return "线宽设置快捷开关(未开启)";
     },
     bOpen: {
       get() {
@@ -990,60 +1008,47 @@ export default {
         action: "add",
       });
     },
-    // 遍历一个combo，并获取tree结构
-    async travelCombo(root, combo) {
+    // let comboTongJiInfo = {
+    //         zuNeiNodeCount,
+    //         zuNeiJjze,
+    //         zuNeiJjbs,
+    //         zuNeiDuiWaiJjze,
+    //         zuNeiDuiWaiJjbs,
+    //       };
+    // 遍历一个combo，并获取tree结构,并获取所有的nodes和所有的nodes关联的edges
+    async travelCombo(root, combo, allNodes, allEdges) {
+      // combo.getChildren()返回的结果中的nodes有bug，拖动一次新增一个
       let comboName = combo.getModel().label;
-      const { nodes, combos } = combo.getChildren();
-      // console.log(
-      //   { nodes, combos },
-      //   combo.getNodes(),
-      //   combo.getCombos(),
-      //   combo.getModel().children
-      // );
+      let comboChildren = combo.getModel().children;
+      let comboId = combo.getModel().id;
       let children = [];
-      for (let node of nodes) {
-        if (children.length === 0) {
+      let obj = {
+        label: comboName,
+        id: comboId,
+        type: "combo",
+        children,
+      };
+      root.push(obj);
+      for (let item of comboChildren) {
+        if (item.itemType === "node") {
+          let node = this.graph.findById(item.id);
+          allNodes.push(node);
+          let edges = node.getEdges();
+          allEdges.push(...edges);
           children.push({
             label: node.getModel().name,
             id: node.getModel().id,
             itemData: node.getModel(),
             type: "node",
           });
-        } else {
-          let bFindSame = false;
-          for (let existItem of children) {
-            if (existItem.id === node.getModel().id) {
-              bFindSame = true;
-              break;
-            }
-          }
-          if (!bFindSame) {
-            children.push({
-              label: node.getModel().name,
-              id: node.getModel().id,
-              itemData: node.getModel(),
-              type: "node",
-            });
-          }
+        } else if (item.itemType === "combo") {
+          let combo = this.graph.findById(item.id);
+          await this.travelCombo(obj.children, combo, allNodes, allEdges);
         }
-      }
-      let obj = {
-        label: comboName,
-        id: combo.getModel().id,
-        type: "combo",
-        children,
-      };
-      root.push(obj);
-
-      if (combos) {
-        for (let combo of combos) {
-          await this.travelCombo(obj.children, combo);
-        }
-      } else {
-        return;
       }
     },
   },
+
   mounted() {
     let _this = this;
     // this.registerNode();
@@ -1166,12 +1171,81 @@ export default {
             action: "add",
           });
         } else if (type === "combo") {
-          console.log(node);
-          let root = [];
-          await this.travelCombo(root, node);
+          let comboentityList = [];
+          let allNodes = [];
+          let allEdges = [];
+          await this.travelCombo(comboentityList, node, allNodes, allEdges);
+          // 给所有边去重复
+          allEdges = this.$lodash.uniqWith(allEdges, this.$lodash.isEqual);
+          let zuNeiNodeCount = allNodes.length; // 组内成员数量
+          let zuNeiJjze = 0; // 组内交易总额
+          let zuNeiJjbs = 0; // 组内交易笔数
+          let zuNeiDuiWaiJjze = 0; // 组内对外交易总额
+          let zuNeiDuiWaiJjbs = 0; // 组内对外交易笔数
+          let zuNeiDuiWaiJjChaE = 0;
+          function belongsToNodes(id) {
+            for (let node of allNodes) {
+              if (node.getModel().id === id) {
+                return true;
+              }
+            }
+            return false;
+          }
+
+          for (let edge of allEdges) {
+            let modelData = edge.getModel();
+            let sourceId = modelData.source;
+            let targetId = modelData.target;
+            if (belongsToNodes(sourceId) && belongsToNodes(targetId)) {
+              zuNeiJjze = new Decimal(zuNeiJjze).add(new Decimal(modelData.je));
+              zuNeiJjbs = new Decimal(zuNeiJjbs).add(new Decimal(modelData.bs));
+            } else {
+              zuNeiDuiWaiJjze = new Decimal(zuNeiDuiWaiJjze).add(
+                new Decimal(modelData.je)
+              );
+              zuNeiDuiWaiJjbs = new Decimal(zuNeiDuiWaiJjbs).add(
+                new Decimal(modelData.bs)
+              );
+              if (belongsToNodes(sourceId)) {
+                zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).sub(
+                  modelData.je
+                );
+              } else {
+                zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).add(
+                  modelData.je
+                );
+              }
+            }
+          }
           this.$store.commit("ShowTable/UPDATE_COMBO_ENTITY_LIST", {
-            comboName: "",
-            comboentityList: root,
+            comboName: nodeModel.label,
+            comboentityList,
+            comboTableData: [
+              {
+                title: "组内成员数量",
+                describe: zuNeiNodeCount,
+              },
+              {
+                title: "组内成员间交易总额",
+                describe: zuNeiJjze + " 元",
+              },
+              {
+                title: "组内成员间交易笔数",
+                describe: zuNeiJjbs,
+              },
+              {
+                title: "组内对外交易总额",
+                describe: zuNeiDuiWaiJjze + " 元",
+              },
+              {
+                title: "组内对外交易笔数",
+                describe: zuNeiDuiWaiJjbs,
+              },
+              {
+                title: "组内对外交易差额",
+                describe: zuNeiDuiWaiJjChaE + " 元",
+              },
+            ],
           });
           this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
             componentName: "combo-entity-list-view",

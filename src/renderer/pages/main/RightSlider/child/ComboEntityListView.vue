@@ -14,36 +14,76 @@
           <span @click="handleClickClose" class="close iconfont">&#xe634;</span>
         </el-col>
       </el-row>
+      <el-row
+        style="
+          background-color: #f5f7fa;
+          height: 31px;
+          font-weight: 700;
+          color: rgb(56, 78, 110);
+          font-size: 12px;
+          border-bottom: 1px solid #ebeef4;
+        "
+      >
+        <div style="margin-left: 10px; margin-top: 5px">
+          分组名称：{{ renderData.comboInfo.comboName }}
+        </div>
+      </el-row>
       <el-tree
-        style="border-bottom: 1px solid #e4e7ec"
+        style="border-bottom: 1px solid #e4e7ec; height: 300px"
         :default-expand-all="true"
-        :data="renderData.comboentityList"
+        :data="renderData.comboInfo.comboentityList"
         :props="defaultProps"
         @node-click="handleNodeClick"
       >
         <span class="iconfont custom-tree-node" slot-scope="{ node, data }">
           <span v-if="node.isLeaf">
-            <!-- <el-tooltip
+            <el-tooltip
               class="item"
               effect="dark"
               :content="makeTips(data)"
               placement="top-start"
-            > -->
-            <span class="tree-item-title"
-              >&#xe75f;&nbsp;&nbsp;{{ node.label }}</span
             >
-            <!-- </el-tooltip -->
-            >
+              <span>
+                <img
+                  :src="data.itemData.icon.img"
+                  width="16"
+                  height="16"
+                  style="vertical-align: middle"
+                />
+                <span class="tree-item-title" style="vertical-align: middle"
+                  >&nbsp;&nbsp;{{ node.label }}</span
+                >
+              </span>
+            </el-tooltip>
           </span>
 
           <span v-else>
-            <span class="tree-item-title"
-              >&#xe639;&nbsp;&nbsp;{{ node.label }}</span
+            <span class="tree-item-title" style="vertical-align: middle"
+              >&nbsp;&nbsp;{{ node.label }}</span
             >
-            <span> </span>
           </span>
         </span>
       </el-tree>
+      <el-table
+        height="300"
+        :data="renderData.comboInfo.comboTableData"
+        size="mini"
+        style="width: 100%"
+        border
+      >
+        <el-table-column prop="title" label="说明" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="describe"
+          label="统计结果"
+          show-overflow-tooltip
+        ></el-table-column>
+      </el-table>
+      <!-- <el-row style="text-align: center; margin-top: 10px">
+        <el-button type="primary" size="small" @click="handleClickUnCombo">
+          解体当前分组
+        </el-button>
+      </el-row> -->
     </div>
   </div>
 </template>
@@ -53,7 +93,7 @@ import { mapState, mapGetters } from "vuex";
 export default {
   props: ["renderData"],
   mounted() {
-    console.log(this.renderData.comboentityList);
+    console.log(this.renderData.comboInfo);
   },
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
@@ -69,13 +109,11 @@ export default {
     };
   },
   methods: {
-    // makeTips(data) {
-    //   const { kh, czje, czbs, jzje, jzbs, jyzje, jyzbs } = data.itemData;
-    //   return `卡号：${kh}\n
-    //   出账金额：${czje}, 出账笔数：${czbs}\n
-    //   进账金额：${jzje}， 进账笔数：${jzbs}\n
-    //   交易总金额：${jyzje}，交易总笔数：${jyzbs}`;
-    // },
+    makeTips(data) {
+      const { label } = data.itemData;
+      return label;
+    },
+    handleClickUnCombo() {},
     handleClickClose() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "combo-entity-list-view",
