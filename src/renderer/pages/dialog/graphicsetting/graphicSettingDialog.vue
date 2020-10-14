@@ -121,7 +121,40 @@
             <el-col :span="4">&nbsp;</el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="交易线宽" name="second">配置管理</el-tab-pane>
+        <el-tab-pane label="交易线宽" name="second">
+          <el-row
+            ><span style="font-size: 12px">线宽设置开关：</span
+            ><el-switch
+              v-model="bOpen"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            >
+            </el-switch
+          ></el-row>
+          <el-row style="margin-top: 20px; text-align: center">
+            <el-radio v-model="radioCatgray" label="je">按交易金额</el-radio>
+            <el-radio v-model="radioCatgray" label="bs">按交易笔数</el-radio>
+          </el-row>
+
+          <el-row style="margin-top: 20px; text-align: center">
+            <el-radio v-model="radioCeng" label="1">3层</el-radio>
+            <el-radio v-model="radioCeng" label="2">6层</el-radio>
+            <el-radio v-model="radioCeng" label="3">9层</el-radio>
+          </el-row>
+
+          <el-row style="margin-top: 20px" v-show="true">
+            <el-col :span="4">&nbsp;</el-col>
+            <el-col :span="16" style="text-align: center">
+              <el-button
+                type="primary"
+                size="medium"
+                @click="handleClickColorConfirmXianKuan"
+                >确定</el-button
+              >
+              <el-button size="medium" @click="handleClose">取消</el-button>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
       </el-tabs>
     </el-dialog>
   </div>
@@ -134,6 +167,12 @@ export default {
     this.myGraphicMoneySectionList = JSON.parse(
       JSON.stringify(this.currentTableData.graphicMoneySectionList)
     );
+    this.xianKuanSetting = JSON.parse(
+      JSON.stringify(this.currentTableData.xianKuanSetting)
+    );
+    this.radioCatgray = this.xianKuanSetting.category;
+    this.radioCeng = parseInt(this.xianKuanSetting.levelNum / 3) + "";
+    this.bOpen = this.xianKuanSetting.open;
   },
   computed: {
     ...mapState("DialogPopWnd", ["graphicSettingVisible"]),
@@ -164,6 +203,9 @@ export default {
   // },
   data() {
     return {
+      bOpen: false,
+      radioCatgray: "",
+      radioCeng: "",
       myGraphicMoneySectionList: null,
       activeName: "first",
       title: "连接线设置",
@@ -178,6 +220,22 @@ export default {
         "ShowTable/SET_NEW_MONEY_SPAN_COLOR",
         JSON.parse(JSON.stringify(this.myGraphicMoneySectionList))
       );
+      this.$store.commit("DialogPopWnd/SET_GRAPHICSETTINGVISIBLE", false);
+    },
+    handleClickColorConfirmXianKuan() {
+      let xianKuanSetting = {
+        open: this.bOpen,
+        category: this.radioCatgray,
+        levelNum: parseInt(this.radioCeng) * 3,
+      };
+      if (
+        JSON.stringify(xianKuanSetting) !== JSON.stringify(this.xianKuanSetting)
+      ) {
+        this.$store.commit(
+          "ShowTable/SET_NEW_XIAN_KUAN",
+          JSON.parse(JSON.stringify(xianKuanSetting))
+        );
+      }
       this.$store.commit("DialogPopWnd/SET_GRAPHICSETTINGVISIBLE", false);
     },
     handleClickSET_NEW_MONEY_SPAN_COLOR() {

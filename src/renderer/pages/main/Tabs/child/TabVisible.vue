@@ -138,6 +138,7 @@
               type="text"
               class="iconfont"
               style="padding: 4px; font-size: 12px"
+              @click="handleClickLockSelectedNodes"
               >&#xe6b1;&nbsp;锁定节点</el-button
             >
           </el-col>
@@ -195,6 +196,9 @@ export default {
         componentName: "entity-list-view",
         action: "add",
       });
+    },
+    handleClickLockSelectedNodes() {
+      
     },
     handleClickSwitchLayout(layoutName) {
       let layout;

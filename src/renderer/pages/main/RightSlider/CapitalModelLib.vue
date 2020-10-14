@@ -32,6 +32,7 @@ import ModelView from "./child/ModelView";
 import ModelListView from "./child/ModelListView";
 import EntityListView from "./child/EntityListView";
 import EntityView from "./child/EntityView";
+import ComboEntityListView from "./child/ComboEntityListView";
 export default {
   mounted() {},
   computed: {
@@ -52,6 +53,7 @@ export default {
     "model-view": ModelView,
     "entity-list-view": EntityListView,
     "entity-view": EntityView,
+    "combo-entity-list-view": ComboEntityListView,
   },
   methods: {
     handleTabRemove(componentName) {

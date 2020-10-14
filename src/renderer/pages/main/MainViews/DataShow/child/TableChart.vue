@@ -2,7 +2,7 @@
   <div>
     <el-table
       :id="tableData.uuid"
-      style="width: 100%;"
+      style="width: 100%"
       :data="tableData.rows"
       size="mini"
       :max-height="limitHeight"
@@ -13,9 +13,9 @@
     >
       <!-- <el-table-column fixed type="index" width="50" label="编号"></el-table-column> -->
       <el-table-column
-        v-for="(header) in tableData.showHeaders"
+        v-for="header in tableData.showHeaders"
         :label="header.fieldcname"
-        :key="header.cid+Math.random()"
+        :key="header.cid + Math.random()"
         show-overflow-tooltip
         :prop="header.fieldename"
         sortable="custom"
@@ -25,25 +25,42 @@
             <el-button
               type="text"
               size="mini"
-              style="color:#2e69b7"
-              @click="handleClickTableCellLink(scope.row, header.fieldename, header.link_mid, scope.row[header.fieldename].value)"
+              style="color: #2e69b7"
+              @click="
+                handleClickTableCellLink(
+                  scope.row,
+                  header.fieldename,
+                  header.link_mid,
+                  scope.row[header.fieldename].value
+                )
+              "
             >
               <u>{{ scope.row[header.fieldename].value }}</u>
             </el-button>
           </div>
-          <div v-else>{{ scope.row[header.fieldename].value }}</div>
+          <div v-else>
+            {{ scope.row[header.fieldename].value }}
+          </div>
         </template>
       </el-table-column>
     </el-table>
     <el-row
-      style=" background-color: #f5f7fa;padding: 5px;border-bottom: 1px solid #dddfe5; border-left: 1px solid #dddfe5; border-right: 1px solid #dddfe5"
+      style="
+        background-color: #f5f7fa;
+        padding: 5px;
+        border-bottom: 1px solid #dddfe5;
+        border-left: 1px solid #dddfe5;
+        border-right: 1px solid #dddfe5;
+      "
     >
       <el-col :span="12">
-        <div
-          style="font-size:12px;color:gray;margin-top:5px;"
-        >每页显示{{pageSize}}条，当前页面条目数量：{{ tableData.rows.length }}条, 总计：{{tableData.sum}}条</div>
+        <div style="font-size: 12px; color: gray; margin-top: 5px">
+          每页显示{{ pageSize }}条，当前页面条目数量：{{
+            tableData.rows.length
+          }}条, 总计：{{ tableData.sum }}条
+        </div>
       </el-col>
-      <el-col :span="10" style="text-align:right;">
+      <el-col :span="10" style="text-align: right">
         <div>
           <el-pagination
             small
@@ -56,7 +73,12 @@
         </div>
       </el-col>
       <el-col :span="2">
-        <el-select v-model="pageSize" placeholder="请选择" size="mini" @change="handleChangePageSize">
+        <el-select
+          v-model="pageSize"
+          placeholder="请选择"
+          size="mini"
+          @change="handleChangePageSize"
+        >
           <el-option
             v-for="item in optionsPageSize"
             :key="item.value"

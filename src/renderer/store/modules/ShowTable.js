@@ -27,6 +27,16 @@ const mutations = {
       graphicMoneySectionList
     );
   },
+
+  // 设置线宽
+  SET_NEW_XIAN_KUAN(state, xianKuanSetting) {
+    Vue.set(
+      state.currentTableData,
+      "xianKuanSetting",
+      JSON.parse(JSON.stringify(xianKuanSetting))
+    );
+  },
+
   // 设置关系表中的实体list
   UPDATE_ENTITY_LIST(state, entityList) {
     Vue.set(
@@ -35,6 +45,19 @@ const mutations = {
       JSON.parse(JSON.stringify(entityList))
     );
     Vue.set(state.currentTableData, "rightActiveName", "entity-list-view");
+  },
+  UPDATE_COMBO_ENTITY_LIST(state, { comboName, comboentityList }) {
+    Vue.set(state.currentTableData, "comboName", comboName);
+    Vue.set(
+      state.currentTableData,
+      "comboentityList",
+      JSON.parse(JSON.stringify(comboentityList))
+    );
+    Vue.set(
+      state.currentTableData,
+      "rightActiveName",
+      "combo-entity-list-view"
+    );
   },
   // 设置关系表中当前显示的实体信息
   UPDATE_ENTITY(state, entity) {
@@ -63,6 +86,11 @@ const mutations = {
         tableData,
         "graphicMoneySectionList",
         JSON.parse(JSON.stringify(Default.graphicMoneySectionList))
+      );
+      Vue.set(
+        tableData,
+        "xianKuanSetting",
+        JSON.parse(JSON.stringify(Default.xianKuanSetting))
       );
       Vue.set(tableData, "fullScrrenFlag", false);
     }
@@ -282,6 +310,14 @@ const mutations = {
               componentName: "entity-list-view",
             });
           }
+          if (componentName === "combo-entity-list-view") {
+            let comboentityList = state.currentTableData.comboentityList;
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表",
+              comboentityList,
+              componentName: "combo-entity-list-view",
+            });
+          }
           if (componentName === "entity-view") {
             let entity = state.currentTableData.entity;
             state.currentTableData.rightTabs.splice(index, 1, {
@@ -310,6 +346,14 @@ const mutations = {
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
             mpids,
             componentName: "model-view",
+          });
+          break;
+        case "combo-entity-list-view":
+          let comboentityList = state.currentTableData.comboentityList;
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表",
+            comboentityList,
+            componentName: "combo-entity-list-view",
           });
           break;
         case "entity-list-view":

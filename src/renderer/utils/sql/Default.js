@@ -595,7 +595,13 @@ const defaultSelection = {
   FiledsEmptyToNullCondition:
     " CASE WHEN CXZH='' THEN NULL ELSE CXZH END AS CXZH,CASE WHEN JYDFZKH='' THEN NULL ELSE JYDFZKH END AS JYDFZKH,CASE WHEN JDBZ='' THEN NULL ELSE JDBZ END AS JDBZ ",
 };
-
+// 线宽设置
+let xianKuanSetting = {
+  open: false,
+  category: "je",
+  levelNum: 3,
+};
+// 金额区间设置
 let graphicMoneySectionList = [
   {
     value: 10,
@@ -657,6 +663,7 @@ module.exports = {
   DataRule,
   GetTimeType,
   graphicMoneySectionList,
+  xianKuanSetting,
 };
 // module.exports.getNowFormatDate = getNowFormatDate;
 // module.exports.ReportTableDic = ReportTableDic;

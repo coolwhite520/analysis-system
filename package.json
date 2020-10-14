@@ -59,6 +59,7 @@
     "@antv/g6": "^3.7.3",
     "axios": "^0.19.2",
     "csv-parse": "^4.12.0",
+    "decimal.js": "^10.2.1",
     "echarts": "^4.8.0",
     "electron-log": "^4.2.4",
     "element-resize-detector": "^1.2.1",

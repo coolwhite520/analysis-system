@@ -20,6 +20,8 @@
         style="width: 100%"
         :height="contentViewHeight - 40 - 40 - 5"
         @row-click="handleClickRow"
+        @cell-mouse-enter="handleMouseEnter"
+        @cell-mouse-leave="handleMouseLeave"
       >
         <el-table-column label="序号" fixed type="index"></el-table-column>
         <el-table-column
@@ -46,6 +48,9 @@
 import { mapState, mapGetters } from "vuex";
 export default {
   props: ["renderData"],
+  data() {
+    return { currentFocusRow: null };
+  },
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", ["currentTableData"]),
@@ -55,6 +60,21 @@ export default {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "entity-list-view",
         action: "remove",
+      });
+    },
+    handleMouseEnter(row, column, cell, event) {
+      this.currentFocusRow = row;
+      this.$bus.$emit("updateNodeState", {
+        graphid: this.currentTableData.graphid,
+        nodeid: row.id,
+        state: "selected",
+      });
+    },
+    handleMouseLeave(row, column, cell, event) {
+      this.$bus.$emit("updateNodeState", {
+        graphid: this.currentTableData.graphid,
+        nodeid: row.id,
+        state: "clear",
       });
     },
     handleClickRow(row, column, event) {

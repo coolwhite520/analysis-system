@@ -8,6 +8,15 @@ var { Pool } = require("pg");
 var copyFrom = require("pg-copy-streams").from;
 const csv = require("@fast-csv/parse");
 
+function aaaa(b) {
+  b.ii = "aa";
+}
+
+let obj = {};
+aaaa(obj);
+console.log(obj);
+
+return;
 (async function() {
   return new Promise(function(resolve, reject) {
     try {
