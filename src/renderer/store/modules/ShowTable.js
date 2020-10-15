@@ -277,6 +277,7 @@ const mutations = {
       else if (leftIndex !== "") state.activeIndex = leftIndex;
     }
     if (state.tableDataList.length === 0) {
+      state.currentTableData.rightTabs = [];
       state.currentTableData = null;
     }
   },
@@ -394,7 +395,6 @@ const mutations = {
   },
   // 设置graph
   SET_RELATION_GRAPH_ID(state, graphid) {
-    console.log("SET_RELATION_GRAPH_ID");
     Vue.set(state.currentTableData, "graphid", graphid);
   },
 };

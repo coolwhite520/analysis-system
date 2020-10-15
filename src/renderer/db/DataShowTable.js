@@ -360,6 +360,7 @@ export default {
           success: true,
           headers: newHeaders,
           rows: retRows,
+          allrows: result.rows,
           sum,
           exportSql,
         };

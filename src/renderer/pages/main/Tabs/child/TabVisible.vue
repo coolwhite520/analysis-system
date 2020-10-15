@@ -76,50 +76,6 @@
           </el-col>
         </el-row>
       </el-col>
-
-      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
-        <el-row>
-          <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              >&#xe601;&nbsp;紧凑树布局</el-button
-            >
-          </el-col>
-          <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              >&#xe6b1;&nbsp;树状布局</el-button
-            >
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              >&#xe610;&nbsp;缩进布局</el-button
-            >
-          </el-col>
-          <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              >&#xe60a;&nbsp;脑图布局</el-button
-            >
-          </el-col>
-        </el-row>
-      </el-col>
-
       <el-col :span="3" style="border-right: 1px solid #e5e7ec">
         <el-row>
           <el-col :span="12">
@@ -138,8 +94,8 @@
               type="text"
               class="iconfont"
               style="padding: 4px; font-size: 12px"
-              @click="handleClickLockSelectedNodes"
-              >&#xe6b1;&nbsp;锁定节点</el-button
+              @click="handleClickSaveGraphData"
+              >&#xe603;&nbsp;保存当前表数据</el-button
             >
           </el-col>
         </el-row>
@@ -150,7 +106,7 @@
               type="text"
               class="iconfont"
               style="padding: 4px; font-size: 12px"
-              >&#xe610;&nbsp;显示实体列表</el-button
+              >&#xe60a;&nbsp;显示实体列表</el-button
             >
           </el-col>
           <el-col :span="12">
@@ -159,7 +115,8 @@
               type="text"
               class="iconfont"
               style="padding: 4px; font-size: 12px"
-              >&#xe60a;&nbsp;显示实体列表</el-button
+              @click="handleClickExportPicture"
+              >&#xe637;&nbsp;导出到图片</el-button
             >
           </el-col>
         </el-row>
@@ -168,12 +125,6 @@
     <el-row style="font-size: 8px; color: gray; text-align: center">
       <el-col :span="4" style="border-right: 1px solid #e5e7ec">
         <div>布局</div>
-      </el-col>
-      <el-col
-        :span="3"
-        style="text-align: center; border-right: 1px solid #e5e7ec"
-      >
-        <div>树形布局</div>
       </el-col>
       <el-col
         :span="3"
@@ -197,8 +148,15 @@ export default {
         action: "add",
       });
     },
-    handleClickLockSelectedNodes() {
-      
+    handleClickSaveGraphData() {
+      this.$bus.$emit("saveGraphData", {
+        graphid: this.currentTableData.graphid,
+      });
+    },
+    handleClickExportPicture() {
+      this.$bus.$emit("exportPicture", {
+        graphid: this.currentTableData.graphid,
+      });
     },
     handleClickSwitchLayout(layoutName) {
       let layout;
@@ -209,15 +167,6 @@ export default {
             preventOverlap: true, // 防止节点重叠
           };
           break;
-        // case "force":
-        //   layout = {
-        //     // Object，可选，布局的方法及其配置项，默认为 random 布局。
-        //     type: "force", // 指定为力导向布局
-        //     preventOverlap: true, // 防止节点重叠
-        //     nodeSize: 30, // 节点大小，用于算法中防止节点重叠时的碰撞检测。由于已经在上一节的元素配置中设置了每个节点的 size 属性，则不需要在此设置 nodeSize。
-        //     linkDistance: 100, // 指定边距离为100
-        //   };
-        //   break;
         case "dagre": //层次
           layout = {
             type: "dagre",
@@ -231,14 +180,6 @@ export default {
             type: "circular",
           };
           break;
-        // case "circular2": // 螺旋
-        //   layout = {
-        //     preventOverlap: true,
-        //     type: "circular",
-        //     startRadius: 10,
-        //     endRadius: 300,
-        //   };
-        //   break;
         case "grid": // 网格
           layout = {
             type: "grid",
@@ -264,24 +205,11 @@ export default {
             preventOverlap: true,
           };
           break;
-        // case "mds":
-        //   layout = {
-        //     type: "mds",
-        //     linkDistance: 100,
-        //   };
-        //   break;
       }
-      // if (["compactBox"].includes(layout.type)) {
-      //   this.$bus.$emit("swichTreeLayout", {
-      //     graphid: this.currentTableData.graphid,
-      //     layout,
-      //   });
-      // } else {
       this.$bus.$emit("swichNormalLayout", {
         graphid: this.currentTableData.graphid,
         layout,
       });
-      // }
     },
   },
 };

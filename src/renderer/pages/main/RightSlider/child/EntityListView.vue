@@ -79,14 +79,9 @@ export default {
       });
     },
     handleClickRow(row, column, event) {
-      // console.log(row, column, event);
-      let entity = {
-        ...row,
-      };
-      this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-view",
-        action: "add",
+      this.$bus.$emit("clickEntityRow", {
+        graphid: this.currentTableData.graphid,
+        nodeid: row.id,
       });
     },
   },

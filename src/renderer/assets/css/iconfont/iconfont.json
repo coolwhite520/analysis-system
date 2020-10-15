@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11476715",
+      "name": "保存 线性",
+      "font_class": "166991",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
       "icon_id": "809932",
       "name": "企业",
       "font_class": "qiye",

@@ -24,9 +24,7 @@
           border-bottom: 1px solid #ebeef4;
         "
       >
-        <div style="margin-left: 10px; margin-top: 5px">
-          分组名称：{{ renderData.comboInfo.comboName }}
-        </div>
+        <div style="margin-left: 10px; margin-top: 5px">分组名称成员列表</div>
       </el-row>
       <el-tree
         style="border-bottom: 1px solid #e4e7ec; height: 300px"
@@ -73,11 +71,20 @@
       >
         <el-table-column prop="title" label="说明" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column
-          prop="describe"
-          label="统计结果"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column prop="describe" label="统计结果" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span
+              v-if="scope.row.title === '组内对外交易差额'"
+              :style="{ color: scope.row.describe > 0 ? '#cd594b' : '#46962e' }"
+            >
+              {{ scope.row.describe }}&nbsp;元
+            </span>
+            <span v-else
+              >{{ scope.row.describe
+              }}{{ scope.row.title.indexOf("额") > 0 ? " 元" : "" }}</span
+            >
+          </template></el-table-column
+        >
       </el-table>
       <!-- <el-row style="text-align: center; margin-top: 10px">
         <el-button type="primary" size="small" @click="handleClickUnCombo">
@@ -123,13 +130,9 @@ export default {
     handleNodeClick(data) {
       console.log(data);
       if (data.type === "node") {
-        let entity = {
-          ...data.itemData,
-        };
-        this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-        this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-          componentName: "entity-view",
-          action: "add",
+        this.$bus.$emit("clickEntityRow", {
+          graphid: this.currentTableData.graphid,
+          nodeid: data.itemData.id,
         });
       }
     },

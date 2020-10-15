@@ -255,6 +255,7 @@ export default {
       "graphicSettingVisible",
       "nodeCombineVisible",
     ]),
+    ...mapState("CaseDetail", ["caseBase"]),
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
     },
@@ -282,7 +283,7 @@ export default {
             ? "交易金额"
             : "交易笔数";
         let levelNum = this.tableData.xianKuanSetting.levelNum;
-        return `线宽设置快捷开关(当前以${tipFilterName}为基准，分${levelNum}种线宽进行展示)`;
+        return `线宽设置快捷开关(当前图表以${tipFilterName}为基准，分${levelNum}种线宽进行展示)`;
       }
       return "线宽设置快捷开关(未开启)";
     },
@@ -651,7 +652,6 @@ export default {
             let jczongbs = 0;
             for (let edge of edges) {
               let edgeModel = edge.getModel();
-              console.log(edgeModel);
               if (edgeModel.target === nodeModel.id) {
                 jzjeTotal = new Decimal(jzjeTotal).add(
                   new Decimal(edgeModel.je)
@@ -666,6 +666,7 @@ export default {
             }
             jcchae = new Decimal(jzjeTotal).sub(new Decimal(czjeTotal));
             jczongbs = jzbsTotal + czbsTotal;
+
             const outDiv = document.createElement("div");
             outDiv.style.width = "180px";
             outDiv.innerHTML = `
@@ -673,7 +674,6 @@ export default {
               e.item.hasLocked() ? "(已锁定)" : ""
             }</h4>
       <ul>
-        <li class="tip-li"><b>卡号：${nodeModel.kh}</b></li>
         <li class="tip-li">交易关联数：${edges.length}&nbsp;&nbsp;</li>
         <li class="tip-li">出账总金额：${czjeTotal}&nbsp;&nbsp;元</li>
         <li class="tip-li">出账总笔数：${czbsTotal}&nbsp;&nbsp;</li>
@@ -705,8 +705,8 @@ export default {
             return outDiv;
           } else if (e.item.getType() === "edge") {
             let nodeModel = e.item.getModel();
-            let zhuanChuFang = nodeModel.source.split("\n")[1];
-            let zhuanRuFang = nodeModel.target.split("\n")[1];
+            let zhuanChuFang = nodeModel.source;
+            let zhuanRuFang = nodeModel.target;
             const outDiv = document.createElement("div");
             outDiv.style.width = "180px";
             outDiv.innerHTML = `
@@ -883,26 +883,234 @@ export default {
         "circle"
       );
     },
+    // 1
+    // 序号(++)，
+    // 交易卡号(cxkh)，
+    // 交易名称(jymc)，
+    // 交易证件号码(jyzjhm)，
+    // 对手账号(jydfzkh)，
+    // 对手名称(jydfmc)，
+    // 对手身份证号(jydfzjhm)，
+    // 交易总金额(jyzje)，
+    // 交易总笔数(jyzbs)，
+    // 出账金额(czje)，
+    // 出账笔数(czbs)，
+    // 进账金额(jzje)，
+    // 进账笔数(jzbs)，
+    // 进出帐差额(jczce)，
+    // 最早交易日期(zzjyrq)，
+    // 最晚交易日期(zwjyrq)
     makeData() {
+      switch (this.tableData.tid) {
+        case "202":
+          return this.makeData202();
+          break;
+        case "203":
+          return this.makeData203();
+          break;
+        case "213":
+          return this.makeData213();
+          break;
+      }
+    },
+    makeData213() {
+      // 重点交易对手团伙发现：参数 金额，笔数。参数可设置团伙分类 以 主体名称（JYMCGROUP），证件号码（JYZJHMGROUP），卡号（CXKHGROUP） 划分
+      this.currentSelectedNodes = [];
+      let nodes = [];
+      let edges = [];
+      let keyName = "";
+      let keyDfName = "";
+      this.tableData.allrows.forEach((row) => {
+        let jymc =
+          row[
+            `${this.tableData.selectCondition.SelectThType.ThId.toLowerCase()}`
+          ];
+        let jydfmc =
+          row[
+            `${this.tableData.selectCondition.SelectThType.DsThId.toLowerCase()}`
+          ];
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+        let jyzje = parseInt(row["jyzje"]);
+        let jyzbs = parseInt(row["jyzbs"]);
+        let data1 = {
+          id: jymc,
+          name: jymc,
+          label: jymc,
+          tid: this.tableData.tid, //tableid
+        };
+        let data2 = {
+          id: jydfmc,
+          name: jydfmc,
+          label: jydfmc,
+          tid: this.tableData.tid,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.id === data1.id) {
+            bFindData1 = true;
+          }
+        }
+        for (let item of nodes) {
+          if (item.id === data2.id) {
+            bFindData2 = true;
+          }
+        }
+        // 画线
+        let tempEdges = [];
+        if (czje > 0) {
+          let lineColor = this.calculateLineColorByJinE(czje);
+          let link1 = {
+            tid: this.tableData.tid,
+            source: jymc,
+            target: jydfmc,
+            je: czje,
+            bs: czbs,
+            label: `${czje}元（${czbs}笔）`,
+            style: {
+              endArrow: {
+                path: "M 0,0 L 8,4 L 8,-4 Z",
+                fill: lineColor,
+              },
+              stroke: lineColor,
+            },
+          };
+          if (lineColor !== "") tempEdges.push(link1);
+        }
+        if (jzje > 0) {
+          let lineColor = this.calculateLineColorByJinE(jzje);
+          let link2 = {
+            tid: this.tableData.tid,
+            source: jydfmc,
+            target: jymc,
+            je: jzje,
+            bs: jzbs,
+            label: `${jzje}元（${jzbs}笔）`,
+            style: {
+              endArrow: {
+                path: "M 0,0 L 8,4 L 8,-4 Z",
+                fill: lineColor,
+              },
+              stroke: lineColor,
+            },
+          };
+          if (lineColor !== "") tempEdges.push(link2);
+        }
+        if (tempEdges.length > 0) {
+          if (!bFindData1) nodes.push(data1);
+          if (!bFindData2) nodes.push(data2);
+          edges.push(...tempEdges);
+        }
+      });
+      this.$G6.Util.processParallelEdges(edges);
+      this.entityCount = nodes.length;
+      this.linkCount = edges.length;
+      this.detailCount = this.entityCount + this.linkCount;
+      return { nodes, edges };
+    },
+    makeData203() {
+      this.currentSelectedNodes = [];
       let nodes = [];
       let edges = [];
       this.tableData.allrows.forEach((row) => {
-        // 序号(++)，
-        // 交易卡号(cxkh)，
-        // 交易名称(jymc)，
-        // 交易证件号码(jyzjhm)，
-        // 对手账号(jydfzkh)，
-        // 对手名称(jydfmc)，
-        // 对手身份证号(jydfzjhm)，
-        // 交易总金额(jyzje)，
-        // 交易总笔数(jyzbs)，
-        // 出账金额(czje)，
-        // 出账笔数(czbs)，
-        // 进账金额(jzje)，
-        // 进账笔数(jzbs)，
-        // 进出帐差额(jczce)，
-        // 最早交易日期(zzjyrq)，
-        // 最晚交易日期(zwjyrq)
+        let jymc = row["jymc"];
+        let cxkh = row["jyzjhm"];
+
+        let jydfmc = row["jydfmc"];
+        let jydfzkh = row["jydfzjhm"];
+
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+        let jyzje = parseInt(row["jyzje"]);
+        let jyzbs = parseInt(row["jyzbs"]);
+        let data1 = {
+          id: cxkh + "\n" + jymc,
+          kh: cxkh,
+          name: jymc,
+          label: cxkh + "\n" + jymc,
+          tid: this.tableData.tid, //tableid
+        };
+        let data2 = {
+          id: jydfzkh + "\n" + jydfmc,
+          kh: jydfzkh,
+          name: jydfmc,
+          label: jydfzkh + "\n" + jydfmc,
+          tid: this.tableData.tid,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.id === data1.id) {
+            bFindData1 = true;
+          }
+        }
+        for (let item of nodes) {
+          if (item.id === data2.id) {
+            bFindData2 = true;
+          }
+        }
+        // 画线
+        let tempEdges = [];
+        if (czje > 0) {
+          let lineColor = this.calculateLineColorByJinE(czje);
+          let link1 = {
+            tid: this.tableData.tid,
+            source: cxkh + "\n" + jymc,
+            target: jydfzkh + "\n" + jydfmc,
+            je: czje,
+            bs: czbs,
+            label: `${czje}元（${czbs}笔）`,
+            style: {
+              endArrow: {
+                path: "M 0,0 L 8,4 L 8,-4 Z",
+                fill: lineColor,
+              },
+              stroke: lineColor,
+            },
+          };
+          if (lineColor !== "") tempEdges.push(link1);
+        }
+        if (jzje > 0) {
+          let lineColor = this.calculateLineColorByJinE(jzje);
+          let link2 = {
+            tid: this.tableData.tid,
+            source: jydfzkh + "\n" + jydfmc,
+            target: cxkh + "\n" + jymc,
+            je: jzje,
+            bs: jzbs,
+            label: `${jzje}元（${jzbs}笔）`,
+            style: {
+              endArrow: {
+                path: "M 0,0 L 8,4 L 8,-4 Z",
+                fill: lineColor,
+              },
+              stroke: lineColor,
+            },
+          };
+          if (lineColor !== "") tempEdges.push(link2);
+        }
+        if (tempEdges.length > 0) {
+          if (!bFindData1) nodes.push(data1);
+          if (!bFindData2) nodes.push(data2);
+          edges.push(...tempEdges);
+        }
+      });
+      this.$G6.Util.processParallelEdges(edges);
+      this.entityCount = nodes.length;
+      this.linkCount = edges.length;
+      this.detailCount = this.entityCount + this.linkCount;
+      return { nodes, edges };
+    },
+    makeData202() {
+      this.currentSelectedNodes = [];
+      let nodes = [];
+      let edges = [];
+      this.tableData.allrows.forEach((row) => {
         let cxkh = row["cxkh"];
         let jymc = row["jymc"];
         let jydfzkh = row["jydfzkh"];
@@ -913,14 +1121,15 @@ export default {
         let jzbs = parseInt(row["jzbs"]);
         let jyzje = parseInt(row["jyzje"]);
         let jyzbs = parseInt(row["jyzbs"]);
-
         let data1 = {
+          tid: this.tableData.tid,
           id: cxkh + "\n" + jymc,
           kh: cxkh,
           name: jymc,
           label: cxkh + "\n" + jymc,
         };
         let data2 = {
+          tid: this.tableData.tid,
           id: jydfzkh + "\n" + jydfmc,
           kh: jydfzkh,
           name: jydfmc,
@@ -943,6 +1152,7 @@ export default {
         if (czje > 0) {
           let lineColor = this.calculateLineColorByJinE(czje);
           let link1 = {
+            tid: this.tableData.tid,
             source: cxkh + "\n" + jymc,
             target: jydfzkh + "\n" + jydfmc,
             je: czje,
@@ -961,6 +1171,7 @@ export default {
         if (jzje > 0) {
           let lineColor = this.calculateLineColorByJinE(jzje);
           let link2 = {
+            tid: this.tableData.tid,
             source: jydfzkh + "\n" + jydfmc,
             target: cxkh + "\n" + jymc,
             je: jzje,
@@ -1008,13 +1219,93 @@ export default {
         action: "add",
       });
     },
-    // let comboTongJiInfo = {
-    //         zuNeiNodeCount,
-    //         zuNeiJjze,
-    //         zuNeiJjbs,
-    //         zuNeiDuiWaiJjze,
-    //         zuNeiDuiWaiJjbs,
-    //       };
+    calculateEntityInfo(node) {
+      let nodeModel = node.getModel();
+      let edges = node.getEdges();
+      let czjeTotal = 0;
+      let czbsTotal = 0;
+      let jzjeTotal = 0;
+      let jzbsTotal = 0;
+      let jcchae = 0; //进出帐差额
+      let jczongbs = 0;
+      for (let edge of edges) {
+        let edgeModel = edge.getModel();
+        console.log(edgeModel);
+        if (edgeModel.target === nodeModel.id) {
+          jzjeTotal = new Decimal(jzjeTotal).add(new Decimal(edgeModel.je));
+          jzbsTotal += edgeModel.bs;
+        } else {
+          czjeTotal = new Decimal(czjeTotal).add(new Decimal(edgeModel.je));
+          czbsTotal += edgeModel.bs;
+        }
+      }
+      jcchae = new Decimal(jzjeTotal).sub(new Decimal(czjeTotal));
+      jczongbs = jzbsTotal + czbsTotal;
+      let entityTableData = [
+        {
+          title: "姓名",
+          describe: nodeModel.name,
+        },
+        {
+          title: "卡号",
+          describe: nodeModel.kh,
+        },
+        {
+          title: "交易关联数",
+          describe: edges.length,
+        },
+        {
+          title: "出账总金额",
+          describe: czjeTotal,
+        },
+        {
+          title: "出账总笔数",
+          describe: czbsTotal,
+        },
+        {
+          title: "进账总金额",
+          describe: jzjeTotal,
+        },
+        {
+          title: "进账总笔数",
+          describe: jzbsTotal,
+        },
+        {
+          title: "进出总差额",
+          describe: jcchae,
+        },
+        {
+          title: "进出总笔数",
+          describe: jczongbs,
+        },
+      ];
+      let nodeStyle = [
+        {
+          title: "节点图标",
+          describe: nodeModel.icon.img,
+        },
+        {
+          title: "节点背景色",
+          describe: nodeModel.style.fill,
+        },
+        {
+          title: "节点边框色",
+          describe: nodeModel.style.stroke,
+        },
+        {
+          title: "节点标签色",
+          describe: nodeModel.labelCfg.style.fill
+            ? nodeModel.labelCfg.style.fill
+            : null,
+        },
+      ];
+      let obj = {
+        nodeid: nodeModel.id,
+        nodeStyle,
+        entityTableData,
+      };
+      return obj;
+    },
     // 遍历一个combo，并获取tree结构,并获取所有的nodes和所有的nodes关联的edges
     async travelCombo(root, combo, allNodes, allEdges) {
       // combo.getChildren()返回的结果中的nodes有bug，拖动一次新增一个
@@ -1078,7 +1369,7 @@ export default {
         },
         icon: {
           show: true,
-          img: "/static/images/yinhangka.png",
+          img: "/static/images/icons/银行卡.png",
           width: 15,
           height: 15,
         },
@@ -1165,7 +1456,9 @@ export default {
         let type = node.getType();
         let nodeModel = node.get("model");
         if (type === "node") {
-          this.$store.commit("ShowTable/UPDATE_ENTITY", nodeModel);
+          let entity = this.calculateEntityInfo(node);
+          console.log({ entity });
+          this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
           this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
             componentName: "entity-view",
             action: "add",
@@ -1227,7 +1520,7 @@ export default {
               },
               {
                 title: "组内成员间交易总额",
-                describe: zuNeiJjze + " 元",
+                describe: zuNeiJjze,
               },
               {
                 title: "组内成员间交易笔数",
@@ -1235,7 +1528,7 @@ export default {
               },
               {
                 title: "组内对外交易总额",
-                describe: zuNeiDuiWaiJjze + " 元",
+                describe: zuNeiDuiWaiJjze,
               },
               {
                 title: "组内对外交易笔数",
@@ -1243,7 +1536,7 @@ export default {
               },
               {
                 title: "组内对外交易差额",
-                describe: zuNeiDuiWaiJjChaE + " 元",
+                describe: zuNeiDuiWaiJjChaE,
               },
             ],
           });
@@ -1358,6 +1651,62 @@ export default {
     });
     // node节点状态更新监听, 针对entitylist组件中鼠标移动进行图表中node的状态更新
     this.$bus.$on("updateNodeState", this.onUpdateNodesState);
+
+    //保存当前图表数据
+    this.$bus.$on("saveGraphData", (data) => {
+      let { graphid } = data;
+      if (graphid !== _this.graphid) return;
+      // 包含nodes，edges，combos
+      let graphData = this.graph.save();
+      console.log(graphData);
+    });
+    // 图表导出到图片
+    this.$bus.$on("exportPicture", async (data) => {
+      let { graphid } = data;
+      if (graphid !== _this.graphid) return;
+      let pngName = `案件${this.caseBase.ajmc}-${this.tableData.title}`;
+      console.log(pngName);
+      this.graph.downloadFullImage(pngName, "image/png");
+    });
+    // 监听右侧菜单中点击table中的每个实体消息
+    this.$bus.$on("clickEntityRow", (data) => {
+      let { graphid, nodeid } = data;
+      if (graphid !== _this.graphid) return;
+      let node = this.graph.findById(nodeid);
+      let entity = this.calculateEntityInfo(node);
+      console.log({ entity });
+      this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+        componentName: "entity-view",
+        action: "add",
+      });
+    });
+    this.$bus.$on("nodeStyleSetting", (data) => {
+      console.log(data);
+      let { graphid, nodeid, nodeStyle } = data;
+      if (graphid !== _this.graphid) return;
+      let node = this.graph.findById(nodeid);
+      this.graph.clearItemStates(node, "selected");
+      let nodeModel = node.getModel();
+      switch (nodeStyle.title) {
+        case "节点图标":
+          nodeModel.icon.img = nodeStyle.describe;
+          this.graph.updateItem(nodeid, nodeModel);
+          break;
+        case "节点背景色":
+          nodeModel.style.fill = nodeStyle.describe;
+          this.graph.updateItem(nodeid, nodeModel);
+          break;
+        case "节点边框色":
+          nodeModel.style.stroke = nodeStyle.describe;
+          this.graph.updateItem(nodeid, nodeModel);
+          break;
+        case "节点标签色":
+          nodeModel.labelCfg.style.fill = nodeStyle.describe;
+          this.graph.updateItem(nodeid, nodeModel);
+          break;
+      }
+    });
   },
 };
 </script>
