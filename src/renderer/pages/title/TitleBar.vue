@@ -5,15 +5,15 @@
         <div class="logo iconfont">&#xe66a;</div>
       </el-col>
       <el-col class="colum" :span="18">
-        <div class="titleContent">
-          <b>FanFu</b>-资金流分析系统
-        </div>
+        <div class="titleContent"><b>FanFu</b>-资金流分析系统</div>
       </el-col>
       <el-col class="colum" :span="4">
         <div>
           <span class="opterationBtn iconfont">
             <el-tooltip content="数据库连接设置" placement="bottom">
-              <span @click="handleClickDbConfig" class="dbconfig">&#xe71a;</span>
+              <span @click="handleClickDbConfig" class="dbconfig"
+                >&#xe71a;</span
+              >
             </el-tooltip>
             <el-tooltip content="返回首页" placement="bottom">
               <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
@@ -23,16 +23,27 @@
           </span>
         </div>
         <div
-          style="float:right;margin-top:20px;font-size:10px;margin-right:10px;"
-        >当前版本号：{{softVersion}}</div>
-        <div style="clear:both;"></div>
-        <div v-show="currentViewName==='main-page'" style="float:right;margin-right:10px;">
+          style="
+            float: right;
+            margin-top: 20px;
+            font-size: 10px;
+            margin-right: 10px;
+          "
+        >
+          当前版本号：{{ softVersion }}
+        </div>
+        <div style="clear: both"></div>
+        <div
+          v-show="currentViewName === 'main-page'"
+          style="float: right; margin-right: 10px"
+        >
           <el-button
-            style="color:white;padding:0;"
+            style="color: white; padding: 0"
             type="text"
             @click="handleClickShowTabBar"
             class="iconfont"
-          >{{showTabBarView?"&#xe6da;":'&#xe6dd;'}}</el-button>
+            >{{ showTabBarView ? "&#xe6da;" : "&#xe6dd;" }}</el-button
+          >
         </div>
       </el-col>
     </el-row>
@@ -52,6 +63,7 @@ export default {
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView"]),
     ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   methods: {
     handleClickShowTabBar() {
@@ -102,11 +114,46 @@ export default {
       let result = await this.$electron.remote.dialog.showMessageBox(null, {
         type: "warning",
         title: "关闭",
-        message: `确定要退出应用程序？`,
-        buttons: ["确定", "取消"],
+        message: `是否保存当前所有操作？`,
+        buttons: ["保存", "否"],
         defaultId: 0,
       });
+      console.log(result);
+      let _this = this;
       if (result.response === 0) {
+        let graphCount = 0;
+        for (let tableData of this.tableDataList) {
+          if (tableData.hasOwnProperty("graphid")) {
+            console.log(tableData.graphid);
+            this.$bus.$emit("saveGraphData", { graphid: tableData.graphid });
+            graphCount++;
+          }
+        }
+        async function checkSaveOver() {
+          let count = 0;
+          for (let tableData of _this.tableDataList) {
+            if (
+              tableData.hasOwnProperty("saveRelationGraphDataOk") &&
+              tableData.saveRelationGraphDataOk
+            ) {
+              count++;
+            }
+          }
+          if (count !== graphCount) {
+            await new Promise((resolve, reject) => {
+              setTimeout(function () {
+                resolve("done");
+              }, 100);
+            });
+            return await checkSaveOver();
+          }
+          return true;
+        }
+        await checkSaveOver();
+        this.$electron.ipcRenderer.send("window-close");
+      } else if (result.response === 1) {
+        this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
+        this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "home-page");
         this.$electron.ipcRenderer.send("window-close");
       }
     },

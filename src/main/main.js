@@ -7,7 +7,7 @@ import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
 import path from "path";
 import { ACHEME, LOAD_URL } from "./config";
-
+import log from "electron-log";
 const isDevelopment = process.env.NODE_ENV !== "production";
 /**
  * Set `__static` path to static files in production
@@ -41,6 +41,7 @@ function createWindow() {
   let exePath = path.dirname(app.getPath("exe"));
   global.appPath = exePath;
   global.configPath = require("path").join(appPath, "config");
+  log.info(global.configPath);
   if (!fs.existsSync(global.configPath)) {
     fs.mkdirSync(global.configPath, { recursive: true });
   }

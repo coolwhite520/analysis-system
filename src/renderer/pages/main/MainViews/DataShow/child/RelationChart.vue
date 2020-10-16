@@ -144,9 +144,9 @@
       :nodes="currentSelectedNodes"
     ></combine-node>
     <div v-show="menuVisible">
-      <div id="menu" class="menu">
+      <div :id="menuId" class="menu">
         <div v-if="rightClickType === 'combo'">
-          <div id="menu" class="menu">
+          <div>
             <div>
               <el-button
                 type="text"
@@ -226,12 +226,12 @@ export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      menuId: uuid.v1(),
       menuVisible: false,
       rightClickType: "",
       inputValue: "",
       data: null,
       graph: null,
-      graphid: uuid.v1(),
       toolBarID: uuid.v1(),
       miniMapID: uuid.v1(),
       fisheye: null,
@@ -258,6 +258,9 @@ export default {
     ...mapState("CaseDetail", ["caseBase"]),
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
+    },
+    graphid() {
+      return this.tableData.graphid;
     },
     lockOrUnlock() {
       let node = this.currentSelectedNodes[0];
@@ -481,6 +484,12 @@ export default {
     },
     handleClickUnCombo() {
       this.graph.expandCombo(this.rightClickComboInstance);
+      let nodes = this.rightClickComboInstance.getNodes();
+      nodes.forEach((node) => {
+        let model = node.getModel();
+        delete model.comboId;
+        this.graph.updateItem(node, model);
+      });
       this.graph.uncombo(this.rightClickComboInstance);
       this.rightClickComboInstance = null;
       this.menuVisible = false;
@@ -499,6 +508,9 @@ export default {
       };
       let nodeIds = this.currentSelectedNodes.map((node) => {
         this.graph.clearItemStates(node, "selected");
+        let model = node.getModel();
+        model.comboId = comboid;
+        this.graph.updateItem(node, model);
         return node.getModel().id;
       });
       this.currentSelectedNodes = [];
@@ -1214,10 +1226,10 @@ export default {
         return b.relationCount - a.relationCount;
       });
       this.$store.commit("ShowTable/UPDATE_ENTITY_LIST", entityList);
-      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-list-view",
-        action: "add",
-      });
+      // this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+      //   componentName: "entity-list-view",
+      //   action: "add",
+      // });
     },
     calculateEntityInfo(node) {
       let nodeModel = node.getModel();
@@ -1440,12 +1452,18 @@ export default {
     };
     this.graph = new this.$G6.Graph(option);
     this.initPlugins();
-    this.graph.data(this.makeData()); // 加载数据
+    if (this.tableData.hasOwnProperty("relationGraphData")) {
+      console.log("a-->", this.tableData.relationGraphData);
+      let data = this.$lodash.cloneDeepWith(this.tableData.relationGraphData);
+      console.log("a-->", data);
+      this.graph.data(data);
+    } else {
+      this.graph.data(this.makeData()); // 加载数据
+    }
     this.graph.render(); // 渲染
     this.updateEntityList();
     this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
     // 监听布局切换
-    this.$store.commit("ShowTable/SET_RELATION_GRAPH_ID", this.graphid);
     this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
     // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
     this.graph.on("nodeselectchange", async (e) => {
@@ -1596,7 +1614,7 @@ export default {
       this.rightClickComboInstance = evt.item;
       //当前节点定位
       this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
-      let menu = document.querySelector("#menu");
+      let menu = document.getElementById(this.menuId);
       menu.style.left = evt.clientX + "px";
       menu.style.top = evt.clientY + "px";
     });
@@ -1623,7 +1641,7 @@ export default {
       }
       //当前节点定位
       this.menuVisible = true;
-      let menu = document.querySelector("#menu");
+      let menu = document.getElementById(this.menuId);
       menu.style.left = evt.clientX + "px";
       menu.style.top = evt.clientY + "px";
       console.log("右键被点击的event:", evt);
@@ -1657,8 +1675,12 @@ export default {
       let { graphid } = data;
       if (graphid !== _this.graphid) return;
       // 包含nodes，edges，combos
-      let graphData = this.graph.save();
-      console.log(graphData);
+      let relationGraphData = this.graph.save();
+      console.log(relationGraphData);
+      this.$store.commit("ShowTable/SAVE_GRAPHDATA", {
+        graphid,
+        relationGraphData,
+      });
     });
     // 图表导出到图片
     this.$bus.$on("exportPicture", async (data) => {
@@ -1672,6 +1694,7 @@ export default {
     this.$bus.$on("clickEntityRow", (data) => {
       let { graphid, nodeid } = data;
       if (graphid !== _this.graphid) return;
+      console.log({ graphid, nodeid });
       let node = this.graph.findById(nodeid);
       let entity = this.calculateEntityInfo(node);
       console.log({ entity });

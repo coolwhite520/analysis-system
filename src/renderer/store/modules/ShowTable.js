@@ -7,6 +7,7 @@ import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 import { stat } from "fs";
+const uuid = require("uuid");
 const log = require("@/utils/log");
 // 关系图设置的金额区间
 
@@ -44,7 +45,7 @@ const mutations = {
       "entityList",
       JSON.parse(JSON.stringify(entityList))
     );
-    Vue.set(state.currentTableData, "rightActiveName", "entity-list-view");
+    // Vue.set(state.currentTableData, "rightActiveName", "entity-list-view");
   },
   UPDATE_COMBO_ENTITY_LIST(
     state,
@@ -94,6 +95,7 @@ const mutations = {
         "xianKuanSetting",
         JSON.parse(JSON.stringify(Default.xianKuanSetting))
       );
+      Vue.set(tableData, "graphid", uuid.v1());
       Vue.set(tableData, "fullScrrenFlag", false);
     }
     state.tableDataList.push(tableData);
@@ -104,7 +106,9 @@ const mutations = {
   // 放大到全屏 缩小
   UPDATE_FULLSCRRENFLAG(state) {
     let flag = state.currentTableData.fullScrrenFlag;
+    console.log(state.currentTableData);
     Vue.set(state.currentTableData, "fullScrrenFlag", !flag);
+    console.log(state.currentTableData);
   },
   // 修改金额区间的选定状态
   MODIFY_MONDY_SECTION_CHECKED(state, id) {
@@ -393,9 +397,19 @@ const mutations = {
       }
     }
   },
-  // 设置graph
-  SET_RELATION_GRAPH_ID(state, graphid) {
-    Vue.set(state.currentTableData, "graphid", graphid);
+  SAVE_GRAPHDATA(state, { graphid, relationGraphData }) {
+    for (let tableData of state.tableDataList) {
+      if (tableData.graphid === graphid) {
+        Vue.set(tableData, "saveRelationGraphDataOk", false);
+        Vue.set(
+          tableData,
+          "relationGraphData",
+          JSON.parse(JSON.stringify(relationGraphData))
+        );
+        Vue.set(tableData, "saveRelationGraphDataOk", true);
+        break;
+      }
+    }
   },
 };
 
