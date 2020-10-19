@@ -106,9 +106,9 @@ const mutations = {
   // 放大到全屏 缩小
   UPDATE_FULLSCRRENFLAG(state) {
     let flag = state.currentTableData.fullScrrenFlag;
-    console.log(state.currentTableData);
+    console.log(state.currentTableData.fullScrrenFlag);
     Vue.set(state.currentTableData, "fullScrrenFlag", !flag);
-    console.log(state.currentTableData);
+    console.log(state.currentTableData.fullScrrenFlag);
   },
   // 修改金额区间的选定状态
   MODIFY_MONDY_SECTION_CHECKED(state, id) {
@@ -333,6 +333,30 @@ const mutations = {
               componentName: "entity-view",
             });
           }
+          if (componentName === "search-replace-view") {
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;查找替换",
+              componentName: "search-replace-view",
+            });
+          }
+          if (componentName === "special-char-view") {
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;特殊字符",
+              componentName: "special-char-view",
+            });
+          }
+          if (componentName === "ineffect-data-view") {
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;无效数据",
+              componentName: "ineffect-data-view",
+            });
+          }
+          if (componentName === "data-diff-view") {
+            state.currentTableData.rightTabs.splice(index, 1, {
+              title: "&#xe61c;&nbsp;&nbsp;&nbsp;数据去重",
+              componentName: "data-diff-view",
+            });
+          }
           state.currentTableData.rightActiveName = componentName;
           return;
         }
@@ -377,6 +401,30 @@ const mutations = {
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体信息",
             entity,
             componentName: "entity-view",
+          });
+          break;
+        case "search-replace-view":
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;查找替换",
+            componentName: "search-replace-view",
+          });
+          break;
+        case "special-char-view":
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;特殊字符",
+            componentName: "special-char-view",
+          });
+          break;
+        case "ineffect-data-view":
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;无效数据",
+            componentName: "ineffect-data-view",
+          });
+          break;
+        case "data-diff-view":
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;数据去重",
+            componentName: "data-diff-view",
           });
           break;
       }
@@ -520,6 +568,7 @@ const actions = {
           modelFilterChildList,
           rightTabs: [],
           showType: 1,
+          tableename,
           exportSql,
         };
         if (modelTreeList && modelTreeList.length > 0) {

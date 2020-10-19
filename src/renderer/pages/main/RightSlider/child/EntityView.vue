@@ -163,8 +163,27 @@ export default {
         action: "remove",
       });
     },
-    handleCommand(command, row) {
+    async handleCommand(command, row) {
       if (command === "自定义") {
+        let mainWindow = this.$electron.remote.getGlobal("mainWindow");
+        let filePathList = await this.$electron.remote.dialog.showOpenDialogSync(
+          mainWindow,
+          {
+            title: "数据导入",
+            buttonLabel: "打开",
+            filters: [{ name: "Files", extensions: ["png", "jpeg", "bmp"] }],
+            properties: ["openFile"],
+          }
+        );
+        if (typeof filePathList === "undefined") return;
+        console.log(filePathList, row);
+        return;
+        row.describe = filePathList[0];
+        this.$bus.$emit("nodeStyleSetting", {
+          graphid: this.currentTableData.graphid,
+          nodeid: this.renderData.entity.nodeid,
+          nodeStyle: row,
+        });
       } else {
         row.describe = this.iconsPath + command + ".png";
         this.$bus.$emit("nodeStyleSetting", {

@@ -71,21 +71,36 @@
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledWashingButtons"
+          @click="handleClickWashingButton('search-replace')"
+        >
           <span class="iconfont selfIcont">&#xe89a;</span>
           <br />
           <span class="title-content">查找替换</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledWashingButtons"
+          @click="handleClickWashingButton('special-char')"
+        >
           <span class="iconfont selfIcont">&#xe669;</span>
           <br />
           <span class="title-content">特殊字符</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledWashingButtons"
+          @click="handleClickWashingButton('ineffect-data')"
+        >
           <span class="iconfont selfIcont">&#xe61d;</span>
           <br />
           <span class="title-content">无效数据</span>
@@ -95,43 +110,25 @@
         <el-button
           type="text"
           class="ctrl-button"
-          @click="handleClickDataDiff"
-          :disabled="!isNotNoDataPage"
+          :disabled="disabledWashingButtons"
+          @click="handleClickWashingButton('data-diff')"
         >
           <span class="iconfont selfIcont">&#xe6ff;</span>
           <br />
           <span class="title-content">数据去重</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
-          <span class="iconfont selfIcont">&#xe62c;</span>
-          <br />
-          <span class="title-content">同交易去重</span>
-        </el-button>
-      </el-col>
-      <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
+      <!-- <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledWashingButtons"
+        >
           <span class="iconfont selfIcont">&#xe602;</span>
           <br />
           <span class="title-content">数据补全</span>
         </el-button>
-      </el-col>
-      <el-col :span="1" class="el-col">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
-          <span class="iconfont selfIcont">&#xe652;</span>
-          <br />
-          <span class="title-content">数据重置</span>
-        </el-button>
-      </el-col>
-
-      <el-col :span="1">
-        <el-button type="text" class="ctrl-button" :disabled="!isNotNoDataPage">
-          <span class="iconfont selfIcont">&#xe629;</span>
-          <br />
-          <span class="title-content">分组</span>
-        </el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1">
         <el-button
           type="text"
@@ -209,7 +206,7 @@
         <div>清洗</div>
       </el-col>
       <el-col
-        :span="7"
+        :span="3"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>分析</div>
@@ -268,6 +265,11 @@ export default {
       return (
         this.currentTableData &&
         this.currentTableData.componentName !== "no-data-view"
+      );
+    },
+    disabledWashingButtons() {
+      return !(
+        this.currentTableData && this.currentTableData.tableType === "base"
       );
     },
     isModelLibVisible() {
@@ -352,7 +354,6 @@ export default {
         true
       );
     },
-    async handleClickDataDiff() {},
     async handleClickExportData() {
       if (this.exportProcessVisible) {
         this.$notify({
@@ -382,6 +383,37 @@ export default {
         };
         this.$electron.ipcRenderer.send("export-one-file-begin", args);
       }
+    },
+    handleClickWashingButton(opt) {
+      console.log(opt);
+      let componentObj = {};
+      switch (opt) {
+        case "search-replace":
+          componentObj = {
+            componentName: "search-replace-view",
+            action: "add",
+          };
+          break;
+        case "special-char":
+          componentObj = {
+            componentName: "special-char-view",
+            action: "add",
+          };
+          break;
+        case "ineffect-data":
+          componentObj = {
+            componentName: "ineffect-data-view",
+            action: "add",
+          };
+          break;
+        case "data-diff":
+          componentObj = {
+            componentName: "data-diff-view",
+            action: "add",
+          };
+          break;
+      }
+      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", componentObj);
     },
   },
 };

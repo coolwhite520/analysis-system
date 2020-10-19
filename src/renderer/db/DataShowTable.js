@@ -230,7 +230,83 @@ export default {
       client.release();
     }
   },
+  UpdateTableLike: async function(
+    ajid,
+    tableename,
+    fieldename,
+    inValue,
+    outValue
+  ) {
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchCase(client, ajid);
+      let sql = `update ${tableename} set ${fieldename}=replace(${fieldename},'${inValue}','${outValue}') where ${fieldename} like '%${inValue}%' and ajid=${ajid}`;
+      console.log(sql);
+      await client.query(sql);
+      return { success: true };
+    } finally {
+      client.release();
+    }
+  },
+  // 模糊查询
+  QuerySearchLike: async function(ajid, tid, tableename, fieldename, filter) {
+    const client = await global.pool.connect();
+    try {
+      let showFields = [`DISTINCT ${fieldename}`];
+      await cases.SwitchCase(client, ajid);
+      let querySqlTemp = "";
+      let countSqlTemp = "";
+      switch (tid) {
+        case "1": //个人
+          querySqlTemp = dataCenterTableTemplate.personTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.personTemplate.countSql;
+          break;
+        case "2": // 单位
+          querySqlTemp = dataCenterTableTemplate.person2Template.querySql;
+          countSqlTemp = dataCenterTableTemplate.person2Template.countSql;
+          break;
+        case "3":
+          querySqlTemp = dataCenterTableTemplate.accountTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.accountTemplate.countSql;
+          break;
+        case "4":
+          querySqlTemp = dataCenterTableTemplate.bankTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.bankTemplate.countSql;
+          break;
+        case "14":
+          querySqlTemp = dataCenterTableTemplate.taxTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.taxTemplate.countSql;
+          break;
+        default:
+          querySqlTemp = dataCenterTableTemplate.otherTemplate.querySql;
+          countSqlTemp = dataCenterTableTemplate.otherTemplate.countSql;
+          break;
+      }
+      let querySql = querySqlTemp
+        .replace(/\$AJID\$/g, ajid)
+        .replace(/\$FIELDS\$/g, showFields)
+        .replace(/\$TABLENAME\$/g, tableename)
+        .replace(/\$FILTER\$/g, filter)
+        .replace(/\$COUNT\$/g, 1000000)
+        .replace(/\$OFFSET\$/g, 0);
 
+      let sql = querySql.split("ORDER BY")[0];
+      let result = await client.query(sql);
+      // 数据过滤
+      if (result.rows.length > 100) {
+        result.rows = result.rows.slice(0, 100);
+      }
+      let retRows = result.rows.map((row) => {
+        return {
+          value: row[`${fieldename}`],
+        };
+      });
+
+      return { success: true, rows: retRows };
+    } finally {
+      client.release();
+    }
+  },
   // 查询所有的基础表的信息
   QueryBaseTableData: async function(
     ajid,

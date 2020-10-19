@@ -1464,7 +1464,7 @@ export default {
     this.updateEntityList();
     this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
     // 监听布局切换
-    this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
+    // this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
     // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
     this.graph.on("nodeselectchange", async (e) => {
       console.log("nodeselectchange", e);

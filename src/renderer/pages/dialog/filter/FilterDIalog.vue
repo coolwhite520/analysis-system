@@ -11,8 +11,8 @@
       :modal="false"
     >
       <div slot="title" class="dialog-title">
-        <i class="iconfont" style="color: white;font-size:30px;">&#xe815;</i>
-        <span class="title-text" style="color: white;">{{title}}</span>
+        <i class="iconfont" style="color: white; font-size: 30px">&#xe815;</i>
+        <span class="title-text" style="color: white">{{ title }}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
         </div>
@@ -28,12 +28,21 @@
         >
           <div class="custom-tree-node" slot-scope="{ node, data }">
             <!-- 判断节点类型 如果是leaf节-->
-            <el-row v-if="data.ConditionNodeType === DefaultData.NodeType.NodeType_Condition">
+            <el-row
+              v-if="
+                data.ConditionNodeType ===
+                DefaultData.NodeType.NodeType_Condition
+              "
+            >
               <el-select
                 v-model="data.FiltrateFieldEN"
                 size="mini"
                 placeholder="请选择"
-                @change="((val)=>{handleChangeSelectionField(val, data)})"
+                @change="
+                  (val) => {
+                    handleChangeSelectionField(val, data);
+                  }
+                "
               >
                 <el-option
                   v-for="item of currentTableData.headers"
@@ -44,8 +53,10 @@
               </el-select>
 
               <el-select
-                v-if="data.FiltrateFieldType === DefaultData.DataType.DECIMAL || 
-                data.FiltrateFieldType === DefaultData.DataType.DOUBLE"
+                v-if="
+                  data.FiltrateFieldType === DefaultData.DataType.DECIMAL ||
+                  data.FiltrateFieldType === DefaultData.DataType.DOUBLE
+                "
                 v-model="data.condtion"
                 size="mini"
                 placeholder="请选择"
@@ -58,7 +69,9 @@
                 ></el-option>
               </el-select>
               <el-select
-                v-else-if="data.FiltrateFieldType === DefaultData.DataType.DATATIME_1"
+                v-else-if="
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_1
+                "
                 v-model="data.condtion"
                 size="mini"
                 placeholder="请选择"
@@ -70,7 +83,12 @@
                   :value="item.LogicID"
                 ></el-option>
               </el-select>
-              <el-select v-else v-model="data.condtion" size="mini" placeholder="请选择">
+              <el-select
+                v-else
+                v-model="data.condtion"
+                size="mini"
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item of DefaultData.FiltrateLogic.List_else"
                   :key="item.LogicID"
@@ -82,22 +100,34 @@
               <el-input
                 v-model="data.FiltrateValue"
                 placeholder="请输入内容"
-                style="width:50%"
+                style="width: 50%"
                 size="mini"
               ></el-input>
-              <el-tooltip class="item" effect="dark" content="点击以删除一个筛选项目" placement="top">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击以删除一个筛选项目"
+                placement="top"
+              >
                 <el-button
                   type="text"
                   @click="() => leafRemove(data, node)"
                   class="iconfont mybtnAddOrRemove"
-                >&#xe616;</el-button>
+                  >&#xe616;</el-button
+                >
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="点击以新增一个筛选项目" placement="top">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="点击以新增一个筛选项目"
+                placement="top"
+              >
                 <el-button
                   type="text"
                   @click="() => leafAppend(data, node)"
                   class="iconfont mybtnAddOrRemove"
-                >&#xe61f;</el-button>
+                  >&#xe61f;</el-button
+                >
               </el-tooltip>
             </el-row>
             <!-- 判断节点类型 如果是非leaf节-->
@@ -106,42 +136,68 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="data.DisplayRelation==='AND'? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系': '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'"
+                  :content="
+                    data.DisplayRelation === 'AND'
+                      ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
+                      : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                  "
                   placement="top"
                 >
                   <el-button
                     type="text"
                     size="mini"
-                    @click="()=>hanleClickRootAndOr(data, node)"
-                  >{{ data.DisplayRelation==='AND'? '且': '或'}}</el-button>
+                    @click="() => hanleClickRootAndOr(data, node)"
+                    >{{
+                      data.DisplayRelation === "AND" ? "且" : "或"
+                    }}</el-button
+                  >
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="点击以新增一个筛选项目" placement="top">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="点击以新增一个筛选项目"
+                  placement="top"
+                >
                   <el-button
                     type="text"
                     @click="() => rootAppend(data, node)"
                     class="iconfont mybtnAddOrRemove"
-                  >&#xe61f;</el-button>
+                    >&#xe61f;</el-button
+                  >
                 </el-tooltip>
               </div>
               <div v-else>
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="data.DisplayRelation==='AND'? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系': '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'"
+                  :content="
+                    data.DisplayRelation === 'AND'
+                      ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
+                      : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                  "
                   placement="top"
                 >
                   <el-button
                     type="text"
                     size="mini"
-                    @click="()=>hanleClickRootAndOr(data, node)"
-                  >{{ data.DisplayRelation==='AND'? '且': '或'}}</el-button>
+                    @click="() => hanleClickRootAndOr(data, node)"
+                    >{{
+                      data.DisplayRelation === "AND" ? "且" : "或"
+                    }}</el-button
+                  >
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="点击以删除所有子节点" placement="top">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="点击以删除所有子节点"
+                  placement="top"
+                >
                   <el-button
                     type="text"
                     @click="() => fatherRemove(data, node)"
                     class="iconfont mybtnAddOrRemove"
-                  >&#xe616;</el-button>
+                    >&#xe616;</el-button
+                  >
                 </el-tooltip>
               </div>
             </el-row>
@@ -149,9 +205,13 @@
         </el-tree>
       </div>
 
-      <el-row style="text-align:center;">
-        <el-button size="medium" @click="handleClickSaveFilter">保存条件</el-button>
-        <el-button size="medium" @click="handleClickInvokeFilter" type="primary">立即执行</el-button>
+      <el-row style="text-align: center">
+        <el-button size="medium" @click="handleClickSaveFilter"
+          >保存条件</el-button
+        >
+        <el-button size="medium" @click="handleClickInvokeFilter" type="primary"
+          >立即执行</el-button
+        >
       </el-row>
     </el-dialog>
   </div>

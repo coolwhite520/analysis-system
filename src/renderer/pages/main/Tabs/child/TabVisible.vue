@@ -10,6 +10,7 @@
               style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('random')"
+              :disabled="disabledButtons"
               >&#xe6cd;&nbsp;随机布局</el-button
             >
           </el-col>
@@ -20,6 +21,7 @@
               style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('dagre')"
+              :disabled="disabledButtons"
               >&#xe737;&nbsp;层次布局</el-button
             >
           </el-col>
@@ -30,6 +32,7 @@
               style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('circular')"
+              :disabled="disabledButtons"
               >&#xe609;&nbsp;圆形布局</el-button
             >
           </el-col>
@@ -51,6 +54,7 @@
               style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('concentric')"
+              :disabled="disabledButtons"
               >&#xe605;&nbsp;同心圆布局</el-button
             >
           </el-col>
@@ -61,6 +65,7 @@
               style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('grid')"
+              :disabled="disabledButtons"
               >&#xe667;&nbsp;网格布局</el-button
             >
           </el-col>
@@ -71,6 +76,7 @@
               style="padding: 4px; font-size: 12px"
               class="iconfont"
               @click="handleClickSwitchLayout('radial')"
+              :disabled="disabledButtons"
               >&#xe7bb;&nbsp;辐射状布局</el-button
             >
           </el-col>
@@ -85,28 +91,8 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickShowEntityListView"
-              >&#xe601;&nbsp;显示实体列表</el-button
-            >
-          </el-col>
-          <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              @click="handleClickSaveGraphData"
-              >&#xe603;&nbsp;保存当前表数据</el-button
-            >
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              >&#xe60a;&nbsp;显示实体列表</el-button
+              :disabled="disabledButtons"
+              >&#xe601;&nbsp;实体列表</el-button
             >
           </el-col>
           <el-col :span="12">
@@ -116,7 +102,30 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickExportPicture"
+              :disabled="disabledButtons"
               >&#xe637;&nbsp;导出到图片</el-button
+            >
+          </el-col>
+          <!-- <el-col :span="12">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              @click="handleClickMoveGraph"
+              >&#xe603;&nbsp;移动</el-button
+            >
+          </el-col> -->
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              :disabled="true || disabledButtons"
+              >&#xe6a3;&nbsp;新建视图</el-button
             >
           </el-col>
         </el-row>
@@ -140,6 +149,11 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState("ShowTable", ["currentTableData"]),
+    disabledButtons() {
+      return !(
+        this.currentTableData && this.currentTableData.hasOwnProperty("graphid")
+      );
+    },
   },
   methods: {
     handleClickShowEntityListView() {
@@ -148,11 +162,7 @@ export default {
         action: "add",
       });
     },
-    handleClickSaveGraphData() {
-      this.$bus.$emit("saveGraphData", {
-        graphid: this.currentTableData.graphid,
-      });
-    },
+
     handleClickExportPicture() {
       this.$bus.$emit("exportPicture", {
         graphid: this.currentTableData.graphid,

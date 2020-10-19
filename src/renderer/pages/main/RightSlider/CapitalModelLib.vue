@@ -33,6 +33,10 @@ import ModelListView from "./child/ModelListView";
 import EntityListView from "./child/EntityListView";
 import EntityView from "./child/EntityView";
 import ComboEntityListView from "./child/ComboEntityListView";
+import SearchReplaceView from "./child/wash/SearchReplaceView";
+import SpecialCharView from "./child/wash/SpecialCharView";
+import IneffectDataView from "./child/wash/IneffectDataView";
+import DataDiffView from "./child/wash/DataDiffView";
 export default {
   mounted() {},
   computed: {
@@ -43,7 +47,6 @@ export default {
         return this.currentTableData.rightActiveName;
       },
       set: function (newValue) {
-        console.log({ newValue });
         this.$store.commit("ShowTable/SET_RIGHT_TAB_ACTIVE", newValue);
       },
     },
@@ -54,6 +57,10 @@ export default {
     "entity-list-view": EntityListView,
     "entity-view": EntityView,
     "combo-entity-list-view": ComboEntityListView,
+    "search-replace-view": SearchReplaceView,
+    "special-char-view": SpecialCharView,
+    "ineffect-data-view": IneffectDataView,
+    "data-diff-view": DataDiffView,
   },
   methods: {
     handleTabRemove(componentName) {

@@ -1,12 +1,18 @@
 <template >
-  <div class="view-style" :style="{ height: contentViewHeight + 'px'}" v-loading="loadingShowData">
+  <div
+    class="view-style"
+    :style="{ height: contentViewHeight + 'px' }"
+    v-loading="loadingShowData"
+  >
     <ul
       v-if="contextMenuVisible"
-      :style="{position: 'fixed' ,left:left+'px',top:top+'px'}"
+      :style="{ position: 'fixed', left: left + 'px', top: top + 'px' }"
       class="contextmenu"
     >
       <li>
-        <el-button size="mini" type="text" @click="closeAllTabs">关闭所有</el-button>
+        <el-button size="mini" type="text" @click="closeAllTabs"
+          >关闭所有</el-button
+        >
       </li>
       <li>
         <el-button
@@ -14,7 +20,8 @@
           type="text"
           @click="closeOtherTabs('left')"
           :disabled="isDisabledCloseLeftBtnFlag"
-        >关闭左边</el-button>
+          >关闭左边</el-button
+        >
       </li>
       <li>
         <el-button
@@ -22,7 +29,8 @@
           type="text"
           @click="closeOtherTabs('right')"
           :disabled="isDisabledCloseRightBtnFlag"
-        >关闭右边</el-button>
+          >关闭右边</el-button
+        >
       </li>
       <li>
         <el-button
@@ -30,7 +38,8 @@
           type="text"
           @click="closeOtherTabs('other')"
           :disabled="isDisabledCloseOtherBtnFlag"
-        >关闭其他</el-button>
+          >关闭其他</el-button
+        >
       </li>
     </ul>
     <el-tabs
@@ -43,7 +52,7 @@
     >
       <el-tab-pane
         :key="item.pageIndex"
-        v-for="(item) in tableDataList"
+        v-for="item in tableDataList"
         :label="item.title"
         :name="item.pageIndex"
       >
@@ -86,7 +95,14 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    // 为了在通过restore加载的时候重新给currentTableData赋值，因为currentTableData是一个指针
+    // restore的时候指向肯定是不存在的
+    this.$store.commit(
+      "ShowTable/SET_ACTIVEINDEX",
+      this.$store.state.ShowTable.activeIndex
+    );
+  },
   data() {
     return {
       left: 0,
