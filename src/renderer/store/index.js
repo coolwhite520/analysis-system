@@ -6,11 +6,12 @@ import modules from "./modules";
 import SecureLS from "secure-ls";
 import { remote } from "electron";
 import path from "path";
-let configPath = remote.getGlobal("configPath");
-let configDbPath = path.join(configPath, "restore.db");
+
+let resoreDbPath = remote.getGlobal("resoreDbPath");
+let dbFullPath = path.join(resoreDbPath, "restore.db");
 
 const ls = new SecureLS({ isCompression: false });
-const store = require("data-store")({ path: configDbPath });
+const store = require("data-store")({ path: dbFullPath });
 Vue.use(Vuex);
 
 // localstorage路径：/Users/baiyang/Library/Application Support/analysis-system

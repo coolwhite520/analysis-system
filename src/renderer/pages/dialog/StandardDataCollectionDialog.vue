@@ -5,13 +5,18 @@
       :close-on-click-modal="false"
       class="standard-data-dialog"
       :visible.sync="standardDataVisible"
-      :width="standardViewSwitch === 'process-import' || (standardViewSwitch === 'begin-import'&& exampleDataList.length === 0)? '30%': '65%'"
+      :width="
+        standardViewSwitch === 'process-import' ||
+        (standardViewSwitch === 'begin-import' && exampleDataList.length === 0)
+          ? '30%'
+          : '65%'
+      "
       :before-close="handleClose"
       :modal="false"
     >
       <div slot="title" class="dialog-title">
-        <i class="iconfont" style="color: white;font-size:30px;">&#xe6a1;</i>
-        <span class="title-text" style="color: white;">{{title}}</span>
+        <i class="iconfont" style="color: white; font-size: 30px">&#xe6a1;</i>
+        <span class="title-text" style="color: white">{{ title }}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
         </div>
@@ -92,6 +97,7 @@ export default {
 }
 .standard-data-dialog .dialog-title {
   margin-top: -10px;
+  -webkit-user-select: none;
 }
 </style>
 

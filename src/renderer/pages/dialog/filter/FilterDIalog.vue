@@ -12,7 +12,9 @@
     >
       <div slot="title" class="dialog-title">
         <i class="iconfont" style="color: white; font-size: 30px">&#xe815;</i>
-        <span class="title-text" style="color: white">{{ title }}</span>
+        <span class="title-text" style="color: white; cursor: pointer">{{
+          title
+        }}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
         </div>

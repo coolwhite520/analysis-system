@@ -1,12 +1,20 @@
 <template>
-  <div>
+  <div v-loading="loading" :element-loading-text="loadingText">
     <title-bar></title-bar>
-    <div style="height:100px;"></div>
+    <!-- <el-image v-if="imgPath" class="table-td-thumb" :src="imgPath"></el-image> -->
+    <save-dialog
+      v-if="showSaveProjectVisible"
+      v-on:confirmSaveProject="confirmSaveProject"
+    ></save-dialog>
+    <div style="height: 100px"></div>
     <component :is="currentViewName"></component>
-    <div style="height:20px;"></div>
-    <div class="state-bar" :style="{ top: stateBarTop - 20 + 'px'}">
+    <div style="height: 20px"></div>
+    <div class="state-bar" :style="{ top: stateBarTop - 20 + 'px' }">
       <el-row v-if="exportProcessVisible">
-        <el-progress :percentage="percentage" :color="customColor"></el-progress>
+        <el-progress
+          :percentage="percentage"
+          :color="customColor"
+        ></el-progress>
       </el-row>
     </div>
   </div>
@@ -18,12 +26,23 @@ import TitleBar from "@/pages/title/TitleBar";
 import HomePage from "@/pages/home/HomePage";
 import MainPage from "@/pages/main/MainPage";
 import { DbConfig, OtherConfig } from "@/utils/config";
+import SaveProjectView from "@/pages/dialog/save/SaveCurrentProject.vue";
+import levelDb from "../../level/leveldb";
 import { Pool, Client } from "pg";
 import base from "@/db/Base.js";
+import { promises, resolve } from "dns";
 const log = require("electron-log");
+const fs = require("fs");
+const path = require("path");
+const screenshot = require("screenshot-desktop");
 export default {
   async mounted() {
     let _this = this;
+
+    this.$electron.ipcRenderer.on("save-state", async (event, data) => {
+      this.$store.commit("DialogPopWnd/SET_SHOWSAVEPROJECTVISIBLE", true);
+    });
+
     this.$electron.ipcRenderer.on("export-one-file-proccess", (event, data) => {
       const { success, errormsg, percentage } = data;
       if (success && percentage) {
@@ -99,6 +118,9 @@ export default {
       stateBarTop: 0,
       percentage: 0,
       customColor: "#75d083",
+      // imgPath: "",
+      loading: false,
+      loadingText: "",
     };
   },
   name: "App",
@@ -106,10 +128,122 @@ export default {
     "title-bar": TitleBar,
     "home-page": HomePage,
     "main-page": MainPage,
+    "save-dialog": SaveProjectView,
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
+    ...mapState("ShowTable", ["tableDataList"]),
+    ...mapState("DialogPopWnd", ["showSaveProjectVisible"]),
+  },
+  methods: {
+    async confirmSaveProject(obj) {
+      let { confirm, title, des } = obj;
+      if (confirm) {
+        await this.saveCurrentAppState({ title, des });
+        this.$bus.$emit("FreshTimeLineView");
+      }
+    },
+    async makeScreenShot(shotPath) {
+      return new Promise((resolve, reject) => {
+        let filePathName = path.join(shotPath, "screenShot.png");
+        screenshot({
+          format: "png",
+          filename: filePathName,
+        })
+          .then((img) => {
+            resolve({ success: true, filePathName });
+          })
+          .catch((err) => {
+            reject({ success: false, err, filePathName });
+          });
+      });
+    },
+    async convertToBase64Image(fileUrl) {
+      const imageData = fs.readFileSync(fileUrl); // 例：xxx/xx/xx.png
+      const imageBase64 = imageData.toString("base64");
+      const imagePrefix = "data:image/png;base64,";
+      console.log(imagePrefix + imageBase64);
+      return imagePrefix + imageBase64;
+    },
+    async saveGraphData() {
+      let _this = this;
+      let graphCount = 0;
+      for (let tableData of this.tableDataList) {
+        if (tableData.hasOwnProperty("graphid")) {
+          console.log(tableData.graphid);
+          this.$bus.$emit("saveGraphData", { graphid: tableData.graphid });
+          graphCount++;
+        }
+      }
+      async function checkSaveOver() {
+        let count = 0;
+        for (let tableData of _this.tableDataList) {
+          if (
+            tableData.hasOwnProperty("saveRelationGraphDataOk") &&
+            tableData.saveRelationGraphDataOk
+          ) {
+            count++;
+          }
+        }
+        if (count !== graphCount) {
+          await new Promise((resolve, reject) => {
+            setTimeout(function () {
+              resolve("done");
+            }, 100);
+          });
+          return await checkSaveOver();
+        }
+        return true;
+      }
+    },
+    async copyCurrentDataToNewPath(filePathSrc, filePathDes) {
+      return new Promise((resolve, reject) => {
+        let file = fs.createReadStream(filePathSrc);
+        let out = fs.createWriteStream(filePathDes);
+        file
+          .pipe(out)
+          .on("finish", () => {
+            resolve("done");
+          })
+          .on("error", (err) => {
+            reject(err);
+          });
+      });
+    },
+    async saveCurrentAppState({ title, des }) {
+      if (!this.loading) {
+        this.loading = true;
+        this.loadingText = "正在进行保存，请稍后...";
+        let resoreDbPath = this.$electron.remote.getGlobal("resoreDbPath");
+        let now = new Date();
+        let nowStr = now.Format("yyyy-MM-dd_hh_mm_ss");
+        let nowTimeStr = now.Format("yyyy-MM-dd:hh:mm:ss");
+        let newDbPath = path.join(resoreDbPath, nowStr);
+        if (!fs.existsSync(newDbPath)) {
+          fs.mkdirSync(newDbPath, { recursive: true });
+        }
+        let dbPathFile = path.join(newDbPath, "restore.db");
+        await this.saveGraphData();
+        await this.copyCurrentDataToNewPath(
+          path.join(resoreDbPath, "restore.db"),
+          dbPathFile
+        );
+        let obj = await this.makeScreenShot(newDbPath);
+        let prefix = this.$electron.remote.getGlobal("levelPrefix");
+        let key = prefix + nowStr;
+        let valueObj = {
+          dbPath: newDbPath,
+          dbPathFile,
+          screenShotPath: obj.filePathName,
+          time: nowTimeStr,
+          title,
+          des,
+        };
+        await levelDb.set(key, valueObj);
+        this.loading = false;
+      }
+    },
   },
 };
 </script>

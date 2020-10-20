@@ -9,6 +9,7 @@ const state = {
   showReportVisible: false,
   graphicSettingVisible: false,
   nodeCombineVisible: false,
+  showSaveProjectVisible: false,
 };
 
 const mutations = {
@@ -40,6 +41,9 @@ const mutations = {
   },
   SET_NODECOMBINEVISIBLE(state, nodeCombineVisible) {
     state.nodeCombineVisible = nodeCombineVisible;
+  },
+  SET_SHOWSAVEPROJECTVISIBLE(state, showSaveProjectVisible) {
+    state.showSaveProjectVisible = showSaveProjectVisible;
   },
 };
 

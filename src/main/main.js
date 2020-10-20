@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, screen } from "electron";
+import { app, protocol, BrowserWindow, screen, Menu, MenuItem } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
 import createDbInitWindow from "./modules/window/initDbWindow";
@@ -36,6 +36,7 @@ function createWindow() {
   /**
    * Initial window options
    */
+  global.levelPrefix = "RestoreDataCollection.";
   global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
   let exePath = path.dirname(app.getPath("exe"));
@@ -44,6 +45,11 @@ function createWindow() {
   log.info(global.configPath);
   if (!fs.existsSync(global.configPath)) {
     fs.mkdirSync(global.configPath, { recursive: true });
+  }
+  global.resoreDbPath = require("path").join(appPath, "db");
+  log.info(global.resoreDbPath);
+  if (!fs.existsSync(global.resoreDbPath)) {
+    fs.mkdirSync(global.resoreDbPath, { recursive: true });
   }
 
   mainWindow = new BrowserWindow({
@@ -64,6 +70,25 @@ function createWindow() {
   createProtocol(ACHEME);
   mainWindow.loadURL(winURL);
   mainWindow.maximize();
+  var template = [
+    {
+      label: "首页",
+      submenu: [
+        {
+          label: "save",
+          accelerator: `CmdOrCtrl+s`,
+          click: () => {
+            // screenShot.makePngWindowShot(global.appPath);
+            global.mainWindow.webContents.send("save-state", {});
+          },
+        },
+      ],
+    },
+  ];
+  var m = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(m);
+
+  global.windowSize = screen.getPrimaryDisplay().workAreaSize;
 
   mainWindow.on("closed", () => {
     mainWindow = null;

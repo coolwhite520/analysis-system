@@ -1,72 +1,83 @@
 <template>
-  <div style="-webkit-user-select: none;margin-top:40px;" ref="wrapper">
-    <div
-      style="margin-top: 40px; margin-bottom: 40px;"
-      v-show="currentViewName === 'show-exist-case-view'"
-    >
-      <el-row>
-        <el-col :span="6">&nbsp;</el-col>
-        <el-col :span="12" style="text-align: center;">
-          <el-button
-            style="width:30%;"
-            class="iconfont"
-            type="primary"
-            @click="handleClickNewCase"
-            round
-          >
-            &#xe6a3; 新增案件
-            <!-- <svg class="icon" aria-hidden="true">
+  <div style="-webkit-user-select: none; margin-top: 0px" ref="wrapper">
+    <el-row>
+      <el-col :span="4">
+        <el-row style="text-align: center; color: #3c4e6b; margin: 10px">
+          <div style="margin-top: 40px; margin-bottom: 40px">
+            <h2>分析记录时间轴</h2>
+          </div>
+          <time-line-view></time-line-view>
+        </el-row>
+      </el-col>
+      <el-col :span="20">
+        <div
+          style="margin-top: 40px; margin-bottom: 40px"
+          v-show="currentViewName === 'show-exist-case-view'"
+        >
+          <el-row>
+            <el-col :span="6"> &nbsp; </el-col>
+            <el-col :span="12" style="text-align: center">
+              <el-button
+                style="width: 30%"
+                class="iconfont"
+                type="primary"
+                @click="handleClickNewCase"
+                round
+              >
+                &#xe6a3; 新增案件
+                <!-- <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-nv" />
             </svg>
             新增案件-->
-          </el-button>
-          <el-button
-            style="width:30%;"
-            class="iconfont"
-            type="primary"
-            @click="handleClickImportCase"
-            round
-          >&#xe61a; 导入案件</el-button>
-          <el-button
-            style="width:30%;"
-            class="iconfont"
-            type="danger"
-            @click="handleClickDeleteAllCase"
-            round
-          >&#xe652; 清空所有案件</el-button>
-        </el-col>
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="4">
-          <el-input placeholder="输入案件名称进行检索" prefix-icon="el-icon-search" v-model="inputAnjianName"></el-input>
-        </el-col>
-        <el-col :span="1">&nbsp;</el-col>
-      </el-row>
-    </div>
-    <el-row v-if="currentViewName !== 'show-exist-case-view'">
-      <el-col :span="24">
-        <div style="height: 40px">&nbsp;</div>
+              </el-button>
+              <el-button
+                style="width: 30%"
+                class="iconfont"
+                type="primary"
+                @click="handleClickImportCase"
+                round
+                >&#xe61a; 导入案件</el-button
+              >
+              <el-button
+                style="width: 30%"
+                class="iconfont"
+                type="danger"
+                @click="handleClickDeleteAllCase"
+                round
+                >&#xe652; 清空所有案件</el-button
+              >
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="4">
+              <el-input
+                placeholder="输入案件名称进行检索"
+                prefix-icon="el-icon-search"
+                v-model="inputAnjianName"
+              ></el-input>
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
+          </el-row>
+        </div>
+        <el-row v-if="currentViewName !== 'show-exist-case-view'">
+          <el-col :span="24">
+            <div style="height: 40px">&nbsp;</div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="20" style="text-align: ">
+            <component :is="currentViewName"></component>
+          </el-col>
+          <el-col :span="1">&nbsp;</el-col>
+        </el-row>
       </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4">&nbsp;</el-col>
-      <el-col :span="16" style="text-align:">
-        <!-- <new-case-view></new-case-view> -->
-        <!-- <show-exist-case-view></show-exist-case-view> -->
-        <!-- <transition
-          name="custom-classes-transition"
-          enter-active-class="animated fadenLeft"
-          leave-active-class="animated fadeOutRight"
-        >-->
-        <component :is="currentViewName"></component>
-        <!-- </transition> -->
-      </el-col>
-      <el-col :span="4">&nbsp;</el-col>
     </el-row>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import AnalysisTimeLine from "./child/AnalysisTimeLine";
 import ShowExistCaseView from "./child/ShowExistCaseView";
 import NewCaseView from "./child/NewCaseView";
 import CaseDetailView from "./child/CaseDetailView";
@@ -91,6 +102,7 @@ export default {
     "show-exist-case-view": ShowExistCaseView,
     "case-detail-view": CaseDetailView,
     "edit-case-view": EditCaseView,
+    "time-line-view": AnalysisTimeLine,
   },
   methods: {
     async handleClickDeleteAllCase() {

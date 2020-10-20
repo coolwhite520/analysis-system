@@ -1705,7 +1705,7 @@ export default {
       });
     });
     this.$bus.$on("nodeStyleSetting", (data) => {
-      console.log(data);
+      console.log({data});
       let { graphid, nodeid, nodeStyle } = data;
       if (graphid !== _this.graphid) return;
       let node = this.graph.findById(nodeid);

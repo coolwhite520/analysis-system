@@ -13,14 +13,18 @@
       <!-- <el-tree :data="currentTableData.headers" :props="defaultProps" show-checkbox></el-tree>
       -->
       <div slot="title" class="dialog-title">
-        <i class="iconfont" style="color: white;font-size:30px;">&#xe600;</i>
-        <span class="title-text" style="color: white;">{{title}}</span>
+        <i class="iconfont" style="color: white; font-size: 30px">&#xe600;</i>
+        <span class="title-text" style="color: white">{{ title }}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
         </div>
       </div>
-      <el-row style="margin-top:10px;">
-        <el-checkbox-group v-model="checkList" size="mini" @change="handleChangeSelect">
+      <el-row style="margin-top: 10px">
+        <el-checkbox-group
+          v-model="checkList"
+          size="mini"
+          @change="handleChangeSelect"
+        >
           <el-checkbox-button
             v-for="item of currentTableData.headers"
             :label="item.fieldcname"
@@ -31,9 +35,11 @@
         </el-checkbox-group>
       </el-row>
       <el-divider></el-divider>
-      <el-row style="text-align:center;">
+      <el-row style="text-align: center">
         <el-button size="medium" @click="handleClickSelectAll">全选</el-button>
-        <el-button size="medium" @click="handleClickNotSelectAll">全不选</el-button>
+        <el-button size="medium" @click="handleClickNotSelectAll"
+          >全不选</el-button
+        >
       </el-row>
     </el-dialog>
   </div>

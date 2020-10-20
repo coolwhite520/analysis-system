@@ -163,6 +163,14 @@ export default {
         action: "remove",
       });
     },
+    async convertToBase64Image(fileUrl) {
+      const fs = require("fs");
+      const imageData = fs.readFileSync(fileUrl); // 例：xxx/xx/xx.png
+      const imageBase64 = imageData.toString("base64");
+      const imagePrefix = "data:image/png;base64,";
+      // console.log(imagePrefix + imageBase64);
+      return imagePrefix + imageBase64;
+    },
     async handleCommand(command, row) {
       if (command === "自定义") {
         let mainWindow = this.$electron.remote.getGlobal("mainWindow");
@@ -176,9 +184,8 @@ export default {
           }
         );
         if (typeof filePathList === "undefined") return;
-        console.log(filePathList, row);
-        return;
-        row.describe = filePathList[0];
+        row.describe = await this.convertToBase64Image(filePathList[0]);
+        console.log({ row });
         this.$bus.$emit("nodeStyleSetting", {
           graphid: this.currentTableData.graphid,
           nodeid: this.renderData.entity.nodeid,
