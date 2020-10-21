@@ -82,6 +82,14 @@ function createWindow() {
             global.mainWindow.webContents.send("save-state", {});
           },
         },
+        {
+          label: "i",
+          accelerator: `CmdOrCtrl+i`,
+          click: () => {
+            // screenShot.makePngWindowShot(global.appPath);
+            global.mainWindow.webContents.openDevTools();
+          },
+        },
       ],
     },
   ];
