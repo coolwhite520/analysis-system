@@ -1,6 +1,5 @@
 import fs from "fs";
 import log from "@/utils/log";
-import { finished } from "stream";
 
 // 小写字母转换设定快捷键 cmd+alt+s
 // 获取案件相关的内容

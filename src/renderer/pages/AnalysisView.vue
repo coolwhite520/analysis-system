@@ -112,6 +112,8 @@ export default {
       );
       log.info(msg);
       global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
+      // 创建聚合函数
+      await base.CreateAggregateFunction();
       await this.$store.dispatch("PublicList/getAJLBList");
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");
