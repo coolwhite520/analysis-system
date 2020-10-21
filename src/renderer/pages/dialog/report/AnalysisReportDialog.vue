@@ -11,8 +11,8 @@
       :modal="false"
     >
       <div slot="title" class="dialog-title">
-        <i class="iconfont" style="color: white;font-size:30px;">&#xe630;</i>
-        <span class="title-text" style="color: white;">{{title}}</span>
+        <i class="iconfont" style="color: white; font-size: 30px">&#xe630;</i>
+        <span class="title-text" style="color: white">{{ title }}</span>
         <div class="button-right">
           <span class="title-close" @click="handleClose"></span>
         </div>
@@ -26,7 +26,9 @@
       >
         <el-collapse-item name="1">
           <template slot="title">
-            <el-checkbox v-model="IsCheckedArray[2].value">主要获利对手分析</el-checkbox>
+            <el-checkbox v-model="IsCheckedArray[2].value"
+              >主要获利对手分析</el-checkbox
+            >
             <i class="header-icon el-icon-info"></i>
           </template>
           <el-row>
@@ -40,7 +42,9 @@
         </el-collapse-item>
         <el-collapse-item name="2">
           <template slot="title">
-            <el-checkbox v-model="IsCheckedArray[3].value">密切联系对手分析</el-checkbox>
+            <el-checkbox v-model="IsCheckedArray[3].value"
+              >密切联系对手分析</el-checkbox
+            >
             <i class="header-icon el-icon-info"></i>
           </template>
           <el-row>
@@ -52,7 +56,9 @@
         </el-collapse-item>
         <el-collapse-item name="3">
           <template slot="title">
-            <el-checkbox v-model="IsCheckedArray[4].value">主要资金去向账号分析（主要转出对手）</el-checkbox>
+            <el-checkbox v-model="IsCheckedArray[4].value"
+              >主要资金去向账号分析（主要转出对手）</el-checkbox
+            >
             <i class="header-icon el-icon-info"></i>
           </template>
           <el-row>
@@ -79,13 +85,18 @@
               <span>排序前几:</span>
             </el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.Soft_No607"></el-input>
+              <el-input
+                size="mini"
+                v-model="ReportParams.Soft_No607"
+              ></el-input>
             </el-col>
           </el-row>
         </el-collapse-item>
         <el-collapse-item name="4">
           <template slot="title">
-            <el-checkbox v-model="IsCheckedArray[5].value">主要资金来源账号分析（主要转入对手）</el-checkbox>
+            <el-checkbox v-model="IsCheckedArray[5].value"
+              >主要资金来源账号分析（主要转入对手）</el-checkbox
+            >
             <i class="header-icon el-icon-info"></i>
           </template>
           <el-row>
@@ -112,13 +123,18 @@
               <span>排序前几:</span>
             </el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.Soft_No608"></el-input>
+              <el-input
+                size="mini"
+                v-model="ReportParams.Soft_No608"
+              ></el-input>
             </el-col>
           </el-row>
         </el-collapse-item>
         <el-collapse-item name="5">
           <template slot="title">
-            <el-checkbox v-model="IsCheckedArray[6].value">即进即出可以账户分析（按小时）</el-checkbox>
+            <el-checkbox v-model="IsCheckedArray[6].value"
+              >即进即出可以账户分析（按小时）</el-checkbox
+            >
             <i class="header-icon el-icon-info"></i>
           </template>
           <el-row>
@@ -134,7 +150,7 @@
             </el-col>
             <el-col :span="1">&nbsp;元</el-col>
           </el-row>
-          <el-row style="margin-top:5px;">
+          <el-row style="margin-top: 5px">
             <el-col :span="3">出进比最小值：</el-col>
             <el-col :span="4">
               <el-input size="mini" v-model="ReportParams.MIN_CJB"></el-input>
@@ -148,13 +164,18 @@
         </el-collapse-item>
         <el-collapse-item name="6">
           <template slot="title">
-            <el-checkbox v-model="IsCheckedArray[7].value">交易方式统计</el-checkbox>
+            <el-checkbox v-model="IsCheckedArray[7].value"
+              >交易方式统计</el-checkbox
+            >
             <i class="header-icon el-icon-info"></i>
           </template>
           <el-row>
             <el-col :span="4">交易方式前几条：</el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.JyfsSoftNo"></el-input>
+              <el-input
+                size="mini"
+                v-model="ReportParams.JyfsSoftNo"
+              ></el-input>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -162,9 +183,11 @@
 
       <el-steps
         :active="activeStep"
-        v-show=" buttonDisabled && IsCheckedArray.filter((el) => el.value).length>0"
+        v-show="
+          buttonDisabled && IsCheckedArray.filter((el) => el.value).length > 0
+        "
         align-center
-        style="margin-top:20px;"
+        style="margin-top: 20px"
         finish-status="success"
       >
         <el-step
@@ -175,13 +198,14 @@
         ></el-step>
       </el-steps>
 
-      <el-row style="text-align:center;margin-top:20px;">
+      <el-row style="text-align: center; margin-top: 20px">
         <div>
           <el-button
             type="primary"
             @click="handleClickGenerateReport"
             :disabled="buttonDisabled"
-          >生成报告</el-button>
+            >生成报告</el-button
+          >
         </div>
       </el-row>
     </el-dialog>
@@ -648,6 +672,10 @@ export default {
           title: "失败",
           message: "生成报告失败，错误信息：" + e.message,
         });
+        this.activeStep = 0;
+        this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", false);
+        this.loading = false;
+        this.buttonDisabled = false;
       }
     },
   },
