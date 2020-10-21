@@ -1,55 +1,67 @@
 <template>
   <div style="-webkit-user-select: none; margin-top: 0px" ref="wrapper">
-    <el-row>
-      <el-col :span="4">
-        <el-row style="text-align: center; color: #3c4e6b; margin: 10px">
-          <div style="margin-top: 40px; margin-bottom: 40px">
-            <h2>分析记录时间轴</h2>
+    <el-row style="box-shadow: 0px 15px 10px -15px #ccc; z-index: 10">
+      <el-col :span="3" style="border-right: 1px solid #dddfe5">
+        <div>
+          <div
+            style="
+              margin-top: 20px;
+              margin-bottom: 20px;
+              text-align: center;
+              color: #3c4e6b;
+            "
+          >
+            <div class="iconfont" style="font-size: 20px">
+              &#xe60b;&nbsp;&nbsp;<b>分析记录时间轴</b>
+            </div>
+            <div style="font-size: 10px; margin-top: 20px">
+              分析记录时间轴会在每次用户按下ctrl+s(保存的快捷键)时，记录下当前的操作数据以便后续进行下一步的分析。
+            </div>
           </div>
-          <time-line-view></time-line-view>
-        </el-row>
+        </div>
       </el-col>
-      <el-col :span="20">
-        <div
-          style="margin-top: 40px; margin-bottom: 40px"
-          v-show="currentViewName === 'show-exist-case-view'"
-        >
-          <el-row>
+      <!-- v-show="currentViewName === 'show-exist-case-view'" -->
+      <el-col :span="21">
+        <div style="margin-top: 20px">
+          <div
+            class="iconfont"
+            style="font-size: 20px; text-align: center; color: #3c4e6b"
+          >
+            &#xe6ad;&nbsp;&nbsp;<b>案件操作面板</b>
+          </div>
+          <el-row style="margin-top: 20px">
             <el-col :span="6"> &nbsp; </el-col>
             <el-col :span="12" style="text-align: center">
               <el-button
                 style="width: 30%"
                 class="iconfont"
                 type="primary"
+                size="mini"
                 @click="handleClickNewCase"
-                round
               >
                 &#xe6a3; 新增案件
-                <!-- <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-nv" />
-            </svg>
-            新增案件-->
               </el-button>
               <el-button
                 style="width: 30%"
                 class="iconfont"
                 type="primary"
+                size="mini"
                 @click="handleClickImportCase"
-                round
                 >&#xe61a; 导入案件</el-button
               >
               <el-button
                 style="width: 30%"
                 class="iconfont"
                 type="danger"
+                size="mini"
                 @click="handleClickDeleteAllCase"
-                round
                 >&#xe652; 清空所有案件</el-button
               >
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="4">
               <el-input
+                size="mini"
                 placeholder="输入案件名称进行检索"
                 prefix-icon="el-icon-search"
                 v-model="inputAnjianName"
@@ -58,17 +70,28 @@
             <el-col :span="1">&nbsp;</el-col>
           </el-row>
         </div>
-        <el-row v-if="currentViewName !== 'show-exist-case-view'">
-          <el-col :span="24">
-            <div style="height: 40px">&nbsp;</div>
-          </el-col>
-        </el-row>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col
+        :span="3"
+        style="text-align: center; border-right: 1px solid #dddfe5"
+      >
+        <time-line-view></time-line-view>
+      </el-col>
+      <el-col :span="21">
         <el-row>
-          <el-col :span="1">&nbsp;</el-col>
-          <el-col :span="20" style="text-align: ">
-            <component :is="currentViewName"></component>
-          </el-col>
-          <el-col :span="1">&nbsp;</el-col>
+          <el-row v-if="currentViewName !== 'show-exist-case-view'">
+            <el-col :span="24"> </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="22" style="padding-top: 20px">
+              <component :is="currentViewName"></component>
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
+          </el-row>
         </el-row>
       </el-col>
     </el-row>
@@ -82,6 +105,7 @@ import ShowExistCaseView from "./child/ShowExistCaseView";
 import NewCaseView from "./child/NewCaseView";
 import CaseDetailView from "./child/CaseDetailView";
 import EditCaseView from "./child/EditCaseView";
+import levelDb from "../../../level/leveldb";
 const log = require("@/utils/log");
 export default {
   data() {
@@ -96,6 +120,7 @@ export default {
   },
   computed: {
     ...mapState("HomePageSwitch", ["currentViewName"]),
+    ...mapState("AppPageSwitch", ["mainViewHeight"]),
   },
   components: {
     "new-case-view": NewCaseView,
@@ -103,6 +128,10 @@ export default {
     "case-detail-view": CaseDetailView,
     "edit-case-view": EditCaseView,
     "time-line-view": AnalysisTimeLine,
+  },
+  async mounted() {
+    // let prefix = this.$electron.remote.getGlobal("levelPrefix");
+    // let { success, list, msg } = await levelDb.find(prefix);
   },
   methods: {
     async handleClickDeleteAllCase() {
@@ -165,5 +194,10 @@ export default {
 <style scoped>
 .sysBtnStyle:hover {
   box-shadow: #1b2735 10px 10px 30px 5px;
+}
+.timeLineContainer {
+  text-align: center;
+  color: #3c4e6b;
+  border-right: 1px solid #dddfe5;
 }
 </style>

@@ -53,7 +53,7 @@ export default {
         let result = await this.$electron.remote.dialog.showMessageBox(null, {
           type: "warning",
           title: "关闭",
-          message: `当前正在进行数据导入操作，您去定要关闭窗口吗？`,
+          message: `当前正在进行数据导入操作，您确定要关闭窗口吗？`,
           buttons: ["确定", "取消"],
           defaultId: 0,
         });
@@ -74,7 +74,7 @@ export default {
 
 <style >
 .standard-data-dialog .el-dialog {
-  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
+  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
   border: 1px solid gray;
   position: absolute;
   top: 50%;

@@ -5,6 +5,7 @@
     <save-dialog
       v-if="showSaveProjectVisible"
       v-on:confirmSaveProject="confirmSaveProject"
+      :screenShotTmpFilePathName="screenShotTmpFilePathName"
     ></save-dialog>
     <div style="height: 100px"></div>
     <component :is="currentViewName"></component>
@@ -34,12 +35,20 @@ import { promises, resolve } from "dns";
 const log = require("electron-log");
 const fs = require("fs");
 const path = require("path");
+const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 export default {
   async mounted() {
     let _this = this;
 
     this.$electron.ipcRenderer.on("save-state", async (event, data) => {
+      let tempPath = this.$electron.remote.app.getPath("temp");
+      console.log(tempPath);
+      tempPath = path.join(tempPath, uuid.v1());
+      fs.mkdirSync(tempPath);
+      let { filePathName } = await this.makeScreenShot(tempPath);
+      this.screenShotTmpPath = tempPath;
+      this.screenShotTmpFilePathName = filePathName;
       this.$store.commit("DialogPopWnd/SET_SHOWSAVEPROJECTVISIBLE", true);
     });
 
@@ -121,6 +130,8 @@ export default {
       // imgPath: "",
       loading: false,
       loadingText: "",
+      screenShotTmpFilePathName: "",
+      screenShotTmpPath: "",
     };
   },
   name: "App",
@@ -137,11 +148,30 @@ export default {
     ...mapState("DialogPopWnd", ["showSaveProjectVisible"]),
   },
   methods: {
+    delDir(path) {
+      let files = [];
+      if (fs.existsSync(path)) {
+        files = fs.readdirSync(path);
+        files.forEach((file, index) => {
+          let curPath = path + "/" + file;
+          if (fs.statSync(curPath).isDirectory()) {
+            delDir(curPath); //递归删除文件夹
+          } else {
+            fs.unlinkSync(curPath); //删除文件
+          }
+        });
+        fs.rmdirSync(path); // 删除文件夹自身
+      }
+    },
     async confirmSaveProject(obj) {
       let { confirm, title, des } = obj;
       if (confirm) {
         await this.saveCurrentAppState({ title, des });
         this.$bus.$emit("FreshTimeLineView");
+      } else {
+        this.delDir(this.screenShotTmpPath);
+        this.screenShotTmpFilePathName = "";
+        this.screenShotTmpPath = "";
       }
     },
     async makeScreenShot(shotPath) {
@@ -163,7 +193,6 @@ export default {
       const imageData = fs.readFileSync(fileUrl); // 例：xxx/xx/xx.png
       const imageBase64 = imageData.toString("base64");
       const imagePrefix = "data:image/png;base64,";
-      console.log(imagePrefix + imageBase64);
       return imagePrefix + imageBase64;
     },
     async saveGraphData() {
@@ -197,7 +226,7 @@ export default {
         return true;
       }
     },
-    async copyCurrentDataToNewPath(filePathSrc, filePathDes) {
+    async copyFile(filePathSrc, filePathDes) {
       return new Promise((resolve, reject) => {
         let file = fs.createReadStream(filePathSrc);
         let out = fs.createWriteStream(filePathDes);
@@ -213,35 +242,54 @@ export default {
     },
     async saveCurrentAppState({ title, des }) {
       if (!this.loading) {
-        this.loading = true;
-        this.loadingText = "正在进行保存，请稍后...";
-        let resoreDbPath = this.$electron.remote.getGlobal("resoreDbPath");
-        let now = new Date();
-        let nowStr = now.Format("yyyy-MM-dd_hh_mm_ss");
-        let nowTimeStr = now.Format("yyyy-MM-dd:hh:mm:ss");
-        let newDbPath = path.join(resoreDbPath, nowStr);
-        if (!fs.existsSync(newDbPath)) {
-          fs.mkdirSync(newDbPath, { recursive: true });
+        try {
+          this.loading = true;
+          this.loadingText = "正在进行保存，请稍后...";
+          let resoreDbPath = this.$electron.remote.getGlobal("resoreDbPath");
+          let now = new Date();
+          let nowStr = now.Format("yyyy-MM-dd_hh_mm_ss");
+          let nowTimeStr = now.Format("yyyy-MM-dd hh:mm:ss");
+          let newDbPath = path.join(resoreDbPath, nowStr);
+          if (!fs.existsSync(newDbPath)) {
+            fs.mkdirSync(newDbPath, { recursive: true });
+          }
+          let dbPathFile = path.join(newDbPath, "restore.db");
+          await this.saveGraphData();
+          await this.copyFile(
+            path.join(resoreDbPath, "restore.db"),
+            dbPathFile
+          );
+          let screenShotDesPath = path.join(newDbPath, "screenShot.png");
+          await this.copyFile(
+            this.screenShotTmpFilePathName,
+            screenShotDesPath
+          );
+          let prefix = this.$electron.remote.getGlobal("levelPrefix");
+          let key = prefix + nowStr;
+          let valueObj = {
+            dbPath: newDbPath,
+            dbPathFile,
+            screenShotPath: screenShotDesPath,
+            time: nowTimeStr,
+            timestamp: now.valueOf(),
+            title,
+            des,
+          };
+          this.delDir(this.screenShotTmpPath);
+          await levelDb.set(key, valueObj);
+          this.$notify({
+            title: "成功",
+            message: "分析记录保存成功，可返回首页进行查看",
+            type: "success",
+          });
+          this.loading = false;
+        } catch (e) {
+          this.$notify.error({
+            title: "失败",
+            message: "分析记录保存失败，错误信息:" + e.message,
+          });
+          this.loading = false;
         }
-        let dbPathFile = path.join(newDbPath, "restore.db");
-        await this.saveGraphData();
-        await this.copyCurrentDataToNewPath(
-          path.join(resoreDbPath, "restore.db"),
-          dbPathFile
-        );
-        let obj = await this.makeScreenShot(newDbPath);
-        let prefix = this.$electron.remote.getGlobal("levelPrefix");
-        let key = prefix + nowStr;
-        let valueObj = {
-          dbPath: newDbPath,
-          dbPathFile,
-          screenShotPath: obj.filePathName,
-          time: nowTimeStr,
-          title,
-          des,
-        };
-        await levelDb.set(key, valueObj);
-        this.loading = false;
       }
     },
   },

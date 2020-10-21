@@ -168,7 +168,6 @@ export default {
       const imageData = fs.readFileSync(fileUrl); // 例：xxx/xx/xx.png
       const imageBase64 = imageData.toString("base64");
       const imagePrefix = "data:image/png;base64,";
-      // console.log(imagePrefix + imageBase64);
       return imagePrefix + imageBase64;
     },
     async handleCommand(command, row) {

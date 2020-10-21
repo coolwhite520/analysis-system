@@ -89,7 +89,7 @@ function createWindow() {
   Menu.setApplicationMenu(m);
 
   global.windowSize = screen.getPrimaryDisplay().workAreaSize;
-
+  global.widthDivHeight = global.windowSize.width / global.windowSize.height;
   mainWindow.on("closed", () => {
     mainWindow = null;
   });

@@ -6,7 +6,6 @@ const db = level(resoreDbPath, { valueEncoding: "json" });
 async function set(key, value) {
   return new Promise((resolve, reject) => {
     if (key && value) {
-      console.log("dbSet:", key, value);
       db.put(key, value, function(error) {
         if (error) reject(error);
         else resolve("success");

@@ -1,35 +1,46 @@
 <template>
-  <div>
+  <div
+    :style="{
+      height: mainViewHeight - 150 + 'px',
+      overflow: 'auto',
+      padding: 15 + 'px',
+    }"
+  >
     <el-row :gutter="40">
       <el-col
-        :span="24/columCount"
-        v-for="(caseItem) in existCasesFilter"
+        :span="24 / columCount"
+        v-for="caseItem in existCasesFilter"
         :key="caseItem.ajid"
-        style="margin-bottom:20px;"
+        style="margin-bottom: 20px"
       >
-        <div class="iconfont" style="color: #ddd;font-size:30px;margin-bottom:-30px;">&#xe65e;</div>
+        <div
+          class="iconfont"
+          style="color: #ddd; font-size: 30px; margin-bottom: -30px"
+        >
+          &#xe65e;
+        </div>
         <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
           <el-row>
-            编号：
-            <b style="color:#384e6e;font-size:12px;">{{caseItem.ajbh}}</b>
+            <span class="iconfont" style="font-size: 20px">&#xe6d1;编号：</span>
+            <b style="color: #384e6e; font-size: 12px">{{ caseItem.ajbh }}</b>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <div class="time">{{caseItem.cjsj}}</div>
+              <div class="time">{{ caseItem.cjsj }}</div>
             </el-col>
             <el-col :span="12">
-              <div class="location">{{caseItem.asjfsddxzqmc}}</div>
+              <div class="location">{{ caseItem.asjfsddxzqmc }}</div>
             </el-col>
           </el-row>
           <el-row>
             <div class="caseName">{{ caseItem.ajmc }}</div>
           </el-row>
           <el-row>
-            <p style="text-align:center;">[{{caseItem.ajlbmc}}]</p>
+            <p style="text-align: center">[{{ caseItem.ajlbmc }}]</p>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <div class="state">状态：{{caseItem.zcjdmc}}</div>
+              <div class="state">状态：{{ caseItem.zcjdmc }}</div>
             </el-col>
             <el-col :span="12">
               <div>
@@ -38,7 +49,8 @@
                   icon="el-icon-search"
                   type="text"
                   @click="handleClickAnalysis(caseItem)"
-                >分析</el-button>
+                  >分析</el-button
+                >
               </div>
             </el-col>
           </el-row>
@@ -53,12 +65,12 @@ export default {
   data() {
     return {
       currentDate: new Date(),
-      columCount: 3, //每行显示几个
+      columCount: 4, //每行显示几个
     };
   },
   computed: {
     ...mapGetters("Cases", ["existCasesFilter"]),
-    ...mapState("AppPageSwitch", ["currentViewName"]),
+    ...mapState("AppPageSwitch", ["currentViewName", "mainViewHeight"]),
     ...mapState("CaseDetail", ["dataSum", "dataCenterList"]),
   },
   methods: {
@@ -109,11 +121,12 @@ export default {
 .cardStyle {
   border: 2px solid #384e6e;
   border-radius: 15px;
-  color: #808080;
+  /* background-image: linear-gradient(to right, #34435c, white); */
+  /* color: #808080; */
 }
 
 .cardStyle:hover {
-  box-shadow: #384e6e 10px 10px 30px 5px;
+  box-shadow: 1px 1px 10px 5px #384e6e;
 }
 .time {
   font-size: 13px;
