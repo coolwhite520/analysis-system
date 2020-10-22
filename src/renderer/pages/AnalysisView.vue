@@ -290,6 +290,7 @@ export default {
             title: "失败",
             message: "分析记录保存失败，错误信息:" + e.message,
           });
+          log.info(e.message);
           this.loading = false;
         }
       }

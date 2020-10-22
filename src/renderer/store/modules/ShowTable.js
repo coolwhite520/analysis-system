@@ -95,6 +95,8 @@ const mutations = {
         "xianKuanSetting",
         JSON.parse(JSON.stringify(Default.xianKuanSetting))
       );
+      tableData.SpreadNodeSwitch = true;
+
       Vue.set(tableData, "graphid", uuid.v1());
       Vue.set(tableData, "fullScrrenFlag", false);
     }
@@ -248,6 +250,9 @@ const mutations = {
         return;
       }
     }
+  },
+  SET_SPREADNODESWITCH(state, SpreadNodeSwitch) {
+    state.currentTableData.SpreadNodeSwitch = SpreadNodeSwitch;
   },
   // 更新筛选条件
   UPDATE_TABLE_MODEL_FILTER(state, modelFilterStr) {

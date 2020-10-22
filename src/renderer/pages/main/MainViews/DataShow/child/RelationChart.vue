@@ -21,16 +21,33 @@
           >
         </el-button-group>
       </el-col>
-      <el-col :span="1">
+      <el-col :span="2">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="离散点显示开关(当一个节点没有任何的连接线称为离散节点)"
+          placement="top-start"
+          ><el-switch
+            v-model="bSpreadNodeSwitch"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            inactive-text="离散"
+            @change="handleChangeSpreadNodeValue"
+          >
+          </el-switch>
+        </el-tooltip>
+      </el-col>
+      <el-col :span="2">
         <el-tooltip
           class="item"
           effect="dark"
           :content="switchButtonTip"
           placement="top-start"
           ><el-switch
-            v-model="bOpen"
+            v-model="bOpenLineWidth"
             active-color="#13ce66"
             inactive-color="#ff4949"
+            inactive-text="线宽"
           >
           </el-switch>
         </el-tooltip>
@@ -51,7 +68,7 @@
           ></el-button>
         </el-tooltip>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="3">
         <el-input size="mini" v-model="inputValue"></el-input>
       </el-col>
     </el-row>
@@ -290,7 +307,15 @@ export default {
       }
       return "线宽设置快捷开关(未开启)";
     },
-    bOpen: {
+    bSpreadNodeSwitch: {
+      get() {
+        return this.tableData.SpreadNodeSwitch;
+      },
+      set(newValue) {
+        this.$store.commit("ShowTable/SET_SPREADNODESWITCH", newValue);
+      },
+    },
+    bOpenLineWidth: {
       get() {
         return this.tableData.xianKuanSetting.open;
       },
@@ -345,6 +370,7 @@ export default {
             this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
             this.graph.changeData(this.makeData()); // 加载数据
             this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+            this.accordingSpreadNodeSwitchRefreshNodes();
             this.updateEntityList();
           }
         }
@@ -389,9 +415,25 @@ export default {
       }
       return value;
     },
+    // 根据离散点开关刷新数据
+    accordingSpreadNodeSwitchRefreshNodes() {
+      if (this.bSpreadNodeSwitch) {
+        // 显示离散点
+        let allNodes = this.graph.getNodes();
+        allNodes.forEach((node) => {
+          this.graph.showItem(node);
+        });
+      } else {
+        let allNodes = this.graph.getNodes();
+        allNodes.forEach((node) => {
+          if (node.getEdges().length === 0) this.graph.hideItem(node);
+          else this.graph.showItem(node);
+        });
+      }
+    },
     // 根据线宽设置
     accordingXianKuanRefreshEdges(xianKuanSetting) {
-      let { category, levelNum, open } = xianKuanSetting;
+      let { category, levelNum, open, openNodeSpread } = xianKuanSetting;
       let allEdges = this.graph.getEdges();
       if (open) {
         let minJe, maxJe, minBs, maxBs;
@@ -1199,17 +1241,23 @@ export default {
           };
           if (lineColor !== "") tempEdges.push(link2);
         }
-        if (tempEdges.length > 0) {
-          if (!bFindData1) nodes.push(data1);
-          if (!bFindData2) nodes.push(data2);
-          edges.push(...tempEdges);
-        }
+        // if (tempEdges.length > 0) {
+        //   if (!bFindData1) nodes.push(data1);
+        //   if (!bFindData2) nodes.push(data2);
+        //   edges.push(...tempEdges);
+        // }
+        if (!bFindData1) nodes.push(data1);
+        if (!bFindData2) nodes.push(data2);
+        edges.push(...tempEdges);
       });
       this.$G6.Util.processParallelEdges(edges);
       this.entityCount = nodes.length;
       this.linkCount = edges.length;
       this.detailCount = this.entityCount + this.linkCount;
       return { nodes, edges };
+    },
+    handleChangeSpreadNodeValue(newVal) {
+      this.accordingSpreadNodeSwitchRefreshNodes();
     },
     // 更新实体列表
     updateEntityList() {
@@ -1461,8 +1509,15 @@ export default {
       this.graph.data(this.makeData()); // 加载数据
     }
     this.graph.render(); // 渲染
+
     this.updateEntityList();
     this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+    this.accordingSpreadNodeSwitchRefreshNodes();
+    let nodes = this.graph.getNodes();
+    let edges = this.graph.getEdges();
+    this.entityCount = nodes.length;
+    this.linkCount = edges.length;
+    this.detailCount = this.entityCount + this.linkCount;
     // 监听布局切换
     // this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
     // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
@@ -1705,7 +1760,7 @@ export default {
       });
     });
     this.$bus.$on("nodeStyleSetting", (data) => {
-      console.log({data});
+      console.log({ data });
       let { graphid, nodeid, nodeStyle } = data;
       if (graphid !== _this.graphid) return;
       let node = this.graph.findById(nodeid);

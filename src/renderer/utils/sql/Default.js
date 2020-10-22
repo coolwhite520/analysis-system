@@ -597,7 +597,7 @@ const defaultSelection = {
 };
 // 线宽设置
 let xianKuanSetting = {
-  open: false,
+  open: false, //线宽开关
   category: "je",
   levelNum: 3,
 };

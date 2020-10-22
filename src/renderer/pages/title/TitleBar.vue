@@ -52,6 +52,8 @@
 
 <script>
 const log = require("@/utils/log");
+const fs = require("fs");
+const path = require("path");
 import { mapState } from "vuex";
 export default {
   data() {
@@ -115,8 +117,9 @@ export default {
         type: "warning",
         title: "关闭",
         message: `是否保存当前所有操作？`,
-        buttons: ["保存", "否"],
+        buttons: ["保存", "不保存", "取消"],
         defaultId: 0,
+        cancelId: 5,
       });
       console.log(result);
       let _this = this;
@@ -152,9 +155,13 @@ export default {
         await checkSaveOver();
         this.$electron.ipcRenderer.send("window-close");
       } else if (result.response === 1) {
-        this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
-        this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "home-page");
+        // 删除本地的状态文件restore.db
+        let resoreDbPath = this.$electron.remote.getGlobal("resoreDbPath");
+        let pathFileName = path.join(resoreDbPath, "restore.db");
+
+        fs.unlinkSync(pathFileName);
         this.$electron.ipcRenderer.send("window-close");
+      } else if (result.response === 2) {
       }
     },
     handleClickDbConfig() {
