@@ -360,19 +360,15 @@ export default {
     "tableData.graphicMoneySectionList": {
       handler(newValue, oldValue) {
         // 因为监听的是对象，所以新旧两个值是一样的，都是同一个地址的引用对象
-        if (this.tempgraphicMoneySectionStrMd5 === "") {
+        if (
+          this.tempgraphicMoneySectionStrMd5 !== md5(JSON.stringify(newValue))
+        ) {
+          console.log("tableData.graphicMoneySectionList");
           this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
-        } else {
-          if (
-            this.tempgraphicMoneySectionStrMd5 !== md5(JSON.stringify(newValue))
-          ) {
-            console.log("tableData.graphicMoneySectionList");
-            this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
-            this.graph.changeData(this.makeData()); // 加载数据
-            this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
-            this.accordingSpreadNodeSwitchRefreshNodes();
-            this.updateEntityList();
-          }
+          this.graph.changeData(this.makeData()); // 加载数据
+          this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+          this.accordingSpreadNodeSwitchRefreshNodes();
+          this.updateEntityList();
         }
       },
       immediate: false,
@@ -1402,6 +1398,9 @@ export default {
 
   mounted() {
     let _this = this;
+    this.tempgraphicMoneySectionStrMd5 = md5(
+      JSON.stringify(this.tableData.graphicMoneySectionList)
+    );
     // this.registerNode();
     this.registerSelfCombo();
     const erd = elementResizeDetectorMaker();

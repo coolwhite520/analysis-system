@@ -95,7 +95,7 @@ const mutations = {
         "xianKuanSetting",
         JSON.parse(JSON.stringify(Default.xianKuanSetting))
       );
-      tableData.SpreadNodeSwitch = true;
+      tableData.SpreadNodeSwitch = false;
 
       Vue.set(tableData, "graphid", uuid.v1());
       Vue.set(tableData, "fullScrrenFlag", false);
