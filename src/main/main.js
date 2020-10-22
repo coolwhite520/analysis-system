@@ -39,7 +39,14 @@ function createWindow() {
   global.levelPrefix = "RestoreDataCollection.";
   global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
-  let exePath = path.dirname(app.getPath("exe"));
+  // let exePath = path.dirname(app.getPath("exe"));
+  let appName = require("../../package.json").name;
+  app.setName(appName);
+  app.setPath(
+    "userData",
+    app.getPath("userData").replace(/Electron/i, appName)
+  );
+  let exePath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
   global.appPath = exePath;
   global.configPath = require("path").join(appPath, "config");
   log.info(global.configPath);
