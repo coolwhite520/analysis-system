@@ -47,6 +47,7 @@ const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
+// const html2canvas = require("html2canvas");
 export default {
   async mounted() {
     let _this = this;
@@ -188,6 +189,18 @@ export default {
       }
     },
     async makeScreenShot(shotPath) {
+      // try {
+      //   let filePathName = path.join(shotPath, "screenShot.png");
+      //   let canvas = await html2canvas(document.body);
+      //   let posterImg = canvas.toDataURL();
+      //   let base64Data = posterImg.replace(/^data:image\/\w+;base64,/, "");
+      //   let dataBuffer = new Buffer(base64Data, "base64");
+      //   fs.writeFileSync(filePathName, dataBuffer);
+      //   return { success: true, filePathName };
+      // } catch (e) {
+      //   return { success: false, err, filePathName };
+      // }
+
       return new Promise((resolve, reject) => {
         let filePathName = path.join(shotPath, "screenShot.png");
         screenshot({
