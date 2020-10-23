@@ -42,8 +42,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-row style="text-align: center">
-      <el-button size="mini" type="primary" @click="handleClickResolve"
+    <el-row style="text-align: center; margin-top: 20px">
+      <el-button size="small" type="primary" @click="handleClickResolve"
         >一键处理</el-button
       >
     </el-row>
@@ -51,7 +51,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-
+import baseDb from "@/db/Base";
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showErrorRowRecordVisible"]),
@@ -66,10 +66,25 @@ export default {
   },
   methods: {
     async handleClickResolve() {
-      await baseDb.QueryCustom(
-        this.currentTableData.renderErrorData.updateSql,
-        this.caseBase.ajid
-      );
+      try {
+        await baseDb.QueryCustom(
+          this.currentTableData.renderErrorData.updateSql,
+          this.caseBase.ajid
+        );
+        this.$message({
+          title: "成功",
+          message: `数据处理完毕`,
+          type: "success",
+        });
+        this.$store.commit("DialogPopWnd/SET_SHOWERRORROWRECORDVISIBLE", false);
+        this.$emit("refreshErrorCharTree");
+        // ?????通知father页面刷新
+      } catch (e) {
+        this.$message.error({
+          title: "失败",
+          message: `数据处理失败，error:${e.message}`,
+        });
+      }
     },
     handleClose() {
       this.$store.commit("DialogPopWnd/SET_SHOWERRORROWRECORDVISIBLE", false);

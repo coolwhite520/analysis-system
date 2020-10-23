@@ -1,6 +1,9 @@
 <template>
   <div>
-    <error-row-view v-if="showErrorRowRecordVisible"></error-row-view>
+    <error-row-view
+      v-if="showErrorRowRecordVisible"
+      v-on:refreshErrorCharTree="refreshErrorCharTree"
+    ></error-row-view>
     <div
       class="searchReplace"
       :style="{ height: contentViewHeight - 40 - 15 + 'px' }"
@@ -99,7 +102,47 @@ export default {
     },
   },
   methods: {
+    async refreshErrorCharTree() {
+      await this.freshTreeErrorCount();
+    },
     async handleClickCheck() {
+      let arr = await this.freshTreeErrorCount();
+      console.log(arr);
+      let sumErrCount = this.$lodash.sum(arr);
+      this.$message({
+        message: `存在${sumErrCount}条特殊字符数据`,
+        type: "success",
+      });
+    },
+    async handleClickResolve() {
+      let allCheckedNodes = this.$refs.tree.getCheckedNodes();
+      let arrayPromise = [];
+      let _this = this;
+      for (let nodeData of allCheckedNodes) {
+        if (nodeData.children.length === 0 && nodeData.gpsqltemplate_update) {
+          let decode = aes.decrypt(nodeData.gpsqltemplate_update);
+          let sql = decode
+            .replace(/\$MODEL_FILTER\$/g, this.currentTableData.modelFilterStr)
+            .replace(/\$SELECTFILTER\$/g, "count(*)")
+            .replace(/\$AJID\$/g, this.caseBase.ajid);
+          arrayPromise.push(
+            (async function () {
+              await baseDb.QueryCustom(sql, _this.caseBase.ajid);
+            })()
+          );
+        }
+      }
+      await Promise.all(arrayPromise);
+      // 再次检测一下
+      let arrCount = await this.freshTreeErrorCount();
+      //
+      this.$message({
+        title: "成功",
+        message: `数据处理完毕`,
+        type: "success",
+      });
+    },
+    async freshTreeErrorCount() {
       let allCheckedNodes = this.$refs.tree.getCheckedNodes();
       let arrayPromise = [];
       let _this = this;
@@ -112,26 +155,26 @@ export default {
             .replace(/\$AJID\$/g, this.caseBase.ajid);
           arrayPromise.push(
             (async function () {
-              console.log(sql);
               let { success, rows } = await baseDb.QueryCustom(
                 sql,
                 _this.caseBase.ajid
               );
-              if (success && rows[0].count > 0) {
+              if (success) {
                 nodeData.errorCount = rows[0].count;
+                return parseInt(nodeData.errorCount);
               }
+              return 0;
             })()
           );
         }
       }
-      await Promise.all(arrayPromise);
+      let arrCount = await Promise.all(arrayPromise);
       this.$store.commit(
         "ShowTable/SET_SPECIALCHAR_TREE_DATA",
         this.myTreeList
       );
+      return arrCount;
     },
-    async handleClickResolve() {},
-
     async handleNodeClick(nodeData, node) {
       if (nodeData.errorCount > 0) {
         let decode = aes.decrypt(nodeData.gpsqltemplate_select);
