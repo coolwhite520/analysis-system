@@ -26,7 +26,15 @@
         </el-button-group>
       </div>
       <div style="clear: both"></div>
-      <el-divider></el-divider>
+      <div
+        style="
+          border-top: 1px solid #404e69;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        "
+      >
+        &nbsp;
+      </div>
       <el-row>
         <el-col :span="12">
           <p>
@@ -89,7 +97,7 @@
         <span class="caseContent">{{ caseBase.zhaq }}</span>
       </p>
     </div>
-    <el-divider></el-divider>
+    <!-- <el-divider></el-divider> -->
     <div class="dataInfo">
       <div class="title">
         <h2 style="float: left">案件数据</h2>
@@ -106,7 +114,16 @@
         </el-button-group>
       </div>
       <div style="clear: both"></div>
-      <el-divider></el-divider>
+      <!-- <el-divider></el-divider> -->
+      <div
+        style="
+          border-top: 1px solid #404e69;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        "
+      >
+        &nbsp;
+      </div>
       <div>
         <span>案件数据：</span>
         <span class="caseContent">共采集&nbsp;{{ batchCount }}&nbsp;批次</span>
@@ -139,7 +156,7 @@
         实体数量：
         <span class="caseContent">{{ entityCount }} 个</span>
       </p>
-      <el-divider></el-divider>
+      <!-- <el-divider></el-divider> -->
       <el-row>
         <el-col :span="8">&nbsp;</el-col>
         <el-col :span="8">
@@ -413,14 +430,18 @@ export default {
   /* border: 2px solid #dddfe5; */
   border-radius: 15px;
   padding: 20px;
-  box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
+  color: white;
+  /* box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
+   */
+  border: 1px solid #404e69;
 }
 .baseInfo {
+  color: white;
   margin-bottom: 60px;
 }
 
 .caseContent {
-  color: gray;
+  color: white;
   font-size: 13px;
 }
 </style>

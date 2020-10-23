@@ -1,33 +1,32 @@
 <template>
   <div style="-webkit-user-select: none; margin-top: 0px" ref="wrapper">
-    <el-row style="box-shadow: 0px 15px 10px -15px #ccc; z-index: 10">
-      <el-col :span="3" style="border-right: 1px solid #dddfe5">
-        <div>
-          <div
-            style="
-              margin-top: 20px;
-              margin-bottom: 20px;
-              text-align: center;
-              color: #3c4e6b;
-            "
-          >
-            <div class="iconfont" style="font-size: 20px">
-              &#xe60b;&nbsp;&nbsp;<b>分析记录时间轴</b>
-            </div>
-            <div style="font-size: 10px; margin-top: 20px">
-              分析记录时间轴会在每次用户按下ctrl+s(保存的快捷键)时，记录下当前的操作数据以便后续进行下一步的分析。
-            </div>
+    <el-row>
+      <el-col :span="3">
+        <div
+          style="
+            margin-top: 10px;
+            padding: 10px;
+            text-align: center;
+            color: #3c4e6b;
+            box-shadow: 15px 0px 10px -15px #404e69;
+          "
+        >
+          <div class="iconfont" style="font-size: 20px; color: white">
+            &#xe60b;&nbsp;&nbsp;<b>时间轴</b>
           </div>
+          <div style="font-size: 10px; margin-top: 20px">
+            时间轴会在每次用户按下ctrl+s(保存的快捷键)时，记录下当前的操作数据以便后续进行下一步的分析。
+          </div>
+          <time-line-view></time-line-view>
         </div>
       </el-col>
-      <!-- v-show="currentViewName === 'show-exist-case-view'" -->
       <el-col :span="21">
         <div style="margin-top: 20px">
           <div
             class="iconfont"
-            style="font-size: 20px; text-align: center; color: #3c4e6b"
+            style="font-size: 20px; text-align: center; color: white"
           >
-            &#xe6ad;&nbsp;&nbsp;<b>案件操作面板</b>
+            &#xe6ad;&nbsp;&nbsp;<b>案件面板</b>
           </div>
           <el-row style="margin-top: 20px">
             <el-col :span="6"> &nbsp; </el-col>
@@ -69,29 +68,20 @@
             <el-col :span="1">&nbsp;</el-col>
           </el-row>
         </div>
-      </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col
-        :span="3"
-        style="text-align: center; border-right: 1px solid #dddfe5"
-      >
-        <time-line-view></time-line-view>
-      </el-col>
-      <el-col :span="21">
-        <el-row>
-          <el-row v-if="currentViewName !== 'show-exist-case-view'">
-            <el-col :span="24"> </el-col>
-          </el-row>
+        <div>
           <el-row>
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="22" style="padding-top: 20px">
-              <component :is="currentViewName"></component>
-            </el-col>
-            <el-col :span="1">&nbsp;</el-col>
+            <el-row v-if="currentViewName !== 'show-exist-case-view'">
+              <el-col :span="24"> </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="1">&nbsp;</el-col>
+              <el-col :span="22" style="padding-top: 20px">
+                <component :is="currentViewName"></component>
+              </el-col>
+              <el-col :span="1">&nbsp;</el-col>
+            </el-row>
           </el-row>
-        </el-row>
+        </div>
       </el-col>
     </el-row>
   </div>

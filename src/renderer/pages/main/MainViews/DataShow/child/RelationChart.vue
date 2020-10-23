@@ -69,7 +69,11 @@
         </el-tooltip>
       </el-col>
       <el-col :span="3">
-        <el-input size="mini" v-model="inputValue"></el-input>
+        <el-input
+          size="mini"
+          v-model="inputValue"
+          placeholder="输入关键字进行快捷定位"
+        ></el-input>
       </el-col>
     </el-row>
 

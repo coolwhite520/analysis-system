@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      height: mainViewHeight - 150 + 'px',
+      height: mainViewHeight - 120 + 'px',
       overflow: 'auto',
       padding: 15 + 'px',
     }"
@@ -13,12 +13,12 @@
         :key="caseItem.ajid"
         style="margin-bottom: 20px"
       >
-        <div
+        <!-- <div
           class="iconfont"
           style="color: #ddd; font-size: 30px; margin-bottom: -30px"
         >
           &#xe65e;
-        </div>
+        </div> -->
         <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
           <el-row>
             <span class="iconfont" style="font-size: 20px">&#xe6d1;</span>
@@ -127,7 +127,7 @@ export default {
 }
 
 .cardStyle:hover {
-  box-shadow: 1px 1px 10px 5px #384e6e;
+  box-shadow: 1px 1px 10px 5px #b6beca;
 }
 .time {
   font-size: 13px;

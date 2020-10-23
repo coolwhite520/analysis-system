@@ -1,13 +1,13 @@
 <template>
-  <div class="data-center-left" :style="{ height: contentViewHeight + 'px'}">
+  <div class="data-center-left" :style="{ height: contentViewHeight + 'px' }">
     <div class="titleBar">
       <b>
-        <span class="iconfont" style="font-size:18px;">&#xe612;</span>
+        <span class="iconfont" style="font-size: 18px">&#xe612;</span>
         <span v-show="!isCollapseLeftBar">数据中心</span>
       </b>
     </div>
     <el-menu
-      :style="{height: (contentViewHeight - 80) + 'px'}"
+      :style="{ height: contentViewHeight - 80 + 'px' }"
       :default-openeds="openeds"
       class="el-menu-vertical-demo"
       @open="handleOpen"
@@ -16,14 +16,14 @@
       @select="handleSelect"
     >
       <el-submenu
-        v-for="(item,i) in dataCenterList"
+        v-for="(item, i) in dataCenterList"
         :index="item.tid"
         :key="item.tid"
         :currentTid="item.tid"
       >
         <template slot="title">
           <i class="iconfont" v-html="iconsList[i].icon"></i>
-          <span slot="title">{{item.title}}</span>
+          <span slot="title">{{ item.title }}</span>
         </template>
         <el-menu-item
           v-for="child in item.childrenArr"
@@ -31,20 +31,23 @@
           class="menu-item"
           :index="child.tid"
         >
-          {{child.title}}
-          <span style="color: gray;font-size:10px">&nbsp;{{child.count}}条</span>
+          {{ child.title }}
+          <span style="color: gray; font-size: 10px"
+            >&nbsp;{{ child.count }}条</span
+          >
         </el-menu-item>
       </el-submenu>
     </el-menu>
     <div class="footbar">
-      <div :style="{float:'right', marginRight:'20px'}">
+      <div :style="{ float: 'right', marginRight: '20px' }">
         <el-button
           class="iconfont"
           @click="handleClickOpenCollapse"
           size="medium"
           type="text"
-          style="color:#0d233e"
-        >{{ isCollapseLeftBar ? '&#xe626;':'&#xe668;'}}</el-button>
+          style="color: #0d233e"
+          >{{ isCollapseLeftBar ? "&#xe626;" : "&#xe668;" }}</el-button
+        >
       </div>
     </div>
   </div>
@@ -125,7 +128,7 @@ export default {
 </script>
 <style scoped>
 .data-center-left {
-  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
+  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
   -webkit-user-select: none;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
@@ -152,6 +155,7 @@ export default {
 }
 .footbar {
   height: 40px;
+  z-index: 100;
   background-color: #f5f7fa;
   border-bottom: 1px solid #e5e7ec;
 }

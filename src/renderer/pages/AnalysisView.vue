@@ -326,7 +326,8 @@ export default {
 <style>
 .state-bar {
   height: 20px;
-  background: #1b2735;
+  /* background: #1b2735; */
+  box-shadow: 5px 0px 10px 1px #404e69;
   /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
   position: fixed;
   z-index: 999;

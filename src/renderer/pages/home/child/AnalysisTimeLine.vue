@@ -1,5 +1,8 @@
 <template>
-  <div :style="{ height: mainViewHeight - 150 + 'px', overflow: 'auto' }">
+  <div
+    :style="{ height: mainViewHeight - 120 + 'px', overflow: 'auto' }"
+    class="timeLine"
+  >
     <div style="margin: 10px" v-if="renderList.length > 0">
       <el-button
         class="iconfont"
@@ -250,6 +253,8 @@ export default {
 }
 </style>
 <style scoped>
+.timeLine {
+}
 .item-tip {
   font-size: 10px;
   color: #384e6e;

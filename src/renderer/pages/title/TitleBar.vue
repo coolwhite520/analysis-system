@@ -5,7 +5,9 @@
         <div class="logo iconfont">&#xe66a;</div>
       </el-col>
       <el-col class="colum" :span="18">
-        <div class="titleContent"><b>FanFu</b>-资金流分析系统</div>
+        <div class="titleContent">
+          <span style="font-size: 25px"><b>FanFu</b>-资金流分析系统</span>
+        </div>
       </el-col>
       <el-col class="colum" :span="4">
         <div>
@@ -180,7 +182,7 @@ export default {
   /* #1b2735 这个是深色 */
   color: #fff;
   height: 100px;
-  background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
+
   /* -webkit-app-region: drag; */
   -webkit-user-select: none;
   position: fixed;
@@ -188,7 +190,12 @@ export default {
   width: 100%;
   left: 0px;
   top: 0px;
-  box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5);
+  /* background: #1b2735; */
+  /* border-bottom: 1px solid #404e69; */
+  box-shadow: 0px 15px 10px -15px #404e69;
+  /* background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%); */
+
+  /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
 }
 
 .logo {
