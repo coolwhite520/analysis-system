@@ -1,11 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
-// import levelDb from "./plugins/leveldb";
 import modules from "./modules";
 import SecureLS from "secure-ls";
 import { remote } from "electron";
 import path from "path";
+import aes from "../utils/aes";
+import myProject from "../../../package.json";
 
 let resoreDbPath = remote.getGlobal("resoreDbPath");
 let dbFullPath = path.join(resoreDbPath, "restore.db");
@@ -20,12 +21,21 @@ export default new Vuex.Store({
   plugins: [
     // createPersistedState(),
     createPersistedState({
+      key: myProject.name,
       storage: {
         // getItem: levelDb.get,
         // setItem: levelDb.set,
         // removeItem: levelDb.del,
-        getItem: (key) => store.get(key),
-        setItem: (key, value) => store.set(key, value),
+        getItem: (key) => {
+          let value = store.get(key);
+          if (typeof value === "undefined") return value;
+          value = JSON.parse(aes.decrypt(value));
+          return value;
+        },
+        setItem: (key, value) => {
+          value = aes.encrypt(JSON.stringify(value));
+          store.set(key, value);
+        },
         removeItem: (key) => store.del(key),
         // getItem: (key) => ls.get(key),
         // setItem: (key, value) => ls.set(key, value),

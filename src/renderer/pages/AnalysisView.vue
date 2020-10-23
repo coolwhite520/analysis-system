@@ -8,7 +8,12 @@
       :screenShotTmpFilePathName="screenShotTmpFilePathName"
     ></save-dialog>
     <div style="height: 100px"></div>
-    <component :is="currentViewName"></component>
+
+    <vue-lazy-component class="custom-transition">
+      <component :is="currentViewName"></component>
+      <analysis-skeleton slot="skeleton" />
+    </vue-lazy-component>
+
     <div style="height: 20px"></div>
     <div class="state-bar" :style="{ top: stateBarTop - 20 + 'px' }">
       <el-row v-if="exportProcessVisible">
@@ -26,6 +31,11 @@ import { mapState } from "vuex";
 import TitleBar from "@/pages/title/TitleBar";
 import HomePage from "@/pages/home/HomePage";
 import MainPage from "@/pages/main/MainPage";
+import analysisSkeleton from "./analysisSkeleton.vue";
+// 使用es6的懒加载模式
+// const HomePage = () => import("@/pages/home/HomePage");
+// const MainPage = () => import("@/pages/main/MainPage");
+
 import { DbConfig, OtherConfig } from "@/utils/config";
 import SaveProjectView from "@/pages/dialog/save/SaveCurrentProject.vue";
 import levelDb from "../../level/leveldb";
@@ -62,7 +72,7 @@ export default {
     this.$electron.ipcRenderer.on("export-one-file-over", (event, data) => {
       _this.$store.commit("MainPageSwitch/SET_EXPORTPROCESSVISIBLE", false);
       _this.percentage = 0;
-      _this.$notify({
+      _this.$message({
         title: "成功",
         message: `文件导出成功!`,
         type: "success",
@@ -142,6 +152,7 @@ export default {
     "home-page": HomePage,
     "main-page": MainPage,
     "save-dialog": SaveProjectView,
+    "analysis-skeleton": analysisSkeleton,
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
@@ -279,14 +290,14 @@ export default {
           };
           this.delDir(this.screenShotTmpPath);
           await levelDb.set(key, valueObj);
-          this.$notify({
+          this.$message({
             title: "成功",
             message: "分析记录保存成功，可返回首页进行查看",
             type: "success",
           });
           this.loading = false;
         } catch (e) {
-          this.$notify.error({
+          this.$message.error({
             title: "失败",
             message: "分析记录保存失败，错误信息:" + e.message,
           });

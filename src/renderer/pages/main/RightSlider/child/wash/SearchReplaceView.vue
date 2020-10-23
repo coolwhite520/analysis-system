@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont" v-html="renderData.title"></span>
+            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;查找替换</span>
           </div>
         </el-col>
         <el-col :span="2">
@@ -100,8 +100,6 @@
 import dataShowTable from "@/db/DataShowTable.js";
 import { mapState, mapGetters } from "vuex";
 export default {
-  props: ["renderData"],
-
   data() {
     return {
       index: 1,
@@ -170,7 +168,7 @@ export default {
         let inValue = item.inValue;
         let outValue = item.outValue;
         if (inValue === "" || outValue === "") {
-          this.$notify.error({
+          this.$message.error({
             title: "错误",
             message: `字段[${item.header.fieldcname}]必须输入原始值和替换值，任何一个不能为空`,
           });
@@ -191,7 +189,7 @@ export default {
         );
       }
       await Promise.all(taskArray);
-      this.$notify({
+      this.$message({
         title: "成功",
         message: "更新替换数据成功",
         type: "success",

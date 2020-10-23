@@ -8,24 +8,24 @@
     >
       <el-row>
         <div
-          style="float:left;"
-          v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length > 0"
+          style="float: left"
+          v-show="
+            bClickBtnCheck && !isDataLoading && sheetItem.showRows.length > 0
+          "
         >
           <h3>下表为错误数据示例：</h3>
         </div>
-        <div style="float:right;">
-          <el-button
-            size="small"
-            type="primary"
-            @click="handleClickCheckData"
-          >&nbsp;&nbsp;一键智能数据检查&nbsp;&nbsp;</el-button>
+        <div style="float: right">
+          <el-button size="small" type="primary" @click="handleClickCheckData"
+            >&nbsp;&nbsp;一键智能数据检查&nbsp;&nbsp;</el-button
+          >
         </div>
       </el-row>
-      <el-row style="margin-top:10px;">
+      <el-row style="margin-top: 10px">
         <el-col :span="24">
           <el-table
-            :cell-style="{padding:'0px'}"
-            style="width: 100%;"
+            :cell-style="{ padding: '0px' }"
+            style="width: 100%"
             :data="sheetItem.showRows"
             size="mini"
             stripe
@@ -41,16 +41,20 @@
             >
               <template slot-scope="scope">
                 <div
-                  :style="{color: scope.row[index].error?'red': 'gray'}"
-                >{{ scope.row[index].value}}</div>
+                  :style="{ color: scope.row[index].error ? 'red' : 'gray' }"
+                >
+                  {{ scope.row[index].value }}
+                </div>
               </template>
             </el-table-column>
           </el-table>
           <el-row>
-            <div
-              style="float:left;margin-top:10px;font-size:10px;"
-            >每页显示{{pageSize}}条，当前页面条目数量：{{sheetItem.showRows.length}}条</div>
-            <div style="float:right;margin-top:10px;">
+            <div style="float: left; margin-top: 10px; font-size: 10px">
+              每页显示{{ pageSize }}条，当前页面条目数量：{{
+                sheetItem.showRows.length
+              }}条
+            </div>
+            <div style="float: right; margin-top: 10px">
               <el-pagination
                 small
                 layout="prev, pager, next"
@@ -62,9 +66,13 @@
           </el-row>
         </el-col>
       </el-row>
-      <el-row v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length > 0">
-        <div style="font-size:12px;">
-          <span style="color:red;">存在错误数据列：</span>
+      <el-row
+        v-show="
+          bClickBtnCheck && !isDataLoading && sheetItem.showRows.length > 0
+        "
+      >
+        <div style="font-size: 12px">
+          <span style="color: red">存在错误数据列：</span>
           <el-button-group>
             <el-button
               v-for="item in sheetItem.errorFields"
@@ -73,23 +81,38 @@
               type="primary"
               size="mini"
               @click="handleClickBtnGroup(item)"
-            >{{item.fieldcname}}({{item.rownums.length}})条</el-button>
-          </el-button-group>&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
-          <el-button type="danger" size="mini" @click="handleClickDeleteAllErrorRows">一键删除</el-button>&nbsp;&nbsp;清理所有的异常数据。
+              >{{ item.fieldcname }}({{ item.rownums.length }})条</el-button
+            > </el-button-group
+          >&nbsp;&nbsp;请点击按钮进行批量数据处理，或点击
+          <el-button
+            type="danger"
+            size="mini"
+            @click="handleClickDeleteAllErrorRows"
+            >一键删除</el-button
+          >&nbsp;&nbsp;清理所有的异常数据。
         </div>
       </el-row>
       <el-row
-        v-show="bClickBtnCheck&&!isDataLoading&&sheetItem.showRows.length===0"
-        style="text-align:center;"
+        v-show="
+          bClickBtnCheck && !isDataLoading && sheetItem.showRows.length === 0
+        "
+        style="text-align: center"
       >
-        <div style="font-size:10px;color: green;margin-bottom:5px;">当前数据已经没有错误，可以进行导入操作了，请点击下面的按钮。</div>
+        <div style="font-size: 10px; color: green; margin-bottom: 5px">
+          当前数据已经没有错误，可以进行导入操作了，请点击下面的按钮。
+        </div>
         <div>
-          <el-button size="small" type="primary" @click="handleClickImportCurrentData">导入当前数据</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="handleClickImportCurrentData"
+            >导入当前数据</el-button
+          >
         </div>
       </el-row>
     </div>
     <el-row>
-      <div v-show="currentPercentage > 0" style="margin-top:20px;">
+      <div v-show="currentPercentage > 0" style="margin-top: 20px">
         <el-progress :percentage="currentPercentage"></el-progress>
       </div>
     </el-row>
@@ -103,29 +126,49 @@
         v-dialogDrag
         top="30vh"
         append-to-body
-        :modal="false"
+        :modal="true"
       >
-        <el-row v-loading="isUpdateDataLoading" :element-loading-text="updateloadingText">
+        <el-row
+          v-loading="isUpdateDataLoading"
+          :element-loading-text="updateloadingText"
+        >
           <el-col :span="1">&nbsp;</el-col>
           <el-col :span="22">
-            <div v-if=" currentErrorField.filterName === 'exceedLen'">
+            <div v-if="currentErrorField.filterName === 'exceedLen'">
               <div>
-                <div style="margin-bottom:10px;">长度超过了{{item.fieldlength}}位的限制长度`</div>
-                <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-                <el-input size="mini" v-model="input" placeholder="请输入内容"></el-input>
+                <div style="margin-bottom: 10px">
+                  长度超过了{{ item.fieldlength }}位的限制长度`
+                </div>
+                <div style="font-size: 10px; margin-bottom: 5px">
+                  请输入新的数据进行批量覆盖：
+                </div>
+                <el-input
+                  size="mini"
+                  v-model="input"
+                  placeholder="请输入内容"
+                ></el-input>
               </div>
             </div>
-            <div v-else-if=" currentErrorField.filterName === 'notNum'">
+            <div v-else-if="currentErrorField.filterName === 'notNum'">
               <div>
-                <div style="margin-bottom:10px;">当前列的数据不是数字类型</div>
-                <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
-                <el-input size="mini" type="number" v-model="input" placeholder="请输入数字"></el-input>
+                <div style="margin-bottom: 10px">当前列的数据不是数字类型</div>
+                <div style="font-size: 10px; margin-bottom: 5px">
+                  请输入新的数据进行批量覆盖：
+                </div>
+                <el-input
+                  size="mini"
+                  type="number"
+                  v-model="input"
+                  placeholder="请输入数字"
+                ></el-input>
               </div>
             </div>
-            <div v-else-if=" currentErrorField.filterName === 'notDate'">
+            <div v-else-if="currentErrorField.filterName === 'notDate'">
               <div>
-                <div style="margin-bottom:10px;">当前列的数据不是日期类型</div>
-                <div style="font-size: 10px;margin-bottom:5px;">请输入新的数据进行批量覆盖：</div>
+                <div style="margin-bottom: 10px">当前列的数据不是日期类型</div>
+                <div style="font-size: 10px; margin-bottom: 5px">
+                  请输入新的数据进行批量覆盖：
+                </div>
                 <!-- <el-input size="mini" type="datetime" v-model="input" placeholder="请输入内容"></el-input>
                 -->
                 <el-date-picker
@@ -134,12 +177,14 @@
                   type="date"
                   placeholder="选择立案日期"
                   v-model="input"
-                  style="width: 100%;"
+                  style="width: 100%"
                 ></el-date-picker>
               </div>
             </div>
-            <el-row style="margin-top:20px;text-align:center;">
-              <el-button type="primary" @click="handleClickSubmitModify">提交修改</el-button>
+            <el-row style="margin-top: 20px; text-align: center">
+              <el-button type="primary" @click="handleClickSubmitModify"
+                >提交修改</el-button
+              >
             </el-row>
           </el-col>
           <el-col :span="1">&nbsp;</el-col>
@@ -188,7 +233,7 @@ export default {
         );
         if (!result.success) {
           findError = true;
-          this.$notify.error({
+          this.$message.error({
             title: "错误",
             message: `数据删除错误, ${result.msg}`,
           });
@@ -207,7 +252,7 @@ export default {
           headers,
         });
         this.innerVisible = false;
-        this.$notify({
+        this.$message({
           title: "成功",
           message: `数据删除成功！`,
           type: "success",
@@ -227,7 +272,7 @@ export default {
           this.currentErrorField.rownums
         );
         if (result.success) {
-          this.$notify({
+          this.$message({
             title: "成功",
             message: `数据更新成功！`,
             type: "success",
@@ -244,13 +289,13 @@ export default {
           });
           this.innerVisible = false;
         } else {
-          this.$notify.error({
+          this.$message.error({
             title: "错误",
             message: `数据更新错误, ${result.msg}`,
           });
         }
       } else {
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: `输入框为空，请输入。`,
         });
@@ -261,7 +306,7 @@ export default {
     async onRecvImportMsg(e, args) {
       let { sumRow, index, tabIndex, success, msg } = args;
       if (!success) {
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: msg,
         });
@@ -295,7 +340,7 @@ export default {
         this.activeName
       );
       // 导入成功，清理examplelist
-      this.$notify({
+      this.$message({
         title: "成功",
         message: `数据插入成功`,
         type: "success",

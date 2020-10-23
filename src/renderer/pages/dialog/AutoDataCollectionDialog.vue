@@ -8,7 +8,7 @@
       :visible.sync="autoDataVisible"
       width="60%"
       :before-close="handleClose"
-      :modal="false"
+      :modal="true"
     >
       <div>
         <el-steps :active="currentStepIndex" finish-status="success">
@@ -17,16 +17,17 @@
           <el-step title="导入文件"></el-step>
         </el-steps>
       </div>
-      <el-row style="text-align:center;margin-top:20px;">
+      <el-row style="text-align: center; margin-top: 20px">
         <el-col :span="8">
-          <div style="float:left;">
+          <div style="float: left">
             <el-button
               size="mini"
               type="primary"
-              :disabled="currentStepIndex!==1"
+              :disabled="currentStepIndex !== 1"
               @click="handleClickSelectFile"
-            >选择文件</el-button>
-            <span style="font-size:10px;">支持格式：txt、csv、xls、xlsx</span>
+              >选择文件</el-button
+            >
+            <span style="font-size: 10px">支持格式：txt、csv、xls、xlsx</span>
           </div>
         </el-col>
         <el-col :span="8">
@@ -34,19 +35,21 @@
             <el-button
               size="mini"
               type="primary"
-              :disabled="currentStepIndex!==2"
+              :disabled="currentStepIndex !== 2"
               @click="handleClickAnalysis"
-            >解析文件</el-button>
+              >解析文件</el-button
+            >
           </div>
         </el-col>
         <el-col :span="8">
-          <div style="float:right;">
+          <div style="float: right">
             <el-button
               size="mini"
               type="primary"
-              :disabled="currentStepIndex!==3"
+              :disabled="currentStepIndex !== 3"
               @click="handleClickImportFile"
-            >导入文件</el-button>
+              >导入文件</el-button
+            >
           </div>
         </el-col>
       </el-row>
@@ -55,17 +58,26 @@
         :data="exampleDataList"
         height="100%"
         border
-        style="width: 100%;margin-top: 20px;"
+        style="width: 100%; margin-top: 20px"
         size="mini"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="序号" width="60" type="index"></el-table-column>
+        <el-table-column
+          prop="id"
+          label="序号"
+          width="60"
+          type="index"
+        ></el-table-column>
         <el-table-column prop="fileName" label="文件名称"></el-table-column>
         <el-table-column prop="sheetName" label="表格名称"></el-table-column>
         <el-table-column prop="mc" label="匹配状态"></el-table-column>
       </el-table>
 
-      <el-progress style="margin-top:20px;" :stroke-width="26" :percentage="currentPercentage"></el-progress>
+      <el-progress
+        style="margin-top: 20px"
+        :stroke-width="26"
+        :percentage="currentPercentage"
+      ></el-progress>
     </el-dialog>
   </div>
 </template>

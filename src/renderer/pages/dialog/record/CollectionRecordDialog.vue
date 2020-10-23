@@ -9,7 +9,7 @@
       :visible.sync="showCollectionRecordVisible"
       width="30%"
       :before-close="handleClose"
-      :modal="false"
+      :modal="true"
     ></el-dialog>
   </div>
 </template>

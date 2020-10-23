@@ -32,31 +32,30 @@
           <el-row style="margin-top: 20px">
             <el-col :span="6"> &nbsp; </el-col>
             <el-col :span="12" style="text-align: center">
-              <el-button
-                style="width: 30%"
-                class="iconfont"
-                type="primary"
-                size="mini"
-                @click="handleClickNewCase"
-              >
-                &#xe6a3; 新增案件
-              </el-button>
-              <el-button
-                style="width: 30%"
-                class="iconfont"
-                type="primary"
-                size="mini"
-                @click="handleClickImportCase"
-                >&#xe61a; 导入案件</el-button
-              >
-              <el-button
-                style="width: 30%"
-                class="iconfont"
-                type="danger"
-                size="mini"
-                @click="handleClickDeleteAllCase"
-                >&#xe652; 清空所有案件</el-button
-              >
+              <el-button-group>
+                <el-button
+                  class="iconfont"
+                  type="primary"
+                  size="mini"
+                  @click="handleClickNewCase"
+                >
+                  &#xe6a3; 新增案件
+                </el-button>
+                <el-button
+                  class="iconfont"
+                  type="primary"
+                  size="mini"
+                  @click="handleClickImportCase"
+                  >&#xe61a; 导入案件</el-button
+                >
+                <el-button
+                  class="iconfont"
+                  type="danger"
+                  size="mini"
+                  @click="handleClickDeleteAllCase"
+                  >&#xe652; 清空所有案件</el-button
+                >
+              </el-button-group>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="4">

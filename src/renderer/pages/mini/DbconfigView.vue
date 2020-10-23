@@ -2,20 +2,26 @@
   <div>
     <el-row class="dbConfigtitle">
       <el-col :span="23">
-        <div class="iconfont" style="font-size:30px;margin:10px;float:left;">&#xe71a;</div>
-        <div style="margin:15px;">数据库连接设置</div>
+        <div
+          class="iconfont"
+          style="font-size: 30px; margin: 10px; float: left"
+        >
+          &#xe71a;
+        </div>
+        <div style="margin: 15px">数据库连接设置</div>
       </el-col>
       <el-col :span="1">
-        <div style="float:right;margin:15px;">
+        <div style="float: right; margin: 15px">
           <span
             @click="handleClickClose"
             class="iconfont close"
-            style="-webkit-app-region: no-drag;font-size:12px;"
-          >&#xe634;</span>
+            style="-webkit-app-region: no-drag; font-size: 12px"
+            >&#xe634;</span
+          >
         </div>
       </el-col>
     </el-row>
-    <el-row style="margin-top:30px;">
+    <el-row style="margin-top: 30px">
       <el-form
         ref="form"
         v-loading="loading"
@@ -69,7 +75,12 @@
           <el-col :span="14">
             <el-form-item size="mini">
               <el-button @click="handleClickTestConn">测试连接</el-button>
-              <el-button type="primary" @click="handleClickSave" :disabled="!enableSaveBtn">保存设置</el-button>
+              <el-button
+                type="primary"
+                @click="handleClickSave"
+                :disabled="!enableSaveBtn"
+                >保存设置</el-button
+              >
             </el-form-item>
           </el-col>
         </el-row>
@@ -110,14 +121,14 @@ export default {
           "SELECT ID::int, PARENT_ID::int,NAME FROM st_location WHERE PARENT_ID = 0;"
         );
         // this.enableSaveBtn = true;
-        this.$notify({
+        this.$message({
           title: "成功",
           message: "数据库测试连接成功",
           type: "success",
         });
       } catch (e) {
         // this.enableSaveBtn = false;
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: "数据库测试连接失败," + e.message,
           showClose: false,
@@ -143,7 +154,7 @@ export default {
           this.$electron.ipcRenderer.send("reloadApp");
         } catch (e) {
           log.error(e);
-          this.$notify.error({
+          this.$message.error({
             title: "错误",
             message: `数据保存错误：${e.message}`,
           });

@@ -9,6 +9,7 @@ import path from "path";
 import { ACHEME, LOAD_URL } from "./config";
 import log from "electron-log";
 const isDevelopment = process.env.NODE_ENV !== "production";
+// const renderProcessApi = path.join(__dirname, './inject.js')
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -60,6 +61,7 @@ function createWindow() {
   }
 
   mainWindow = new BrowserWindow({
+    // backgroundColor: "#11151d",
     useContentSize: true,
     title: global.title,
     resizable: process.platform === "darwin" ? true : false,

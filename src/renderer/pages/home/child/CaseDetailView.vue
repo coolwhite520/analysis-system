@@ -2,38 +2,42 @@
   <div class="detailInfo" v-loading="loading">
     <div class="baseInfo">
       <div class="title">
-        <h2 style="float: left;">基本信息</h2>
-        <el-button-group style="float: right; ">
+        <h2 style="float: left">基本信息</h2>
+        <el-button-group style="float: right">
           <el-button
             round
             type="primary"
             icon="el-icon-edit"
             size="mini"
             @click="handleClickEdit"
-          >编辑</el-button>
-          <el-button round type="primary" icon="el-icon-share" size="mini">导出</el-button>
+            >编辑</el-button
+          >
+          <el-button round type="primary" icon="el-icon-share" size="mini"
+            >导出</el-button
+          >
           <el-button
             round
             type="primary"
             icon="el-icon-delete"
             size="mini"
             @click="handleClickDelCase"
-          >删除</el-button>
+            >删除</el-button
+          >
         </el-button-group>
       </div>
-      <div style="clear:both;"></div>
+      <div style="clear: both"></div>
       <el-divider></el-divider>
       <el-row>
         <el-col :span="12">
           <p>
             案件名称：
-            <span class="caseContent">{{caseBase.ajmc}}</span>
+            <span class="caseContent">{{ caseBase.ajmc }}</span>
           </p>
         </el-col>
         <el-col :span="12">
           <p>
             案件编号：
-            <span class="caseContent">{{caseBase.ajbh}}</span>
+            <span class="caseContent">{{ caseBase.ajbh }}</span>
           </p>
         </el-col>
       </el-row>
@@ -42,7 +46,7 @@
         <el-col :span="12">
           <p>
             案件类型：
-            <span class="caseContent">{{caseBase.ajlbmc}}</span>
+            <span class="caseContent">{{ caseBase.ajlbmc }}</span>
           </p>
         </el-col>
         <el-col :span="12">&nbsp;</el-col>
@@ -51,13 +55,13 @@
         <el-col :span="12">
           <p>
             发生时间：
-            <span class="caseContent">{{caseBase.jjsj}}</span>
+            <span class="caseContent">{{ caseBase.jjsj }}</span>
           </p>
         </el-col>
         <el-col :span="12">
           <p>
             所属地区：
-            <span class="caseContent">{{caseBase.asjfsddxzqmc}}</span>
+            <span class="caseContent">{{ caseBase.asjfsddxzqmc }}</span>
           </p>
         </el-col>
       </el-row>
@@ -65,31 +69,31 @@
         <el-col :span="12">
           <p>
             立案时间：
-            <span class="caseContent">{{caseBase.cjsj}}</span>
+            <span class="caseContent">{{ caseBase.cjsj }}</span>
           </p>
         </el-col>
         <el-col :span="12">
           <p>
             案件状态：
-            <span class="caseContent">{{caseBase.zcjdmc}}</span>
+            <span class="caseContent">{{ caseBase.zcjdmc }}</span>
           </p>
         </el-col>
       </el-row>
 
       <p>
         简要案情：
-        <span class="caseContent">{{caseBase.jyaq}}</span>
+        <span class="caseContent">{{ caseBase.jyaq }}</span>
       </p>
       <p>
         综述案情：
-        <span class="caseContent">{{caseBase.zhaq}}</span>
+        <span class="caseContent">{{ caseBase.zhaq }}</span>
       </p>
     </div>
     <el-divider></el-divider>
     <div class="dataInfo">
       <div class="title">
-        <h2 style="float: left;">案件数据</h2>
-        <el-button-group style="float: right; ">
+        <h2 style="float: left">案件数据</h2>
+        <el-button-group style="float: right">
           <el-button
             v-for="item in renderButtonGroupList"
             :key="item.tid"
@@ -97,53 +101,68 @@
             type="primary"
             size="mini"
             @click="handleClickBtnGroup(item)"
-          >{{item.title}}</el-button>
+            >{{ item.title }}</el-button
+          >
         </el-button-group>
       </div>
-      <div style="clear:both;"></div>
+      <div style="clear: both"></div>
       <el-divider></el-divider>
       <div>
         <span>案件数据：</span>
-        <span class="caseContent">共采集&nbsp;{{batchCount}}&nbsp;批次</span>
+        <span class="caseContent">共采集&nbsp;{{ batchCount }}&nbsp;批次</span>
         <span>
-          <el-button type="text" size="mini" @click="handleClickCollectionRecord">采集记录</el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="handleClickCollectionRecord"
+            >采集记录</el-button
+          >
         </span>
       </div>
       <p>
         <span>数据总量：</span>
-        <span class="caseContent">共&nbsp;{{dataSum}}&nbsp;条</span>
+        <span class="caseContent">共&nbsp;{{ dataSum }}&nbsp;条</span>
         <span>
-          <el-button type="text" size="mini" @click="handleClickDataCollection">数据采集</el-button>
+          <el-button type="text" size="mini" @click="handleClickDataCollection"
+            >数据采集</el-button
+          >
         </span>
       </p>
       <p>
         待调单任务：
-        <span class="caseContent">{{awaitTaskCount}} 个</span>
+        <span class="caseContent">{{ awaitTaskCount }} 个</span>
         <span>
           <el-button type="text" size="mini">查看待调单任务</el-button>
         </span>
       </p>
       <p>
         实体数量：
-        <span class="caseContent">{{entityCount}} 个</span>
+        <span class="caseContent">{{ entityCount }} 个</span>
       </p>
       <el-divider></el-divider>
       <el-row>
         <el-col :span="8">&nbsp;</el-col>
         <el-col :span="8">
           <div>
-            <div style="text-align:center;">
-              <el-button class="button" type="primary" @click="handleClickBeginAnalysis" round>开始分析</el-button>
+            <div style="text-align: center">
+              <el-button
+                class="button"
+                type="primary"
+                @click="handleClickBeginAnalysis"
+                round
+                >开始分析</el-button
+              >
               <el-button
                 round
                 class="button"
                 type="primary"
                 @click="handleClickBeginAnalysisReport"
-              >分析报告</el-button>
+                >分析报告</el-button
+              >
             </div>
           </div>
         </el-col>
-        <el-col :span="8" style="text-align: right;">
+        <el-col :span="8" style="text-align: right">
           <el-button type="text" @click="handleClickGoHome">返回首页</el-button>
         </el-col>
       </el-row>
@@ -203,14 +222,14 @@ export default {
           "show-exist-case-view"
         );
         this.$store.commit("CaseDetail/SET_DELETE_STATE", "failed");
-        this.$notify({
+        this.$message({
           title: "成功",
           message: `删除案件成功!`,
           type: "success",
         });
       } else if (newValue === "failed") {
         this.loading = false;
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: `删除案件失败!`,
         });

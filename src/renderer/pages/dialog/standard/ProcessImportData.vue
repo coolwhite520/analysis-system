@@ -1,22 +1,36 @@
 <template>
   <div>
-    <div style="margin-bottom:10px;">
+    <div style="margin-bottom: 10px">
       <span>正在导入</span>
-      <span style="font-size:12px;color:#0c4b03">[{{fileName}}]</span>
+      <span style="font-size: 12px; color: #0c4b03">[{{ fileName }}]</span>
       <span>文件中的</span>
-      <span style="font-size:12px;color:#0c4b03">[{{sheetName}}]</span>
+      <span style="font-size: 12px; color: #0c4b03">[{{ sheetName }}]</span>
       <span>表数据...</span>
     </div>
     <el-row>
       <div
-        :style="{fontSize:10 + 'px', textAlign: 'center' , color: percentage !== 99 ? '#96d558':'#b75438', marginBottom:10 + 'px'}"
-      >{{secondTitle}}</div>
+        :style="{
+          fontSize: 10 + 'px',
+          textAlign: 'center',
+          color: percentage !== 99 ? '#96d558' : '#b75438',
+          marginBottom: 10 + 'px',
+        }"
+      >
+        {{ secondTitle }}
+      </div>
     </el-row>
     <el-row>
       <el-col :span="12">
         <div
-          style="font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
-        >{{tip}}</div>
+          style="
+            font-size: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          "
+        >
+          {{ tip }}
+        </div>
       </el-col>
     </el-row>
     <el-progress :percentage="percentage" :color="customColor"></el-progress>
@@ -63,7 +77,7 @@ export default {
         secondTitle,
       } = data;
       if (!success) {
-        _this.$notify.error({
+        _this.$message.error({
           title: "错误",
           message: msg,
         });

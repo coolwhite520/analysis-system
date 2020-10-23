@@ -10,6 +10,7 @@ const state = {
   graphicSettingVisible: false,
   nodeCombineVisible: false,
   showSaveProjectVisible: false,
+  showErrorRowRecordVisible: false,
 };
 
 const mutations = {
@@ -44,6 +45,9 @@ const mutations = {
   },
   SET_SHOWSAVEPROJECTVISIBLE(state, showSaveProjectVisible) {
     state.showSaveProjectVisible = showSaveProjectVisible;
+  },
+  SET_SHOWERRORROWRECORDVISIBLE(state, showErrorRowRecordVisible) {
+    state.showErrorRowRecordVisible = showErrorRowRecordVisible;
   },
 };
 

@@ -8,7 +8,7 @@
       :visible.sync="showReportVisible"
       width="50%"
       :before-close="handleClose"
-      :modal="false"
+      :modal="true"
     >
       <div slot="title" class="dialog-title">
         <i class="iconfont" style="color: white; font-size: 30px">&#xe630;</i>
@@ -659,7 +659,7 @@ export default {
 
         this.loading = false;
         this.buttonDisabled = false;
-        this.$notify({
+        this.$message({
           title: "成功",
           message: "生成报告成功，保存在目录：" + homedir,
           type: "success",
@@ -668,7 +668,7 @@ export default {
         this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", false);
       } catch (e) {
         log.info(e);
-        this.$notify.error({
+        this.$message.error({
           title: "失败",
           message: "生成报告失败，错误信息：" + e.message,
         });

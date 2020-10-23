@@ -1,6 +1,23 @@
 const log = require("electron-log");
 import cases from "./Cases";
 export default {
+  QueryCustom: async function(sql, ajid = "") {
+    const client = await global.pool.connect();
+    try {
+      if (ajid) {
+        await cases.SwitchCase(client, ajid);
+      } else {
+        await cases.SwitchDefaultCase(client);
+      }
+      const res = await client.query(sql);
+      return { success: true, rows: res.rows };
+    } catch (e) {
+      console.log(e);
+      return { success: false, rows: [] };
+    } finally {
+      client.release();
+    }
+  },
   // 创建聚合函数
   CreateAggregateFunction: async function() {
     const client = await global.pool.connect();
@@ -12,10 +29,10 @@ export default {
         stype = anyarray,
         initcond='{}'
         );`;
-      const res = await client.query(sql);
-      console.log(res);
-      client.release();
+      await client.query(sql);
     } catch (e) {
+      console.log(e);
+    } finally {
       client.release();
     }
   },

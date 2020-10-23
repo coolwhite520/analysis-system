@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont" v-html="renderData.title"></span>
+            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;无效数据</span>
           </div>
         </el-col>
         <el-col :span="2">
@@ -21,8 +21,6 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  props: ["renderData"],
-
   data() {
     return {};
   },

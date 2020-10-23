@@ -93,28 +93,33 @@ const actions = {
       let childrenArr = list.filter((child) => {
         return child.parentid === item.tid;
       });
-
       // 遍历子元素，根据tid获取模型的详细列表
+      let promiseArray = [];
       for (let index = 0; index < childrenArr.length; index++) {
         let childItem = childrenArr[index];
-        let mids = await models.QueryModelmidsByTid(childItem.tid);
-        if (mids.length > 0) {
-          let modelsDetailList = await models.QueryModelListByMids(mids);
-          let newTreeList = [];
-          let parentList = modelsDetailList.filter((item) => {
-            return item.parentid_200 === -1;
-          });
-          for (let father of parentList) {
-            let childrenList = modelsDetailList.filter((item) => {
-              return item.parentid_200 === father.mid;
-            });
-            father.childrenList = childrenList;
-            newTreeList.push(father);
-          }
-          // 把模型库添加到datacenter的项目中
-          Vue.set(childrenArr[index], "modelTreeList", newTreeList);
-        }
+        promiseArray.push(
+          (async function() {
+            let mids = await models.QueryModelmidsByTid(childItem.tid);
+            if (mids.length > 0) {
+              let modelsDetailList = await models.QueryModelListByMids(mids);
+              let newTreeList = [];
+              let parentList = modelsDetailList.filter((item) => {
+                return item.parentid_200 === -1;
+              });
+              for (let father of parentList) {
+                let childrenList = modelsDetailList.filter((item) => {
+                  return item.parentid_200 === father.mid;
+                });
+                father.childrenList = childrenList;
+                newTreeList.push(father);
+              }
+              // 把模型库添加到datacenter的项目中
+              Vue.set(childrenArr[index], "modelTreeList", newTreeList);
+            }
+          })()
+        );
       }
+      await Promise.all(promiseArray);
       item.childrenArr = childrenArr;
       treeList.push(item);
     }

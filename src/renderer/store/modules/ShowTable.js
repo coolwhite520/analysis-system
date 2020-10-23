@@ -251,6 +251,10 @@ const mutations = {
       }
     }
   },
+  // 主要是考虑模型中节点的展开和关闭的状态保存
+  SET_MODELTREE_OPENEDS(state, openeds) {
+    Vue.set(state.currentTableData.modelTree, "openeds", openeds);
+  },
   SET_SPREADNODESWITCH(state, SpreadNodeSwitch) {
     state.currentTableData.SpreadNodeSwitch = SpreadNodeSwitch;
   },
@@ -313,98 +317,39 @@ const mutations = {
     if (action === "add") {
       for (let index = 0; index < tabs.length; index++) {
         let tab = tabs[index];
-        if (tab.componentName === componentName) {
-          if (componentName === "entity-list-view") {
-            let entityList = state.currentTableData.entityList;
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
-              entityList,
-              componentName: "entity-list-view",
-            });
-          }
-          if (componentName === "combo-entity-list-view") {
-            let comboInfo = state.currentTableData.comboInfo;
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表",
-              comboInfo,
-              componentName: "combo-entity-list-view",
-            });
-          }
-          if (componentName === "entity-view") {
-            let entity = state.currentTableData.entity;
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体信息",
-              entity,
-              componentName: "entity-view",
-            });
-          }
-          if (componentName === "search-replace-view") {
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;查找替换",
-              componentName: "search-replace-view",
-            });
-          }
-          if (componentName === "special-char-view") {
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;特殊字符",
-              componentName: "special-char-view",
-            });
-          }
-          if (componentName === "ineffect-data-view") {
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;无效数据",
-              componentName: "ineffect-data-view",
-            });
-          }
-          if (componentName === "data-diff-view") {
-            state.currentTableData.rightTabs.splice(index, 1, {
-              title: "&#xe61c;&nbsp;&nbsp;&nbsp;数据去重",
-              componentName: "data-diff-view",
-            });
-          }
+        if (componentName === tab.componentName) {
           state.currentTableData.rightActiveName = componentName;
           return;
         }
       }
-      state.currentTableData.rightActiveName = componentName;
       switch (componentName) {
         case "model-list-view":
-          let modelTreeList = state.currentTableData.modelTreeList;
           state.currentTableData.rightTabs.push({
             title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
-            modelTreeList,
             componentName: "model-list-view",
           });
           break;
         case "model-view":
-          let mpids = state.currentTableData.mpids;
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
-            mpids,
             componentName: "model-view",
           });
           break;
         case "combo-entity-list-view":
-          let comboInfo = state.currentTableData.comboInfo;
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表",
-            comboInfo,
             componentName: "combo-entity-list-view",
           });
           break;
         case "entity-list-view":
-          let entityList = state.currentTableData.entityList;
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体列表",
-            entityList,
             componentName: "entity-list-view",
           });
           break;
         case "entity-view":
-          let entity = state.currentTableData.entity;
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体信息",
-            entity,
             componentName: "entity-view",
           });
           break;
@@ -433,6 +378,7 @@ const mutations = {
           });
           break;
       }
+      state.currentTableData.rightActiveName = componentName;
       return;
     } else {
       for (let index = 0; index < tabs.length; index++) {
@@ -449,6 +395,14 @@ const mutations = {
         }
       }
     }
+  },
+  // 记录右侧特殊字符tree的原始数据
+  SET_SPECIALCHAR_TREE_DATA(state, specialCharData) {
+    Vue.set(state.currentTableData, "specialCharData", specialCharData);
+  },
+  // 记录特殊字符错误数据
+  SET_RENDERERRORDATA(state, renderErrorData) {
+    Vue.set(state.currentTableData, "renderErrorData", renderErrorData);
   },
   SAVE_GRAPHDATA(state, { graphid, relationGraphData }) {
     for (let tableData of state.tableDataList) {
@@ -510,6 +464,7 @@ const actions = {
     if (typeof modelFilterChildList === "undefined") {
       modelFilterChildList = [];
     }
+
     let modelTreeList = [];
     let title = "";
     let tableename = "";
@@ -523,6 +478,7 @@ const actions = {
         }
       }
     }
+
     let filterChildStr = convertSql.convertDataFilterToSqlStr(
       parseInt(tid),
       modelFilterChildList
@@ -577,13 +533,12 @@ const actions = {
           exportSql,
         };
         if (modelTreeList && modelTreeList.length > 0) {
-          obj.modelTreeList = modelTreeList;
+          obj.modelTree = { treeList: modelTreeList, openeds: [] };
+          obj.rightActiveName = "model-list-view";
           obj.rightTabs.push({
             title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",
-            modelTreeList,
             componentName: "model-list-view",
           });
-          obj.rightActiveName = "model-list-view";
         }
         commit("ADD_TABLE_DATA_TO_LIST", obj);
       }
@@ -684,12 +639,11 @@ const actions = {
         };
         if (mpids && mpids.length > 0) {
           obj.mpids = mpids;
+          obj.rightActiveName = "model-view";
           obj.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
-            mpids,
             componentName: "model-view",
           });
-          obj.rightActiveName = "model-view";
         }
         commit("ADD_TABLE_DATA_TO_LIST", obj);
       }

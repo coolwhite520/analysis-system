@@ -1500,9 +1500,7 @@ export default {
     this.graph = new this.$G6.Graph(option);
     this.initPlugins();
     if (this.tableData.hasOwnProperty("relationGraphData")) {
-      console.log("a-->", this.tableData.relationGraphData);
       let data = this.$lodash.cloneDeepWith(this.tableData.relationGraphData);
-      console.log("a-->", data);
       this.graph.data(data);
     } else {
       this.graph.data(this.makeData()); // 加载数据
@@ -1625,9 +1623,12 @@ export default {
       });
       if (e.select) {
         e.selectedItems.nodes.forEach((cn) => {
-          this.graph.setItemState(cn, "selected", true); // 设置当前节点的 click 状态为 true
+          if (cn._cfg.visible) {
+            this.currentSelectedNodes = [];
+            this.currentSelectedNodes.push(cn);
+            this.graph.setItemState(cn, "selected", true); // 设置当前节点的 click 状态为 true
+          }
         });
-        this.currentSelectedNodes = e.selectedItems.nodes;
       } else {
         this.currentSelectedNodes = [];
       }

@@ -1,6 +1,6 @@
 <template>
   <div class="newcaseForm" v-loading="loading">
-    <div style="text-align:center;margin-bottom:20px;">
+    <div style="text-align: center; margin-bottom: 20px">
       <h2>新增案件</h2>
     </div>
     <el-form
@@ -15,7 +15,7 @@
           <el-form-item label="案件类型" prop="ajlbArr">
             <el-cascader
               @change="handleChangeAjlb(ruleForm.ajlbArr)"
-              style="width: 100%;"
+              style="width: 100%"
               filterable
               :show-all-levels="false"
               v-model="ruleForm.ajlbArr"
@@ -48,7 +48,7 @@
                 placeholder="选择案件发生的时间日期"
                 value-format="yyyy-MM-dd"
                 v-model="ruleForm.jjsj"
-                style="width: 100%;"
+                style="width: 100%"
               ></el-date-picker>
             </el-form-item>
           </el-form-item>
@@ -62,7 +62,7 @@
                 type="date"
                 placeholder="选择立案日期"
                 v-model="ruleForm.cjsj"
-                style="width: 100%;"
+                style="width: 100%"
               ></el-date-picker>
             </el-form-item>
           </el-form-item>
@@ -70,7 +70,11 @@
       </el-row>
 
       <el-form-item label="案件状态" prop="zcjddm">
-        <el-select v-model="ruleForm.zcjddm" placeholder="请选择案件状态" @change="handleChangeState">
+        <el-select
+          v-model="ruleForm.zcjddm"
+          placeholder="请选择案件状态"
+          @change="handleChangeState"
+        >
           <el-option
             v-for="item of zcjdmc_list"
             :key="item.id"
@@ -106,7 +110,12 @@
             placeholder="请选择城市"
             @change="handleChangeCity(ruleForm.city)"
           >
-            <el-option v-for="city of city_list" :key="city.id" :label="city.name" :value="city.id"></el-option>
+            <el-option
+              v-for="city of city_list"
+              :key="city.id"
+              :label="city.name"
+              :value="city.id"
+            ></el-option>
           </el-select>
         </el-col>
         <el-col :span="5">
@@ -115,7 +124,12 @@
             placeholder="请选择区、镇"
             @change="handleChangeTown(ruleForm.asjfsddxzqhdm)"
           >
-            <el-option v-for="town of town_list" :key="town.id" :label="town.name" :value="town.id"></el-option>
+            <el-option
+              v-for="town of town_list"
+              :key="town.id"
+              :label="town.name"
+              :value="town.id"
+            ></el-option>
           </el-select>
         </el-col>
       </el-form-item>
@@ -130,9 +144,13 @@
 
       <el-row>
         <el-col :span="8">&nbsp;</el-col>
-        <el-col style="text-align:center;">
-          <el-button type="primary" round @click="submitForm('ruleForm')">立即创建</el-button>
-          <el-button @click="resetForm('ruleForm')" round>&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</el-button>
+        <el-col style="text-align: center">
+          <el-button type="primary" round @click="submitForm('ruleForm')"
+            >立即创建</el-button
+          >
+          <el-button @click="resetForm('ruleForm')" round
+            >&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</el-button
+          >
         </el-col>
         <el-col :span="8">&nbsp;</el-col>
       </el-row>
@@ -229,7 +247,7 @@ export default {
           "show-exist-case-view"
         );
         this.$store.commit("NewCase/SET_CREATE_STATE", "failed");
-        this.$notify({
+        this.$message({
           title: "成功",
           message: `新建案件[${this.ruleForm.ajmc}]成功!`,
           type: "success",
@@ -237,7 +255,7 @@ export default {
         this.$store.dispatch("Cases/getExistCaseAsync");
       } else if (newState === "failed") {
         this.loading = false;
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: `新建案件[${this.ruleForm.ajmc}]失败!`,
         });

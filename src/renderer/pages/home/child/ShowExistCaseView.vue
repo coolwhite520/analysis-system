@@ -21,7 +21,8 @@
         </div>
         <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
           <el-row>
-            <span class="iconfont" style="font-size: 20px">&#xe6d1;编号：</span>
+            <span class="iconfont" style="font-size: 20px">&#xe6d1;</span>
+            <span style="font-size: 15px">编号：</span>
             <b style="color: #384e6e; font-size: 12px">{{ caseItem.ajbh }}</b>
           </el-row>
           <el-row>
@@ -122,7 +123,7 @@ export default {
   border: 2px solid #384e6e;
   border-radius: 15px;
   /* background-image: linear-gradient(to right, #34435c, white); */
-  /* color: #808080; */
+  color: #384e6e;
 }
 
 .cardStyle:hover {

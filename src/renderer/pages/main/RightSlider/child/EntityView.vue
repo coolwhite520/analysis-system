@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont" v-html="renderData.title"></span>
+            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;实体信息</span>
           </div>
         </el-col>
         <el-col :span="2">
@@ -16,7 +16,7 @@
       </el-row>
 
       <el-table
-        :data="renderData.entity.entityTableData"
+        :data="currentTableData.entity.entityTableData"
         :height="tableHeight"
         size="mini"
         style="width: 100%"
@@ -113,8 +113,6 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  props: ["renderData"],
-
   data() {
     return {
       iconsPath: "",
@@ -122,7 +120,6 @@ export default {
     };
   },
   mounted() {
-    console.log("mounted", this.renderData.entity.nodeStyle);
     this.iconsPath = "/static/images/icons/";
     let iconNames = ["金融", "男", "女", "企业", "银行卡", "组织"];
     this.iconList = iconNames.map((name) => {
@@ -139,13 +136,15 @@ export default {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", ["currentTableData"]),
     tableHeight() {
-      return 36 * 1 + 36 * this.renderData.entity.entityTableData.length + 2;
+      return (
+        36 * 1 + 36 * this.currentTableData.entity.entityTableData.length + 2
+      );
     },
     table2Height() {
-      return 36 * 2 + 48 * this.renderData.entity.nodeStyle.length + 2;
+      return 36 * 2 + 48 * this.currentTableData.entity.nodeStyle.length + 2;
     },
     myNodeStyle() {
-      return JSON.parse(JSON.stringify(this.renderData.entity.nodeStyle));
+      return JSON.parse(JSON.stringify(this.currentTableData.entity.nodeStyle));
     },
   },
   methods: {
@@ -153,7 +152,7 @@ export default {
       console.log(row);
       this.$bus.$emit("nodeStyleSetting", {
         graphid: this.currentTableData.graphid,
-        nodeid: this.renderData.entity.nodeid,
+        nodeid: this.currentTableData.entity.nodeid,
         nodeStyle: row,
       });
     },
@@ -194,7 +193,7 @@ export default {
         row.describe = this.iconsPath + command + ".png";
         this.$bus.$emit("nodeStyleSetting", {
           graphid: this.currentTableData.graphid,
-          nodeid: this.renderData.entity.nodeid,
+          nodeid: this.currentTableData.entity.nodeid,
           nodeStyle: row,
         });
       }

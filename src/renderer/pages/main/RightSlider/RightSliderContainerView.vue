@@ -20,7 +20,7 @@
           class="iconfont"
           v-html="item.title"
         ></span>
-        <component :is="item.componentName" :renderData="item"></component>
+        <component :is="item.componentName"></component>
       </el-tab-pane>
     </el-tabs>
   </div>

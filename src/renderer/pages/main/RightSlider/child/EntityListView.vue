@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont" v-html="renderData.title"></span>
+            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;实体列表</span>
           </div>
         </el-col>
         <el-col :span="2">
@@ -16,7 +16,7 @@
       </el-row>
       <el-table
         size="mini"
-        :data="renderData.entityList"
+        :data="currentTableData.entityList"
         style="width: 100%"
         :height="contentViewHeight - 40 - 40 - 5"
         @row-click="handleClickRow"
@@ -48,7 +48,6 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  props: ["renderData"],
   data() {
     return { currentFocusRow: null };
   },

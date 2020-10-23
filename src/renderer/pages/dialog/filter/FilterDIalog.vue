@@ -8,7 +8,7 @@
       :visible.sync="filterVisible"
       width="50%"
       :before-close="handleClose"
-      :modal="false"
+      :modal="true"
     >
       <div slot="title" class="dialog-title">
         <i class="iconfont" style="color: white; font-size: 30px">&#xe815;</i>

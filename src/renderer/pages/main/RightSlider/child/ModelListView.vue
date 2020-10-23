@@ -3,7 +3,7 @@
     <el-row class="title">
       <el-col :span="22">
         <div>
-          <span class="iconfont" v-html="renderData.title"></span>
+          <span class="iconfont">&#xe60f;&nbsp;&nbsp;&nbsp;模型库</span>
         </div>
       </el-col>
       <el-col :span="2">
@@ -15,12 +15,14 @@
       :style="{ height: contentViewHeight - 40 * 2 - 15 + 'px' }"
     >
       <el-menu
-        @select="handleSelect"
         :default-openeds="openeds"
+        @close="handleClose"
+        @open="handleOpen"
+        @select="handleSelect"
         :style="{ height: contentViewHeight - 200 + 'px' }"
       >
         <el-submenu
-          v-for="father of renderData.modelTreeList"
+          v-for="father of currentTableData.modelTree.treeList"
           :key="father.mid"
           :index="String(father.mid)"
         >
@@ -65,24 +67,26 @@
 import { mapState, mapGetters } from "vuex";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 export default {
-  props: ["renderData"],
   mounted() {},
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", ["tableDataList", "currentTableData"]),
+    openeds() {
+      return JSON.parse(
+        JSON.stringify(this.currentTableData.modelTree.openeds)
+      );
+    },
   },
   data() {
-    return {
-      openeds: ["1"],
-    };
+    return {};
   },
   methods: {
     async handleSelect(key, keyPath) {
       let tid = keyPath[1];
       let pgsqlTemplate = "";
       let model = {};
-      for (let item of this.renderData.modelTreeList) {
+      for (let item of this.currentTableData.modelTree.treeList) {
         for (let childitem of item.childrenList) {
           if (tid === String(childitem.mid)) {
             pgsqlTemplate = childitem.gpsqltemplate;
@@ -92,7 +96,7 @@ export default {
         }
       }
       if (pgsqlTemplate === null) {
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: `没有基础模版哦`,
         });
@@ -120,6 +124,36 @@ export default {
         offset: 0,
         count: 30,
       });
+    },
+    handleOpen(openIndex) {
+      let bFindSame = false;
+      for (let index = 0; index < this.openeds.length; index++) {
+        let value = this.openeds[index];
+        if (value === openIndex) {
+          bFindSame = true;
+          break;
+        }
+      }
+      if (!bFindSame) this.openeds.push(openIndex);
+      console.log(this.openeds);
+      this.$store.commit(
+        "ShowTable/SET_MODELTREE_OPENEDS",
+        JSON.parse(JSON.stringify(this.openeds))
+      );
+    },
+    handleClose(closeIndex) {
+      for (let index = 0; index < this.openeds.length; index++) {
+        let value = this.openeds[index];
+        if (value === closeIndex) {
+          this.openeds.splice(index, 1);
+          break;
+        }
+      }
+      console.log(this.openeds);
+      this.$store.commit(
+        "ShowTable/SET_MODELTREE_OPENEDS",
+        JSON.parse(JSON.stringify(this.openeds))
+      );
     },
     handleClickClose() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {

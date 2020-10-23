@@ -8,7 +8,7 @@
       :visible.sync="showFieldsVisible"
       width="30%"
       :before-close="handleClose"
-      :modal="false"
+      :modal="true"
     >
       <!-- <el-tree :data="currentTableData.headers" :props="defaultProps" show-checkbox></el-tree>
       -->

@@ -94,7 +94,7 @@ export default {
         let result = await this.$electron.remote.dialog.showMessageBox(null, {
           type: "warning",
           title: "注意",
-          message: `返回主页面将丢失当前的操作数据，您确定这样做吗？`,
+          message: `返回主页面将丢失当前的操作数据，您确定这样做吗？如有重要数据建议您先进行保存（ctrl+s)`,
           buttons: ["确定", "取消"],
           defaultId: 0,
         });

@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont" v-html="renderData.title"></span>
+            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;分组实体列表</span>
           </div>
         </el-col>
         <el-col :span="2">
@@ -29,7 +29,7 @@
       <el-tree
         style="border-bottom: 1px solid #e4e7ec; height: 300px"
         :default-expand-all="true"
-        :data="renderData.comboInfo.comboentityList"
+        :data="currentTableData.comboInfo.comboentityList"
         :props="defaultProps"
         @node-click="handleNodeClick"
       >
@@ -64,7 +64,7 @@
       </el-tree>
       <el-table
         height="300"
-        :data="renderData.comboInfo.comboTableData"
+        :data="currentTableData.comboInfo.comboTableData"
         size="mini"
         style="width: 100%"
         border
@@ -98,9 +98,8 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 export default {
-  props: ["renderData"],
   mounted() {
-    console.log(this.renderData.comboInfo);
+    console.log(this.currentTableData.comboInfo);
   },
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),

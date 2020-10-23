@@ -3,7 +3,7 @@
     <!-- <el-row>
       <span style="font-size:12px;">标准导入：</span>
     </el-row>-->
-    <el-row style="text-align:center;margin-top:10px;">
+    <el-row style="text-align: center; margin-top: 10px">
       <el-button-group>
         <el-button
           size="mini"
@@ -12,12 +12,12 @@
           @click="handleClickImportData(item.pdm)"
         >
           <span class="mybutton iconfont" v-html="item.icon"></span>
-          <span>{{item.mc}}</span>
+          <span>{{ item.mc }}</span>
         </el-button>
       </el-button-group>
     </el-row>
 
-    <el-row style="margin-top: 20px;"></el-row>
+    <el-row style="margin-top: 20px"></el-row>
     <el-row>
       <!-- <span style="font-size:12px;">自动导入：</span> -->
       <!-- <el-tooltip effect="dark" content="可以自动分析文件字段并进行自动匹配" placement="top"> -->
@@ -25,11 +25,13 @@
         <span class="mybutton iconfont">&#xe620;</span>
         <span>智能文件导入</span>
       </el-button>
-      <span style="font-size:10px;color:gray">可自动分析文件字段并进行自动匹配</span>
+      <span style="font-size: 10px; color: gray"
+        >可自动分析文件字段并进行自动匹配</span
+      >
       <!-- </el-tooltip> -->
     </el-row>
-    <div style="margin-top:20px;" v-show="exampleDataList.length > 0">
-      <span style="font-size:16px;">
+    <div style="margin-top: 20px" v-show="exampleDataList.length > 0">
+      <span style="font-size: 16px">
         <b>数据文件表</b>
       </span>
       <el-table
@@ -44,11 +46,28 @@
         @current-change="handleCurrentChange"
       >
         <el-table-column type="selection"></el-table-column>
-        <el-table-column label="序号" width="60" fixed type="index"></el-table-column>
-        <el-table-column prop="fileName" label="工作簿（文件名）" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="sheetName" label="工作表（sheet）" show-overflow-tooltip>
+        <el-table-column
+          label="序号"
+          width="60"
+          fixed
+          type="index"
+        ></el-table-column>
+        <el-table-column
+          prop="fileName"
+          label="工作簿（文件名）"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="sheetName"
+          label="工作表（sheet）"
+          show-overflow-tooltip
+        >
           <template slot-scope="scope">
-            <el-input :value="scope.row.sheetName" size="mini" disabled></el-input>
+            <el-input
+              :value="scope.row.sheetName"
+              size="mini"
+              disabled
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="mc" label="数据类型" show-overflow-tooltip>
@@ -58,7 +77,11 @@
               placeholder="请选择"
               size="mini"
               :disabled="!scope.row.enableModify"
-              @change="((val)=>{handleChangeDataType(val, scope.$index)})"
+              @change="
+                (val) => {
+                  handleChangeDataType(val, scope.$index);
+                }
+              "
             >
               <el-option
                 v-for="item in scope.row.DataTypeList"
@@ -70,10 +93,13 @@
             <el-button
               size="mini"
               class="iconfont"
-              style="font-size:15px;"
+              style="font-size: 15px"
               type="text"
               @click="handleModify(scope.$index, scope.row)"
-            >{{!scope.row.enableModify?"&#xe60d;":"&#xe60e;"}}</el-button>
+              >{{
+                !scope.row.enableModify ? "&#xe60d;" : "&#xe60e;"
+              }}</el-button
+            >
           </template>
         </el-table-column>
         <el-table-column label="匹配目标表" show-overflow-tooltip>
@@ -83,7 +109,11 @@
               :value="scope.row.matchedMbdm"
               placeholder="请选择"
               size="mini"
-              @change="((val)=>{handleChangeMatchTemplate(val, scope.$index)})"
+              @change="
+                (val) => {
+                  handleChangeMatchTemplate(val, scope.$index);
+                }
+              "
             >
               <el-option
                 v-for="item in scope.row.matchedMbdmList"
@@ -96,12 +126,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top:20px;" v-if="currentRow">
+      <div style="margin-top: 20px" v-if="currentRow">
         <div>
-          <span style="font-size:16px;">
+          <span style="font-size: 16px">
             <b>数据文件实例表</b>
           </span>
-          <span style="font-size:12px;">{{currentRow.fileName}}\{{currentRow.sheetName}}</span>
+          <span style="font-size: 12px"
+            >{{ currentRow.fileName }}\{{ currentRow.sheetName }}</span
+          >
         </div>
         <el-table
           stripe
@@ -111,10 +143,27 @@
           style="width: 100%"
           size="mini"
         >
-          <el-table-column label="序号" width="60" type="index" fixed></el-table-column>
-          <el-table-column prop="fileColName" label="文件字段" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="ins1" label="文件表数据实例1" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="ins2" label="文件表数据实例2" show-overflow-tooltip></el-table-column>
+          <el-table-column
+            label="序号"
+            width="60"
+            type="index"
+            fixed
+          ></el-table-column>
+          <el-table-column
+            prop="fileColName"
+            label="文件字段"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column
+            prop="ins1"
+            label="文件表数据实例1"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column
+            prop="ins2"
+            label="文件表数据实例2"
+            show-overflow-tooltip
+          ></el-table-column>
           <el-table-column label="数据库字段" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-select
@@ -122,7 +171,11 @@
                 placeholder
                 size="mini"
                 filterable
-                @change=" ((val)=>{handleChangeMatchColName(val, scope.$index, scope.row)})"
+                @change="
+                  (val) => {
+                    handleChangeMatchColName(val, scope.$index, scope.row);
+                  }
+                "
               >
                 <el-option
                   v-for="item in currentRow.templateToFieldObjList"
@@ -134,17 +187,25 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="operation" label="操作/提示" show-overflow-tooltip>
+          <el-table-column
+            prop="operation"
+            label="操作/提示"
+            show-overflow-tooltip
+          >
             <template slot-scope="scope">
-              <div v-show="scope.row.matchedFieldName.toLowerCase()==='jdbz'">
+              <div v-show="scope.row.matchedFieldName.toLowerCase() === 'jdbz'">
                 <el-button size="mini" type="text">进出设置</el-button>
               </div>
-              <div v-show="scope.row.sameMatchedRow" style="color:#d07d76">重复的字段选取</div>
+              <div v-show="scope.row.sameMatchedRow" style="color: #d07d76">
+                重复的字段选取
+              </div>
             </template>
           </el-table-column>
         </el-table>
-        <div style="margin-top:20px;text-align: center;">
-          <el-button @click="handleClickSubmit" type="primary">数据临时导入</el-button>
+        <div style="margin-top: 20px; text-align: center">
+          <el-button @click="handleClickSubmit" type="primary"
+            >数据临时导入</el-button
+          >
         </div>
       </div>
     </div>
@@ -164,7 +225,7 @@ export default {
         if (!data.success) {
           const h = _this.$createElement;
           let message = `文件：[${data.filePathName}] 解析错误信息：${data.errormsg}`;
-          _this.$notify({
+          _this.$message({
             title: "解析文件出错",
             message: h("i", { style: "color: teal" }, `${message}`),
           });
@@ -213,7 +274,7 @@ export default {
       if (this.multipleSelection.length > 0) {
         for (let data of this.multipleSelection) {
           if (data.matchedMbdm === "") {
-            this.$notify.error({
+            this.$message.error({
               title: "错误",
               message: `[${data.fileName}]的[${data.sheetName}]没有匹配的目标表, 请修改后继续！`,
             });
@@ -222,7 +283,7 @@ export default {
           let allFieldList = [];
           for (let item of data.dataList) {
             if (item.sameMatchedRow) {
-              this.$notify.error({
+              this.$message.error({
                 title: "错误",
                 message: `[${data.fileName}]的[${data.sheetName}]存在重复字段, 请修改后继续！`,
               });
@@ -240,7 +301,7 @@ export default {
                   return el.toUpperCase() === "ZH" || el.toUpperCase() === "KH";
                 });
                 if (filterTemp.length === 0) {
-                  this.$notify.error({
+                  this.$message.error({
                     title: "错误",
                     message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项`,
                   });
@@ -254,7 +315,7 @@ export default {
                 //   return el === "ZH" || el === "KH";
                 // });
                 // if (filterTemp.length === 0) {
-                //   this.$notify.error({
+                //   this.$message.error({
                 //     title: "错误",
                 //     message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项`,
                 //   });
@@ -299,7 +360,7 @@ export default {
         );
         this.$electron.ipcRenderer.send("read-all-file", newExampleList);
       } else {
-        this.$notify.error({
+        this.$message.error({
           title: "错误",
           message: `当前没有选择任何需要导入的数据, 请勾选后继续进行！`,
         });

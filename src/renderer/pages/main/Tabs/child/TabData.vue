@@ -237,6 +237,7 @@ import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import { mapState } from "vuex";
 import path, { extname } from "path";
+import DataCleanDb from "@/db/DataClean.js";
 export default {
   data() {
     return {
@@ -275,7 +276,7 @@ export default {
     isModelLibVisible() {
       return (
         this.currentTableData &&
-        this.currentTableData.hasOwnProperty("modelTreeList")
+        this.currentTableData.hasOwnProperty("modelTree")
       );
     },
     isModelVisible() {
@@ -356,7 +357,7 @@ export default {
     },
     async handleClickExportData() {
       if (this.exportProcessVisible) {
-        this.$notify({
+        this.$message({
           title: "警告",
           message: "当前存在导出操作，请稍后...",
           type: "warning",
@@ -384,7 +385,27 @@ export default {
         this.$electron.ipcRenderer.send("export-one-file-begin", args);
       }
     },
-    handleClickWashingButton(opt) {
+    findRoot(rows) {
+      let obj = rows.find((row) => row.parentid === -1);
+      return JSON.parse(JSON.stringify(obj));
+    },
+    makeTreeByList(list, rootid) {
+      let len = list.length;
+      function loop(rootid) {
+        let res = [];
+        for (let i = 0; i < len; i++) {
+          let item = list[i];
+          if (item.parentid === rootid) {
+            item.children = loop(item.tid);
+            item.errorCount = 0;
+            res.push(item);
+          }
+        }
+        return res;
+      }
+      return loop(rootid);
+    },
+    async handleClickWashingButton(opt) {
       console.log(opt);
       let componentObj = {};
       switch (opt) {
@@ -395,6 +416,21 @@ export default {
           };
           break;
         case "special-char":
+          let { success, rows } = await DataCleanDb.queryRulesFromTable(
+            this.currentTableData.tableename,
+            "0"
+          );
+          if (success) {
+            if (rows.length > 0) {
+              let keys = rows.map((row) => row.tid);
+              let rootNode = this.findRoot(rows);
+              let renderTree = this.makeTreeByList(rows, rootNode.tid);
+              this.$store.commit("ShowTable/SET_SPECIALCHAR_TREE_DATA", {
+                checkedKeys: JSON.parse(JSON.stringify(keys)),
+                renderTree,
+              });
+            }
+          }
           componentObj = {
             componentName: "special-char-view",
             action: "add",

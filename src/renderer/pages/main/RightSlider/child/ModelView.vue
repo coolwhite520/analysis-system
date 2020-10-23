@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont" v-html="renderData.title"></span>
+            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;模型参数</span>
           </div>
         </el-col>
         <el-col :span="2">
@@ -30,11 +30,11 @@
       </el-row>
 
       <el-row>
-        <div v-show="renderData.mpids.length > 0" class="modelTitle">
+        <div v-show="currentTableData.mpids.length > 0" class="modelTitle">
           参数设置：
         </div>
         <div class="modelDescribe">
-          <div v-show="renderData.mpids.includes('1')">
+          <div v-show="currentTableData.mpids.includes('1')">
             <div class="childTitle">交易账卡号：</div>
             <div>
               <el-input
@@ -46,7 +46,7 @@
               <span>多个请用逗号隔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('2')">
+          <div v-show="currentTableData.mpids.includes('2')">
             <div class="childTitle">交易对手账卡号：</div>
             <div>
               <el-input
@@ -58,7 +58,7 @@
               <span>多个请用逗号隔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('3')">
+          <div v-show="currentTableData.mpids.includes('3')">
             <div class="childTitle">关键人员：</div>
             <div>
               <el-input
@@ -69,7 +69,7 @@
               <span>多个请用逗号隔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('4')">
+          <div v-show="currentTableData.mpids.includes('4')">
             <div class="childTitle">对手关键人员：</div>
             <div>
               <el-input
@@ -81,7 +81,7 @@
               <span>多个请用逗号隔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('5')">
+          <div v-show="currentTableData.mpids.includes('5')">
             <div class="childTitle">交易证照号码：</div>
             <div>
               <el-input
@@ -93,7 +93,7 @@
               <span>多个请用逗号隔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('6')">
+          <div v-show="currentTableData.mpids.includes('6')">
             <div class="childTitle">交易对手证照号码：</div>
             <div>
               <el-input
@@ -105,7 +105,7 @@
               <span>多个请用逗号隔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('7')">
+          <div v-show="currentTableData.mpids.includes('7')">
             <div class="childTitle">获利金额：</div>
             <div>
               <span>大于</span>
@@ -117,7 +117,7 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('8')">
+          <div v-show="currentTableData.mpids.includes('8')">
             <div class="childTitle">关联账户数阀值：</div>
             <div>
               <el-input
@@ -128,7 +128,7 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('9')">
+          <div v-show="currentTableData.mpids.includes('9')">
             <div class="childTitle">最小交易额 大于等于：</div>
             <div>
               <el-input
@@ -140,7 +140,7 @@
               <span>元</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('10')">
+          <div v-show="currentTableData.mpids.includes('10')">
             <div class="childTitle">交易金额：</div>
             <div class="childSelection">
               <el-select
@@ -166,7 +166,10 @@
               <span>元</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('11')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('11')"
+            class="selectionItem"
+          >
             <div class="childTitle">交易总额：</div>
             <div class="childSelection">
               <el-select
@@ -192,7 +195,10 @@
               <span>元</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('12')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('12')"
+            class="selectionItem"
+          >
             <div class="childTitle">交易笔数：</div>
             <div class="childSelection">
               <el-select
@@ -217,7 +223,10 @@
               <span>笔</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('13')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('13')"
+            class="selectionItem"
+          >
             <div class="childTitle">时间间隔：</div>
             <div>
               <el-input
@@ -229,7 +238,10 @@
               <span>小时</span>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('14')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('14')"
+            class="selectionItem"
+          >
             <div class="childTitle">时间段：</div>
             <div class="childSelection">
               <el-select
@@ -248,7 +260,10 @@
               </el-select>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('15')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('15')"
+            class="selectionItem"
+          >
             <div class="childTitle">时间段：</div>
             <div>
               <el-input
@@ -268,7 +283,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('16')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('16')"
+            class="selectionItem"
+          >
             <div class="childTitle">交易出进比最小值：</div>
             <div>
               <el-input
@@ -288,7 +306,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('18')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('18')"
+            class="selectionItem"
+          >
             <div class="childTitle">注册地点关联公司数量：</div>
             <div>
               <span>大于</span>
@@ -300,7 +321,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('19')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('19')"
+            class="selectionItem"
+          >
             <div class="childTitle">报税人关联公司数量：</div>
             <div>
               <span>大于</span>
@@ -312,7 +336,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('20')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('20')"
+            class="selectionItem"
+          >
             <div class="childTitle">财务负责人关联公司数量：</div>
             <div>
               <span>大于</span>
@@ -324,7 +351,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('21')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('21')"
+            class="selectionItem"
+          >
             <div class="childTitle">销项税金额合计：</div>
             <div>
               <span>大于</span>
@@ -336,7 +366,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('22')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('22')"
+            class="selectionItem"
+          >
             <div class="childTitle">可疑主体证照号码：</div>
             <div>
               <el-input
@@ -347,7 +380,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('17')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('17')"
+            class="selectionItem"
+          >
             <div class="childTitle">收付金额占比：</div>
             <div>
               <span>大于等于</span>
@@ -359,7 +395,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('23')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('23')"
+            class="selectionItem"
+          >
             <div class="childTitle">进出总次数比</div>
             <div>
               <span>最小值：</span>
@@ -380,7 +419,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('24')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('24')"
+            class="selectionItem"
+          >
             <div class="childTitle">收付金额比</div>
             <div>
               <span>最小值：</span>
@@ -401,7 +443,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('25')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('25')"
+            class="selectionItem"
+          >
             <div class="childTitle">销方公司关联不同购方公司数量：</div>
             <div>
               <span>大于</span>
@@ -413,7 +458,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('26')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('26')"
+            class="selectionItem"
+          >
             <div class="childTitle">购方公司关联不同销方公司数量：</div>
             <div>
               <span>大于</span>
@@ -425,7 +473,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('27')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('27')"
+            class="selectionItem"
+          >
             <div class="childTitle">存续最小开票时间：</div>
             <div>
               <span>大于</span>
@@ -437,7 +488,10 @@
               ></el-input>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('28')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('28')"
+            class="selectionItem"
+          >
             <div class="childTitle">时间：</div>
             <div class="childSelection">
               <el-select
@@ -529,7 +583,10 @@
               </el-select>
             </div>
           </div>
-          <div v-show="renderData.mpids.includes('29')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('29')"
+            class="selectionItem"
+          >
             <div class="childTitle">交易金额：</div>
             <div>
               <span>大于等于</span>
@@ -542,12 +599,18 @@
             </div>
           </div>
           <!-- 30 这个是个？ ？？？？？？？下面的不是哦-->
-          <div v-show="renderData.mpids.includes('30')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('30')"
+            class="selectionItem"
+          >
             <div class="childTitle">{{ MoneyIntervalDes }}</div>
             <el-button type="text" size="mini">区间设置</el-button>
           </div>
 
-          <div v-show="renderData.mpids.includes('31')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('31')"
+            class="selectionItem"
+          >
             <div class="childTitle">时间段：</div>
             <el-date-picker
               size="mini"
@@ -566,7 +629,10 @@
             ></el-date-picker>
           </div>
 
-          <div v-show="renderData.mpids.includes('32')" class="selectionItem">
+          <div
+            v-show="currentTableData.mpids.includes('32')"
+            class="selectionItem"
+          >
             <div class="childTitle">团伙划分：</div>
             <div class="childSelection">
               <el-select
@@ -587,15 +653,15 @@
           </div>
           <!-- 33、34这个是个？ ？？？？？？？下面的不是哦-->
           <div
-            v-show="renderData.mpids.includes('33')"
+            v-show="currentTableData.mpids.includes('33')"
             class="selectionItem"
           ></div>
           <div
-            v-show="renderData.mpids.includes('34')"
+            v-show="currentTableData.mpids.includes('34')"
             class="selectionItem"
           ></div>
           <div
-            v-show="renderData.mpids.length > 0"
+            v-show="currentTableData.mpids.length > 0"
             style="margin-top: 40px; text-align: center"
           >
             <el-button size="mini" @click="handleClickSaveCondition"
@@ -626,7 +692,6 @@ import aes from "@/utils/aes";
 import { mapState, mapGetters } from "vuex";
 
 export default {
-  props: ["renderData"],
   data() {
     return {
       selectCondition: {},
@@ -784,8 +849,8 @@ export default {
     },
   },
   async beforeMount() {
-    // this.renderData.mpids = JSON.parse(
-    //   JSON.stringify(this.currentTableData.renderData.mpids)
+    // this.currentTableData.mpids = JSON.parse(
+    //   JSON.stringify(this.currentTableData.currentTableData.mpids)
     // );
     this.selectCondition = JSON.parse(
       JSON.stringify(this.currentTableData.selectCondition)
