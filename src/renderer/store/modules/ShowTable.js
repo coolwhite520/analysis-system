@@ -400,6 +400,12 @@ const mutations = {
   SET_SPECIALCHAR_TREE_DATA(state, specialCharData) {
     Vue.set(state.currentTableData, "specialCharData", specialCharData);
   },
+  SET_INEFFECTDATA_TREE_DATA(state, ineffectData) {
+    Vue.set(state.currentTableData, "ineffectData", ineffectData);
+  },
+  SET_DIFFDATA_TREE_DATA(state, diffData) {
+    Vue.set(state.currentTableData, "diffData", diffData);
+  },
   // 记录特殊字符错误数据
   SET_RENDERERRORDATA(state, renderErrorData) {
     Vue.set(state.currentTableData, "renderErrorData", renderErrorData);

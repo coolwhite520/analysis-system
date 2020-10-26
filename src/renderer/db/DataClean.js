@@ -7,6 +7,7 @@ export default {
     try {
       await cases.SwitchDefaultCase(client);
       let sql = `SELECT * FROM gas_datarules WHERE rule_type='${rule_type}' AND rule_datatype ='${tableename}' order by tid asc  `;
+      console.log(sql);
       let ret = await client.query(sql);
       return { success: true, rows: ret.rows };
     } catch (e) {

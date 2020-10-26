@@ -50,14 +50,15 @@
             type="primary"
             @click="handleClickCheck"
             :disabled="disabled"
+            :loading="loading"
             >开始检测</el-button
           >
 
           <el-button
             size="mini"
             type="primary"
+            :disabled="errorCount <= 0"
             @click="handleClickResolve"
-            :disabled="disabled"
             >数据处理</el-button
           >
         </el-row>
@@ -73,6 +74,7 @@ import aes from "@/utils/aes";
 import baseDb from "../../../../../db/Base";
 import dataShowDb from "../../../../../db/DataShowTable";
 import errorDataTableView from "@/pages/dialog/filter/ErrowRowReview.vue";
+const log = require("electron-log");
 export default {
   props: ["renderData"],
   components: {
@@ -80,6 +82,8 @@ export default {
   },
   data() {
     return {
+      errorCount: 0,
+      loading: false,
       renderErrorData: {},
       disabled: false,
       keys: [],
@@ -106,44 +110,68 @@ export default {
       await this.freshTreeErrorCount();
     },
     async handleClickCheck() {
-      let arr = await this.freshTreeErrorCount();
-      console.log(arr);
-      let sumErrCount = this.$lodash.sum(arr);
-      this.$message({
-        message: `存在${sumErrCount}条特殊字符数据`,
-        type: "success",
-      });
+      this.loading = true;
+      try {
+        let arr = await this.freshTreeErrorCount();
+        console.log(arr);
+        let sumErrCount = this.$lodash.sum(arr);
+        this.errorCount = sumErrCount;
+        this.$message({
+          message: `存在${sumErrCount}条特殊字符数据`,
+          type: "success",
+        });
+      } catch (e) {
+        this.$message.error({
+          message: `数据检测失败：` + e.message,
+        });
+        log.info(e.message);
+      }
+      this.loading = false;
     },
     async handleClickResolve() {
-      let allCheckedNodes = this.$refs.tree.getCheckedNodes();
-      let arrayPromise = [];
-      let _this = this;
-      for (let nodeData of allCheckedNodes) {
-        if (nodeData.children.length === 0 && nodeData.gpsqltemplate_update) {
-          let decode = aes.decrypt(nodeData.gpsqltemplate_update);
-          let sql = decode
-            .replace(/\$MODEL_FILTER\$/g, this.currentTableData.modelFilterStr)
-            .replace(/\$SELECTFILTER\$/g, "count(*)")
-            .replace(/\$AJID\$/g, this.caseBase.ajid);
-          arrayPromise.push(
-            (async function () {
-              await baseDb.QueryCustom(sql, _this.caseBase.ajid);
-            })()
-          );
+      try {
+        let allCheckedNodes = this.$refs.tree.getCheckedNodes();
+        if (allCheckedNodes.length === 0) return;
+
+        let arrayPromise = [];
+        let _this = this;
+        for (let nodeData of allCheckedNodes) {
+          if (nodeData.children.length === 0 && nodeData.gpsqltemplate_update) {
+            let decode = aes.decrypt(nodeData.gpsqltemplate_update);
+            let sql = decode
+              .replace(
+                /\$MODEL_FILTER\$/g,
+                this.currentTableData.modelFilterStr
+              )
+              .replace(/\$SELECTFILTER\$/g, "count(*)")
+              .replace(/\$AJID\$/g, this.caseBase.ajid);
+            arrayPromise.push(
+              (async function () {
+                await baseDb.QueryCustom(sql, _this.caseBase.ajid);
+              })()
+            );
+          }
         }
+        await Promise.all(arrayPromise);
+        // 再次检测一下
+        let arrCount = await this.freshTreeErrorCount();
+        //
+        this.$message({
+          title: "成功",
+          message: `数据处理完毕`,
+          type: "success",
+        });
+      } catch (e) {
+        this.$message.error({
+          message: `数据处理失败：` + e.message,
+        });
+        log.info(e.message);
       }
-      await Promise.all(arrayPromise);
-      // 再次检测一下
-      let arrCount = await this.freshTreeErrorCount();
-      //
-      this.$message({
-        title: "成功",
-        message: `数据处理完毕`,
-        type: "success",
-      });
     },
     async freshTreeErrorCount() {
       let allCheckedNodes = this.$refs.tree.getCheckedNodes();
+      if (allCheckedNodes.length === 0) return;
+
       let arrayPromise = [];
       let _this = this;
       for (let nodeData of allCheckedNodes) {
@@ -235,6 +263,7 @@ export default {
         componentName: "special-char-view",
         action: "remove",
       });
+      this.$store.commit("ShowTable/SET_RENDERERRORDATA", null);
     },
   },
 };

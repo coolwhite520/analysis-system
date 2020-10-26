@@ -1620,17 +1620,12 @@ export default {
           });
         }
       }
-      const selectedNodes = this.graph.findAllByState("node", "selected");
-      console.log(selectedNodes);
-      selectedNodes.forEach((cn) => {
-        this.graph.setItemState(cn, "selected", false);
-      });
+
       if (e.select) {
+        this.currentSelectedNodes = [];
         e.selectedItems.nodes.forEach((cn) => {
           if (cn._cfg.visible) {
-            this.currentSelectedNodes = [];
             this.currentSelectedNodes.push(cn);
-            this.graph.setItemState(cn, "selected", true); // 设置当前节点的 click 状态为 true
           }
         });
       } else {

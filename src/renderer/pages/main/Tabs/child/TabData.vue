@@ -238,6 +238,7 @@ import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import { mapState } from "vuex";
 import path, { extname } from "path";
 import DataCleanDb from "@/db/DataClean.js";
+import aes from "@/utils/aes";
 export default {
   data() {
     return {
@@ -381,6 +382,7 @@ export default {
           exportSql,
           filePath: result.filePath,
           headers: this.currentTableData.headers,
+          sumRowCount: this.currentTableData.sum,
         };
         this.$electron.ipcRenderer.send("export-one-file-begin", args);
       }
@@ -388,6 +390,25 @@ export default {
     findRoot(rows) {
       let obj = rows.find((row) => row.parentid === -1);
       return JSON.parse(JSON.stringify(obj));
+    },
+    makeTreeByTableHeaders(gpsqltemplate_select, gpsqltemplate_update) {
+      let headers = this.currentTableData.headers;
+      let keys = [];
+      let tree = headers.map((header) => {
+        keys.push(header.fieldename);
+        return {
+          describe: header.fieldcname,
+          children: [],
+          errorCount: 0,
+          tid: header.fieldename,
+          gpsqltemplate_select,
+          gpsqltemplate_update,
+        };
+      });
+      return {
+        keys,
+        tree,
+      };
     },
     makeTreeByList(list, rootid) {
       let len = list.length;
@@ -416,37 +437,79 @@ export default {
           };
           break;
         case "special-char":
-          let { success, rows } = await DataCleanDb.queryRulesFromTable(
-            this.currentTableData.tableename,
-            "0"
-          );
-          if (success) {
-            if (rows.length > 0) {
-              let keys = rows.map((row) => row.tid);
-              let rootNode = this.findRoot(rows);
-              let renderTree = this.makeTreeByList(rows, rootNode.tid);
-              this.$store.commit("ShowTable/SET_SPECIALCHAR_TREE_DATA", {
-                checkedKeys: JSON.parse(JSON.stringify(keys)),
-                renderTree,
-              });
+          {
+            let { success, rows } = await DataCleanDb.queryRulesFromTable(
+              this.currentTableData.tableename,
+              "0"
+            );
+            if (success) {
+              if (rows.length > 0) {
+                let keys = rows.map((row) => row.tid);
+                let rootNode = this.findRoot(rows);
+                let renderTree = this.makeTreeByList(rows, rootNode.tid);
+                this.$store.commit("ShowTable/SET_SPECIALCHAR_TREE_DATA", {
+                  checkedKeys: JSON.parse(JSON.stringify(keys)),
+                  renderTree,
+                });
+              }
             }
+            componentObj = {
+              componentName: "special-char-view",
+              action: "add",
+            };
           }
-          componentObj = {
-            componentName: "special-char-view",
-            action: "add",
-          };
+
           break;
         case "ineffect-data":
-          componentObj = {
-            componentName: "ineffect-data-view",
-            action: "add",
-          };
+          {
+            let { success, rows } = await DataCleanDb.queryRulesFromTable(
+              this.currentTableData.tableename,
+              "1"
+            );
+            if (success) {
+              if (rows.length > 0) {
+                let keys = rows.map((row) => row.tid);
+                let rootNode = this.findRoot(rows);
+                let renderTree = this.makeTreeByList(rows, rootNode.tid);
+                this.$store.commit("ShowTable/SET_INEFFECTDATA_TREE_DATA", {
+                  checkedKeys: JSON.parse(JSON.stringify(keys)),
+                  renderTree,
+                });
+              }
+            }
+            componentObj = {
+              componentName: "ineffect-data-view",
+              action: "add",
+            };
+          }
+
           break;
         case "data-diff":
-          componentObj = {
-            componentName: "data-diff-view",
-            action: "add",
-          };
+          {
+            let { success, rows } = await DataCleanDb.queryRulesFromTable(
+              this.currentTableData.tableename,
+              "2"
+            );
+            console.log(rows);
+            if (success) {
+              if (rows.length > 0) {
+                let { gpsqltemplate_select, gpsqltemplate_update } = rows[0];
+                let { keys, tree } = this.makeTreeByTableHeaders(
+                  gpsqltemplate_select,
+                  gpsqltemplate_update
+                );
+                this.$store.commit("ShowTable/SET_DIFFDATA_TREE_DATA", {
+                  checkedKeys: keys,
+                  renderTree: tree,
+                });
+              }
+            }
+            componentObj = {
+              componentName: "data-diff-view",
+              action: "add",
+            };
+          }
+
           break;
       }
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", componentObj);

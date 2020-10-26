@@ -88,7 +88,11 @@
         </el-collapse-item>
       </el-collapse>
       <el-row style="text-align: center; margin-top: 20px">
-        <el-button size="small" type="primary" @click="handleClickReplace"
+        <el-button
+          size="small"
+          type="primary"
+          @click="handleClickReplace"
+          :loading="loading"
           >执行替换</el-button
         >
       </el-row>
@@ -99,9 +103,11 @@
 <script>
 import dataShowTable from "@/db/DataShowTable.js";
 import { mapState, mapGetters } from "vuex";
+const log = require("electron-log");
 export default {
   data() {
     return {
+      loading: false,
       index: 1,
       activeNames: [],
       collapseList: [],
@@ -161,44 +167,54 @@ export default {
       console.log(item);
     },
     async handleClickReplace() {
-      let taskArray = [];
-      for (let item of this.collapseList) {
-        let ajid = this.caseBase.ajid;
-        let fieldename = item.header.fieldename;
-        let inValue = item.inValue;
-        let outValue = item.outValue;
-        if (inValue === "" || outValue === "") {
-          this.$message.error({
-            title: "错误",
-            message: `字段[${item.header.fieldcname}]必须输入原始值和替换值，任何一个不能为空`,
-          });
-          return;
+      this.loading = true;
+      try {
+        let taskArray = [];
+        for (let item of this.collapseList) {
+          let ajid = this.caseBase.ajid;
+          let fieldename = item.header.fieldename;
+          let inValue = item.inValue;
+          let outValue = item.outValue;
+          if (inValue === "" || outValue === "") {
+            this.$message.error({
+              title: "错误",
+              message: `字段[${item.header.fieldcname}]必须输入原始值和替换值，任何一个不能为空`,
+            });
+            this.loading = false;
+            return;
+          }
+          let { tableename } = this.currentTableData;
+          console.log(this.currentTableData);
+          taskArray.push(
+            (async () => {
+              return await dataShowTable.UpdateTableLike(
+                ajid,
+                tableename,
+                fieldename,
+                inValue,
+                outValue
+              );
+            })()
+          );
         }
-        let { tableename } = this.currentTableData;
-        console.log(this.currentTableData);
-        taskArray.push(
-          (async () => {
-            return await dataShowTable.UpdateTableLike(
-              ajid,
-              tableename,
-              fieldename,
-              inValue,
-              outValue
-            );
-          })()
-        );
+        await Promise.all(taskArray);
+        this.$message({
+          title: "成功",
+          message: "更新替换数据成功",
+          type: "success",
+        });
+        await this.$store.dispatch(this.currentTableData.dispatchName, {
+          ...this.currentTableData,
+          offset: 0,
+          count: 30,
+        });
+      } catch (e) {
+        this.$message.error({
+          message: "更新替换数据失败：" + e.message,
+        });
+        log.info(e.message);
       }
-      await Promise.all(taskArray);
-      this.$message({
-        title: "成功",
-        message: "更新替换数据成功",
-        type: "success",
-      });
-      await this.$store.dispatch(this.currentTableData.dispatchName, {
-        ...this.currentTableData,
-        offset: 0,
-        count: 30,
-      });
+      this.loading = false;
     },
     handleClickDelItem(item) {
       this.activeNames = [];
