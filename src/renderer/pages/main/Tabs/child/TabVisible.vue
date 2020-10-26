@@ -131,7 +131,14 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row style="font-size: 8px; color: gray; text-align: center">
+    <el-row
+      style="
+        font-size: 8px;
+        color: gray;
+        text-align: center;
+        padding-bottom: 2px;
+      "
+    >
       <el-col :span="4" style="border-right: 1px solid #e5e7ec">
         <div>布局</div>
       </el-col>
