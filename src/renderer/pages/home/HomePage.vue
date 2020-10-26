@@ -70,16 +70,12 @@
         </div>
         <div>
           <el-row>
-            <el-row v-if="currentViewName !== 'show-exist-case-view'">
-              <el-col :span="24"> </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="1">&nbsp;</el-col>
-              <el-col :span="22" style="padding-top: 20px">
-                <component :is="currentViewName"></component>
-              </el-col>
-              <el-col :span="1">&nbsp;</el-col>
-            </el-row>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="22">
+              <div style="height: 40px">&nbsp;</div>
+              <component :is="currentViewName"></component>
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
           </el-row>
         </div>
       </el-col>

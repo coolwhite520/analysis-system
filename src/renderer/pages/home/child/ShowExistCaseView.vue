@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      height: mainViewHeight - 120 + 'px',
+      height: mainViewHeight - 140 + 'px',
       overflow: 'auto',
       padding: 15 + 'px',
     }"
@@ -20,12 +20,12 @@
           &#xe65e;
         </div> -->
         <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
-          <el-row>
+          <el-row class="rowstyle">
             <span class="iconfont" style="font-size: 20px">&#xe6d1;</span>
             <span style="font-size: 15px">编号：</span>
             <b style="color: #384e6e; font-size: 12px">{{ caseItem.ajbh }}</b>
           </el-row>
-          <el-row>
+          <el-row class="rowstyle">
             <el-col :span="12">
               <div class="time">{{ caseItem.cjsj }}</div>
             </el-col>
@@ -33,7 +33,7 @@
               <div class="location">{{ caseItem.asjfsddxzqmc }}</div>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row class="rowstyle">
             <div class="caseName">{{ caseItem.ajmc }}</div>
           </el-row>
           <el-row>
@@ -150,7 +150,11 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.rowstyle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .state {
   font-size: 12px;
   margin-top: 12px;

@@ -375,10 +375,11 @@ export default {
 
 <style scoped>
 .newcaseForm {
+  color: white;
   /* border: 2px solid #dddfe5; */
   border-radius: 15px;
   padding: 20px;
   /* box-shadow: 5px 5px 10px 5px gray, -5px 5px 5px 5px rgba(255, 255, 255, 0.5); */
-  border: 1px solid #dddfe5;
+  border: 1px solid #404e69;
 }
 </style>

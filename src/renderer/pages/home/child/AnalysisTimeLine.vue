@@ -14,7 +14,11 @@
       >
     </div>
 
-    <el-collapse v-model="activeNames" @change="handleChange">
+    <el-collapse
+      v-model="activeNames"
+      @change="handleChange"
+      class="myCollapse"
+    >
       <div v-if="renderList.length == 0">
         <div style="font-size: 10px; color: gray">当前无分析记录</div>
       </div>
@@ -250,6 +254,9 @@ export default {
 <style >
 .el-popover {
   box-shadow: #384e6e 10px 10px 20px 5px;
+}
+.myCollapse .el-collapse-item__header {
+  background-color: #1e2534;
 }
 </style>
 <style scoped>
