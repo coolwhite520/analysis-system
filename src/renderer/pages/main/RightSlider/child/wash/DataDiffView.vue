@@ -181,6 +181,8 @@ export default {
         if (success) {
           this.errorCount = rows[0].count;
           return this.errorCount;
+        } else {
+          return 0;
         }
       }
     },

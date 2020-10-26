@@ -1,5 +1,8 @@
 import fs from "fs";
 import log from "@/utils/log";
+import dataImport from "./DataImport";
+import base from "./Base";
+import { head } from "lodash";
 
 // 小写字母转换设定快捷键 cmd+alt+s
 // 获取案件相关的内容
@@ -22,6 +25,112 @@ export default {
     } catch (e) {
       log.info(e);
       return false;
+    }
+  },
+  // 获取采集记录
+  QueryCollectionRecords: async function(ajid, offset, count) {
+    const client = await global.pool.connect();
+    try {
+      let headers = [
+        {
+          fieldename: "batch",
+          fieldcname: "导入批次",
+        },
+        {
+          fieldename: "filename",
+          fieldcname: "文件名",
+        },
+        {
+          fieldename: "sheetname",
+          fieldcname: "sheet名",
+        },
+        {
+          fieldename: "mbmc",
+          fieldcname: "导入文件模板",
+        },
+        {
+          fieldename: "jh",
+          fieldcname: "导入人员编号",
+        },
+        {
+          fieldename: "name",
+          fieldcname: "导入人员",
+        },
+        {
+          fieldename: "drrq",
+          fieldcname: "导入时间",
+        },
+      ];
+      let rowCount = 0;
+      let countSql = `select count(*)::int count  from icap_base.st_data_source where ajid=${ajid}`;
+      const resCount = await client.query(countSql);
+      rowCount = resCount.rows[0].count;
+      let queryStr = headers.map((header) => header.fieldename);
+      queryStr.push("sjlyid");
+      let sql = `select ${queryStr}  from icap_base.st_data_source where ajid=${ajid} LIMIT ${count} OFFSET ${offset};`;
+      const res = await client.query(sql);
+      return { rows: res.rows, success: true, headers, rowCount };
+    } catch (e) {
+      return { rows: [], success: false, msg: e.message };
+    } finally {
+      client.release();
+    }
+  },
+  // 查询一个案件中的所有表名称
+  showLAllTableTableName: async function(ajid) {
+    const client = await global.pool.connect();
+    try {
+      let sql = `SELECT table_name  FROM information_schema.tables
+      WHERE table_schema = 'icap_${ajid}'`;
+      const res = await client.query(sql);
+      return { success: true, rows: res.rows };
+    } finally {
+      client.release();
+    }
+  },
+  // 删除一个案件中所有表中包含sjlyid字段，并且值为特定值的数据
+  DeleteCollectionRecords: async function(ajid, sjlyid) {
+    try {
+      let { success, rows } = await this.showLAllTableTableName(ajid);
+      if (!success) return { success: false };
+      let promiseArr = [];
+      for (let row of rows) {
+        promiseArr.push(
+          (async function() {
+            if (row.table_name.endsWith("_temp")) {
+              let sqlDelTable = `DROP TABLE ${row.table_name}`;
+              await base.QueryCustom(sqlDelTable, ajid);
+              return true;
+            }
+            let result = await dataImport.showTableStruct(ajid, row.table_name);
+            if (result.success) {
+              // console.log(result.rows);
+              let findResult = result.rows.find((row) => {
+                if (row.fieldename) {
+                  return row.fieldename === "sjlyid";
+                } else {
+                  return false;
+                }
+              });
+              if (findResult) {
+                console.log(row.table_name);
+                let sqlDelRows = `DELETE FROM ${row.table_name} WHERE ajid =${ajid} AND SJLYID IN(${sjlyid})`;
+                await base.QueryCustom(sqlDelRows, ajid);
+              }
+              return true;
+            }
+          })()
+        );
+      }
+      let ret = await Promise.all(promiseArr);
+      console.log(ret);
+      // 把base库的记录表中的数据删除
+      let sqlDelRows = `DELETE FROM  icap_base.st_data_source WHERE ajid =${ajid} AND SJLYID IN(${sjlyid})`;
+      await base.QueryCustom(sqlDelRows);
+      return { success: true };
+    } catch (e) {
+      return { success: false, msg: e.message };
+    } finally {
     }
   },
   CreateNewCaseSchema: async function(ajid, userName) {

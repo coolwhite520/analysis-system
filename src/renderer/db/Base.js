@@ -12,7 +12,7 @@ export default {
       const res = await client.query(sql);
       return { success: true, rows: res.rows };
     } catch (e) {
-      console.log(e);
+      console.log({ sql, e });
       return { success: false, rows: [] };
     } finally {
       client.release();

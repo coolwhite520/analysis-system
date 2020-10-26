@@ -10,6 +10,7 @@ const state = {
   awaitTaskCount: 0, // 待调单数量
   dataCenterList: [], // 数据中心tree列表数据
   openeds: [], // 数据中心默认展开项目
+  CollectionRecords: {},
 };
 const mutations = {
   SET_CASE_DETAIL(state, caseBase) {
@@ -38,6 +39,9 @@ const mutations = {
   },
   SET_LISTOPENEDS(state, openeds) {
     state.openeds = openeds;
+  },
+  SET_COLLECTIONRECORDS(state, { rows, headers, rowCount }) {
+    Vue.set(state, "CollectionRecords", { rows, headers, rowCount });
   },
   RESET_ALL_DATA(state) {
     state.caseBase = {}; //  st_case表对应的字段对象
@@ -73,15 +77,15 @@ const actions = {
   },
   async queryEntityCount({ commit }, ajid) {
     let res = await cases.QueryEntityCount(ajid);
-    if (res) commit("SET_ENTITYCOUNT", res);
+    commit("SET_ENTITYCOUNT", res);
   },
   async queryBatchCount({ commit }, ajid) {
     let res = await cases.QueryBatchCount(ajid);
-    if (res) commit("SET_BATCHCOUNT", res);
+    commit("SET_BATCHCOUNT", res);
   },
   async queryAwaitTaskCount({ commit }, ajid) {
     let res = await cases.QueryAwaitTaskCount(ajid);
-    if (res) commit("SET_AWAITTASK", res);
+    commit("SET_AWAITTASK", res);
   },
   async queryCaseDataCenter({ commit }, ajid) {
     let { list, dataSum } = await cases.QueryDataCenterTableInfo(ajid);

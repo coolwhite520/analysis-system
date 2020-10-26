@@ -139,11 +139,11 @@
       <p>
         <span>数据总量：</span>
         <span class="caseContent">共&nbsp;{{ dataSum }}&nbsp;条</span>
-        <span>
+        <!-- <span>
           <el-button type="text" size="mini" @click="handleClickDataCollection"
             >数据采集</el-button
           >
-        </span>
+        </span> -->
       </p>
       <p>
         待调单任务：
@@ -184,13 +184,14 @@
         </el-col>
       </el-row>
     </div>
-    <collection-record></collection-record>
+    <collection-record v-if="showCollectionRecordVisible"></collection-record>
   </div>
 </template>
 
 <script>
 import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog";
 import { mapState, mapGetters } from "vuex";
+import cases from "@/db/Cases";
 export default {
   async beforeMount() {
     await this.$store.dispatch(
@@ -229,6 +230,7 @@ export default {
       "dataCenterList",
     ]),
     ...mapGetters("CaseDetail", ["renderButtonGroupList"]),
+    ...mapState("DialogPopWnd", ["showCollectionRecordVisible"]),
   },
   watch: {
     deleteState(newValue, oldValue) {
@@ -255,8 +257,30 @@ export default {
   },
   methods: {
     // 采集记录
-    handleClickCollectionRecord() {
-      this.$store.commit("DialogPopWnd/SET_SHOWCOLLECTIONRECORDVISIBLE", true);
+    async handleClickCollectionRecord() {
+      try {
+        let {
+          success,
+          rows,
+          headers,
+          rowCount,
+        } = await cases.QueryCollectionRecords(this.caseBase.ajid, 0, 30);
+        if (success) {
+          this.$store.commit("CaseDetail/SET_COLLECTIONRECORDS", {
+            rows,
+            headers,
+            rowCount,
+          });
+          this.$store.commit(
+            "DialogPopWnd/SET_SHOWCOLLECTIONRECORDVISIBLE",
+            true
+          );
+        }
+      } catch (e) {
+        this.$message.error({
+          message: "出错了：" + e.message,
+        });
+      }
     },
     // 数据采集
     async handleClickDataCollection() {
