@@ -136,7 +136,7 @@
         font-size: 8px;
         color: gray;
         text-align: center;
-        padding-bottom: 2px;
+        padding-bottom: 4px;
       "
     >
       <el-col :span="4" style="border-right: 1px solid #e5e7ec">
