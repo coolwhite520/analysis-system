@@ -41,10 +41,10 @@
                 white-space: nowrap;
               "
             >
-              <span class="iconfont" style="color: #384e6e; font-size: 10px"
+              <span class="iconfont" style="font-size: 10px"
                 >&nbsp;&nbsp;&#xe63d;&nbsp;&nbsp;{{ item.title }}</span
               >
-              <span style="font-size: 10px; color: #384e6e"
+              <span style="font-size: 10px"
                 >&nbsp;&nbsp;{{ item.datetime }}</span
               >
             </div>
@@ -257,6 +257,7 @@ export default {
 }
 .myCollapse .el-collapse-item__header {
   background-color: #1e2534;
+  color: white;
 }
 </style>
 <style scoped>

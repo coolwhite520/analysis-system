@@ -50,6 +50,7 @@ export default {
       percentage: 0,
       secondTitle: "",
       customColor: "#f56c6c",
+      rowCount: 0,
       tip: "",
     };
   },
@@ -86,20 +87,28 @@ export default {
       _this.secondTitle = secondTitle;
       _this.fileName = fileName;
       _this.sheetName = sheetName;
-      _this.percentage = percentage;
-      this.tip = msg;
-      if (percentage < 20) {
-        _this.customColor = "#f56c6c";
-      } else if (percentage > 20 && percentage < 40) {
-        _this.customColor = "#e6a23c";
-      } else if (percentage > 40 && percentage < 60) {
-        _this.customColor = "#5cb87a";
-      } else if (percentage > 60 && percentage < 80) {
-        _this.customColor = "#1989fa";
-      } else if (percentage > 80 && percentage <= 100) {
-        _this.customColor = "#6f7ad3";
+      this.rowCount++;
+      if (this.rowCount % 10 === 0) {
+        if (_this.percentage !== percentage) {
+          _this.tip = msg;
+          _this.percentage = percentage;
+          if (percentage < 20) {
+            _this.customColor = "#f56c6c";
+          } else if (percentage > 20 && percentage < 40) {
+            _this.customColor = "#e6a23c";
+          } else if (percentage > 40 && percentage < 60) {
+            _this.customColor = "#5cb87a";
+          } else if (percentage > 60 && percentage < 80) {
+            _this.customColor = "#1989fa";
+          } else if (percentage > 80 && percentage <= 100) {
+            _this.customColor = "#6f7ad3";
+          }
+        } else {
+          _this.tip = msg;
+        }
       }
     });
+
     this.$electron.ipcRenderer.on("read-one-file-over", (event, data) => {
       const { sheetIndex, tableName } = data;
       _this.$store.commit("DataCollection/SET_TABLENAME", {
