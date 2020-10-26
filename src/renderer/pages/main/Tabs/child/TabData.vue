@@ -6,6 +6,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickDataCollection"
+          :loading="loading"
         >
           <span class="iconfont selfIcont">&#xe6a1;</span>
           <br />
@@ -242,6 +243,7 @@ import aes from "@/utils/aes";
 export default {
   data() {
     return {
+      loading: false,
       defaultProps: {
         children: "children",
         label: "fieldcname",
@@ -300,6 +302,7 @@ export default {
       });
     },
     async handleClickDataCollection() {
+      this.loading = true;
       await this.$electron.ipcRenderer.send("data-collection-open");
       this.$electron.ipcRenderer.on(
         "data-collection-open-complete",
@@ -320,6 +323,7 @@ export default {
           this.$electron.ipcRenderer.removeAllListeners(
             "data-collection-open-complete"
           );
+          this.loading = false;
         }
       );
     },

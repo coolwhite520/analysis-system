@@ -3,15 +3,18 @@
     <el-row>
       <el-col :span="8">&nbsp;</el-col>
       <el-col :span="8">
-        <div style="text-align:center;">
+        <div style="text-align: center">
           <el-button
             class="iconfont"
             type="text"
-            style="font-size:100px;"
+            style="font-size: 100px"
             @click="handleClickImportData"
+            :loading="loading"
           >
             &#xe6a1;
-            <div style="text-align:center; font-size:20px;">当前案件无数据，请进行数据采集</div>
+            <div style="text-align: center; font-size: 20px">
+              当前案件无数据，请进行数据采集
+            </div>
           </el-button>
         </div>
       </el-col>
@@ -22,11 +25,20 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  mounted() {
+    this.loading = false;
+  },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
   },
   methods: {
     async handleClickImportData() {
+      this.loading = true;
       await this.$electron.ipcRenderer.send("data-collection-open");
       this.$electron.ipcRenderer.on(
         "data-collection-open-complete",
@@ -47,6 +59,7 @@ export default {
           this.$electron.ipcRenderer.removeAllListeners(
             "data-collection-open-complete"
           );
+          this.loading = false;
         }
       );
     },
