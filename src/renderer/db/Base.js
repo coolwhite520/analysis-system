@@ -1,4 +1,7 @@
 const log = require("electron-log");
+var copyTo = require("pg-copy-streams").to;
+const fs = require("fs");
+
 import cases from "./Cases";
 export default {
   QueryCustom: async function(sql, ajid = "") {

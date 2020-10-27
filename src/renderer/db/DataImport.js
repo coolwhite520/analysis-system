@@ -104,9 +104,9 @@ export default {
       let sql = `INSERT INTO "icap_base"."st_data_source"("sjly", "jh", "drrq", "ajid", "jgid", 
       "ajmc", "filetype", "filename", "filepath", "mbdm", "batch", "sjl", "fl", "md5", "erropath", 
       "sheetname", "name", "mbmc", "tablecname", "versionsnum") VALUES 
-      ('', '00000000', '${now}', ${ajid}, '', '${ajmc}', '${fileExt}', '${filename}',
+      ('', '00009527', '${now}', ${ajid}, '', '${ajmc}', '${fileExt}', '${filename}',
        '${filepath}', '${mbdm}', ${batch}, 0, 0, '', '', '${sheetname}', 
-       '小智', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
+       '小白', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
       const res = await client.query(sql);
       return res.rows[0].sjlyid;
     } finally {

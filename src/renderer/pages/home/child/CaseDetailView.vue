@@ -12,7 +12,12 @@
             @click="handleClickEdit"
             >编辑</el-button
           >
-          <el-button round type="primary" icon="el-icon-share" size="mini"
+          <el-button
+            round
+            type="primary"
+            icon="el-icon-share"
+            size="mini"
+            @click="handleClickExportScheme"
             >导出</el-button
           >
           <el-button
@@ -192,6 +197,9 @@
 import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog";
 import { mapState, mapGetters } from "vuex";
 import cases from "@/db/Cases";
+import base from "@/db/Base";
+const fs = require("fs");
+const path = require("path");
 export default {
   async beforeMount() {
     await this.$store.dispatch(
@@ -436,6 +444,44 @@ export default {
           type: "info",
           message: "已取消删除",
         });
+      }
+    },
+    async handleClickExportScheme() {
+      let result = await this.$electron.remote.dialog.showSaveDialog({
+        title: "请选择要保存的文件名",
+        buttonLabel: "保存",
+        defaultPath:
+          `案件${this.caseBase.ajmc}-` + new Date().Format("yyyyMMddhhmmss"),
+        filters: [{ name: "数据", extensions: ["dat"] }],
+      });
+      if (!result.canceled) {
+        let cmd = "";
+        let dumpFilePath = "";
+        let vendorpath = this.$electron.remote.getGlobal("vendorPath");
+        console.log(vendorpath);
+        if (process.platform === "win32") {
+          dumpFilePath = path.join(vendorpath, "pg_dump.exe");
+        } else if (process.platform === "darwin") {
+          dumpFilePath = path.join(vendorpath, "pg_dump");
+        } else {
+        }
+        if (!fs.existsSync(dumpFilePath)) {
+          this.$message.error({
+            message: "dump 文件不存在。",
+          });
+          return;
+        }
+        cmd = `${dumpFilePath} `;
+        console.log(cmd);
+        return;
+        try {
+          const shell = require("shelljs");
+          shell.exec(cmd, { silent: true }, function (code, stdout, stderr) {
+            console.log("Exit code:", code);
+            console.log("Program output:", stdout);
+            console.log("Program stderr:", stderr);
+          });
+        } catch (e) {}
       }
     },
     handleClickGoHome() {

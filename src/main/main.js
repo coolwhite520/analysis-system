@@ -104,7 +104,19 @@ function createWindow() {
   ];
   var m = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(m);
-
+  global.vendorPath = process.mainModule.filename.includes("app.asar")
+    ? path.join(
+        process.mainModule.filename,
+        `../../../vendor/${process.platform}`
+      )
+    : path.join(
+        process.mainModule.filename.replace(
+          "node_modules/electron-mocha/lib/main.js",
+          "index.html"
+        ),
+        `../vendor/${process.platform}`
+      );
+  log.info(global.vendorPath);
   global.windowSize = screen.getPrimaryDisplay().workAreaSize;
   global.widthDivHeight = global.windowSize.width / global.windowSize.height;
   mainWindow.on("closed", () => {
