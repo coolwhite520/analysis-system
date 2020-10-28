@@ -496,10 +496,12 @@ export default {
             return;
           }
           // windows 想要免密码输入 需要设置一个环境变量
-          shell.cmd(`set PGPASSWORD="${password}"`, {
-            silent: true,
-            async: false,
-          });
+          try {
+            shell.exec(`set PGPASSWORD="${password}"`, {
+              silent: true,
+              async: false,
+            });
+          } catch (e) {}
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(vendorpath, "pg_dump");
           if (!fs.existsSync(dumpFilePath)) {

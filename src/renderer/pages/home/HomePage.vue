@@ -217,10 +217,12 @@ export default {
           });
           return;
         }
-        shell.cmd(`set PGPASSWORD="${password}"`, {
-          silent: true,
-          async: false,
-        });
+        try {
+          shell.exec(`set PGPASSWORD="${password}"`, {
+            silent: true,
+            async: false,
+          });
+        } catch (e) {}
       } else if (process.platform === "darwin") {
         dumpFilePath = path.join(vendorpath, "psql");
         if (!fs.existsSync(dumpFilePath)) {
