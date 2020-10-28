@@ -490,6 +490,7 @@ export default {
         let tempPathFile = path.join(tempPath, uuid.v1());
         // 转存数据排除后缀是temp的表
         cmd = `'${dumpFilePath}' -w -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp gas_data -O -f '${tempPathFile}'`;
+        console.log(cmd);
         try {
           const shell = require("shelljs");
           shell.exec(
