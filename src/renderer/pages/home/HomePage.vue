@@ -257,7 +257,7 @@ export default {
           .on("finish", async () => {
             //解压后的回调
             console.log("done");
-            cmd = `'${dumpFilePath}' -d gas_data -f "${tempPathFile}"`;
+            cmd = `'${dumpFilePath}' -w -d gas_data -f "${tempPathFile}"`;
             console.log(cmd);
             const shell = require("shelljs");
             shell.exec(

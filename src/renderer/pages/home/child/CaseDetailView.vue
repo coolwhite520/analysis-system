@@ -489,7 +489,7 @@ export default {
         let tempPath = this.$electron.remote.app.getPath("temp");
         let tempPathFile = path.join(tempPath, uuid.v1());
         // 转存数据排除后缀是temp的表
-        cmd = `'${dumpFilePath}' -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp gas_data -O -f '${tempPathFile}'`;
+        cmd = `'${dumpFilePath}' -w -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp gas_data -O -f '${tempPathFile}'`;
         try {
           const shell = require("shelljs");
           shell.exec(
