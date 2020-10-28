@@ -40,7 +40,7 @@ const actions = {
   },
   async deleteAllCase({ commit }) {
     let case_list = await cases.QueryExistCases();
-    // case_list = [{ ajid: 1 }, { ajid: 2 }];
+    // case_list = [{ ajid: 1 }, { ajid: 2 }, { ajid: 3 }];
     for (let item of case_list) {
       await cases.DropCaseByID(item.ajid);
       commit("DELETE_CASE_BYID", item.ajid);

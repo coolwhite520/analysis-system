@@ -1,5 +1,9 @@
 <template>
-  <div class="newcaseForm" v-loading="loading">
+  <div
+    class="newcaseForm"
+    v-loading.fullscreen.lock="loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <div style="text-align: center; margin-bottom: 20px">
       <h2>新增案件</h2>
     </div>

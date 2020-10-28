@@ -11,9 +11,9 @@
         <el-tab-pane label="分析报告" name="third">
           <tab-report></tab-report>
         </el-tab-pane>
-        <el-tab-pane label="关于" name="fourth">
+        <!-- <el-tab-pane label="关于" name="fourth">
           <tab-about></tab-about>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </el-row>
   </div>

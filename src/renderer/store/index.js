@@ -15,7 +15,7 @@ const ls = new SecureLS({ isCompression: false });
 const store = require("data-store")({ path: dbFullPath });
 Vue.use(Vuex);
 
-// localstorage路径：/Users/baiyang/Library/Application Support/analysis-system
+// localstorage路径：/Users/panda/Library/Application Support/analysis-system
 export default new Vuex.Store({
   modules,
   plugins: [
