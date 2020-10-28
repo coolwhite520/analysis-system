@@ -230,8 +230,8 @@ export default {
       // const iconv = require("iconv-lite");
       // const through2 = require("through2");
       let writeableStream = fs.createWriteStream(tempPathFile);
-      let password = new Buffer(process.env.PASS || "password");
-      let decryptStream = crypto.createDecipher("aes-256-cbc", password);
+      let passwordEn = new Buffer(process.env.PASS || "password");
+      let decryptStream = crypto.createDecipher("aes-256-cbc", passwordEn);
       let gzip = zlib.createGunzip(); //解压
       let readStream = fs.createReadStream(filePathList[0]);
       let importAjid = (await cases.QueryCaseMaxCount()) + 1;
