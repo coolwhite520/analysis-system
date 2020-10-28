@@ -187,6 +187,7 @@ export default {
       const shell = require("shelljs");
       const path = require("path");
       const fs = require("fs");
+      const uuid = require("uuid");
       let cmd = "";
       let dumpFilePath = "";
       let vendorpath = this.$electron.remote.getGlobal("vendorPath");
@@ -194,6 +195,7 @@ export default {
         "dbCon"
       );
       console.log({ user, database, password, port });
+
       let tempPath = this.$electron.remote.app.getPath("temp");
       let tempPathFile = path.join(tempPath, uuid.v1());
       console.log(tempPathFile);
@@ -224,7 +226,7 @@ export default {
         cmd = `"${dumpFilePath}" -d ${database} -f "${tempPathFile}"`;
       }
       this.loading = true;
-      const uuid = require("uuid");
+
       const crypto = require("crypto"); //用来加密
       const zlib = require("zlib"); //用来压缩
 
