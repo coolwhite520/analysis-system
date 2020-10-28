@@ -524,10 +524,10 @@ export default {
               } else {
                 const crypto = require("crypto"); //用来加密
                 const zlib = require("zlib"); //用来压缩
-                const password = new Buffer(process.env.PASS || "password");
+                const passwordEn = new Buffer(process.env.PASS || "password");
                 const encryptStream = crypto.createCipher(
                   "aes-256-cbc",
-                  password
+                  passwordEn
                 );
                 // 1.st_case 2.st_data_source
                 let { sqlStr, err } = await this.makeExternal_St_caseSql(
