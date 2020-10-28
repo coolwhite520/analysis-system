@@ -453,14 +453,9 @@ export default {
     async setEnvParam(password) {
       try {
         const shell = require("shelljs");
-        const uuid = require("uuid");
-        let tempPath = this.$electron.remote.app.getPath("temp");
-        let tempPathFile = path.join(tempPath, uuid.v1() + ".sh");
-        fs.writeFileSync(tempPathFile, `export PGPASSWORD="${password}"`);
-        await shell.exec(`source ${tempPathFile}`, {
+        shell.exec(`export PGPASSWORD="${password}"`, {
           silent: true,
         });
-        fs.unlinkSync(tempPathFile);
       } catch (e) {
         log.info(e.message);
       }
@@ -501,7 +496,7 @@ export default {
             return;
           }
           // windows 想要免密码输入 需要设置一个环境变量
-          shell.exec(`set PGPASSWORD="${password}"`, {
+          shell.cmd(`set PGPASSWORD="${password}"`, {
             silent: true,
             async: false,
           });

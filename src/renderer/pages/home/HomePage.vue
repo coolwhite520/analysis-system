@@ -171,15 +171,9 @@ export default {
     async setEnvParam(password) {
       try {
         const shell = require("shelljs");
-        const uuid = require("uuid");
-        let tempPath = this.$electron.remote.app.getPath("temp");
-        let tempPathFile = path.join(tempPath, uuid.v1() + ".sh");
-        fs.writeFileSync(tempPathFile, `export PGPASSWORD="${password}"`);
-        shell.exec(`source ${tempPathFile}`, {
+        await shell.exec(`export PGPASSWORD="${password}"`, {
           silent: true,
-          async: false,
         });
-        fs.unlinkSync(tempPathFile);
       } catch (e) {
         log.info(e.message);
       }
@@ -223,7 +217,7 @@ export default {
           });
           return;
         }
-        shell.exec(`set PGPASSWORD="${password}"`, {
+        shell.cmd(`set PGPASSWORD="${password}"`, {
           silent: true,
           async: false,
         });
