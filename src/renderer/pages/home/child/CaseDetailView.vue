@@ -499,10 +499,18 @@ export default {
             this.loading = false;
             return;
           }
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" ${database}`;
+          shell.exec(`export PGPASSWORD=${password}`, {
+            silent: true,
+            async: false,
+          });
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
         } else {
+          shell.exec(`export PGPASSWORD=${password}`, {
+            silent: true,
+            async: false,
+          });
           dumpFilePath = "pg_dump";
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" ${database}`;
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
         }
 
         // 转存数据排除后缀是temp的表

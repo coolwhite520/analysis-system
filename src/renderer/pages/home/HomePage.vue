@@ -211,7 +211,7 @@ export default {
           silent: true,
           async: false,
         });
-        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -f "${tempPathFile}"`;
+        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       } else if (process.platform === "darwin") {
         dumpFilePath = path.join(vendorpath, "psql");
         if (!fs.existsSync(dumpFilePath)) {
@@ -220,10 +220,18 @@ export default {
           });
           return;
         }
-        cmd = `"${dumpFilePath}" -d ${database} -f "${tempPathFile}"`;
+        shell.exec(`export PGPASSWORD=${password}`, {
+          silent: true,
+          async: false,
+        });
+        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       } else {
+        shell.exec(`export PGPASSWORD=${password}`, {
+          silent: true,
+          async: false,
+        });
         dumpFilePath = "psql";
-        cmd = `"${dumpFilePath}" -d ${database} -f "${tempPathFile}"`;
+        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       }
       this.loading = true;
 
