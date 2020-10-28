@@ -184,11 +184,16 @@ export default {
         }
       );
       if (typeof filePathList === "undefined") return;
+      const shell = require("shelljs");
       const path = require("path");
       const fs = require("fs");
       let cmd = "";
       let dumpFilePath = "";
       let vendorpath = this.$electron.remote.getGlobal("vendorPath");
+      let { user, database, password, port } = this.$electron.remote.getGlobal(
+        "dbCon"
+      );
+      console.log({ user, database, password, port });
       if (process.platform === "win32") {
         dumpFilePath = path.join(vendorpath, "psql.exe");
         if (!fs.existsSync(dumpFilePath)) {
@@ -197,6 +202,11 @@ export default {
           });
           return;
         }
+        shell.exec(`set PGPASSWORD=${password}`, {
+          silent: true,
+          async: false,
+        });
+        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -f "${tempPathFile}"`;
       } else if (process.platform === "darwin") {
         dumpFilePath = path.join(vendorpath, "psql");
         if (!fs.existsSync(dumpFilePath)) {
@@ -205,8 +215,10 @@ export default {
           });
           return;
         }
+        cmd = `"${dumpFilePath}" -d ${database} -f "${tempPathFile}"`;
       } else {
         dumpFilePath = "psql";
+        cmd = `"${dumpFilePath}" -d ${database} -f "${tempPathFile}"`;
       }
       this.loading = true;
       const uuid = require("uuid");
@@ -257,9 +269,9 @@ export default {
           .on("finish", async () => {
             //解压后的回调
             console.log("done");
-            cmd = `"${dumpFilePath}" -d gas_data -f "${tempPathFile}"`;
+
             console.log(cmd);
-            const shell = require("shelljs");
+
             shell.exec(
               cmd,
               { silent: true, async: true },

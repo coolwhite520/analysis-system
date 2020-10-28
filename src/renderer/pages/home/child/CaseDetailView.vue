@@ -203,6 +203,7 @@ import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog
 import { mapState, mapGetters } from "vuex";
 import cases from "@/db/Cases";
 import base from "@/db/Base";
+import { shell } from "electron";
 const fs = require("fs");
 const path = require("path");
 export default {
@@ -457,12 +458,23 @@ export default {
         filters: [{ name: "数据", extensions: ["dat"] }],
       });
       if (!result.canceled) {
+        const shell = require("shelljs");
         this.loading = true;
         this.loadingText = "数据导出中...";
         let cmd = "";
         let dumpFilePath = "";
         let vendorpath = this.$electron.remote.getGlobal("vendorPath");
         console.log(vendorpath);
+        let {
+          user,
+          database,
+          password,
+          port,
+        } = this.$electron.remote.getGlobal("dbCon");
+        console.log({ user, database, password, port });
+        const uuid = require("uuid");
+        let tempPath = this.$electron.remote.app.getPath("temp");
+        let tempPathFile = path.join(tempPath, uuid.v1());
         if (process.platform === "win32") {
           dumpFilePath = path.join(vendorpath, "pg_dump.exe");
           if (!fs.existsSync(dumpFilePath)) {
@@ -472,6 +484,12 @@ export default {
             this.loading = false;
             return;
           }
+          // windows 想要免密码输入 需要设置一个环境变量
+          shell.exec(`set PGPASSWORD=${password}`, {
+            silent: true,
+            async: false,
+          });
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(vendorpath, "pg_dump");
           if (!fs.existsSync(dumpFilePath)) {
@@ -481,18 +499,15 @@ export default {
             this.loading = false;
             return;
           }
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" ${database}`;
         } else {
           dumpFilePath = "pg_dump";
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" ${database}`;
         }
 
-        const uuid = require("uuid");
-        let tempPath = this.$electron.remote.app.getPath("temp");
-        let tempPathFile = path.join(tempPath, uuid.v1());
         // 转存数据排除后缀是temp的表
-        cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" gas_data`;
         console.log(cmd);
         try {
-          const shell = require("shelljs");
           shell.exec(
             cmd,
             { silent: true, async: true },
