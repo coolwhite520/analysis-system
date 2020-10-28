@@ -194,6 +194,9 @@ export default {
         "dbCon"
       );
       console.log({ user, database, password, port });
+      let tempPath = this.$electron.remote.app.getPath("temp");
+      let tempPathFile = path.join(tempPath, uuid.v1());
+      console.log(tempPathFile);
       if (process.platform === "win32") {
         dumpFilePath = path.join(vendorpath, "psql.exe");
         if (!fs.existsSync(dumpFilePath)) {
@@ -224,9 +227,7 @@ export default {
       const uuid = require("uuid");
       const crypto = require("crypto"); //用来加密
       const zlib = require("zlib"); //用来压缩
-      let tempPath = this.$electron.remote.app.getPath("temp");
-      let tempPathFile = path.join(tempPath, uuid.v1());
-      console.log(tempPathFile);
+
       // const iconv = require("iconv-lite");
       // const through2 = require("through2");
       let writeableStream = fs.createWriteStream(tempPathFile);
