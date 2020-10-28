@@ -168,6 +168,22 @@ export default {
         this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "new-case-view");
       }
     },
+    async setEnvParam(password) {
+      try {
+        const shell = require("shelljs");
+        const uuid = require("uuid");
+        let tempPath = this.$electron.remote.app.getPath("temp");
+        let tempPathFile = path.join(tempPath, uuid.v1() + ".sh");
+        fs.writeFileSync(tempPathFile, `export PGPASSWORD="${password}"`);
+        shell.exec(`source ${tempPathFile}`, {
+          silent: true,
+          async: false,
+        });
+        fs.unlinkSync(tempPathFile);
+      } catch (e) {
+        log.info(e.message);
+      }
+    },
     async handleClickImportCase() {
       if (!global.pool) {
         this.$electron.ipcRenderer.send("show-db-config");
@@ -207,11 +223,10 @@ export default {
           });
           return;
         }
-        shell.exec(`set PGPASSWORD=${password}`, {
+        shell.exec(`set PGPASSWORD="${password}"`, {
           silent: true,
           async: false,
         });
-        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       } else if (process.platform === "darwin") {
         dumpFilePath = path.join(vendorpath, "psql");
         if (!fs.existsSync(dumpFilePath)) {
@@ -220,19 +235,17 @@ export default {
           });
           return;
         }
-        shell.exec(`export PGPASSWORD=${password}`, {
-          silent: true,
-          async: false,
-        });
-        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
+        await this.setEnvParam(password);
       } else {
-        shell.exec(`export PGPASSWORD=${password}`, {
-          silent: true,
-          async: false,
-        });
         dumpFilePath = "psql";
-        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
+        await this.setEnvParam(password);
       }
+
+      if (user !== "")
+        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
+      else
+        cmd = `"${dumpFilePath}" -d ${database} -p ${port} -f "${tempPathFile}"`;
+
       this.loading = true;
 
       const crypto = require("crypto"); //用来加密

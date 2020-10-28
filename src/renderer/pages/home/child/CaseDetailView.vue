@@ -204,6 +204,7 @@ import { mapState, mapGetters } from "vuex";
 import cases from "@/db/Cases";
 import base from "@/db/Base";
 import { shell } from "electron";
+import log from "electron-log";
 const fs = require("fs");
 const path = require("path");
 export default {
@@ -449,6 +450,21 @@ export default {
         });
       }
     },
+    async setEnvParam(password) {
+      try {
+        const shell = require("shelljs");
+        const uuid = require("uuid");
+        let tempPath = this.$electron.remote.app.getPath("temp");
+        let tempPathFile = path.join(tempPath, uuid.v1() + ".sh");
+        fs.writeFileSync(tempPathFile, `export PGPASSWORD="${password}"`);
+        await shell.exec(`source ${tempPathFile}`, {
+          silent: true,
+        });
+        fs.unlinkSync(tempPathFile);
+      } catch (e) {
+        log.info(e.message);
+      }
+    },
     async handleClickExportScheme() {
       let result = await this.$electron.remote.dialog.showSaveDialog({
         title: "请选择要保存的文件名",
@@ -485,11 +501,10 @@ export default {
             return;
           }
           // windows 想要免密码输入 需要设置一个环境变量
-          shell.exec(`set PGPASSWORD=${password}`, {
+          shell.exec(`set PGPASSWORD="${password}"`, {
             silent: true,
             async: false,
           });
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(vendorpath, "pg_dump");
           if (!fs.existsSync(dumpFilePath)) {
@@ -499,19 +514,15 @@ export default {
             this.loading = false;
             return;
           }
-          shell.exec(`export PGPASSWORD=${password}`, {
-            silent: true,
-            async: false,
-          });
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
+          await this.setEnvParam(password);
         } else {
-          shell.exec(`export PGPASSWORD=${password}`, {
-            silent: true,
-            async: false,
-          });
           dumpFilePath = "pg_dump";
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
+          await this.setEnvParam(password);
         }
+        if (user)
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
+        else
+          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -p ${port} ${database}`;
 
         // 转存数据排除后缀是temp的表
         console.log(cmd);
