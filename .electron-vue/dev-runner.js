@@ -48,6 +48,7 @@ function startRenderer() {
     rendererConfig.entry.renderer = [path.join(__dirname, "dev-client")].concat(
       rendererConfig.entry.renderer
     );
+    console.log("panda", rendererConfig.entry.renderer);
     rendererConfig.mode = "development";
     const compiler = webpack(rendererConfig);
     hotMiddleware = webpackHotMiddleware(compiler, {

@@ -98,7 +98,7 @@ export default {
       if (pgsqlTemplate === null) {
         this.$message.error({
           title: "错误",
-          message: `没有基础模版哦`,
+          message: `功能暂未开放，敬请期待！`,
         });
         return;
       }

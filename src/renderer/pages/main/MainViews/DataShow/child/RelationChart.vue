@@ -759,6 +759,8 @@ export default {
             return outDiv;
           } else if (e.item.getType() === "edge") {
             let nodeModel = e.item.getModel();
+            console.log(nodeModel);
+
             let zhuanChuFang = nodeModel.source;
             let zhuanRuFang = nodeModel.target;
             const outDiv = document.createElement("div");
@@ -775,6 +777,7 @@ export default {
           font-size: 10px;
         }
       `);
+
             return outDiv;
           }
         },
@@ -1420,6 +1423,7 @@ export default {
       animate: true,
       defaultCombo: {
         type: "cCircle", // Combo 类型
+
         // ... 其他配置
       },
       defaultNode: {

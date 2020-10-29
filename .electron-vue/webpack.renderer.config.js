@@ -1,17 +1,16 @@
 "use strict";
 
 process.env.BABEL_ENV = "renderer";
-
 const path = require("path");
 const { dependencies } = require("../package.json");
 const webpack = require("webpack");
-
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
-
+const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
+const JavaScriptObfuscator = require("webpack-obfuscator");
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -111,6 +110,7 @@ let rendererConfig = {
     __dirname: process.env.NODE_ENV !== "production",
     __filename: process.env.NODE_ENV !== "production",
   },
+
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({ filename: "styles.css" }),
@@ -129,6 +129,11 @@ let rendererConfig = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
+    new ParallelUglifyPlugin({
+      test: /\.js$/,
+      exclude: /node_modules/,
+      uglifyES: {},
+    }),
   ],
   output: {
     filename: "[name].js",
@@ -179,5 +184,12 @@ if (process.env.NODE_ENV === "production") {
     })
   );
 }
-
+// 打包的时候才进行代码混淆
+if (process.env.NODE_ENV === "production") {
+  rendererConfig.plugins.push(
+    new JavaScriptObfuscator({
+      rotateStringArray: true,
+    })
+  );
+}
 module.exports = rendererConfig;

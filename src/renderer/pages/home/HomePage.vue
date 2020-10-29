@@ -146,6 +146,10 @@ export default {
             message: "删除成功！",
           });
           this.loading = false;
+          this.$store.commit(
+            "HomePageSwitch/SET_VIEW_NAME",
+            "show-exist-case-view"
+          );
         } catch (e) {
           this.$message.error({
             message: "删除错误：" + e.message,
