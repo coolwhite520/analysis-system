@@ -129,11 +129,11 @@ let rendererConfig = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new ParallelUglifyPlugin({
-      test: /\.js$/,
-      exclude: /node_modules/,
-      uglifyES: {},
-    }),
+    // new ParallelUglifyPlugin({
+    //   test: /\.js$/,
+    //   exclude: /node_modules/,
+    //   uglifyES: {},
+    // }),
   ],
   output: {
     filename: "[name].js",
