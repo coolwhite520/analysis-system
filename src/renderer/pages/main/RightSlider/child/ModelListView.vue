@@ -124,6 +124,7 @@ export default {
         offset: 0,
         count: 30,
       });
+      console.log(tid);
     },
     handleOpen(openIndex) {
       let bFindSame = false;

@@ -1,9 +1,9 @@
 <template>
   <div class="TabVisible">
     <el-row style="text-align: center">
-      <el-col :span="4" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
@@ -14,7 +14,7 @@
               >&#xe6cd;&nbsp;随机布局</el-button
             >
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
@@ -25,7 +25,7 @@
               >&#xe737;&nbsp;层次布局</el-button
             >
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
@@ -36,18 +36,20 @@
               >&#xe609;&nbsp;圆形布局</el-button
             >
           </el-col>
-          <!-- <el-col :span="6">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
-              style="padding:4px;font-size:12px;"
+              style="padding: 4px; font-size: 12px"
               class="iconfont"
-              @click="handleClickSwitchLayout('circular2')"
-            >&#xe609;&nbsp;螺旋布局</el-button>
-          </el-col>-->
+              @click="handleClickSwitchLayout('sangji')"
+              :disabled="disabledButtons"
+              >&#xe609;&nbsp;桑基布局</el-button
+            >
+          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
@@ -58,7 +60,7 @@
               >&#xe605;&nbsp;同心圆布局</el-button
             >
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
@@ -69,7 +71,7 @@
               >&#xe667;&nbsp;网格布局</el-button
             >
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button
               size="mini"
               type="text"
@@ -91,7 +93,9 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickShowEntityListView"
-              :disabled="disabledButtons"
+              :disabled="
+                disabledButtons || currentTableData.graphType === 'special'
+              "
               >&#xe601;&nbsp;实体列表</el-button
             >
           </el-col>
@@ -139,7 +143,7 @@
         padding-bottom: 4px;
       "
     >
-      <el-col :span="4" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
         <div>布局</div>
       </el-col>
       <el-col
@@ -177,18 +181,21 @@ export default {
     },
     handleClickSwitchLayout(layoutName) {
       let layout;
+      let isNormalLayout = false;
       switch (layoutName) {
         case "random": // 随机
           layout = {
             type: "random", // 指定为力导向布局
             preventOverlap: true, // 防止节点重叠
           };
+          isNormalLayout = true;
           break;
         case "dagre": //层次
           layout = {
             type: "dagre",
             preventOverlap: true,
           };
+          isNormalLayout = true;
           break;
         case "circular": // 圆形
           layout = {
@@ -196,6 +203,7 @@ export default {
             ordering: "degree",
             type: "circular",
           };
+          isNormalLayout = true;
           break;
         case "grid": // 网格
           layout = {
@@ -203,16 +211,18 @@ export default {
             preventOverlap: true,
             begin: [20, 20],
           };
+          isNormalLayout = true;
           break;
         case "radial": // 辐射
           layout = {
             type: "radial",
             unitRadius: 50,
             preventOverlap: true,
-            nodeSpacing: 20,
+            nodeSpacing: 50,
             strictRadial: true,
             maxPreventOverlapIteration: 100,
           };
+          isNormalLayout = true;
           break;
         case "concentric": // 同心圆
           layout = {
@@ -221,12 +231,23 @@ export default {
             sortBy: "degree",
             preventOverlap: true,
           };
+          isNormalLayout = true;
+          break;
+        case "sangji":
+          isNormalLayout = false;
           break;
       }
-      this.$bus.$emit("swichNormalLayout", {
-        graphid: this.currentTableData.graphid,
-        layout,
-      });
+
+      if (isNormalLayout) {
+        this.$bus.$emit("swichNormalLayout", {
+          graphid: this.currentTableData.graphid,
+          layout,
+        });
+      } else {
+        this.$bus.$emit("switchSpecialLayout", {
+          graphid: this.currentTableData.graphid,
+        });
+      }
     },
   },
 };

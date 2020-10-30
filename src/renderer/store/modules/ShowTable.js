@@ -98,6 +98,7 @@ const mutations = {
       tableData.SpreadNodeSwitch = false;
 
       Vue.set(tableData, "graphid", uuid.v1());
+      Vue.set(tableData, "graphType", "normal");
       Vue.set(tableData, "fullScrrenFlag", false);
     }
     state.tableDataList.push(tableData);
@@ -105,12 +106,15 @@ const mutations = {
     state.activeIndex = state.pageIndex;
     state.currentTableData = tableData;
   },
+  // 切换布局类型，在normal和special中切换
+  SWITCH_GRAPHTYPE(state, graphType) {
+    Vue.set(state.currentTableData, "graphType", graphType);
+  },
   // 放大到全屏 缩小
   UPDATE_FULLSCRRENFLAG(state) {
     let flag = state.currentTableData.fullScrrenFlag;
     console.log(state.currentTableData.fullScrrenFlag);
     Vue.set(state.currentTableData, "fullScrrenFlag", !flag);
-    console.log(state.currentTableData.fullScrrenFlag);
   },
   // 修改金额区间的选定状态
   MODIFY_MONDY_SECTION_CHECKED(state, id) {
@@ -311,7 +315,9 @@ const mutations = {
   SET_RIGHT_TAB_ACTIVE(state, componentName) {
     state.currentTableData.rightActiveName = componentName;
   },
-
+  CLEAR_ALL_RIGHT_TABS(state) {
+    state.currentTableData.rightTabs = [];
+  },
   ADD_OR_REMOVE_RIGHT_TAB(state, { componentName, action }) {
     let tabs = state.currentTableData.rightTabs;
     if (action === "add") {

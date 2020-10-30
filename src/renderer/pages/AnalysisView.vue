@@ -56,6 +56,12 @@ export default {
     let _this = this;
 
     this.$electron.ipcRenderer.on("save-state", async (event, data) => {
+      if (this.currentViewName === "home-page") {
+        this.$message({
+          message: "当前页面没有任何保存价值，请进入分析页面。",
+        });
+        return;
+      }
       let tempPath = this.$electron.remote.app.getPath("temp");
       console.log(tempPath);
       tempPath = path.join(tempPath, uuid.v1());

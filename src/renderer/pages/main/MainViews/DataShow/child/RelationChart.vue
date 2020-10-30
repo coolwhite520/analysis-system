@@ -6,6 +6,7 @@
       <el-col :span="16">
         <el-button-group>
           <el-button
+            :disabled="buttonDisabled"
             size="mini"
             v-for="(item, index) of tableData.graphicMoneySectionList"
             :key="item.id"
@@ -33,6 +34,7 @@
             inactive-color="#ff4949"
             inactive-text="离散"
             @change="handleChangeSpreadNodeValue"
+            :disabled="buttonDisabled"
           >
           </el-switch>
         </el-tooltip>
@@ -48,6 +50,7 @@
             active-color="#13ce66"
             inactive-color="#ff4949"
             inactive-text="线宽"
+            :disabled="buttonDisabled"
           >
           </el-switch>
         </el-tooltip>
@@ -60,6 +63,7 @@
           placement="top-start"
         >
           <el-button
+            :disabled="buttonDisabled"
             size="mini"
             type="primary"
             icon="el-icon-s-tools"
@@ -73,6 +77,7 @@
           size="mini"
           v-model="inputValue"
           placeholder="输入关键字进行快捷定位"
+          :disabled="buttonDisabled"
         ></el-input>
       </el-col>
     </el-row>
@@ -114,6 +119,7 @@
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5" style="text-align: right">
         <el-button
+          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -123,6 +129,7 @@
         >
 
         <el-button
+          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -131,6 +138,7 @@
           >&#xe622;</el-button
         >
         <el-button
+          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -139,6 +147,7 @@
           >&#xe623;</el-button
         >
         <el-button
+          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -242,7 +251,10 @@ import GraphicSetting from "@/pages/dialog/graphicsetting/graphicSettingDialog";
 import NodeCombine from "@/pages/dialog/nodeCombine/nodeCombineDialog";
 const uuid = require("uuid");
 const elementResizeDetectorMaker = require("element-resize-detector");
+import DataSet from "@antv/data-set";
+import { Chart } from "@antv/g2";
 import insertCss from "insert-css";
+import { link } from "fs";
 export default {
   props: ["tableData", "limitHeight"],
   data() {
@@ -253,6 +265,7 @@ export default {
       inputValue: "",
       data: null,
       graph: null,
+      myEchart: null,
       toolBarID: uuid.v1(),
       miniMapID: uuid.v1(),
       fisheye: null,
@@ -277,6 +290,9 @@ export default {
       "nodeCombineVisible",
     ]),
     ...mapState("CaseDetail", ["caseBase"]),
+    buttonDisabled() {
+      return this.tableData.graphType === "special";
+    },
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
     },
@@ -620,7 +636,6 @@ export default {
       this.menuVisible = false;
     },
     resize() {
-      console.log("resize");
       let { clientWidth, clientHeight } = this.$refs[this.graphid];
       console.log({ clientWidth, clientHeight });
       this.graph.changeSize(clientWidth, clientHeight);
@@ -698,6 +713,7 @@ export default {
           if (e.item.getType() === "node") {
             let nodeModel = e.item.getModel();
             let edges = e.item.getEdges();
+            let jyEdgeCount = 0; // 需要排除comboEdge
             let czjeTotal = 0;
             let czbsTotal = 0;
             let jzjeTotal = 0;
@@ -706,6 +722,11 @@ export default {
             let jczongbs = 0;
             for (let edge of edges) {
               let edgeModel = edge.getModel();
+              if (edgeModel.isComboEdge) {
+                // 连接到combo的边存在问题
+                continue;
+              }
+              jyEdgeCount++;
               if (edgeModel.target === nodeModel.id) {
                 jzjeTotal = new Decimal(jzjeTotal).add(
                   new Decimal(edgeModel.je)
@@ -728,7 +749,7 @@ export default {
               e.item.hasLocked() ? "(已锁定)" : ""
             }</h4>
       <ul>
-        <li class="tip-li">交易关联数：${edges.length}&nbsp;&nbsp;</li>
+        <li class="tip-li">交易关联数：${jyEdgeCount}&nbsp;&nbsp;</li>
         <li class="tip-li">出账总金额：${czjeTotal}&nbsp;&nbsp;元</li>
         <li class="tip-li">出账总笔数：${czbsTotal}&nbsp;&nbsp;</li>
         <li class="tip-li">进账总金额：${jzjeTotal}&nbsp;&nbsp;元</li>
@@ -754,30 +775,39 @@ export default {
               }
             `);
             }
+            return outDiv;
             // style="color:#cd594b"
             // style="color:#46962e"
-            return outDiv;
           } else if (e.item.getType() === "edge") {
-            let nodeModel = e.item.getModel();
-            console.log(nodeModel);
-
-            let zhuanChuFang = nodeModel.source;
-            let zhuanRuFang = nodeModel.target;
+            let edgeModel = e.item.getModel();
+            let zhuanChuFang = edgeModel.source; // 一定是combo
+            let zhuanRuFang = edgeModel.target; // 可能是combo 也可能是普通节点
             const outDiv = document.createElement("div");
             outDiv.style.width = "180px";
-            outDiv.innerHTML = `
-      <ul>
-        <li class="tip-li">转出方：${zhuanChuFang}</li>
-        <li class="tip-li">转入方：${zhuanRuFang}</li>
-        <li class="tip-li">转账金额：${nodeModel.je}&nbsp;&nbsp;元</li>
-        <li class="tip-li">转账笔数：${nodeModel.bs}&nbsp;&nbsp;</li>
-      </ul>`;
-            insertCss(`
-        .tip-li{
-          font-size: 10px;
-        }
-      `);
+            if (edgeModel.isComboEdge) {
+              let graph = e.currentTarget;
+              let zhuanChuFangCombo = graph.findById(zhuanChuFang);
+              let zhuanRuFangNode = graph.findById(zhuanRuFang);
 
+              outDiv.innerHTML = `
+              <ul>
+                <li class="tip-li">展开分组后可观察资金走向</li>
+              </ul>`;
+            } else {
+              outDiv.innerHTML = `
+              <ul>
+                <li class="tip-li">转出方：${zhuanChuFang}</li>
+                <li class="tip-li">转入方：${zhuanRuFang}</li>
+                <li class="tip-li">转账金额：${edgeModel.je}&nbsp;&nbsp;元</li>
+                <li class="tip-li">转账笔数：${edgeModel.bs}&nbsp;&nbsp;</li>
+              </ul>`;
+            }
+
+            insertCss(`
+                .tip-li{
+                  font-size: 10px;
+                }
+              `);
             return outDiv;
           }
         },
@@ -970,13 +1000,195 @@ export default {
           break;
       }
     },
+    makeSankeyData() {
+      switch (this.tableData.tid) {
+        case "202":
+          return this.makeSankeyData202();
+          break;
+        case "203":
+          return this.makeSankeyData203();
+          break;
+        case "213":
+          return this.makeSankeyData213();
+          break;
+      }
+    },
+    // 构造桑基数据
+    makeSankeyData202() {
+      let nodes = [];
+      let links = [];
+      this.tableData.allrows.forEach((row) => {
+        let jymc = row["jymc"];
+        let cxkh = row["cxkh"];
+        let jydfmc = row["jydfmc"];
+        let jydfzkh = row["jydfzkh"];
+        let jczce = parseFloat(row["jczce"]);
+
+        let data1 = {
+          name: cxkh + "\n" + jymc,
+        };
+        let data2 = {
+          name: jydfzkh + "\n" + jydfmc,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.name === data1.name) {
+            bFindData1 = true;
+            break;
+          }
+        }
+
+        if (!bFindData1) nodes.push(data1);
+        for (let item of nodes) {
+          if (item.name === data2.name) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+
+        // 画线
+        let link = {
+          source: jczce > 0 ? cxkh + "\n" + jymc : jydfzkh + "\n" + jydfmc,
+          target: jczce > 0 ? jydfzkh + "\n" + jydfmc : cxkh + "\n" + jymc,
+          value: jczce > 0 ? jczce : -jczce,
+        };
+
+        links.push(link);
+      });
+      // antv 需要转换一下
+      // let newLinks = links.map((link) => {
+      //   let sourceIndex = nodes.findIndex((node) => node.name === link.source);
+      //   let targetIndex = nodes.findIndex((node) => node.name === link.target);
+      //   return {
+      //     source: sourceIndex,
+      //     target: targetIndex,
+      //     value: link.value,
+      //   };
+      // });
+
+      return { nodes, links };
+    },
+    makeSankeyData203() {
+      let nodes = [];
+      let links = [];
+      this.tableData.allrows.forEach((row) => {
+        let jymc = row["jymc"];
+        // let cxkh = row["jyzjhm"];
+
+        let jydfmc = row["jydfmc"];
+        // let jydfzkh = row["jydfzjhm"];
+
+        let jczce = parseFloat(row["jczce"]);
+
+        let data1 = {
+          name: jymc,
+        };
+        let data2 = {
+          name: jydfmc,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.name === data1.name) {
+            bFindData1 = true;
+            break;
+          }
+        }
+        if (!bFindData1) nodes.push(data1);
+        for (let item of nodes) {
+          if (item.name === data2.name) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+
+        // 画线
+        let link = {
+          source: jczce > 0 ? jymc : jydfmc,
+          target: jczce > 0 ? jydfmc : jymc,
+          value: jczce > 0 ? jczce : -jczce,
+        };
+
+        links.push(link);
+      });
+      // antv 需要转换一下
+      // let newLinks = links.map((link) => {
+      //   let sourceIndex = nodes.findIndex((node) => node.name === link.source);
+      //   let targetIndex = nodes.findIndex((node) => node.name === link.target);
+      //   return {
+      //     source: sourceIndex,
+      //     target: targetIndex,
+      //     value: link.value,
+      //   };
+      // });
+
+      return { nodes, links };
+    },
+    makeSankeyData213() {
+      let nodes = [];
+      let links = [];
+      this.tableData.allrows.forEach((row) => {
+        let jymc =
+          row[
+            `${this.tableData.selectCondition.SelectThType.ThId.toLowerCase()}`
+          ];
+        let jydfmc =
+          row[
+            `${this.tableData.selectCondition.SelectThType.DsThId.toLowerCase()}`
+          ];
+        let jczce = parseFloat(row["jczce"]);
+
+        let data1 = {
+          name: jymc,
+        };
+        let data2 = {
+          name: jydfmc,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.name === data1.name) {
+            bFindData1 = true;
+            break;
+          }
+        }
+        if (!bFindData1) nodes.push(data1);
+        for (let item of nodes) {
+          if (item.name === data2.name) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+        // 画线
+        let link = {
+          source: jczce > 0 ? jymc : jydfmc,
+          target: jczce > 0 ? jydfmc : jymc,
+          value: jczce > 0 ? jczce : -jczce,
+        };
+        if (jymc !== jydfmc) links.push(link);
+      });
+      // antv 需要转换一下
+      // let newLinks = links.map((link) => {
+      //   let sourceIndex = nodes.findIndex((node) => node.name === link.source);
+      //   let targetIndex = nodes.findIndex((node) => node.name === link.target);
+      //   return {
+      //     source: sourceIndex,
+      //     target: targetIndex,
+      //     value: link.value,
+      //   };
+      // });
+
+      return { nodes, links };
+    },
     makeData213() {
       // 重点交易对手团伙发现：参数 金额，笔数。参数可设置团伙分类 以 主体名称（JYMCGROUP），证件号码（JYZJHMGROUP），卡号（CXKHGROUP） 划分
       this.currentSelectedNodes = [];
       let nodes = [];
       let edges = [];
-      let keyName = "";
-      let keyDfName = "";
       this.tableData.allrows.forEach((row) => {
         let jymc =
           row[
@@ -1009,13 +1221,18 @@ export default {
         for (let item of nodes) {
           if (item.id === data1.id) {
             bFindData1 = true;
+            break;
           }
         }
+        if (!bFindData1) nodes.push(data1);
         for (let item of nodes) {
           if (item.id === data2.id) {
             bFindData2 = true;
+            break;
           }
         }
+        if (!bFindData2) nodes.push(data2);
+
         // 画线
         let tempEdges = [];
         if (czje > 0) {
@@ -1057,8 +1274,6 @@ export default {
           if (lineColor !== "") tempEdges.push(link2);
         }
         if (tempEdges.length > 0) {
-          if (!bFindData1) nodes.push(data1);
-          if (!bFindData2) nodes.push(data2);
           edges.push(...tempEdges);
         }
       });
@@ -1074,10 +1289,8 @@ export default {
       let edges = [];
       this.tableData.allrows.forEach((row) => {
         let jymc = row["jymc"];
-        let cxkh = row["jyzjhm"];
 
         let jydfmc = row["jydfmc"];
-        let jydfzkh = row["jydfzjhm"];
 
         let czje = parseFloat(row["czje"]);
         let czbs = parseInt(row["czbs"]);
@@ -1086,17 +1299,17 @@ export default {
         let jyzje = parseInt(row["jyzje"]);
         let jyzbs = parseInt(row["jyzbs"]);
         let data1 = {
-          id: cxkh + "\n" + jymc,
-          kh: cxkh,
+          id: jymc,
+          kh: jymc,
           name: jymc,
-          label: cxkh + "\n" + jymc,
+          label: jymc,
           tid: this.tableData.tid, //tableid
         };
         let data2 = {
-          id: jydfzkh + "\n" + jydfmc,
-          kh: jydfzkh,
+          id: jydfmc,
+          kh: jydfmc,
           name: jydfmc,
-          label: jydfzkh + "\n" + jydfmc,
+          label: jydfmc,
           tid: this.tableData.tid,
         };
         let bFindData1 = false;
@@ -1104,21 +1317,26 @@ export default {
         for (let item of nodes) {
           if (item.id === data1.id) {
             bFindData1 = true;
+            break;
           }
         }
+        if (!bFindData1) nodes.push(data1);
         for (let item of nodes) {
           if (item.id === data2.id) {
             bFindData2 = true;
+            break;
           }
         }
+        if (!bFindData2) nodes.push(data2);
+
         // 画线
         let tempEdges = [];
         if (czje > 0) {
           let lineColor = this.calculateLineColorByJinE(czje);
           let link1 = {
             tid: this.tableData.tid,
-            source: cxkh + "\n" + jymc,
-            target: jydfzkh + "\n" + jydfmc,
+            source: jymc,
+            target: jydfmc,
             je: czje,
             bs: czbs,
             label: `${czje}元（${czbs}笔）`,
@@ -1136,8 +1354,8 @@ export default {
           let lineColor = this.calculateLineColorByJinE(jzje);
           let link2 = {
             tid: this.tableData.tid,
-            source: jydfzkh + "\n" + jydfmc,
-            target: cxkh + "\n" + jymc,
+            source: jydfmc,
+            target: jymc,
             je: jzje,
             bs: jzbs,
             label: `${jzje}元（${jzbs}笔）`,
@@ -1152,8 +1370,6 @@ export default {
           if (lineColor !== "") tempEdges.push(link2);
         }
         if (tempEdges.length > 0) {
-          if (!bFindData1) nodes.push(data1);
-          if (!bFindData2) nodes.push(data2);
           edges.push(...tempEdges);
         }
       });
@@ -1197,13 +1413,19 @@ export default {
         for (let item of nodes) {
           if (item.id === data1.id) {
             bFindData1 = true;
+            break;
           }
         }
+        if (!bFindData1) nodes.push(data1);
+
         for (let item of nodes) {
           if (item.id === data2.id) {
             bFindData2 = true;
+            break;
           }
         }
+        if (!bFindData2) nodes.push(data2);
+
         // 画线
         let tempEdges = [];
         if (czje > 0) {
@@ -1249,8 +1471,7 @@ export default {
         //   if (!bFindData2) nodes.push(data2);
         //   edges.push(...tempEdges);
         // }
-        if (!bFindData1) nodes.push(data1);
-        if (!bFindData2) nodes.push(data2);
+
         edges.push(...tempEdges);
       });
       this.$G6.Util.processParallelEdges(edges);
@@ -1285,6 +1506,7 @@ export default {
     calculateEntityInfo(node) {
       let nodeModel = node.getModel();
       let edges = node.getEdges();
+      let jyEdgeCount = 0;
       let czjeTotal = 0;
       let czbsTotal = 0;
       let jzjeTotal = 0;
@@ -1293,7 +1515,11 @@ export default {
       let jczongbs = 0;
       for (let edge of edges) {
         let edgeModel = edge.getModel();
-        console.log(edgeModel);
+        if (edgeModel.isComboEdge) {
+          // 连接到combo的边存在问题
+          continue;
+        }
+        jyEdgeCount++;
         if (edgeModel.target === nodeModel.id) {
           jzjeTotal = new Decimal(jzjeTotal).add(new Decimal(edgeModel.je));
           jzbsTotal += edgeModel.bs;
@@ -1315,7 +1541,7 @@ export default {
         },
         {
           title: "交易关联数",
-          describe: edges.length,
+          describe: jyEdgeCount,
         },
         {
           title: "出账总金额",
@@ -1401,392 +1627,608 @@ export default {
         }
       }
     },
+    async loadGraphDefault(
+      layout = {
+        type: "random", // 指定为力导向布局
+        preventOverlap: true, // 防止节点重叠
+      }
+    ) {
+      let _this = this;
+      this.tempgraphicMoneySectionStrMd5 = md5(
+        JSON.stringify(this.tableData.graphicMoneySectionList)
+      );
+
+      this.registerSelfCombo();
+      let { clientWidth, clientHeight } = this.$refs[this.graphid];
+      let option = {
+        groupByTypes: false,
+        width: clientWidth,
+        height: clientHeight,
+        container: this.graphid, // 指定挂载容器
+        animate: true,
+        defaultCombo: {
+          type: "cCircle", // Combo 类型
+
+          // ... 其他配置
+        },
+        defaultNode: {
+          type: "circle",
+          style: {
+            // 默认是虚线
+            lineDash: [1, 1],
+            fill: "#d9dce1",
+            stroke: "#3c4e6b",
+          },
+          icon: {
+            show: true,
+            img: "/static/images/icons/银行卡.png",
+            width: 15,
+            height: 15,
+          },
+          labelCfg: {
+            position: "bottom",
+            offset: 0,
+            style: {
+              fontSize: 5,
+            },
+          },
+        },
+        defaultEdge: {
+          labelCfg: {
+            autoRotate: true,
+            style: {
+              fontSize: 5,
+            },
+          },
+          style: {
+            lineWidth: 1,
+            lineAppendWidth: 5,
+          },
+        },
+        nodeStateStyles: {
+          selected: {
+            shadowColor: "red",
+            shadowBlur: 10,
+          },
+          active: {
+            opacity: 1,
+          },
+          inactive: {
+            opacity: 0.2,
+          },
+        },
+        layout,
+        edgeStateStyles: {
+          active: {
+            opacity: 1,
+          },
+          inactive: {
+            opacity: 0.2,
+          },
+        },
+        comboStateStyles: {
+          dragenter: {
+            lineWidth: 4,
+            stroke: "#FE9797",
+          },
+        },
+        // linkCenter: true,
+        modes: {
+          default: [
+            "drag-node",
+            "drag-combo",
+            "zoom-canvas",
+            "activate-relations",
+            { type: "click-select", trigger: "ctrl" }, //点选
+            {
+              // 框选
+              type: "brush-select",
+              fillOpacity: 0.1,
+              lineWidth: 2,
+              stroke: "red",
+              trigger: "drag",
+            },
+          ],
+        },
+      };
+      this.graph = new this.$G6.Graph(option);
+      this.initPlugins();
+      if (this.tableData.hasOwnProperty("relationGraphData")) {
+        let data = this.$lodash.cloneDeepWith(this.tableData.relationGraphData);
+        this.graph.data(data);
+      } else {
+        this.graph.data(this.makeData()); // 加载数据
+      }
+      this.graph.render(); // 渲染
+
+      this.updateEntityList();
+      this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+      this.accordingSpreadNodeSwitchRefreshNodes();
+      let nodes = this.graph.getNodes();
+      let edges = this.graph.getEdges();
+      this.entityCount = nodes.length;
+      this.linkCount = edges.length;
+      this.detailCount = this.entityCount + this.linkCount;
+      // 监听布局切换
+      // this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
+      // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
+      this.graph.on("nodeselectchange", async (e) => {
+        console.log("nodeselectchange", e);
+        // 单个节点的select
+        let node = e.target;
+        if (node) {
+          let type = node.getType();
+          let nodeModel = node.get("model");
+          if (type === "node") {
+            let entity = this.calculateEntityInfo(node);
+            console.log({ entity });
+            this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
+            this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+              componentName: "entity-view",
+              action: "add",
+            });
+          } else if (type === "combo") {
+            let comboentityList = [];
+            let allNodes = [];
+            let allEdges = [];
+            await this.travelCombo(comboentityList, node, allNodes, allEdges);
+            // 给所有边去重复
+            allEdges = this.$lodash.uniqWith(allEdges, this.$lodash.isEqual);
+            let zuNeiNodeCount = allNodes.length; // 组内成员数量
+            let zuNeiJjze = 0; // 组内交易总额
+            let zuNeiJjbs = 0; // 组内交易笔数
+            let zuNeiDuiWaiJjze = 0; // 组内对外交易总额
+            let zuNeiDuiWaiJjbs = 0; // 组内对外交易笔数
+            let zuNeiDuiWaiJjChaE = 0;
+            function belongsToNodes(id) {
+              for (let node of allNodes) {
+                if (node.getModel().id === id) {
+                  return true;
+                }
+              }
+              return false;
+            }
+
+            for (let edge of allEdges) {
+              let modelData = edge.getModel();
+              let sourceId = modelData.source;
+              let targetId = modelData.target;
+              if (belongsToNodes(sourceId) && belongsToNodes(targetId)) {
+                zuNeiJjze = new Decimal(zuNeiJjze).add(
+                  new Decimal(modelData.je)
+                );
+                zuNeiJjbs = new Decimal(zuNeiJjbs).add(
+                  new Decimal(modelData.bs)
+                );
+              } else {
+                zuNeiDuiWaiJjze = new Decimal(zuNeiDuiWaiJjze).add(
+                  new Decimal(modelData.je)
+                );
+                zuNeiDuiWaiJjbs = new Decimal(zuNeiDuiWaiJjbs).add(
+                  new Decimal(modelData.bs)
+                );
+                if (belongsToNodes(sourceId)) {
+                  zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).sub(
+                    modelData.je
+                  );
+                } else {
+                  zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).add(
+                    modelData.je
+                  );
+                }
+              }
+            }
+            this.$store.commit("ShowTable/UPDATE_COMBO_ENTITY_LIST", {
+              comboName: nodeModel.label,
+              comboentityList,
+              comboTableData: [
+                {
+                  title: "组内成员数量",
+                  describe: zuNeiNodeCount,
+                },
+                {
+                  title: "组内成员间交易总额",
+                  describe: zuNeiJjze,
+                },
+                {
+                  title: "组内成员间交易笔数",
+                  describe: zuNeiJjbs,
+                },
+                {
+                  title: "组内对外交易总额",
+                  describe: zuNeiDuiWaiJjze,
+                },
+                {
+                  title: "组内对外交易笔数",
+                  describe: zuNeiDuiWaiJjbs,
+                },
+                {
+                  title: "组内对外交易差额",
+                  describe: zuNeiDuiWaiJjChaE,
+                },
+              ],
+            });
+            this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+              componentName: "combo-entity-list-view",
+              action: "add",
+            });
+          }
+        }
+
+        if (e.select) {
+          this.currentSelectedNodes = [];
+          e.selectedItems.nodes.forEach((cn) => {
+            if (cn._cfg.visible) {
+              this.currentSelectedNodes.push(cn);
+            }
+          });
+        } else {
+          this.currentSelectedNodes = [];
+        }
+      });
+      this.graph.on("click", () => {
+        this.menuVisible = false;
+      });
+      // collapse/expand when click the marker
+      this.graph.on("combo:click", async (e) => {
+        if (e.target.get("name") === "combo-marker-shape") {
+          // graph.collapseExpandCombo(e.item.getModel().id);
+          this.graph.collapseExpandCombo(e.item);
+          // 不知道怎么弄？？？？
+          if (false && e.item.getModel().collapsed) {
+            let comboId = e.item.getModel().id;
+            let comboentityList = [];
+            let allNodes = [];
+            let allEdges = [];
+            await this.travelCombo(comboentityList, e.item, allNodes, allEdges);
+            // 给所有边去重复
+            allEdges = this.$lodash.uniqWith(allEdges, this.$lodash.isEqual);
+            function belongsToNodes(id) {
+              for (let node of allNodes) {
+                if (node.getModel().id === id) {
+                  return true;
+                }
+              }
+              return false;
+            }
+            let outEdges = [];
+            for (let edge of allEdges) {
+              let modelData = edge.getModel();
+              let sourceId = modelData.source;
+              let targetId = modelData.target;
+              if (belongsToNodes(sourceId) && belongsToNodes(targetId)) {
+              } else {
+                let outEdgeModel = edge.getModel();
+                if (belongsToNodes(outEdgeModel.source)) {
+                  outEdgeModel.source = comboId;
+                }
+                if (belongsToNodes(outEdgeModel.target)) {
+                  outEdgeModel.target = comboId;
+                }
+
+                outEdges.push(outEdgeModel);
+              }
+            }
+            console.log(outEdges);
+            this.$G6.Util.processParallelEdges(outEdges);
+          }
+
+          if (this.graph.get("layout")) this.graph.layout();
+          else this.graph.refreshPositions(); // Refresh positions for items otherwise
+        }
+      });
+      this.graph.on("combo:dragend", (e) => {
+        this.graph.getCombos().forEach((combo) => {
+          this.graph.setItemState(combo, "dragenter", false);
+        });
+      });
+      this.graph.on("node:dragend", (e) => {
+        this.graph.getCombos().forEach((combo) => {
+          this.graph.setItemState(combo, "dragenter", false);
+        });
+      });
+      this.graph.on("combo:dragenter", (e) => {
+        this.graph.setItemState(e.item, "dragenter", true);
+      });
+      this.graph.on("combo:dragleave", (e) => {
+        this.graph.setItemState(e.item, "dragenter", false);
+      });
+
+      // 右键点击combo
+      this.graph.on("combo:contextmenu", (evt) => {
+        this.rightClickType = "combo";
+        console.log(evt);
+        this.rightClickComboInstance = evt.item;
+        //当前节点定位
+        this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
+        let menu = document.getElementById(this.menuId);
+        menu.style.left = evt.clientX + "px";
+        menu.style.top = evt.clientY + "px";
+      });
+      // 右键菜单node
+      this.graph.on("node:contextmenu", (evt) => {
+        this.rightClickType = "node";
+        let node = evt.item;
+        this.nodeBelongCombo = this.accordingNodeFindCombo(
+          this.graph.getCombos(),
+          node
+        );
+        let nodeid = node.get("model").id;
+        let filterNodes = this.currentSelectedNodes.filter((n) => {
+          let nId = n.get("model").id;
+          return nId === nodeid;
+        });
+        if (filterNodes.length === 0) {
+          this.currentSelectedNodes.forEach((cn) => {
+            this.graph.setItemState(cn, "selected", false);
+          });
+          this.graph.setItemState(node, "selected", true);
+          this.currentSelectedNodes = [];
+          this.currentSelectedNodes.push(node);
+        }
+        //当前节点定位
+        this.menuVisible = true;
+        let menu = document.getElementById(this.menuId);
+        menu.style.left = evt.clientX + "px";
+        menu.style.top = evt.clientY + "px";
+        console.log("右键被点击的event:", evt);
+      });
+
+      this.graph.on("node:mouseleave", (evt) => {
+        this.menuVisible = false;
+      });
+      this.graph.on("combo:mouseleave", (evt) => {
+        this.menuVisible = false;
+      });
+      // 画布监听keydown
+      this.graph.on("keydown", (ev) => {
+        // console.log(ev);
+      });
+
+      // node节点状态更新监听, 针对entitylist组件中鼠标移动进行图表中node的状态更新
+      this.$bus.$on("updateNodeState", this.onUpdateNodesState);
+
+      //保存当前图表数据
+      this.$bus.$on("saveGraphData", (data) => {
+        let { graphid } = data;
+        if (graphid !== _this.graphid) return;
+        // 包含nodes，edges，combos
+        let relationGraphData = this.graph.save();
+        console.log(relationGraphData);
+        this.$store.commit("ShowTable/SAVE_GRAPHDATA", {
+          graphid,
+          relationGraphData,
+        });
+      });
+      // 图表导出到图片
+      this.$bus.$on("exportPicture", async (data) => {
+        let { graphid } = data;
+        if (graphid !== _this.graphid) return;
+        let pngName = `案件${this.caseBase.ajmc}-${this.tableData.title}`;
+        console.log(pngName);
+        this.graph.downloadFullImage(pngName, "image/png");
+      });
+      // 监听右侧菜单中点击table中的每个实体消息
+      this.$bus.$on("clickEntityRow", (data) => {
+        let { graphid, nodeid } = data;
+        if (graphid !== _this.graphid) return;
+        console.log({ graphid, nodeid });
+        let node = this.graph.findById(nodeid);
+        let entity = this.calculateEntityInfo(node);
+        console.log({ entity });
+        this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
+        this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+          componentName: "entity-view",
+          action: "add",
+        });
+      });
+      this.$bus.$on("nodeStyleSetting", (data) => {
+        console.log({ data });
+        let { graphid, nodeid, nodeStyle } = data;
+        if (graphid !== _this.graphid) return;
+        let node = this.graph.findById(nodeid);
+        this.graph.clearItemStates(node, "selected");
+        let nodeModel = node.getModel();
+        switch (nodeStyle.title) {
+          case "节点图标":
+            nodeModel.icon.img = nodeStyle.describe;
+            this.graph.updateItem(nodeid, nodeModel);
+            break;
+          case "节点背景色":
+            nodeModel.style.fill = nodeStyle.describe;
+            this.graph.updateItem(nodeid, nodeModel);
+            break;
+          case "节点边框色":
+            nodeModel.style.stroke = nodeStyle.describe;
+            this.graph.updateItem(nodeid, nodeModel);
+            break;
+          case "节点标签色":
+            nodeModel.labelCfg.style.fill = nodeStyle.describe;
+            this.graph.updateItem(nodeid, nodeModel);
+            break;
+        }
+      });
+    },
+    // g2 渲染，暂时没有使用 因为渲染效果太差
+    async loadSpecialLayout2() {
+      let data = await this.makeSankeyData();
+      console.log(data);
+      const ds = new DataSet();
+      const dv = ds.createView().source(data, {
+        type: "graph",
+        edges: (d) => d.links,
+      });
+      dv.transform({
+        type: "diagram.sankey",
+        sort: (a, b) => {
+          if (a.value > b.value) {
+            return 0;
+          } else if (a.value < b.value) {
+            return -1;
+          }
+          return 0;
+        },
+      });
+      const chart = new Chart({
+        container: this.graphid,
+        autoFit: true,
+        // height: 500,
+        padding: [40, 40],
+      });
+      chart.legend(false);
+      chart.tooltip({
+        showTitle: false,
+        showMarkers: false,
+      });
+      chart.axis(false);
+      chart.scale({
+        x: { sync: true, nice: true },
+        y: { sync: true, nice: true },
+      });
+
+      // edge view
+      const edges = dv.edges.map((edge) => {
+        return {
+          source: edge.source.name,
+          target: edge.target.name,
+          x: edge.x,
+          y: edge.y,
+          value: edge.value,
+        };
+      });
+      const edgeView = chart.createView();
+      edgeView.data(edges);
+      edgeView
+        .edge()
+        .position("x*y")
+        .shape("arc")
+        .color("value")
+        .tooltip("target*source*value", (target, source, value) => {
+          return {
+            name: source + " to " + target + "</span>",
+            value,
+          };
+        })
+        .style({
+          fillOpacity: 0.6,
+        });
+
+      // node view
+      const nodes = dv.nodes.map((node) => {
+        return {
+          x: node.x,
+          y: node.y,
+          name: node.name,
+        };
+      });
+      const nodeView = chart.createView();
+      nodeView.data(nodes);
+      nodeView
+        .polygon()
+        .position("x*y") // nodes数据的x、y由layout方法计算得出
+        .color("name")
+        .label("name", {
+          style: {
+            fill: "#545454",
+            textAlign: "start",
+          },
+          offset: 0,
+          content: (obj) => {
+            return "  " + obj.name;
+          },
+        })
+        .tooltip(false)
+        .style({
+          // stroke: "#ccc",
+        });
+
+      chart.interaction("element-active");
+
+      chart.render();
+    },
+    async loadSpecialLayout() {
+      let el = document.getElementById(this.graphid);
+      this.myEchart = this.$echarts.init(el);
+      let { nodes, links } = await this.makeSankeyData();
+      window.onresize = this.myEchart.resize;
+      console.log(nodes, links);
+      // myChart.hideLoading();
+      this.myEchart.setOption({
+        tooltip: {
+          trigger: "item",
+          triggerOn: "mousemove",
+        },
+        series: [
+          {
+            type: "sankey",
+            data: nodes,
+            links: links,
+            focusNodeAdjacency: "allEdges",
+            itemStyle: {
+              borderWidth: 1,
+              borderColor: "#aaa",
+            },
+            lineStyle: {
+              color: "source",
+              curveness: 0.5,
+            },
+            label: {
+              color: "rgba(0,0,0,0.7)",
+              fontFamily: "Arial",
+              fontSize: 5,
+            },
+          },
+        ],
+      });
+    },
   },
 
   mounted() {
-    let _this = this;
-    this.tempgraphicMoneySectionStrMd5 = md5(
-      JSON.stringify(this.tableData.graphicMoneySectionList)
-    );
-    // this.registerNode();
-    this.registerSelfCombo();
+    if (this.tableData.graphType === "normal") this.loadGraphDefault();
+    else if (this.tableData.graphType === "special") this.loadSpecialLayout();
+    // 监听页面元素的大小变化
     const erd = elementResizeDetectorMaker();
-    erd.listenTo(document.getElementById(this.graphid), function (element) {
-      _this.resize();
-    });
-    let { clientWidth, clientHeight } = this.$refs[this.graphid];
-    let option = {
-      groupByTypes: false,
-      width: clientWidth,
-      height: clientHeight,
-      container: this.graphid, // 指定挂载容器
-      animate: true,
-      defaultCombo: {
-        type: "cCircle", // Combo 类型
-
-        // ... 其他配置
-      },
-      defaultNode: {
-        type: "circle",
-        style: {
-          // 默认是虚线
-          lineDash: [1, 1],
-          fill: "#d9dce1",
-          stroke: "#3c4e6b",
-        },
-        icon: {
-          show: true,
-          img: "/static/images/icons/银行卡.png",
-          width: 15,
-          height: 15,
-        },
-        labelCfg: {
-          position: "bottom",
-          offset: 0,
-          style: {
-            fontSize: 5,
-          },
-        },
-      },
-      defaultEdge: {
-        labelCfg: {
-          autoRotate: true,
-          style: {
-            fontSize: 5,
-          },
-        },
-        style: {
-          lineWidth: 1,
-          lineAppendWidth: 5,
-        },
-      },
-      nodeStateStyles: {
-        selected: {
-          shadowColor: "red",
-          shadowBlur: 10,
-        },
-        active: {
-          opacity: 1,
-        },
-        inactive: {
-          opacity: 0.2,
-        },
-      },
-      edgeStateStyles: {
-        active: {
-          opacity: 1,
-        },
-        inactive: {
-          opacity: 0.2,
-        },
-      },
-      comboStateStyles: {
-        dragenter: {
-          lineWidth: 4,
-          stroke: "#FE9797",
-        },
-      },
-      // linkCenter: true,
-      modes: {
-        default: [
-          "drag-node",
-          "drag-combo",
-          "zoom-canvas",
-          "activate-relations",
-          { type: "click-select", trigger: "ctrl" }, //点选
-          {
-            // 框选
-            type: "brush-select",
-            fillOpacity: 0.1,
-            lineWidth: 2,
-            stroke: "red",
-            trigger: "drag",
-          },
-        ],
-      },
-    };
-    this.graph = new this.$G6.Graph(option);
-    this.initPlugins();
-    if (this.tableData.hasOwnProperty("relationGraphData")) {
-      let data = this.$lodash.cloneDeepWith(this.tableData.relationGraphData);
-      this.graph.data(data);
-    } else {
-      this.graph.data(this.makeData()); // 加载数据
-    }
-    this.graph.render(); // 渲染
-
-    this.updateEntityList();
-    this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
-    this.accordingSpreadNodeSwitchRefreshNodes();
-    let nodes = this.graph.getNodes();
-    let edges = this.graph.getEdges();
-    this.entityCount = nodes.length;
-    this.linkCount = edges.length;
-    this.detailCount = this.entityCount + this.linkCount;
-    // 监听布局切换
-    // this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
-    // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
-    this.graph.on("nodeselectchange", async (e) => {
-      console.log("nodeselectchange", e);
-      // 单个节点的select
-      let node = e.target;
-      if (node) {
-        let type = node.getType();
-        let nodeModel = node.get("model");
-        if (type === "node") {
-          let entity = this.calculateEntityInfo(node);
-          console.log({ entity });
-          this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-          this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-            componentName: "entity-view",
-            action: "add",
-          });
-        } else if (type === "combo") {
-          let comboentityList = [];
-          let allNodes = [];
-          let allEdges = [];
-          await this.travelCombo(comboentityList, node, allNodes, allEdges);
-          // 给所有边去重复
-          allEdges = this.$lodash.uniqWith(allEdges, this.$lodash.isEqual);
-          let zuNeiNodeCount = allNodes.length; // 组内成员数量
-          let zuNeiJjze = 0; // 组内交易总额
-          let zuNeiJjbs = 0; // 组内交易笔数
-          let zuNeiDuiWaiJjze = 0; // 组内对外交易总额
-          let zuNeiDuiWaiJjbs = 0; // 组内对外交易笔数
-          let zuNeiDuiWaiJjChaE = 0;
-          function belongsToNodes(id) {
-            for (let node of allNodes) {
-              if (node.getModel().id === id) {
-                return true;
-              }
-            }
-            return false;
-          }
-
-          for (let edge of allEdges) {
-            let modelData = edge.getModel();
-            let sourceId = modelData.source;
-            let targetId = modelData.target;
-            if (belongsToNodes(sourceId) && belongsToNodes(targetId)) {
-              zuNeiJjze = new Decimal(zuNeiJjze).add(new Decimal(modelData.je));
-              zuNeiJjbs = new Decimal(zuNeiJjbs).add(new Decimal(modelData.bs));
-            } else {
-              zuNeiDuiWaiJjze = new Decimal(zuNeiDuiWaiJjze).add(
-                new Decimal(modelData.je)
-              );
-              zuNeiDuiWaiJjbs = new Decimal(zuNeiDuiWaiJjbs).add(
-                new Decimal(modelData.bs)
-              );
-              if (belongsToNodes(sourceId)) {
-                zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).sub(
-                  modelData.je
-                );
-              } else {
-                zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).add(
-                  modelData.je
-                );
-              }
-            }
-          }
-          this.$store.commit("ShowTable/UPDATE_COMBO_ENTITY_LIST", {
-            comboName: nodeModel.label,
-            comboentityList,
-            comboTableData: [
-              {
-                title: "组内成员数量",
-                describe: zuNeiNodeCount,
-              },
-              {
-                title: "组内成员间交易总额",
-                describe: zuNeiJjze,
-              },
-              {
-                title: "组内成员间交易笔数",
-                describe: zuNeiJjbs,
-              },
-              {
-                title: "组内对外交易总额",
-                describe: zuNeiDuiWaiJjze,
-              },
-              {
-                title: "组内对外交易笔数",
-                describe: zuNeiDuiWaiJjbs,
-              },
-              {
-                title: "组内对外交易差额",
-                describe: zuNeiDuiWaiJjChaE,
-              },
-            ],
-          });
-          this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-            componentName: "combo-entity-list-view",
-            action: "add",
-          });
-        }
-      }
-
-      if (e.select) {
-        this.currentSelectedNodes = [];
-        e.selectedItems.nodes.forEach((cn) => {
-          if (cn._cfg.visible) {
-            this.currentSelectedNodes.push(cn);
-          }
-        });
-      } else {
-        this.currentSelectedNodes = [];
-      }
-    });
-    this.graph.on("click", () => {
-      this.menuVisible = false;
-    });
-    // collapse/expand when click the marker
-    this.graph.on("combo:click", (e) => {
-      if (e.target.get("name") === "combo-marker-shape") {
-        // graph.collapseExpandCombo(e.item.getModel().id);
-        this.graph.collapseExpandCombo(e.item);
-        // if (this.graph.get("layout")) this.graph.layout();
-        // else this.graph.refreshPositions();
-      }
-    });
-    this.graph.on("combo:dragend", (e) => {
-      this.graph.getCombos().forEach((combo) => {
-        this.graph.setItemState(combo, "dragenter", false);
-      });
-    });
-    this.graph.on("node:dragend", (e) => {
-      this.graph.getCombos().forEach((combo) => {
-        this.graph.setItemState(combo, "dragenter", false);
-      });
-    });
-    this.graph.on("combo:dragenter", (e) => {
-      this.graph.setItemState(e.item, "dragenter", true);
-    });
-    this.graph.on("combo:dragleave", (e) => {
-      this.graph.setItemState(e.item, "dragenter", false);
-    });
-
-    // 右键点击combo
-    this.graph.on("combo:contextmenu", (evt) => {
-      this.rightClickType = "combo";
-      console.log(evt);
-      this.rightClickComboInstance = evt.item;
-      //当前节点定位
-      this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
-      let menu = document.getElementById(this.menuId);
-      menu.style.left = evt.clientX + "px";
-      menu.style.top = evt.clientY + "px";
-    });
-    // 右键菜单node
-    this.graph.on("node:contextmenu", (evt) => {
-      this.rightClickType = "node";
-      let node = evt.item;
-      this.nodeBelongCombo = this.accordingNodeFindCombo(
-        this.graph.getCombos(),
-        node
-      );
-      let nodeid = node.get("model").id;
-      let filterNodes = this.currentSelectedNodes.filter((n) => {
-        let nId = n.get("model").id;
-        return nId === nodeid;
-      });
-      if (filterNodes.length === 0) {
-        this.currentSelectedNodes.forEach((cn) => {
-          this.graph.setItemState(cn, "selected", false);
-        });
-        this.graph.setItemState(node, "selected", true);
-        this.currentSelectedNodes = [];
-        this.currentSelectedNodes.push(node);
-      }
-      //当前节点定位
-      this.menuVisible = true;
-      let menu = document.getElementById(this.menuId);
-      menu.style.left = evt.clientX + "px";
-      menu.style.top = evt.clientY + "px";
-      console.log("右键被点击的event:", evt);
-    });
-
-    this.graph.on("node:mouseleave", (evt) => {
-      this.menuVisible = false;
-    });
-    this.graph.on("combo:mouseleave", (evt) => {
-      this.menuVisible = false;
-    });
-    // 画布监听keydown
-    this.graph.on("keydown", (ev) => {
-      // console.log(ev);
+    erd.listenTo(document.getElementById(this.graphid), (element) => {
+      if (this.myEchart) {
+        setTimeout(() => {
+          this.myEchart.resize();
+        }, 100);
+      } else if (this.graph) this.resize();
     });
     // 布局切换监听
     this.$bus.$on("swichNormalLayout", (data) => {
       let { graphid, layout } = data;
-      if (graphid !== _this.graphid) return;
-      console.log(layout, typeof layout);
-      _this.graph.updateLayout(layout);
-      this.updateEntityList();
-      this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
-      this.graph.fitView(20);
-    });
-    // node节点状态更新监听, 针对entitylist组件中鼠标移动进行图表中node的状态更新
-    this.$bus.$on("updateNodeState", this.onUpdateNodesState);
-
-    //保存当前图表数据
-    this.$bus.$on("saveGraphData", (data) => {
-      let { graphid } = data;
-      if (graphid !== _this.graphid) return;
-      // 包含nodes，edges，combos
-      let relationGraphData = this.graph.save();
-      console.log(relationGraphData);
-      this.$store.commit("ShowTable/SAVE_GRAPHDATA", {
-        graphid,
-        relationGraphData,
-      });
-    });
-    // 图表导出到图片
-    this.$bus.$on("exportPicture", async (data) => {
-      let { graphid } = data;
-      if (graphid !== _this.graphid) return;
-      let pngName = `案件${this.caseBase.ajmc}-${this.tableData.title}`;
-      console.log(pngName);
-      this.graph.downloadFullImage(pngName, "image/png");
-    });
-    // 监听右侧菜单中点击table中的每个实体消息
-    this.$bus.$on("clickEntityRow", (data) => {
-      let { graphid, nodeid } = data;
-      if (graphid !== _this.graphid) return;
-      console.log({ graphid, nodeid });
-      let node = this.graph.findById(nodeid);
-      let entity = this.calculateEntityInfo(node);
-      console.log({ entity });
-      this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-        componentName: "entity-view",
-        action: "add",
-      });
-    });
-    this.$bus.$on("nodeStyleSetting", (data) => {
-      console.log({ data });
-      let { graphid, nodeid, nodeStyle } = data;
-      if (graphid !== _this.graphid) return;
-      let node = this.graph.findById(nodeid);
-      this.graph.clearItemStates(node, "selected");
-      let nodeModel = node.getModel();
-      switch (nodeStyle.title) {
-        case "节点图标":
-          nodeModel.icon.img = nodeStyle.describe;
-          this.graph.updateItem(nodeid, nodeModel);
-          break;
-        case "节点背景色":
-          nodeModel.style.fill = nodeStyle.describe;
-          this.graph.updateItem(nodeid, nodeModel);
-          break;
-        case "节点边框色":
-          nodeModel.style.stroke = nodeStyle.describe;
-          this.graph.updateItem(nodeid, nodeModel);
-          break;
-        case "节点标签色":
-          nodeModel.labelCfg.style.fill = nodeStyle.describe;
-          this.graph.updateItem(nodeid, nodeModel);
-          break;
+      if (graphid !== this.graphid) return;
+      if (this.tableData.graphType === "special") {
+        this.myEchart.dispose();
+        this.myEchart = null;
+        this.loadGraphDefault(layout);
+      } else {
+        this.graph.updateLayout(layout);
+        this.updateEntityList();
+        this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
       }
+      setTimeout(() => {
+        this.graph.fitView(20);
+      }, 1000);
+      this.$store.commit("ShowTable/SWITCH_GRAPHTYPE", "normal");
+    });
+
+    this.$bus.$on("switchSpecialLayout", (data) => {
+      let { graphid, layout } = data;
+      if (graphid !== this.graphid) return;
+      if (this.tableData.graphType === "normal") {
+        // 移除所有右侧的表
+        this.$store.commit("ShowTable/CLEAR_ALL_RIGHT_TABS");
+        this.graph.destroy();
+        this.graph = null;
+        this.loadSpecialLayout();
+        setTimeout(() => {
+          this.myEchart.resize();
+        }, 100);
+      }
+
+      this.$store.commit("ShowTable/SWITCH_GRAPHTYPE", "special");
     });
   },
 };
