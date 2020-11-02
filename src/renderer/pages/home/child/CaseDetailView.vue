@@ -487,7 +487,7 @@ export default {
         let tempPath = this.$electron.remote.app.getPath("temp");
         let tempPathFile = path.join(tempPath, uuid.v1());
         if (process.platform === "win32") {
-          dumpFilePath = path.join(vendorpath, "pg_dump.exe");
+          dumpFilePath = path.join(vendorpath, process.platform, "pg_dump.exe");
           if (!fs.existsSync(dumpFilePath)) {
             this.$message.error({
               message: "dump 文件不存在。",
@@ -503,7 +503,7 @@ export default {
             });
           } catch (e) {}
         } else if (process.platform === "darwin") {
-          dumpFilePath = path.join(vendorpath, "pg_dump");
+          dumpFilePath = path.join(vendorpath, process.platform, "pg_dump");
           if (!fs.existsSync(dumpFilePath)) {
             this.$message.error({
               message: "dump 文件不存在。",

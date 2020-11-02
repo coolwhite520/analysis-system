@@ -106,14 +106,8 @@ function createWindow() {
   Menu.setApplicationMenu(m);
   global.vendorPath =
     process.platform === "win32"
-      ? path.join(
-          path.dirname(app.getPath("exe")),
-          `vendor/${process.platform}`
-        )
-      : path.join(
-          path.dirname(app.getPath("exe")),
-          `../vendor/${process.platform}`
-        );
+      ? path.join(path.dirname(app.getPath("exe")), `vendor`)
+      : path.join(path.dirname(app.getPath("exe")), `../vendor`);
   log.info(global.vendorPath);
   global.windowSize = screen.getPrimaryDisplay().workAreaSize;
   global.widthDivHeight = global.windowSize.width / global.windowSize.height;

@@ -12,9 +12,9 @@ class DbConfig {
     log.info(this.configFilePath);
     if (!fs.existsSync(this.configFilePath)) {
       let obj = {
-        user: "",
+        user: "postgres",
         host: "127.0.0.1",
-        database: "gas_data",
+        database: "ff_db",
         password: "",
         port: 5432,
         max: 100,
