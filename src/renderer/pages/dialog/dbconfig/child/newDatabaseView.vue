@@ -186,13 +186,13 @@ export default {
             trigger: "blur",
           },
         ],
-        password: [
-          {
-            required: true,
-            message: "请输入管理员密码",
-            trigger: "blur",
-          },
-        ],
+        // password: [
+        //   {
+        //     required: true,
+        //     message: "请输入管理员密码",
+        //     trigger: "blur",
+        //   },
+        // ],
         port: [
           {
             required: true,
@@ -332,7 +332,10 @@ export default {
             return;
           }
         }
-        let cmd = `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
+        let cmd =
+          password.trim().length > 0
+            ? `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+            : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
         console.log("execImportInitDb:", cmd);
         shell.exec(cmd, { silent: true }, (code, stdout, stderr) => {
           if (stderr) {
@@ -404,7 +407,10 @@ export default {
           }
         }
 
-        let cmd = `${envParam} && "${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`;
+        let cmd =
+          password.trim().length > 0
+            ? `${envParam} && "${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
+            : `"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`;
         console.log(cmd);
         // try {
         //   shell.exec(cmd, { silent: true });

@@ -501,7 +501,10 @@ export default {
           }
           envParam = `export PGPASSWORD="${password}"`;
         }
-        let cmd = `${envParam} && "${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
+        let cmd =
+          password.trim().length > 0
+            ? `${envParam} && "${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
+            : `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
 
         // 转存数据排除后缀是temp的表
         console.log(cmd);

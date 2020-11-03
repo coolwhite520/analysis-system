@@ -151,13 +151,13 @@ export default {
             trigger: "blur",
           },
         ],
-        password: [
-          {
-            required: true,
-            message: "请输入管理员密码",
-            trigger: "blur",
-          },
-        ],
+        // password: [
+        //   {
+        //     required: true,
+        //     message: "请输入管理员密码",
+        //     trigger: "blur",
+        //   },
+        // ],
         port: [
           {
             required: true,

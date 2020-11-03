@@ -194,7 +194,7 @@ export default {
         }
       );
       if (typeof filePathList === "undefined") return;
-      let cmd = "";
+
       let dumpFilePath = "";
       let vendorPath = this.$electron.remote.getGlobal("vendorPath");
       let { user, database, password, port } = this.$electron.remote.getGlobal(
@@ -225,7 +225,10 @@ export default {
           return;
         }
       }
-      cmd = `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
+      let cmd =
+        password.trim().length > 0
+          ? `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+          : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       this.loading = true;
 
       const crypto = require("crypto"); //用来加密
