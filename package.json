@@ -60,8 +60,7 @@
         "vendor/win32",
         "vendor/base"
       ],
-      "icon": "build/icons/icon.ico",
-      "requestedExecutionLevel": "requireAdministrator"
+      "icon": "build/icons/icon.ico"
     },
     "linux": {
       "icon": "build/icons"

@@ -235,7 +235,7 @@ export default {
     },
     async handleClickInitDb() {
       this.btnLoading = true;
-      let loopSpan = 50;
+      let loopSpan = 100;
       let loop = setInterval((loopSpan) => {
         this.percentage++;
         if (this.percentage === 99) {

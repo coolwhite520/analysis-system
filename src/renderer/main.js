@@ -31,6 +31,7 @@ import G6 from "@antv/g6";
 Vue.prototype.$G6 = G6;
 
 Vue.prototype.$bus = new Vue();
+// "requestedExecutionLevel": "requireAdministrator" 当builder打包需要uac的时候配置到win下面
 /* eslint-disable no-new */
 new Vue({
   components: { App },
