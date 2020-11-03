@@ -1,9 +1,7 @@
 import { app, protocol, BrowserWindow, screen, Menu, MenuItem } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
-import createDbInitWindow from "./modules/window/initDbWindow";
 import createExportWindow from "./modules/window/exportWindow";
-import createDbConfigWindow from "./modules/window/dbconfigWindows";
 import fs from "fs";
 import path from "path";
 import { ACHEME, LOAD_URL } from "./config";
@@ -122,7 +120,6 @@ function createWindow() {
   mainWindow.once("show", () => {
     initIpcEvent();
     global.exportWindow = createExportWindow(BrowserWindow);
-    global.dbConfigWindow = createDbConfigWindow(BrowserWindow);
   });
 }
 app.on("activate", () => {

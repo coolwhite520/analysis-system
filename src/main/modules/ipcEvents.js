@@ -70,13 +70,6 @@ export default function() {
   ipcMain.on("export-one-file-over", (e, args) => {
     global.mainWindow.webContents.send("export-one-file-over", args);
   });
-  // 隐藏db设置
-  ipcMain.on("hide-db-config", () => {
-    global.dbConfigWindow.hide();
-  });
-  ipcMain.on("show-db-config", () => {
-    global.dbConfigWindow.show();
-  });
 
   // 数据库初始化操作窗口
   ipcMain.on("hide-db-init", () => {

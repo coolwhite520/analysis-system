@@ -26,12 +26,12 @@ export default new Router({
         require(["@/pages/mini/ExportView"], resolve);
       },
     },
-    {
-      path: "/dbconfig",
-      name: "dbconfig",
-      component: function(resolve) {
-        require(["@/pages/mini/DbconfigView"], resolve);
-      },
-    },
+    // {
+    //   path: "/dbconfig",
+    //   name: "dbconfig",
+    //   component: function(resolve) {
+    //     require(["@/pages/mini/DbconfigView"], resolve);
+    //   },
+    // },
   ],
 });

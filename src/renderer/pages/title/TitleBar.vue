@@ -58,6 +58,7 @@ const fs = require("fs");
 const path = require("path");
 import { mapState } from "vuex";
 export default {
+  components: {},
   data() {
     return {
       softVersion: this.$electron.remote.getGlobal("softVersion"),
@@ -155,6 +156,14 @@ export default {
           return true;
         }
         await checkSaveOver();
+        if (global.pool) {
+          console.log(
+            global.pool.totalCount,
+            global.pool.idleCount,
+            global.pool.waitingCount
+          );
+          global.pool.end();
+        }
         this.$electron.ipcRenderer.send("window-close");
       } else if (result.response === 1) {
         // 删除本地的状态文件restore.db
@@ -162,15 +171,20 @@ export default {
         let pathFileName = path.join(resoreDbPath, "restore.db");
 
         fs.unlinkSync(pathFileName);
+        if (global.pool) {
+          console.log(
+            global.pool.totalCount,
+            global.pool.idleCount,
+            global.pool.waitingCount
+          );
+          global.pool.end();
+        }
         this.$electron.ipcRenderer.send("window-close");
       } else if (result.response === 2) {
       }
     },
     handleClickDbConfig() {
-      const { OtherConfig } = require("@/utils/config");
-      let otherConfig = new OtherConfig();
-      let other = otherConfig.readConfig();
-      this.$electron.ipcRenderer.send("show-db-config");
+      this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", true);
     },
   },
 };

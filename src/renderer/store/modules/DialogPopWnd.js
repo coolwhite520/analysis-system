@@ -11,6 +11,7 @@ const state = {
   nodeCombineVisible: false,
   showSaveProjectVisible: false,
   showErrorRowRecordVisible: false,
+  dbConfigVisible: false,
 };
 
 const mutations = {
@@ -48,6 +49,9 @@ const mutations = {
   },
   SET_SHOWERRORROWRECORDVISIBLE(state, showErrorRowRecordVisible) {
     state.showErrorRowRecordVisible = showErrorRowRecordVisible;
+  },
+  SET_DBCONFIGVISIBLE(state, dbConfigVisible) {
+    state.dbConfigVisible = dbConfigVisible;
   },
 };
 

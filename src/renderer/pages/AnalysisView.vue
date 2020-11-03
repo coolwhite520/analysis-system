@@ -26,6 +26,7 @@
         ></el-progress>
       </el-row>
     </div>
+    <dbconfig-view v-if="dbConfigVisible"></dbconfig-view>
   </div>
 </template>
 
@@ -50,6 +51,8 @@ const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
+import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
+
 // const html2canvas = require("html2canvas");
 export default {
   async mounted() {
@@ -119,7 +122,7 @@ export default {
       });
       // 判断是否连接到了Postgres
       if (!connFlag) {
-        this.$electron.ipcRenderer.send("show-db-config");
+        this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", true);
         return;
       }
       // global.pool = pool;
@@ -140,7 +143,9 @@ export default {
       await this.$store.dispatch("Cases/getExistCaseAsync");
     } catch (e) {
       global.pool = null;
-      this.$electron.ipcRenderer.send("show-db-config");
+      setTimeout(() => {
+        this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", true);
+      }, 1000);
       console.log(e);
     }
   },
@@ -163,12 +168,13 @@ export default {
     "main-page": MainPage,
     "save-dialog": SaveProjectView,
     "analysis-skeleton": analysisSkeleton,
+    "dbconfig-view": dbConfigView,
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
     ...mapState("ShowTable", ["tableDataList"]),
-    ...mapState("DialogPopWnd", ["showSaveProjectVisible"]),
+    ...mapState("DialogPopWnd", ["showSaveProjectVisible", "dbConfigVisible"]),
   },
   methods: {
     delDir(path) {

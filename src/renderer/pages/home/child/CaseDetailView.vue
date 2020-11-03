@@ -199,16 +199,17 @@
 </template>
 
 <script>
+const shell = require("shelljs");
 import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog";
 import { mapState, mapGetters } from "vuex";
 import cases from "@/db/Cases";
 import base from "@/db/Base";
-import { shell } from "electron";
 import log from "electron-log";
 const fs = require("fs");
 const path = require("path");
 export default {
   async beforeMount() {
+    shell.config.execPath = shell.which("node").toString();
     await this.$store.dispatch(
       "CaseDetail/queryEntityCount",
       this.caseBase.ajid
@@ -450,16 +451,7 @@ export default {
         });
       }
     },
-    async setEnvParam(password) {
-      try {
-        const shell = require("shelljs");
-        shell.exec(`export PGPASSWORD="${password}"`, {
-          silent: true,
-        });
-      } catch (e) {
-        log.info(e.message);
-      }
-    },
+
     async handleClickExportScheme() {
       let result = await this.$electron.remote.dialog.showSaveDialog({
         title: "请选择要保存的文件名",
@@ -469,57 +461,47 @@ export default {
         filters: [{ name: "数据", extensions: ["dat"] }],
       });
       if (!result.canceled) {
-        const shell = require("shelljs");
         this.loading = true;
         this.loadingText = "数据导出中...";
-        let cmd = "";
         let dumpFilePath = "";
-        let vendorpath = this.$electron.remote.getGlobal("vendorPath");
-        console.log(vendorpath);
+        let vendorPath = this.$electron.remote.getGlobal("vendorPath");
         let {
           user,
           database,
           password,
           port,
         } = this.$electron.remote.getGlobal("dbCon");
-        console.log({ user, database, password, port });
         const uuid = require("uuid");
         let tempPath = this.$electron.remote.app.getPath("temp");
         let tempPathFile = path.join(tempPath, uuid.v1());
+        let fileName = "pg_dump";
+        let envParam = "";
         if (process.platform === "win32") {
-          dumpFilePath = path.join(vendorpath, process.platform, "pg_dump.exe");
-          if (!fs.existsSync(dumpFilePath)) {
-            this.$message.error({
-              message: "dump 文件不存在。",
-            });
-            this.loading = false;
-            return;
-          }
-          // windows 想要免密码输入 需要设置一个环境变量
-          try {
-            shell.exec(`set PGPASSWORD="${password}"`, {
-              silent: true,
-              async: false,
-            });
-          } catch (e) {}
+          fileName += ".exe";
+          envParam = `set PGPASSWORD="${password}"`;
+          dumpFilePath = path.join(vendorPath, process.platform, fileName);
         } else if (process.platform === "darwin") {
-          dumpFilePath = path.join(vendorpath, process.platform, "pg_dump");
+          dumpFilePath = path.join(
+            vendorPath,
+            process.platform,
+            "bin",
+            fileName
+          );
+          envParam = `export PGPASSWORD="${password}"`;
+        } else if (process.platform === "linux") {
+          dumpFilePath = fileName;
+        }
+        // 判断文件是否存在
+        if (process.platform !== "linux") {
           if (!fs.existsSync(dumpFilePath)) {
-            this.$message.error({
-              message: "dump 文件不存在。",
+            this.$message({
+              message: "执行文件不存在",
             });
-            this.loading = false;
             return;
           }
-          await this.setEnvParam(password);
-        } else {
-          dumpFilePath = "pg_dump";
-          await this.setEnvParam(password);
+          envParam = `export PGPASSWORD="${password}"`;
         }
-        if (user)
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
-        else
-          cmd = `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -p ${port} ${database}`;
+        let cmd = `${envParam} && "${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
 
         // 转存数据排除后缀是temp的表
         console.log(cmd);

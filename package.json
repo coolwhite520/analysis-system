@@ -60,7 +60,8 @@
         "vendor/win32",
         "vendor/base"
       ],
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "linux": {
       "icon": "build/icons"
@@ -89,6 +90,7 @@
     "lodash": "^4.17.20",
     "md5-node": "^1.0.1",
     "moment": "^2.27.0",
+    "node-cmd": "^3.0.0",
     "officegen": "^0.6.4",
     "pg": "^8.2.1",
     "pg-copy-streams": "^5.1.1",

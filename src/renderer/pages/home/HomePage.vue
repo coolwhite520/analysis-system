@@ -89,6 +89,10 @@
 </template>
 
 <script>
+const shell = require("shelljs");
+const path = require("path");
+const fs = require("fs");
+const uuid = require("uuid");
 import { mapState } from "vuex";
 import AnalysisTimeLine from "./child/AnalysisTimeLine";
 import ShowExistCaseView from "./child/ShowExistCaseView";
@@ -122,6 +126,7 @@ export default {
     "time-line-view": AnalysisTimeLine,
   },
   async mounted() {
+    shell.config.execPath = shell.which("node").toString();
     // let prefix = this.$electron.remote.getGlobal("levelPrefix");
     // let { success, list, msg } = await levelDb.find(prefix);
   },
@@ -167,24 +172,15 @@ export default {
     handleClickNewCase() {
       //this.currentViewName = "new-case-view";
       if (!global.pool) {
-        this.$electron.ipcRenderer.send("show-db-config");
+        this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", true);
       } else {
         this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "new-case-view");
       }
     },
-    async setEnvParam(password) {
-      try {
-        const shell = require("shelljs");
-        await shell.exec(`export PGPASSWORD="${password}"`, {
-          silent: true,
-        });
-      } catch (e) {
-        log.info(e.message);
-      }
-    },
+
     async handleClickImportCase() {
       if (!global.pool) {
-        this.$electron.ipcRenderer.send("show-db-config");
+        this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", true);
         return;
       }
       let mainWindow = this.$electron.remote.getGlobal("mainWindow");
@@ -198,54 +194,38 @@ export default {
         }
       );
       if (typeof filePathList === "undefined") return;
-      const shell = require("shelljs");
-      const path = require("path");
-      const fs = require("fs");
-      const uuid = require("uuid");
       let cmd = "";
       let dumpFilePath = "";
-      let vendorpath = this.$electron.remote.getGlobal("vendorPath");
+      let vendorPath = this.$electron.remote.getGlobal("vendorPath");
       let { user, database, password, port } = this.$electron.remote.getGlobal(
         "dbCon"
       );
       console.log({ user, database, password, port });
-
       let tempPath = this.$electron.remote.app.getPath("temp");
       let tempPathFile = path.join(tempPath, uuid.v1());
-      console.log(tempPathFile);
+      let fileName = "psql";
+      let envParam = "";
       if (process.platform === "win32") {
-        dumpFilePath = path.join(vendorpath, "psql.exe");
-        if (!fs.existsSync(dumpFilePath)) {
-          this.$message.error({
-            message: "dump 文件不存在。",
-          });
-          return;
-        }
-        try {
-          shell.exec(`set PGPASSWORD="${password}"`, {
-            silent: true,
-            async: false,
-          });
-        } catch (e) {}
+        fileName += ".exe";
+        envParam = `set PGPASSWORD="${password}"`;
+        dumpFilePath = path.join(vendorPath, process.platform, fileName);
       } else if (process.platform === "darwin") {
-        dumpFilePath = path.join(vendorpath, "psql");
+        dumpFilePath = path.join(vendorPath, process.platform, "bin", fileName);
+        envParam = `export PGPASSWORD="${password}"`;
+      } else if (process.platform === "linux") {
+        dumpFilePath = fileName;
+        envParam = `export PGPASSWORD="${password}"`;
+      }
+      // 判断文件是否存在
+      if (process.platform !== "linux") {
         if (!fs.existsSync(dumpFilePath)) {
-          this.$message.error({
-            message: "dump 文件不存在。",
+          this.$message({
+            message: "执行文件不存在",
           });
           return;
         }
-        await this.setEnvParam(password);
-      } else {
-        dumpFilePath = "psql";
-        await this.setEnvParam(password);
       }
-
-      if (user !== "")
-        cmd = `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
-      else
-        cmd = `"${dumpFilePath}" -d ${database} -p ${port} -f "${tempPathFile}"`;
-
+      cmd = `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       this.loading = true;
 
       const crypto = require("crypto"); //用来加密

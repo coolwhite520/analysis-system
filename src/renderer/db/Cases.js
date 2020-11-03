@@ -3,6 +3,7 @@ import log from "@/utils/log";
 import dataImport from "./DataImport";
 import base from "./Base";
 import { head } from "lodash";
+import { DbConfig } from "@/utils/config";
 
 // 小写字母转换设定快捷键 cmd+alt+s
 // 获取案件相关的内容
@@ -400,8 +401,11 @@ export default {
   ) {
     const client = await global.pool.connect();
     try {
+      // 获取配置文件
+      let conf = new DbConfig();
+      let obj = await conf.readDbConfig();
       let ajid = (await this.QueryCaseMaxCount()) + 1;
-      let scheamName = await this.CreateNewCaseSchema(ajid, "baiyang");
+      let scheamName = await this.CreateNewCaseSchema(ajid, obj.user);
       if (scheamName) {
         let content = ` -- ---------------------------- 
         -- Sequence structure for bk_fk_dtcx_shard_id_seq 
