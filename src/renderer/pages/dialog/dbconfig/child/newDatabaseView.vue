@@ -266,7 +266,7 @@ export default {
         this.btnLoading = false;
         this.$message({
           type: "success",
-          message: "基库始化成功",
+          message: "基库初始化成功",
         });
         this.btnLoading = false;
         this.activeStep++;
