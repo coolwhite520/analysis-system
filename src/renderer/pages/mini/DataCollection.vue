@@ -1131,6 +1131,7 @@ export default {
     );
     this.$electron.ipcRenderer.send("data-collection-open-complete");
     console.log(global.pool);
+    console.log(global.pool);
   },
   destroyed() {
     log.info("datacollection destroyed.");
