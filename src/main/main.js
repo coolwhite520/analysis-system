@@ -57,6 +57,11 @@ function createWindow() {
   if (!fs.existsSync(global.resoreDbPath)) {
     fs.mkdirSync(global.resoreDbPath, { recursive: true });
   }
+  global.vendorPath =
+    process.platform === "win32"
+      ? path.join(path.dirname(app.getPath("exe")), `vendor`)
+      : path.join(path.dirname(app.getPath("exe")), `../vendor`);
+  log.info("vendorPath:", global.vendorPath);
 
   mainWindow = new BrowserWindow({
     // backgroundColor: "#11151d",
@@ -102,11 +107,7 @@ function createWindow() {
   ];
   var m = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(m);
-  global.vendorPath =
-    process.platform === "win32"
-      ? path.join(path.dirname(app.getPath("exe")), `vendor`)
-      : path.join(path.dirname(app.getPath("exe")), `../vendor`);
-  log.info(global.vendorPath);
+
   global.windowSize = screen.getPrimaryDisplay().workAreaSize;
   global.widthDivHeight = global.windowSize.width / global.windowSize.height;
   mainWindow.on("closed", () => {
