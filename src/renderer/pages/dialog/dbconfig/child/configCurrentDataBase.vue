@@ -58,8 +58,6 @@ export default {
     shell.config.execPath = shell.which("node").toString();
     let config = new DbConfig();
     this.form = config.readDbConfig();
-    this.vendorPath = this.$electron.remote.getGlobal("vendorPath");
-    this.tempPath = this.$electron.remote.app.getPath("temp");
   },
   methods: {
     handleClickTestConn(formName) {
@@ -128,8 +126,6 @@ export default {
   data() {
     return {
       testSuccess: false,
-      vendorPath: "",
-      tempPath: "",
       btnLoading: false,
       percentage: 0,
       form: {},

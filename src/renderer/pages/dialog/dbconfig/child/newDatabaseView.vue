@@ -154,8 +154,6 @@ export default {
     let config = new DbConfig();
     this.form = config.readDbConfig();
     this.form.database = "";
-    this.vendorPath = this.$electron.remote.getGlobal("vendorPath");
-    this.tempPath = this.$electron.remote.app.getPath("temp");
   },
   computed: {
     ...mapState("DialogPopWnd", ["dbConfigVisible"]),
@@ -163,8 +161,6 @@ export default {
   data() {
     return {
       activeStep: 0,
-      vendorPath: "",
-      tempPath: "",
       btnLoading: false,
       percentage: 0,
       form: {},
@@ -242,9 +238,10 @@ export default {
           clearInterval(loop);
         }
       }, loopSpan);
-
-      let baseDbFilePath = path.join(this.vendorPath, "base", "base.dat");
-      let tempPathFile = path.join(this.tempPath, uuid.v1());
+      let vendorPath = this.$electron.remote.getGlobal("vendorPath");
+      let tempPath = this.$electron.remote.app.getPath("temp");
+      let baseDbFilePath = path.join(vendorPath, "base", "base.dat");
+      let tempPathFile = path.join(tempPath, uuid.v1());
       if (!fs.existsSync(baseDbFilePath)) {
         clearInterval(loop);
         this.btnLoading = false;
@@ -305,6 +302,7 @@ export default {
 
     async execImportInitDb(tempPathFile) {
       return new Promise((resolve, reject) => {
+        let vendorPath = this.$electron.remote.getGlobal("vendorPath");
         let dumpFilePath = "";
         let fileName = "psql";
         let envParam;
@@ -312,10 +310,10 @@ export default {
         if (process.platform === "win32") {
           fileName += ".exe";
           envParam = `set PGPASSWORD="${password}"`;
-          dumpFilePath = path.join(this.vendorPath, process.platform, fileName);
+          dumpFilePath = path.join(vendorPath, process.platform, fileName);
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(
-            this.vendorPath,
+            vendorPath,
             process.platform,
             "bin",
             fileName
@@ -381,16 +379,17 @@ export default {
     async createDataBase() {
       let { user, password, port, host, database } = this.form;
       return new Promise((resolve, reject) => {
+        let vendorPath = this.$electron.remote.getGlobal("vendorPath");
         let dumpFilePath = "";
         let fileName = "createdb";
         let envParam;
         if (process.platform === "win32") {
           fileName += ".exe";
           envParam = `set PGPASSWORD="${password}"`;
-          dumpFilePath = path.join(this.vendorPath, process.platform, fileName);
+          dumpFilePath = path.join(vendorPath, process.platform, fileName);
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(
-            this.vendorPath,
+            vendorPath,
             process.platform,
             "bin",
             fileName

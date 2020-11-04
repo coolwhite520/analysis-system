@@ -27,6 +27,13 @@ export default {
     };
   },
   methods: {
+    async sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("done");
+        }, ms);
+      });
+    },
     async handleClickInstallPostgres() {
       this.loading = true;
 
@@ -44,6 +51,7 @@ export default {
           try {
             let strDesFilePath = path.join(tempPath, uuid.v1() + ".exe");
             await this.doDecryptFile(strFilePath, strDesFilePath);
+            await this.sleep(1000 * 3);
             this.loading = false;
             await this.$electron.shell.openPath(strDesFilePath);
           } catch (e) {
@@ -63,6 +71,7 @@ export default {
           try {
             let strDesFilePath = path.join(tempPath, uuid.v1() + ".dmg");
             await this.doDecryptFile(strFilePath, strDesFilePath);
+            await this.sleep(1000 * 3);
             this.loading = false;
             await this.$electron.shell.openPath(strDesFilePath);
           } catch (e) {
@@ -104,7 +113,7 @@ export default {
           .pipe(writeableStream)
           .on("finish", () => {
             //解压后的回调
-            resolve({ success: true });
+            resolve(true);
           })
           .on("error", (err) => {
             reject(err);
