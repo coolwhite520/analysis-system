@@ -25,6 +25,9 @@
       <el-tab-pane label="数据库连接配置" name="second">
         <config-view></config-view>
       </el-tab-pane>
+      <el-tab-pane label="扩展" name="third">
+        <install-view></install-view>
+      </el-tab-pane>
     </el-tabs>
   </el-dialog>
 </template>
@@ -32,10 +35,12 @@
 import { mapState } from "vuex";
 import initDatabase from "./child/newDatabaseView";
 import configDataBase from "./child/configCurrentDataBase";
+import installPostgres from "./child/installPostgresView";
 export default {
   components: {
     "init-view": initDatabase,
     "config-view": configDataBase,
+    "install-view": installPostgres,
   },
   computed: {
     ...mapState("DialogPopWnd", ["dbConfigVisible"]),

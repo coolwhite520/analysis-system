@@ -1,5 +1,7 @@
 .DS_Store
 vendor/base/*
+vendor/darwin/extend/*
+vendor/win32/extend/*
 dist/electron/*
 dist/web/*
 build/*
