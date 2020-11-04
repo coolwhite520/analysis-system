@@ -478,7 +478,7 @@ export default {
         let envParam = "";
         if (process.platform === "win32") {
           fileName += ".exe";
-          envParam = `set PGPASSWORD="${password}"`;
+          envParam = `set PGPASSWORD=${password}`;
           dumpFilePath = path.join(vendorPath, process.platform, fileName);
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(
@@ -503,7 +503,7 @@ export default {
         }
         let cmd =
           password.trim().length > 0
-            ? `${envParam} && "${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
+            ? `${envParam} \r\n "${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
 
         // 转存数据排除后缀是temp的表

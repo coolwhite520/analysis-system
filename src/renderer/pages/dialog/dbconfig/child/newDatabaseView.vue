@@ -309,7 +309,7 @@ export default {
         let { user, password, port, database } = this.form;
         if (process.platform === "win32") {
           fileName += ".exe";
-          envParam = `set PGPASSWORD="${password}"`;
+          envParam = `set PGPASSWORD=${password}`;
           dumpFilePath = path.join(vendorPath, process.platform, fileName);
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(
@@ -318,10 +318,10 @@ export default {
             "bin",
             fileName
           );
-          envParam = `export PGPASSWORD="${password}"`;
+          envParam = `export PGPASSWORD='${password}'`;
         } else if (process.platform === "linux") {
           dumpFilePath = fileName;
-          envParam = `set PGPASSWORD="${password}"`;
+          envParam = `set PGPASSWORD=${password}`;
         }
         // 判断文件是否存在
         if (process.platform !== "linux") {
@@ -332,7 +332,7 @@ export default {
         }
         let cmd =
           password.trim().length > 0
-            ? `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+            ? `${envParam} \r\n "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
             : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
         console.log("execImportInitDb:", cmd);
         shell.exec(cmd, { silent: true }, (code, stdout, stderr) => {
@@ -385,7 +385,7 @@ export default {
         let envParam;
         if (process.platform === "win32") {
           fileName += ".exe";
-          envParam = `set PGPASSWORD="${password}"`;
+          envParam = `set PGPASSWORD=${password}`;
           dumpFilePath = path.join(vendorPath, process.platform, fileName);
         } else if (process.platform === "darwin") {
           dumpFilePath = path.join(
@@ -408,16 +408,16 @@ export default {
 
         let cmd =
           password.trim().length > 0
-            ? `${envParam} && "${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
+            ? `${envParam} \r\n "${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`;
         console.log(cmd);
-        // try {
-        //   shell.exec(cmd, { silent: true });
-        //   resolve("done");
-        // } catch (e) {
-        //   reject(e);
-        // }
-        shell.exec(cmd, { silent: true }, (code, stdout, stderr) => {
+        let tempPath = this.$electron.remote.app.getPath("temp");
+        let shellFilePath =
+          process.platform === "win32"
+            ? path.join(tempPath, uuid.v1() + ".bat")
+            : path.join(tempPath, uuid.v1() + ".sh");
+        fs.writeFileSync(shellFilePath, cmd);
+        shell.exec(shellFilePath, { silent: true }, (code, stdout, stderr) => {
           if (stderr) {
             reject(new Error(stderr));
           } else {

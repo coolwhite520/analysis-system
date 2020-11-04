@@ -207,7 +207,7 @@ export default {
       let envParam = "";
       if (process.platform === "win32") {
         fileName += ".exe";
-        envParam = `set PGPASSWORD="${password}"`;
+        envParam = `set PGPASSWORD=${password}`;
         dumpFilePath = path.join(vendorPath, process.platform, fileName);
       } else if (process.platform === "darwin") {
         dumpFilePath = path.join(vendorPath, process.platform, "bin", fileName);
