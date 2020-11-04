@@ -204,7 +204,6 @@ export default {
       if (result.response === 0) {
         let rootDbPath = this.$electron.remote.getGlobal("resoreDbPath");
         let rootDbPathFile = path.join(rootDbPath, "restore.db");
-        fs.unlinkSync(rootDbPathFile);
         await this.copyFile(item.dbPathFile, rootDbPathFile);
         this.$electron.ipcRenderer.send("reloadApp");
       }
