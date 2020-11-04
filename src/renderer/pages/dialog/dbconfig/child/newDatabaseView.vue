@@ -332,22 +332,21 @@ export default {
         }
         let cmd =
           password.trim().length > 0
-            ? `${envParam} \r\n "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+            ? `${envParam}\r\n"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
             : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
         console.log("execImportInitDb:", cmd);
-        shell.exec(cmd, { silent: true }, (code, stdout, stderr) => {
+        let shellFilePath =
+          process.platform === "win32"
+            ? path.join(tempPath, uuid.v1() + ".bat")
+            : path.join(tempPath, uuid.v1() + ".sh");
+        fs.writeFileSync(shellFilePath, cmd);
+        shell.exec(shellFilePath, { silent: true }, (code, stdout, stderr) => {
           if (stderr) {
             reject(new Error(stderr));
           } else {
             resolve(code);
           }
         });
-        // try {
-        //   shell.exec(cmd, { silent: true });
-        //   resolve("done");
-        // } catch (e) {
-        //   reject(e);
-        // }
       });
     },
     async doDecryptFile(srcFilePath, desFilePath) {
@@ -408,7 +407,7 @@ export default {
 
         let cmd =
           password.trim().length > 0
-            ? `${envParam} \r\n "${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
+            ? `${envParam}\r\n"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`;
         console.log(cmd);
         let tempPath = this.$electron.remote.app.getPath("temp");

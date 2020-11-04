@@ -503,14 +503,19 @@ export default {
         }
         let cmd =
           password.trim().length > 0
-            ? `${envParam} \r\n "${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
+            ? `${envParam}\r\n"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
 
         // 转存数据排除后缀是temp的表
         console.log(cmd);
         try {
+          let shellFilePath =
+            process.platform === "win32"
+              ? path.join(tempPath, uuid.v1() + ".bat")
+              : path.join(tempPath, uuid.v1() + ".sh");
+          fs.writeFileSync(shellFilePath, cmd);
           shell.exec(
-            cmd,
+            shellFilePath,
             { silent: true, async: true },
             async (code, stdout, stderr) => {
               console.log("Exit code:", code);

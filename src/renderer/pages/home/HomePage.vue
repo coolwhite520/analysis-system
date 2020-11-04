@@ -227,7 +227,7 @@ export default {
       }
       let cmd =
         password.trim().length > 0
-          ? `${envParam} && "${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+          ? `${envParam}\r\n"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
           : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
       this.loading = true;
 
@@ -278,9 +278,13 @@ export default {
             console.log("done");
 
             console.log(cmd);
-
+            let shellFilePath =
+              process.platform === "win32"
+                ? path.join(tempPath, uuid.v1() + ".bat")
+                : path.join(tempPath, uuid.v1() + ".sh");
+            fs.writeFileSync(shellFilePath, cmd);
             shell.exec(
-              cmd,
+              shellFilePath,
               { silent: true, async: true },
               async (code, stdout, stderr) => {
                 if (stderr) {
