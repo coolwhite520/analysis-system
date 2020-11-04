@@ -499,7 +499,6 @@ export default {
             });
             return;
           }
-          envParam = `export PGPASSWORD=${password}`;
         }
         let cmd =
           password.trim().length > 0
