@@ -287,10 +287,11 @@ export default {
           this.loading = true;
           this.loadingText = "正在进行保存，请稍后...";
           let resoreDbPath = this.$electron.remote.getGlobal("resoreDbPath");
+          let dbCon = this.$electron.remote.getGlobal("dbCon");
           let now = new Date();
           let nowStr = now.Format("yyyy-MM-dd_hh_mm_ss");
           let nowTimeStr = now.Format("yyyy-MM-dd hh:mm:ss");
-          let newDbPath = path.join(resoreDbPath, nowStr);
+          let newDbPath = path.join(resoreDbPath, dbCon.database, nowStr);
           if (!fs.existsSync(newDbPath)) {
             fs.mkdirSync(newDbPath, { recursive: true });
           }
@@ -306,7 +307,7 @@ export default {
             screenShotDesPath
           );
           let prefix = this.$electron.remote.getGlobal("levelPrefix");
-          let key = prefix + nowStr;
+          let key = prefix + dbCon.database + "." + nowStr;
           let valueObj = {
             dbPath: newDbPath,
             dbPathFile,

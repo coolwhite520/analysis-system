@@ -1627,12 +1627,7 @@ export default {
         }
       }
     },
-    async loadGraphDefault(
-      layout = {
-        type: "random", // 指定为力导向布局
-        preventOverlap: true, // 防止节点重叠
-      }
-    ) {
+    async loadGraphDefault() {
       let _this = this;
       this.tempgraphicMoneySectionStrMd5 = md5(
         JSON.stringify(this.tableData.graphicMoneySectionList)
@@ -1697,7 +1692,6 @@ export default {
             opacity: 0.2,
           },
         },
-        layout,
         edgeStateStyles: {
           active: {
             opacity: 1,
@@ -2202,12 +2196,12 @@ export default {
       if (this.tableData.graphType === "special") {
         this.myEchart.dispose();
         this.myEchart = null;
-        this.loadGraphDefault(layout);
-      } else {
-        this.graph.updateLayout(layout);
-        this.updateEntityList();
-        this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+        this.loadGraphDefault();
       }
+      this.graph.updateLayout(layout);
+      this.updateEntityList();
+      this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+
       setTimeout(() => {
         this.graph.fitView(20);
       }, 1000);

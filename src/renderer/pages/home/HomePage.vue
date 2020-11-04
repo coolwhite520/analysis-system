@@ -262,7 +262,7 @@ export default {
             console.log("done");
             let cmd =
               password.trim().length > 0
-                ? `${envParam}&&${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+                ? `${envParam}&&"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
                 : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
             this.loading = true;
             if (process.platform === "win32") {
@@ -271,13 +271,14 @@ export default {
               fs.writeFileSync(batFilePath, cmd);
               cmd = batFilePath;
             }
+            console.log(cmd);
             shell.exec(
               cmd,
               { silent: true, async: true },
               async (code, stdout, stderr) => {
                 if (stderr) {
                   this.$message({
-                    message: "载入失败, 存在相同的案件信息！",
+                    message: "载入失败:" + stderr,
                     type: "error",
                   });
                   this.loading = false;

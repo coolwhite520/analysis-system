@@ -110,11 +110,17 @@ export default {
   },
 
   async mounted() {
-    let widthDivHeight = this.$electron.remote.getGlobal("widthDivHeight");
-    this.popOverPicWidth = parseInt(widthDivHeight * this.popOverPicHeigth);
-    this.PicWidth = parseInt(widthDivHeight * this.PicHeigth);
-    this.freshList();
     this.$bus.$on("FreshTimeLineView", this.freshList);
+    let loop = setInterval(() => {
+      let dbCon = this.$electron.remote.getGlobal("dbCon");
+      if (dbCon) {
+        clearInterval(loop);
+        let widthDivHeight = this.$electron.remote.getGlobal("widthDivHeight");
+        this.popOverPicWidth = parseInt(widthDivHeight * this.popOverPicHeigth);
+        this.PicWidth = parseInt(widthDivHeight * this.PicHeigth);
+        this.freshList();
+      }
+    }, 100);
   },
   methods: {
     delDir(path) {
@@ -211,7 +217,10 @@ export default {
     },
     async freshList() {
       let prefix = this.$electron.remote.getGlobal("levelPrefix");
-      let { success, list, msg } = await levelDb.find(prefix);
+      let dbCon = this.$electron.remote.getGlobal("dbCon");
+      prefix = prefix + dbCon.database + ".";
+      console.log(prefix);
+      let { success, list, msg } = await levelDb.find({ prefix });
       if (success) {
         let ret = [];
         for (let item of list) {
