@@ -302,6 +302,7 @@ export default {
 
     async execImportInitDb(tempPathFile) {
       return new Promise((resolve, reject) => {
+        let tempPath = this.$electron.remote.app.getPath("temp");
         let vendorPath = this.$electron.remote.getGlobal("vendorPath");
         let dumpFilePath = "";
         let fileName = "psql";
@@ -332,18 +333,21 @@ export default {
         }
         let cmd =
           password.trim().length > 0
-            ? `${envParam}\r\n"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+            ? `${envParam}&&"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
             : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
-        console.log("execImportInitDb:", cmd);
-        let shellFilePath =
-          process.platform === "win32"
-            ? path.join(tempPath, uuid.v1() + ".bat")
-            : path.join(tempPath, uuid.v1() + ".sh");
-        fs.writeFileSync(shellFilePath, cmd);
-        shell.exec(shellFilePath, { silent: true }, (code, stdout, stderr) => {
+        if (process.platform === "win32") {
+          let batFilePath = path.join(tempPath, uuid.v1() + ".bat");
+          cmd = cmd.replace("&&", "\r\n");
+          fs.writeFileSync(batFilePath, cmd);
+          cmd = batFilePath;
+        }
+        shell.exec(cmd, { silent: true }, (code, stdout, stderr) => {
           if (stderr) {
             reject(new Error(stderr));
           } else {
+            if (process.platform === "win32") {
+              fs.unlinkSync(cmd);
+            }
             resolve(code);
           }
         });
@@ -378,6 +382,7 @@ export default {
     async createDataBase() {
       let { user, password, port, host, database } = this.form;
       return new Promise((resolve, reject) => {
+        let tempPath = this.$electron.remote.app.getPath("temp");
         let vendorPath = this.$electron.remote.getGlobal("vendorPath");
         let dumpFilePath = "";
         let fileName = "createdb";
@@ -393,33 +398,36 @@ export default {
             "bin",
             fileName
           );
-          envParam = `export PGPASSWORD="${password}"`;
+          envParam = `export PGPASSWORD=${password}`;
         } else if (process.platform === "linux") {
           dumpFilePath = fileName;
-          envParam = `export PGPASSWORD="${password}"`;
+          envParam = `export PGPASSWORD=${password}`;
         }
         // 判断文件是否存在
         if (process.platform !== "linux") {
           if (!fs.existsSync(dumpFilePath)) {
             reject(new Error(`${dumpFilePath} not exist`));
+            return;
           }
         }
-
         let cmd =
           password.trim().length > 0
-            ? `${envParam}\r\n"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
+            ? `${envParam}&&"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -h ${host} -U ${user} -p ${port} ${database}`;
-        console.log(cmd);
-        let tempPath = this.$electron.remote.app.getPath("temp");
-        let shellFilePath =
-          process.platform === "win32"
-            ? path.join(tempPath, uuid.v1() + ".bat")
-            : path.join(tempPath, uuid.v1() + ".sh");
-        fs.writeFileSync(shellFilePath, cmd);
-        shell.exec(shellFilePath, { silent: true }, (code, stdout, stderr) => {
+        // win下执行bat
+        if (process.platform === "win32") {
+          let batFilePath = path.join(tempPath, uuid.v1() + ".bat");
+          cmd = cmd.replace("&&", "\r\n");
+          fs.writeFileSync(batFilePath, cmd);
+          cmd = batFilePath;
+        }
+        shell.exec(cmd, { silent: true }, (code, stdout, stderr) => {
           if (stderr) {
             reject(new Error(stderr));
           } else {
+            if (process.platform === "win32") {
+              fs.unlinkSync(cmd);
+            }
             resolve(code);
           }
         });

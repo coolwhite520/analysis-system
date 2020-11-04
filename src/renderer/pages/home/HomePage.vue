@@ -211,10 +211,10 @@ export default {
         dumpFilePath = path.join(vendorPath, process.platform, fileName);
       } else if (process.platform === "darwin") {
         dumpFilePath = path.join(vendorPath, process.platform, "bin", fileName);
-        envParam = `export PGPASSWORD="${password}"`;
+        envParam = `export PGPASSWORD=${password}`;
       } else if (process.platform === "linux") {
         dumpFilePath = fileName;
-        envParam = `export PGPASSWORD="${password}"`;
+        envParam = `export PGPASSWORD=${password}`;
       }
       // 判断文件是否存在
       if (process.platform !== "linux") {
@@ -225,12 +225,6 @@ export default {
           return;
         }
       }
-      let cmd =
-        password.trim().length > 0
-          ? `${envParam}\r\n"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
-          : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
-      this.loading = true;
-
       const crypto = require("crypto"); //用来加密
       const zlib = require("zlib"); //用来压缩
 
@@ -262,29 +256,23 @@ export default {
             });
             this.loading = false;
           })
-          // .pipe(
-          //   through2(function (chunk, enc, callback) {
-          //     //每个表都有ajid的数据，怎么搞？先不搞了，没法全局替换每个导出表中的ajid
-          //     chunk = iconv.decode(chunk, "UTF-8");
-          //     chunk = chunk.replace(/icap_[0-9]+/gi, `icap_${importAjid}`);
-          //     chunk = chunk.replace(/\$AJID_REPLACE\$/g, `${importAjid}`);
-          //     this.push(Buffer.from(chunk));
-          //     callback();
-          //   })
-          // )
           .pipe(writeableStream)
           .on("finish", async () => {
             //解压后的回调
             console.log("done");
-
-            console.log(cmd);
-            let shellFilePath =
-              process.platform === "win32"
-                ? path.join(tempPath, uuid.v1() + ".bat")
-                : path.join(tempPath, uuid.v1() + ".sh");
-            fs.writeFileSync(shellFilePath, cmd);
+            let cmd =
+              password.trim().length > 0
+                ? `${envParam}&&${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`
+                : `"${dumpFilePath}" -d ${database} -U ${user} -p ${port} -f "${tempPathFile}"`;
+            this.loading = true;
+            if (process.platform === "win32") {
+              let batFilePath = path.join(tempPath, uuid.v1() + ".bat");
+              cmd = cmd.replace("&&", "\r\n");
+              fs.writeFileSync(batFilePath, cmd);
+              cmd = batFilePath;
+            }
             shell.exec(
-              shellFilePath,
+              cmd,
               { silent: true, async: true },
               async (code, stdout, stderr) => {
                 if (stderr) {
@@ -301,6 +289,9 @@ export default {
                   // 写入到base库的st_case表中
                   await this.$store.dispatch("Cases/getExistCaseAsync");
                   fs.unlinkSync(tempPathFile);
+                  if (process.platform === "win32") {
+                    fs.unlinkSync(cmd);
+                  }
                   this.loading = false;
                 }
               }

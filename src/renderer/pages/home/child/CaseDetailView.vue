@@ -487,7 +487,7 @@ export default {
             "bin",
             fileName
           );
-          envParam = `export PGPASSWORD="${password}"`;
+          envParam = `export PGPASSWORD=${password}`;
         } else if (process.platform === "linux") {
           dumpFilePath = fileName;
         }
@@ -499,28 +499,24 @@ export default {
             });
             return;
           }
-          envParam = `export PGPASSWORD="${password}"`;
+          envParam = `export PGPASSWORD=${password}`;
         }
         let cmd =
           password.trim().length > 0
-            ? `${envParam}\r\n"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
+            ? `${envParam}&&"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
 
-        // 转存数据排除后缀是temp的表
-        console.log(cmd);
+        if (process.platform === "win32") {
+          let batFilePath = path.join(tempPath, uuid.v1() + ".bat");
+          cmd = cmd.replace("&&", "\r\n");
+          fs.writeFileSync(batFilePath, cmd);
+          cmd = batFilePath;
+        }
         try {
-          let shellFilePath =
-            process.platform === "win32"
-              ? path.join(tempPath, uuid.v1() + ".bat")
-              : path.join(tempPath, uuid.v1() + ".sh");
-          fs.writeFileSync(shellFilePath, cmd);
           shell.exec(
-            shellFilePath,
+            cmd,
             { silent: true, async: true },
             async (code, stdout, stderr) => {
-              console.log("Exit code:", code);
-              console.log("Program output:", stdout);
-              console.log("Program stderr:", stderr);
               if (stderr) {
                 this.$message.error({
                   message: stderr,
@@ -528,6 +524,9 @@ export default {
                 this.loading = false;
                 return;
               } else {
+                if (process.platform === "win32") {
+                  fs.unlinkSync(cmd);
+                }
                 const crypto = require("crypto"); //用来加密
                 const zlib = require("zlib"); //用来压缩
                 const passwordEn = new Buffer(process.env.PASS || "password");
