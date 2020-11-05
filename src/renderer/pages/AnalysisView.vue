@@ -91,13 +91,13 @@ export default {
         type: "success",
       });
     });
-    this.$electron.ipcRenderer.on("reloadApp", function () {
+    this.$electron.ipcRenderer.on("reloadApp", () => {
       // 每次调用重启都会清理现场
       let rootDbPath = this.$electron.remote.getGlobal("resoreDbPath");
       let rootDbPathFile = path.join(rootDbPath, "restore.db");
       fs.unlinkSync(rootDbPathFile);
-      _this.$electron.remote.app.relaunch();
-      _this.$electron.remote.app.exit(0);
+      this.$electron.remote.app.relaunch();
+      this.$electron.remote.app.exit(0);
     });
     // 设置主区域的height
     let height = this.$electron.remote.getGlobal("height");
