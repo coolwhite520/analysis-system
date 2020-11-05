@@ -22,7 +22,7 @@
     "postinstall": ""
   },
   "build": {
-    "afterPack": "./afterPack.js",
+    "afterPack": "./vmpack/afterPack.js",
     "productName": "analysis-system",
     "appId": "com.ff.panda",
     "directories": {

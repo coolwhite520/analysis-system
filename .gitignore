@@ -1,4 +1,5 @@
 .DS_Store
+vmpack/*
 vendor/base/*
 vendor/darwin/extend/*
 vendor/win32/extend/*
