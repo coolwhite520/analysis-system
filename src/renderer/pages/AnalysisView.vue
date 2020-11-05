@@ -91,11 +91,14 @@ export default {
         type: "success",
       });
     });
-    this.$electron.ipcRenderer.on("reloadApp", () => {
+    this.$electron.ipcRenderer.on("reloadApp", (event, data) => {
       // 每次调用重启都会清理现场
-      let rootDbPath = this.$electron.remote.getGlobal("resoreDbPath");
-      let rootDbPathFile = path.join(rootDbPath, "restore.db");
-      fs.unlinkSync(rootDbPathFile);
+      let { deleteLocalDb } = data;
+      if (deleteLocalDb) {
+        let rootDbPath = this.$electron.remote.getGlobal("resoreDbPath");
+        let rootDbPathFile = path.join(rootDbPath, "restore.db");
+        fs.unlinkSync(rootDbPathFile);
+      }
       this.$electron.remote.app.relaunch();
       this.$electron.remote.app.exit(0);
     });

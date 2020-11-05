@@ -100,8 +100,8 @@ export default function() {
     }
   });
 
-  ipcMain.on("reloadApp", () => {
-    global.mainWindow.webContents.send("reloadApp");
+  ipcMain.on("reloadApp", (e, args) => {
+    global.mainWindow.webContents.send("reloadApp", args);
   });
   ipcMain.on("move-to-zero", () => {
     let bounds = global.mainWindow.getBounds();

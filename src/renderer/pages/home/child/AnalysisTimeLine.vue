@@ -205,7 +205,9 @@ export default {
         let rootDbPath = this.$electron.remote.getGlobal("resoreDbPath");
         let rootDbPathFile = path.join(rootDbPath, "restore.db");
         await this.copyFile(item.dbPathFile, rootDbPathFile);
-        this.$electron.ipcRenderer.send("reloadApp");
+        this.$electron.ipcRenderer.send("reloadApp", {
+          deleteLocalDb: false,
+        });
       }
     },
     async convertToBase64Image(fileUrl) {

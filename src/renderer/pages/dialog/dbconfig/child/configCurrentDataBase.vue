@@ -97,7 +97,9 @@ export default {
               config.writeDbConfig({ user, host, database, password, port });
               this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", false);
               this.activeStep = 0;
-              this.$electron.ipcRenderer.send("reloadApp");
+              this.$electron.ipcRenderer.send("reloadApp", {
+                deleteLocalDb: true,
+              });
             } catch (e) {
               log.error(e);
               this.$message.error({
