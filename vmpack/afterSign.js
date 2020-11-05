@@ -9,6 +9,7 @@ async function sleep(ms) {
     }, ms);
   });
 }
+
 exports.default = async function(context) {
   console.log(context);
   let exeFilePath;
@@ -28,9 +29,26 @@ exports.default = async function(context) {
       context.appOutDir,
       "analysis-system.origin.exe"
     );
-    fs.renameSync(exeFilePath, newPathFileName);
-    shell.exec("./protect.bat", { silent: false });
-    await sleep(1000);
-    fs.unlinkSync(newPathFileName);
+    console.log("wait for protect....")
+    await sleep(5000);
+    try {
+      console.log("rename begin....")
+      fs.renameSync(exeFilePath, newPathFileName);
+      console.log("rename end....")
+      await sleep(1000);
+      console.log("protect begin....");
+      let batFilePath = path.join(__dirname, "protect.bat");
+      console.log(batFilePath);
+      shell.exec(batFilePath, { silent: false, async: false});
+      console.log("protect end....")
+      await sleep(1000);
+      fs.unlinkSync(newPathFileName);
+      //analysis-system.origin.exe.log
+      fs.unlinkSync(newPathFileName + ".log");
+      await sleep(1000);
+    } catch(e) {
+      console.log(e.message)
+    }
+   
   }
 };
