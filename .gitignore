@@ -1,5 +1,5 @@
 .DS_Store
-vmpack/*
+vmpack/WinLicense/*
 vendor/base/*
 vendor/darwin/extend/*
 vendor/win32/extend/*
