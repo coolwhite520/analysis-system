@@ -106,8 +106,8 @@ const mutations = {
     state.activeIndex = state.pageIndex;
     state.currentTableData = tableData;
   },
-  // 切换布局类型，在normal和special中切换
-  SWITCH_GRAPHTYPE(state, graphType) {
+
+  SWITCH_GRAPH_LAYOUT_TYPE(state, graphType) {
     Vue.set(state.currentTableData, "graphType", graphType);
   },
   // 放大到全屏 缩小

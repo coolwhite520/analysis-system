@@ -36,7 +36,7 @@
               >&#xe609;&nbsp;圆形布局</el-button
             >
           </el-col>
-          <el-col :span="6">
+          <!-- <el-col :span="6" v-if="false">
             <el-button
               size="mini"
               type="text"
@@ -45,6 +45,17 @@
               @click="handleClickSwitchLayout('sangji')"
               :disabled="disabledButtons"
               >&#xe609;&nbsp;桑基布局</el-button
+            >
+          </el-col> -->
+          <el-col :span="6">
+            <el-button
+              size="mini"
+              type="text"
+              style="padding: 4px; font-size: 12px"
+              class="iconfont"
+              @click="handleClickSwitchLayout('fruchterman')"
+              :disabled="disabledButtons"
+              >&#xe609;&nbsp;fm聚类布局</el-button
             >
           </el-col>
         </el-row>
@@ -188,14 +199,12 @@ export default {
             type: "random", // 指定为力导向布局
             preventOverlap: true, // 防止节点重叠
           };
-          isNormalLayout = true;
           break;
         case "dagre": //层次
           layout = {
             type: "dagre",
             preventOverlap: true,
           };
-          isNormalLayout = true;
           break;
         case "circular": // 圆形
           layout = {
@@ -203,7 +212,6 @@ export default {
             ordering: "degree",
             type: "circular",
           };
-          isNormalLayout = true;
           break;
         case "grid": // 网格
           layout = {
@@ -211,7 +219,6 @@ export default {
             preventOverlap: true,
             begin: [20, 20],
           };
-          isNormalLayout = true;
           break;
         case "radial": // 辐射
           layout = {
@@ -222,7 +229,6 @@ export default {
             strictRadial: true,
             maxPreventOverlapIteration: 100,
           };
-          isNormalLayout = true;
           break;
         case "concentric": // 同心圆
           layout = {
@@ -231,23 +237,27 @@ export default {
             sortBy: "degree",
             preventOverlap: true,
           };
-          isNormalLayout = true;
           break;
-        case "sangji":
-          isNormalLayout = false;
+        case "fruchterman":
+          layout = {
+            type: "fruchterman",
+            gravity: 1,
+            speed: 5,
+            clustering: true,
+          };
           break;
       }
+      this.$bus.$emit("swichNormalLayout", {
+        graphid: this.currentTableData.graphid,
+        layout,
+      });
+      // if (isNormalLayout) {
 
-      if (isNormalLayout) {
-        this.$bus.$emit("swichNormalLayout", {
-          graphid: this.currentTableData.graphid,
-          layout,
-        });
-      } else {
-        this.$bus.$emit("switchSpecialLayout", {
-          graphid: this.currentTableData.graphid,
-        });
-      }
+      // } else {
+      //   this.$bus.$emit("switchSpecialLayout", {
+      //     graphid: this.currentTableData.graphid,
+      //   });
+      // }
     },
   },
 };
