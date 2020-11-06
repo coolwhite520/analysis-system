@@ -369,6 +369,7 @@ export default {
         worksheet.columns = columns;
         worksheet.properties.defaultRowHeight = 30;
         await cases.SwitchCase(client, ajid);
+        log.info({ ajid, item, filePath, tableDic, exportSql });
         let { rows } = await client.query(exportSql);
         for (let index = 0; index < rows.length; index++) {
           worksheet.addRow(rows[index]).commit();
