@@ -6213,6 +6213,11 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
+if-async@^3.7.4:
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/if-async/-/if-async-3.7.4.tgz#55868deb0093d3c67bf7166e745353fb9bcb21a2"
+  integrity sha1-VYaN6wCT08Z79xZudFNT+5vLIaI=
+
 iferr@^0.1.5:
   version "0.1.5"
   resolved "https://registry.npm.taobao.org/iferr/download/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
@@ -9764,6 +9769,16 @@ reflect-metadata@0.1.13:
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
 
+regedit@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/regedit/-/regedit-3.0.3.tgz#0c2188e15f670de7d5740c5cea9bbebe99497749"
+  integrity sha512-SpHmMKOtiEYx0MiRRC48apBsmThoZ4svZNsYoK8leHd5bdUHV1nYb8pk8gh6Moou7/S9EDi1QsjBTpyXVQrPuQ==
+  dependencies:
+    debug "^4.1.0"
+    if-async "^3.7.4"
+    stream-slicer "0.0.6"
+    through2 "^0.6.3"
+
 regenerate@^1.2.1:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/regenerate/download/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
@@ -10780,6 +10795,11 @@ stream-shift@^1.0.0:
   resolved "https://registry.npm.taobao.org/stream-shift/download/stream-shift-1.0.1.tgz?cache=0&sync_timestamp=1576147168429&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fstream-shift%2Fdownload%2Fstream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha1-1wiCgVWasneEJCebCHfaPDktWj0=
 
+stream-slicer@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/stream-slicer/-/stream-slicer-0.0.6.tgz#f86b2ac5c2440b7a0a87b71f33665c0788046138"
+  integrity sha1-+GsqxcJEC3oKh7cfM2ZcB4gEYTg=
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/strict-uri-encode/download/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
@@ -11169,7 +11189,7 @@ through2@^0.5.0:
     readable-stream "~1.0.17"
     xtend "~3.0.0"
 
-through2@^0.6.1:
+through2@^0.6.1, through2@^0.6.3:
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-0.6.5.tgz#41ab9c67b29d57209071410e1d7a7a968cd3ad48"
   integrity sha1-QaucZ7KdVyCQcUEOHXp6lozTrUg=

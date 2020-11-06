@@ -234,7 +234,7 @@ export default {
       title: "分析报告参数设定",
       buttonDisabled: false,
       activeStep: 0,
-      activeNames: ["1"],
+      activeNames: [],
       loading: false,
       loadingText: "",
       SoftTypeListZC: [
@@ -369,7 +369,6 @@ export default {
         worksheet.columns = columns;
         worksheet.properties.defaultRowHeight = 30;
         await cases.SwitchCase(client, ajid);
-        log.info({ ajid, item, filePath, tableDic, exportSql });
         let { rows } = await client.query(exportSql);
         for (let index = 0; index < rows.length; index++) {
           worksheet.addRow(rows[index]).commit();
@@ -557,8 +556,9 @@ export default {
           CurrentExeSql: "", //模板sql
           Tb_Name: "", //页面表名，目前报告中没有该参数
         };
+        let now = new Date().Format("yyyy_MM_dd_hh_mm_ss");
         let homedir = os.homedir();
-        homedir = path.join(homedir, "Desktop", ajid + "-" + ajmc);
+        homedir = path.join(homedir, "Desktop", ajmc + "_" + now);
         fs.mkdirSync(homedir, { recursive: true });
 
         let docfilePath = path.join(

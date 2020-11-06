@@ -256,7 +256,47 @@ export default {
               })()
             );
           } else if (item.fieldtype === 2 || item.fieldtype === 3) {
-            // continue;
+            if (item.fieldename.toUpperCase() === "JYJE") {
+              taskArray.push(
+                (async () => {
+                  let temp = await this.QueryJyjeMoreThanZero(
+                    ajid,
+                    tableName,
+                    matchedFieldsNew,
+                    item.fieldename
+                  );
+                  if (temp.success && temp.rows.length > 0) {
+                    let rownums = [];
+                    for (let row of temp.rows) {
+                      let newRow = [];
+                      rownums.push(row["rownum"]);
+                      if (rownums.length === 1) {
+                        // 只要一行示例错误
+                        for (let k in row) {
+                          let value = row[k];
+                          let key = k;
+                          let error =
+                            key.toLowerCase() === item.fieldename.toLowerCase()
+                              ? true
+                              : false; //这个地方需要判定
+
+                          let cell = { key, value, error };
+                          newRow.push(cell);
+                        }
+                        newRows.push(newRow);
+                      }
+                    }
+                    return {
+                      filterName: "JyjeNotBiggerThanZero",
+                      fieldcname: item.fieldcname,
+                      fieldename: item.fieldename.toLowerCase(),
+                      rownums,
+                    };
+                  }
+                  return null;
+                })()
+              );
+            }
             taskArray.push(
               (async () => {
                 let temp = await this.QueryFieldNotNumberRows(
@@ -364,7 +404,36 @@ export default {
       client.release();
     }
   },
-
+  // 查询交易金额必须大于0
+  QueryJyjeMoreThanZero: async function(
+    ajid,
+    tableName,
+    matchedFields,
+    fieldName
+  ) {
+    const client = await global.pool.connect();
+    let success = true;
+    try {
+      await cases.SwitchCase(client, ajid);
+      let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !='' and  icap_base.isnumeric(${fieldName}) and to_number(${fieldName}, '9999999999999999999') <= 0;`;
+      // log.info(sql);
+      console.log(sql);
+      let res = await client.query(sql);
+      let rows = res.rows;
+      let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
+      and TRIM(both '  ' FROM ${fieldName}) !='' and  icap_base.isnumeric(${fieldName}) and to_number(${fieldName}, '9999999999999999999') <= 0;`;
+      res = await client.query(sqlCount);
+      let count = res.rows[0].count;
+      return {
+        rows,
+        count,
+        success,
+      };
+    } finally {
+      client.release();
+    }
+  },
   // 查询不是数的条目
   QueryFieldNotNumberRows: async function(
     ajid,

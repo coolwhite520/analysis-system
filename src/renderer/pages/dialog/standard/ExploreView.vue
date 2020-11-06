@@ -181,6 +181,25 @@
                 ></el-date-picker>
               </div>
             </div>
+            <div
+              v-else-if="
+                currentErrorField.filterName === 'JyjeNotBiggerThanZero'
+              "
+            >
+              <div>
+                <div style="margin-bottom: 10px">交易金额必须大于零</div>
+                <div style="font-size: 10px; margin-bottom: 5px">
+                  请输入新的数据进行批量覆盖：
+                </div>
+                <el-input
+                  size="mini"
+                  type="number"
+                  v-model="input"
+                  placeholder="请输入内容"
+                ></el-input>
+              </div>
+            </div>
+
             <el-row style="margin-top: 20px; text-align: center">
               <el-button type="primary" @click="handleClickSubmitModify"
                 >提交修改</el-button
@@ -201,6 +220,7 @@ export default {
   props: ["sheetItem", "activeName"],
   data() {
     return {
+      number: 1,
       loadingText: "正在进行数据检测，请稍后...",
       isUpdateDataLoading: false,
       updateloadingText: "正在进行数据更新，请稍后...",
