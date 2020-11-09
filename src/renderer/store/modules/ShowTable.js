@@ -98,7 +98,7 @@ const mutations = {
       tableData.SpreadNodeSwitch = false;
 
       Vue.set(tableData, "graphid", uuid.v1());
-      Vue.set(tableData, "graphType", "normal");
+      Vue.set(tableData, "graphType", "");
       Vue.set(tableData, "fullScrrenFlag", false);
     }
     state.tableDataList.push(tableData);

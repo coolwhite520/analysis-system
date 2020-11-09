@@ -6,7 +6,6 @@
       <el-col :span="16">
         <el-button-group>
           <el-button
-            :disabled="buttonDisabled"
             size="mini"
             v-for="(item, index) of tableData.graphicMoneySectionList"
             :key="item.id"
@@ -34,7 +33,6 @@
             inactive-color="#ff4949"
             inactive-text="离散"
             @change="handleChangeSpreadNodeValue"
-            :disabled="buttonDisabled"
           >
           </el-switch>
         </el-tooltip>
@@ -50,7 +48,6 @@
             active-color="#13ce66"
             inactive-color="#ff4949"
             inactive-text="线宽"
-            :disabled="buttonDisabled"
           >
           </el-switch>
         </el-tooltip>
@@ -63,7 +60,6 @@
           placement="top-start"
         >
           <el-button
-            :disabled="buttonDisabled"
             size="mini"
             type="primary"
             icon="el-icon-s-tools"
@@ -77,7 +73,6 @@
           size="mini"
           v-model="inputValue"
           placeholder="输入关键字进行快捷定位"
-          :disabled="buttonDisabled"
         ></el-input>
       </el-col>
     </el-row>
@@ -119,7 +114,6 @@
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5" style="text-align: right">
         <el-button
-          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -129,7 +123,6 @@
         >
 
         <el-button
-          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -138,7 +131,6 @@
           >&#xe622;</el-button
         >
         <el-button
-          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -147,7 +139,6 @@
           >&#xe623;</el-button
         >
         <el-button
-          :disabled="buttonDisabled"
           type="text"
           size="mini"
           class="iconfont"
@@ -290,9 +281,7 @@ export default {
       "nodeCombineVisible",
     ]),
     ...mapState("CaseDetail", ["caseBase"]),
-    buttonDisabled() {
-      return this.tableData.graphType === "special";
-    },
+
     fullScrrenFlag() {
       return this.tableData.fullScrrenFlag;
     },
@@ -385,7 +374,10 @@ export default {
         ) {
           console.log("tableData.graphicMoneySectionList");
           this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
-          if (this.tableData.graphType === "fruchterman") {
+          if (
+            this.tableData.graphType === "fruchterman" ||
+            this.tableData.graphType === "radial"
+          ) {
             this.graph.data(this.makeData()); // 加载数据
             this.graph.render();
             this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
@@ -2657,16 +2649,11 @@ export default {
   },
 
   mounted() {
-    if (this.tableData.graphType === "normal") this.loadGraphDefault();
-    else if (this.tableData.graphType === "special") this.loadSpecialLayout(); //
+    this.loadGraphDefault();
     // 监听页面元素的大小变化
     const erd = elementResizeDetectorMaker();
     erd.listenTo(document.getElementById(this.graphid), (element) => {
-      if (this.myEchart) {
-        setTimeout(() => {
-          this.myEchart.resize();
-        }, 100);
-      } else if (this.graph) this.resize();
+      if (this.graph) this.resize();
     });
     // 布局切换监听
     this.$bus.$on("swichNormalLayout", (data) => {

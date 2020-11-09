@@ -36,17 +36,7 @@
               >&#xe609;&nbsp;圆形布局</el-button
             >
           </el-col>
-          <!-- <el-col :span="6" v-if="false">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding: 4px; font-size: 12px"
-              class="iconfont"
-              @click="handleClickSwitchLayout('sangji')"
-              :disabled="disabledButtons"
-              >&#xe609;&nbsp;桑基布局</el-button
-            >
-          </el-col> -->
+
           <el-col :span="6">
             <el-button
               size="mini"
@@ -55,7 +45,7 @@
               class="iconfont"
               @click="handleClickSwitchLayout('fruchterman')"
               :disabled="disabledButtons"
-              >&#xe609;&nbsp;fm聚类布局</el-button
+              >&#xe609;&nbsp;聚类布局</el-button
             >
           </el-col>
         </el-row>
@@ -93,6 +83,17 @@
               >&#xe7bb;&nbsp;辐射状布局</el-button
             >
           </el-col>
+          <el-col :span="6">
+            <el-button
+              size="mini"
+              type="text"
+              style="padding: 4px; font-size: 12px"
+              class="iconfont"
+              @click="handleClickSwitchLayout('force')"
+              :disabled="disabledButtons"
+              >&#xe63f;&nbsp;力导向布局</el-button
+            >
+          </el-col>
         </el-row>
       </el-col>
       <el-col :span="3" style="border-right: 1px solid #e5e7ec">
@@ -104,9 +105,6 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickShowEntityListView"
-              :disabled="
-                disabledButtons || currentTableData.graphType === 'special'
-              "
               >&#xe601;&nbsp;实体列表</el-button
             >
           </el-col>
@@ -117,7 +115,6 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickExportPicture"
-              :disabled="disabledButtons"
               >&#xe637;&nbsp;导出到图片</el-button
             >
           </el-col>
@@ -244,6 +241,11 @@ export default {
             gravity: 1,
             speed: 5,
             clustering: true,
+          };
+          break;
+        case "force":
+          layout = {
+            type: "force",
           };
           break;
       }
