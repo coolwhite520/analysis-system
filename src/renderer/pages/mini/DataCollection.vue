@@ -27,19 +27,6 @@ export default {
     };
   },
   methods: {
-    formatExcelDate(numb) {
-      if (numb > 1) {
-        const time = new Date(new Date(1900, 0, numb));
-        const year = time.getFullYear() + "";
-        let month = time.getMonth() + 1 + "";
-        month = month.length === 1 ? "0" + month : month;
-        let date = time.getDate() - 1 + "";
-        date = date.length === 1 ? "0" + date : date;
-        return year + "-" + month + "-" + date;
-      } else {
-        return "00:00:00";
-      }
-    },
     async getValueOfMbdm(ryid, fileName, mbdm, extField) {
       let value = "";
       switch (mbdm) {
@@ -186,7 +173,16 @@ export default {
     // 解析示例xlsx文件
     async parseExampleExcelFile(filePathName) {
       let resultList = [];
-      const workbookReader = new excel.stream.xlsx.WorkbookReader(filePathName);
+      const workbookReader = new excel.stream.xlsx.WorkbookReader(
+        filePathName,
+        {
+          entries: "emit",
+          sharedStrings: "cache",
+          hyperlinks: "cache",
+          styles: "cache",
+          worksheets: "emit",
+        }
+      );
       for await (const worksheetReader of workbookReader) {
         let rows = [];
         for await (const row of worksheetReader) {
@@ -195,7 +191,8 @@ export default {
           for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
             let cell = row.getCell(cindex);
             if (cell.type === 4) {
-              let cellDate = new Date(cell);
+              console.log(cell.type, cell.value);
+              let cellDate = new Date(cell.value);
               let m = moment(cellDate).utc();
               let year = m.year();
               let month = m.month() + 1;
@@ -211,7 +208,11 @@ export default {
               if (year === 1899) {
                 cell = `${hour}:${minute}:${sec}`;
               } else {
-                cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+                if (hour === "00" && minute === "00" && sec === "00") {
+                  cell = `${year}-${month}-${day}`;
+                } else {
+                  cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+                }
               }
             } else {
               cell = cell.toString().trim();
@@ -459,14 +460,6 @@ export default {
                   obj.matchedFieldName = "";
                 }
               }
-              if (
-                obj.matchedFieldType === 4 ||
-                obj.matchedFieldType === 5 ||
-                obj.matchedFieldType === 6
-              ) {
-                obj.ins1 = this.formatExcelDate(obj.ins1);
-                obj.ins2 = this.formatExcelDate(obj.ins2);
-              }
               dataList.push(obj);
             }
 
@@ -702,7 +695,14 @@ export default {
           let fileSize = stats.size;
           let bFirstRow = true;
           const workbookReader = new excel.stream.xlsx.WorkbookReader(
-            filePathName
+            filePathName,
+            {
+              entries: "emit",
+              sharedStrings: "cache",
+              hyperlinks: "cache",
+              styles: "cache",
+              worksheets: "emit",
+            }
           );
           let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
             matchedMbdm
@@ -720,7 +720,7 @@ export default {
               for (let cindex of matchedColNumList) {
                 let cell = row.getCell(cindex);
                 if (cell.type === 4) {
-                  let cellDate = new Date(cell);
+                  let cellDate = new Date(cell.value);
                   let m = moment(cellDate).utc();
                   let year = m.year();
                   let month = m.month() + 1;
@@ -736,25 +736,11 @@ export default {
                   if (year === 1899) {
                     cell = `${hour}:${minute}:${sec}`;
                   } else {
-                    cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
-                  }
-                }
-                // 数字类型，由于模块存在类型的判定错误，把日期和时间也都转换为了number类型，所以需要重新转换
-                else if (cell.type === 2) {
-                  let currentFieldName = matchedFields[
-                    matchedFieldIndex
-                  ].toLowerCase();
-                  let objType = templateToFieldObjList.find(
-                    (el) => el.fieldename.toLowerCase() === currentFieldName
-                  );
-                  if (
-                    objType.fieldtype === 4 ||
-                    objType.fieldtype === 5 ||
-                    objType.fieldtype === 6
-                  ) {
-                    cell = _this.formatExcelDate(cell.value);
-                  } else {
-                    cell = cell.toString().trim();
+                    if (hour === "00" && minute === "00" && sec === "00") {
+                      cell = `${year}-${month}-${day}`;
+                    } else {
+                      cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+                    }
                   }
                 } else {
                   cell = cell.toString().trim();
@@ -1020,6 +1006,8 @@ export default {
               newTestRow[k] = testRow[k];
             }
           }
+          console.log(Object.keys(newTestRow));
+          console.log({ Columns, newTestRow, targetTableName });
           newTestRow = importModel.TestingHandle(
             Columns,
             newTestRow,
@@ -1040,9 +1028,9 @@ export default {
           const stream = client.query(query);
 
           // 创建copyFrom流
-          let streamFrom = await client2.query(
-            copyFrom(`COPY ${targetTableName}(${postHandleFields}) FROM STDIN`)
-          );
+          let copyFromStr = `COPY ${targetTableName}(${postHandleFields}) FROM STDIN`;
+          console.log(copyFromStr);
+          let streamFrom = await client2.query(copyFrom(copyFromStr));
           streamFrom.on("error", (err) => {
             rejcect(err);
           });
@@ -1068,6 +1056,10 @@ export default {
             .pipe(
               through2.obj(function (row, enc, callback) {
                 row = importModel.TestingHandle(Columns, row, targetTableName);
+                if (Object.keys(row).length !== postHandleFields.length) {
+                  callback();
+                  return;
+                }
                 let values = [];
                 for (let k of Object.keys(row)) {
                   let obj = targetTableStruct.rows.find(
@@ -1083,6 +1075,7 @@ export default {
                   }
                 }
                 let valueStr = values.join("\t") + "\n";
+                console.log(valueStr);
                 this.push(valueStr);
                 callback();
               })

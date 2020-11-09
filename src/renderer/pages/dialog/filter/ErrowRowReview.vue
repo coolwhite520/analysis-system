@@ -4,9 +4,9 @@
     :close-on-click-modal="false"
     class="standard-data-dialog"
     :title="currentTableData.renderErrorData.title"
-    :visible.sync="showErrorRowRecordVisible"
+    :visible="showErrorRowRecordVisible"
     width="40%"
-    :before-close="handleClose"
+    @close="handleClose"
     :modal="true"
   >
     <div>错误数据最多展示30行</div>

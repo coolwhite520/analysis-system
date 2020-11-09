@@ -5,9 +5,9 @@
     :close-on-click-modal="false"
     class="standard-data-dialog"
     :title="title"
-    :visible.sync="showCollectionRecordVisible"
+    :visible="showCollectionRecordVisible"
     width="40%"
-    :before-close="handleClose"
+    @close="handleClose"
     :modal="true"
   >
     <div :loading="loading">

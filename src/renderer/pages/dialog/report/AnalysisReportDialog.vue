@@ -5,9 +5,9 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
-      :visible.sync="showReportVisible"
+      :visible="showReportVisible"
       width="50%"
-      :before-close="handleClose"
+      @close="handleClose"
       :modal="true"
     >
       <div slot="title" class="dialog-title">

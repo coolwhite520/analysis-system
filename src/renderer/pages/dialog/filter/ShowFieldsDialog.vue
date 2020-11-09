@@ -5,9 +5,9 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
-      :visible.sync="showFieldsVisible"
+      :visible="showFieldsVisible"
       width="30%"
-      :before-close="handleClose"
+      @close="handleClose"
       :modal="true"
     >
       <!-- <el-tree :data="currentTableData.headers" :props="defaultProps" show-checkbox></el-tree>

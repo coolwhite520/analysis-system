@@ -38,30 +38,33 @@ function createWindow() {
   global.levelPrefix = "RestoreDataCollection.";
   global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
-  // let exePath = path.dirname(app.getPath("exe"));
   let appName = require("../../package.json").name;
   app.setName(appName);
   app.setPath(
     "userData",
     app.getPath("userData").replace(/Electron/i, appName)
   );
-  let exePath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
-  global.appPath = exePath;
-  global.configPath = require("path").join(appPath, "config");
-  log.info(global.configPath);
-  if (!fs.existsSync(global.configPath)) {
-    fs.mkdirSync(global.configPath, { recursive: true });
+  let appPath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
+  global.appPath = appPath;
+
+  // 初始化config路径
+  let configPath = require("path").join(appPath, "config");
+  log.info(configPath);
+  if (!fs.existsSync(configPath)) {
+    fs.mkdirSync(configPath, { recursive: true });
   }
-  global.resoreDbPath = require("path").join(appPath, "db");
-  log.info(global.resoreDbPath);
-  if (!fs.existsSync(global.resoreDbPath)) {
-    fs.mkdirSync(global.resoreDbPath, { recursive: true });
+  global.configPath = configPath;
+  // 初始化db路径
+  let resoreDbPath = require("path").join(appPath, "db");
+  log.info(resoreDbPath);
+  if (!fs.existsSync(resoreDbPath)) {
+    fs.mkdirSync(resoreDbPath, { recursive: true });
   }
+  global.resoreDbPath = resoreDbPath;
   global.vendorPath =
     process.platform === "win32"
       ? path.join(path.dirname(app.getPath("exe")), `vendor`)
       : path.join(path.dirname(app.getPath("exe")), `../vendor`);
-  log.info("vendorPath:", global.vendorPath);
 
   mainWindow = new BrowserWindow({
     // backgroundColor: "#11151d",
@@ -90,7 +93,6 @@ function createWindow() {
           label: "save",
           accelerator: `CmdOrCtrl+s`,
           click: () => {
-            // screenShot.makePngWindowShot(global.appPath);
             global.mainWindow.webContents.send("save-state", {});
           },
         },
@@ -98,7 +100,6 @@ function createWindow() {
           label: "i",
           accelerator: `CmdOrCtrl+i`,
           click: () => {
-            // screenShot.makePngWindowShot(global.appPath);
             global.mainWindow.webContents.openDevTools();
           },
         },

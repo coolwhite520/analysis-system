@@ -5,9 +5,9 @@
       :close-on-click-modal="false"
       class="standard-data-dialog"
       :title="title"
-      :visible.sync="nodeCombineVisible"
+      :visible="nodeCombineVisible"
       width="30%"
-      :before-close="handleClose"
+      @close="handleClose"
       :modal="true"
     >
       <div slot="title" class="dialog-title">

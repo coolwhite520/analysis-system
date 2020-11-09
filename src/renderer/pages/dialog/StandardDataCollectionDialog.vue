@@ -4,14 +4,14 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
-      :visible.sync="standardDataVisible"
+      :visible="standardDataVisible"
       :width="
         standardViewSwitch === 'process-import' ||
         (standardViewSwitch === 'begin-import' && exampleDataList.length === 0)
           ? '30%'
           : '65%'
       "
-      :before-close="handleClose"
+      @close="handleClose"
       :modal="true"
     >
       <div slot="title" class="dialog-title">

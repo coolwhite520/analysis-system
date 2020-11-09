@@ -3,9 +3,9 @@
     v-dialogDrag
     :close-on-click-modal="false"
     class="standard-data-dialog"
-    :visible.sync="dbConfigVisible"
+    :visible="dbConfigVisible"
     width="40%"
-    :before-close="handleClose"
+    @close="handleClose"
     :modal="true"
   >
     <div slot="title" class="dialog-title">
@@ -36,7 +36,19 @@ import { mapState } from "vuex";
 import initDatabase from "./child/newDatabaseView";
 import configDataBase from "./child/configCurrentDataBase";
 import installPostgres from "./child/installPostgresView";
+import checkPgInstall from "@/utils/checker/checkPgInstall";
 export default {
+  async mounted() {
+    if (process.platform === "win32") {
+      let installed = await checkPgInstall.existServiceBinFile();
+      if (!installed) {
+        this.$message({
+          message: "检测到您还没有安装数据库服务，请先进行安装。",
+        });
+        this.activeName = "third";
+      }
+    }
+  },
   components: {
     "init-view": initDatabase,
     "config-view": configDataBase,

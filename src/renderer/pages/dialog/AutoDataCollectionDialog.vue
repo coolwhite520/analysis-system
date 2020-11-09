@@ -5,9 +5,9 @@
       class="auto-data-dialog"
       :close-on-click-modal="false"
       title="智能数据采集"
-      :visible.sync="autoDataVisible"
+      :visible="autoDataVisible"
       width="60%"
-      :before-close="handleClose"
+      @close="handleClose"
       :modal="true"
     >
       <div>

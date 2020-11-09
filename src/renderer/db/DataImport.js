@@ -416,13 +416,13 @@ export default {
     try {
       await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
-      and TRIM(both '  ' FROM ${fieldName}) !='' and  icap_base.isnumeric(${fieldName}) and to_number(${fieldName}, '9999999999999999999') <= 0;`;
+      and TRIM(both '  ' FROM ${fieldName}) !='' and  icap_base.isnumeric(${fieldName}) and to_number(${fieldName}, '9999999999999999999') = 0;`;
       // log.info(sql);
       console.log(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null
-      and TRIM(both '  ' FROM ${fieldName}) !='' and  icap_base.isnumeric(${fieldName}) and to_number(${fieldName}, '9999999999999999999') <= 0;`;
+      and TRIM(both '  ' FROM ${fieldName}) !='' and  icap_base.isnumeric(${fieldName}) and to_number(${fieldName}, '9999999999999999999') = 0;`;
       res = await client.query(sqlCount);
       let count = res.rows[0].count;
       return {
@@ -447,7 +447,7 @@ export default {
       await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
-      // log.info(sql);
+      log.info(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null

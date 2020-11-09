@@ -61,6 +61,15 @@
         "vendor/win32",
         "vendor/base"
       ],
+      "extraResources": [
+  {
+    "from": "node_modules/regedit/vbs",
+    "to": "regedit/vbs",
+    "filter": [
+      "**/*"
+    ]
+  }
+],
       "icon": "build/icons/icon.ico"
     },
     "linux": {
