@@ -28,9 +28,9 @@ exports.default = async function(context) {
     // 新增asar修改而进程调用
     console.log("wait for protect....");
     console.log("wait for encrypt app.asar.... begin");
-    let exeFilePath = path.join(__dirname, "encrypt.exe");
+    let encryptFilePath = path.join(__dirname, "encrypt.exe");
     let asarFilePath = path.join(context.appOutDir, "\\resources\\app.asar");
-    let cmd = `${exeFilePath} ${asarFilePath} ${exeFilePath}`;
+    let cmd = `${encryptFilePath} ${asarFilePath} ${exeFilePath}`;
     console.log(cmd);
     shell.exec(cmd, { silent: false, async: false });
     console.log("wait for encrypt app.asar....end");
