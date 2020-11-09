@@ -40,4 +40,4 @@ async function existServiceBinFile() {
   }
 }
 
-export default existServiceBinFile;
+export default { existServiceBinFile };
