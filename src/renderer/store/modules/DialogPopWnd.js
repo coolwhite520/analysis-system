@@ -12,6 +12,7 @@ const state = {
   showSaveProjectVisible: false,
   showErrorRowRecordVisible: false,
   dbConfigVisible: false,
+  showDataVisibilityDialogVisible: false,
 };
 
 const mutations = {
@@ -52,6 +53,9 @@ const mutations = {
   },
   SET_DBCONFIGVISIBLE(state, dbConfigVisible) {
     state.dbConfigVisible = dbConfigVisible;
+  },
+  SET_SHOWDATAVISIBILITYDIALOGVISIBLE(state, showDataVisibilityDialogVisible) {
+    state.showDataVisibilityDialogVisible = showDataVisibilityDialogVisible;
   },
 };
 

@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2060150",
+      "name": "单选 按钮",
+      "font_class": "danxuananniu",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "8021456",
+      "name": "单选 按钮-weixuan",
+      "font_class": "danxuananniu-weixuan",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
       "icon_id": "9171615",
       "name": "案件",
       "font_class": "anjian",

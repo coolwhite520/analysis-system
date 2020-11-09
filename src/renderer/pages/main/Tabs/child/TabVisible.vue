@@ -139,6 +139,7 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               :disabled="true || disabledButtons"
+              @click="handleClickNewView"
               >&#xe6a3;&nbsp;新建视图</el-button
             >
           </el-col>
@@ -177,6 +178,7 @@ export default {
     },
   },
   methods: {
+    handleClickNewView() {},
     handleClickShowEntityListView() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "entity-list-view",

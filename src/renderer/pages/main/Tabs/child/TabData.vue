@@ -159,6 +159,7 @@
         <el-button
           type="text"
           class="ctrl-button"
+          @click="handleClickDataVisibleView"
           :disabled="
             !(
               currentTableData &&
@@ -229,6 +230,9 @@
     <div v-if="showFieldsVisible">
       <show-fields-dialog></show-fields-dialog>
     </div>
+    <div v-if="showDataVisibilityDialogVisible">
+      <show-visible-dialog></show-visible-dialog>
+    </div>
   </div>
 </template>
 <script >
@@ -236,6 +240,7 @@ import StandardDataCollectionDialog from "@/pages/dialog/StandardDataCollectionD
 import AutoDataCollectionDialog from "@/pages/dialog/AutoDataCollectionDialog";
 import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
+import ShowDataVisibleView from "@/pages/dialog/visible/visibleDialog";
 import { mapState } from "vuex";
 import path, { extname } from "path";
 import DataCleanDb from "@/db/DataClean.js";
@@ -255,6 +260,7 @@ export default {
     "filter-dialog": FilterDialog,
     "show-fields-dialog": ShowFieldsDialog,
     "auto-dialog": AutoDataCollectionDialog,
+    "show-visible-dialog": ShowDataVisibleView,
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -262,6 +268,7 @@ export default {
       "standardDataVisible",
       "filterVisible",
       "showFieldsVisible",
+      "showDataVisibilityDialogVisible",
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
@@ -289,6 +296,12 @@ export default {
     },
   },
   methods: {
+    async handleClickDataVisibleView() {
+      this.$store.commit(
+        "DialogPopWnd/SET_SHOWDATAVISIBILITYDIALOGVISIBLE",
+        true
+      );
+    },
     async handleClickShowModelLib() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "model-list-view",
