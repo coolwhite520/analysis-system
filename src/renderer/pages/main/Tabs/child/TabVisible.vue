@@ -45,7 +45,7 @@
               class="iconfont"
               @click="handleClickSwitchLayout('fruchterman')"
               :disabled="disabledButtons"
-              >&#xe609;&nbsp;聚类布局</el-button
+              >&#xe6b1;&nbsp;聚类布局</el-button
             >
           </el-col>
         </el-row>
@@ -105,6 +105,7 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickShowEntityListView"
+              :disabled="disabledButtons"
               >&#xe601;&nbsp;实体列表</el-button
             >
           </el-col>
@@ -115,6 +116,7 @@
               class="iconfont"
               style="padding: 4px; font-size: 12px"
               @click="handleClickExportPicture"
+              :disabled="disabledButtons"
               >&#xe637;&nbsp;导出到图片</el-button
             >
           </el-col>
