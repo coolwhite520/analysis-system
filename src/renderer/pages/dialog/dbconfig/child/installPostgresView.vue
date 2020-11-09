@@ -1,6 +1,11 @@
 <template>
   <div style="text-align: center">
-    <h3>如果您没有安装数据库服务，那么请点击下面的按钮进行安装。</h3>
+    <h3 style="color: #151924">
+      如果您没有安装数据库服务，那么请点击下面的按钮进行安装。
+    </h3>
+    <p style="color: red; margin-top: 10px">
+      注意：安装过程中可能会要求输入数据库密码，请留意并记住。
+    </p>
     <div style="margin-top: 20px; text-align: center">
       <el-button
         @click="handleClickInstallPostgres"
@@ -9,6 +14,16 @@
         >启动数据库安装程序</el-button
       >
     </div>
+    <el-row
+      style="
+        text-align: center;
+        font-size: 12px;
+        color: #387947;
+        margin-top: 10px;
+      "
+    >
+      安装完成后请切换到数据库初始化页面按着操作步骤进行操作。
+    </el-row>
   </div>
 </template>
 

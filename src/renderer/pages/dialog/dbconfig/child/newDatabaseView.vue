@@ -1,9 +1,9 @@
 <template>
   <div class="main">
     <el-steps :active="activeStep" finish-status="success" simple>
-      <el-step title="数据库创建" icon="el-icon-edit"></el-step>
-      <el-step title="基础数据导入" icon="el-icon-upload"></el-step>
-      <el-step title="配置保存" icon="el-icon-success"></el-step>
+      <el-step title="1.数据库创建" icon="el-icon-edit"></el-step>
+      <el-step title="2.基础数据导入" icon="el-icon-upload"></el-step>
+      <el-step title="3.配置保存" icon="el-icon-success"></el-step>
     </el-steps>
     <div v-if="activeStep === 0">
       <el-row style="margin-top: 10px">
@@ -19,15 +19,18 @@
           <el-form-item label="数据库名称：" prop="database">
             <el-input
               v-model="form.database"
-              placeholder="数据库名称"
+              placeholder="数据库名称(最好不要使用中文)"
             ></el-input>
           </el-form-item>
           <el-form-item label="ip地址：" prop="host">
-            <el-input v-model="form.host" placeholder="ip地址"></el-input>
+            <el-input
+              v-model="form.host"
+              placeholder="默认为127.0.0.1"
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="端口号：" prop="port">
-            <el-input v-model="form.port" placeholder="端口号"></el-input>
+            <el-input v-model="form.port" placeholder="默认为5432"></el-input>
           </el-form-item>
 
           <el-form-item label="数据库管理员名称：" prop="user">
@@ -90,21 +93,21 @@
             <el-input
               :disabled="true"
               v-model="form.database"
-              placeholder="数据库名称"
+              placeholder="数据库名称任意（最好不要使用中文）"
             ></el-input>
           </el-form-item>
           <el-form-item label="ip地址：" prop="host">
             <el-input
               v-model="form.host"
-              placeholder="ip地址"
+              placeholder="ip地址默认127.0.0.1"
               :disabled="true"
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="端口号：" prop="port">
+          <el-form-item label="端口" prop="port">
             <el-input
               v-model="form.port"
-              placeholder="端口号"
+              placeholder="端口号默认5432"
               :disabled="true"
             ></el-input>
           </el-form-item>
