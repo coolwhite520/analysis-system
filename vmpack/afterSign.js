@@ -31,8 +31,7 @@ async function encrpyt(asarFilePath, exeFilePath) {
     path.join(path.dirname(exeFilePath), `${appName}.out.exe`),
     exeFilePath
   );
-  fs.unlinkSync(path.join(path.dirname(asarFilePath), "app.out.asar"));
-  fs.unlinkSync(path.join(path.dirname(exeFilePath), `${appName}.out.exe`));
+
   console.log("encrypt app.asar....end");
 }
 
