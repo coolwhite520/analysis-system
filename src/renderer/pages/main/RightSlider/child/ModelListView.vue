@@ -53,6 +53,9 @@
         </el-submenu>
       </el-menu>
     </div>
+    <link-model v-if="showLinkModelDialogVisible"></link-model>
+    <cricle-model v-if="showCircleModelDialogVisible"></cricle-model>
+    <twoends-model v-if="showTwoEndsDialogVisible"></twoends-model>
     <!-- <el-row class="foot">
       <el-col :span="24">
         <div>
@@ -66,12 +69,25 @@
 <script >
 import { mapState, mapGetters } from "vuex";
 import convertSql from "@/utils/sql/DataFiltrator.js";
+import linkModel from "@/pages/main/RightSlider/zjctModels/linkModel";
+import cricleModel from "@/pages/main/RightSlider/zjctModels/circleModel";
+import twoEndsModel from "@/pages/main/RightSlider/zjctModels/twoEndsModel";
 export default {
+  components: {
+    "link-model": linkModel,
+    "cricle-model": cricleModel,
+    "twoends-model": twoEndsModel,
+  },
   mounted() {},
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", ["tableDataList", "currentTableData"]),
+    ...mapState("DialogPopWnd", [
+      "showLinkModelDialogVisible",
+      "showCircleModelDialogVisible",
+      "showTwoEndsDialogVisible",
+    ]),
     openeds() {
       return JSON.parse(
         JSON.stringify(this.currentTableData.modelTree.openeds)
@@ -84,47 +100,58 @@ export default {
   methods: {
     async handleSelect(key, keyPath) {
       let tid = keyPath[1];
-      let pgsqlTemplate = "";
-      let model = {};
-      for (let item of this.currentTableData.modelTree.treeList) {
-        for (let childitem of item.childrenList) {
-          if (tid === String(childitem.mid)) {
-            pgsqlTemplate = childitem.gpsqltemplate;
-            model = childitem;
-            break;
+      console.log(tid);
+      if (tid === "401") {
+        this.$store.commit("DialogPopWnd/SET_SHOWLINKMODELDIALOGVISIBLE", true);
+      } else if (tid == "402") {
+        this.$store.commit(
+          "DialogPopWnd/SET_SHOWCIRCLEMODELDIALOGVISIBLE",
+          true
+        );
+      } else if (tid == "403") {
+        this.$store.commit("DialogPopWnd/SET_SHOWTWOENDSDIALOGVISIBLE", true);
+      } else {
+        let pgsqlTemplate = "";
+        let model = {};
+        for (let item of this.currentTableData.modelTree.treeList) {
+          for (let childitem of item.childrenList) {
+            if (tid === String(childitem.mid)) {
+              pgsqlTemplate = childitem.gpsqltemplate;
+              model = childitem;
+              break;
+            }
           }
         }
-      }
-      if (pgsqlTemplate === null) {
-        this.$message.error({
-          title: "错误",
-          message: `功能暂未开放，敬请期待！`,
-        });
-        return;
-      }
-      let {
-        count,
-        offset,
-        selectCondition,
-        modelFilterStr,
-        modelFilterChildList,
-      } = this.currentTableData;
+        if (pgsqlTemplate === null) {
+          this.$message.error({
+            title: "错误",
+            message: `功能暂未开放，敬请期待！`,
+          });
+          return;
+        }
+        let {
+          count,
+          offset,
+          selectCondition,
+          modelFilterStr,
+          modelFilterChildList,
+        } = this.currentTableData;
 
-      let filterChildStr = convertSql.convertDataFilterToSqlStr(
-        parseInt(tid),
-        this.currentTableData.modelFilterChildList
-      );
-      await this.$store.dispatch("ShowTable/showModelTable", {
-        tid,
-        count,
-        offset,
-        selectCondition,
-        modelFilterStr: filterChildStr,
-        modelFilterChildList: [],
-        offset: 0,
-        count: 30,
-      });
-      console.log(tid);
+        let filterChildStr = convertSql.convertDataFilterToSqlStr(
+          parseInt(tid),
+          this.currentTableData.modelFilterChildList
+        );
+        await this.$store.dispatch("ShowTable/showModelTable", {
+          tid,
+          count,
+          offset,
+          selectCondition,
+          modelFilterStr: filterChildStr,
+          modelFilterChildList: [],
+          offset: 0,
+          count: 30,
+        });
+      }
     },
     handleOpen(openIndex) {
       let bFindSame = false;

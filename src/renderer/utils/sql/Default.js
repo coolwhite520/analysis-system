@@ -17,6 +17,26 @@ function GetBankDetailTableSql(TableName) {
     "')GROUP6 on BANK.JYDFMC = GROUP6.GROUPMEMBER  )ALLBANK)GROUPBANKTABLE"
   );
 }
+
+function GetBankDetailTableSumSql(TableName) {
+  return "".concat(
+    "(  SELECT *, (CASE WHEN CXKHGROUPNAME IS NULL THEN CXKH ELSE CXKHGROUPNAME END) AS CXKHGROUP,  (CASE WHEN JYDFZKHGROUPNAME IS NULL THEN JYDFZKH ELSE JYDFZKHGROUPNAME END) AS JYDFZKHGROUP,  (CASE WHEN JYZJHMGROUPNAME IS NULL THEN JYZJHM ELSE JYZJHMGROUPNAME END) AS JYZJHMGROUP, (CASE WHEN JYDFZJHMGROUPNAME IS NULL THEN JYDFZJHM ELSE JYDFZJHMGROUPNAME END) AS JYDFZJHMGROUP,  (CASE WHEN JYMCGROUPNAME IS NULL THEN JYMC ELSE JYMCGROUPNAME END) AS JYMCGROUP,  (CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END) AS JYDFMCGROUP  FROM(  (SELECT * FROM ",
+    TableName,
+    " WHERE AJID = $AJID$ )BANK  LEFT JOIN (SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER, GROUPMEMBERCOUNT AS CXKHGROUPMEMBERCOUNT FROM mark_group_detail WHERE AJID = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = '",
+    TableName,
+    "')GROUP1 on BANK.CXKH = GROUP1.GROUPMEMBER  LEFT JOIN (SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER, GROUPMEMBERCOUNT AS JYDFZKHGROUPMEMBERCOUNT FROM mark_group_detail WHERE AJID = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = '",
+    TableName,
+    "')GROUP2 on BANK.JYDFZKH = GROUP2.GROUPMEMBER  LEFT JOIN (SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER, GROUPMEMBERCOUNT AS JYZJHMGROUPMEMBERCOUNT FROM mark_group_detail WHERE AJID = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = '",
+    TableName,
+    "')GROUP3 on BANK.JYZJHM = GROUP3.GROUPMEMBER  LEFT JOIN (SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER, GROUPMEMBERCOUNT AS JYDFZJHMGROUPMEMBERCOUNT FROM mark_group_detail WHERE AJID = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = '",
+    TableName,
+    "')GROUP4 on BANK.JYDFZJHM = GROUP4.GROUPMEMBER  LEFT JOIN (SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER, GROUPMEMBERCOUNT AS JYMCGROUPMEMBERCOUNT FROM mark_group_detail WHERE AJID = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = '",
+    TableName,
+    "')GROUP5 on BANK.JYMC = GROUP5.GROUPMEMBER  LEFT JOIN (SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER, GROUPMEMBERCOUNT AS JYDFMCGROUPMEMBERCOUNT FROM mark_group_detail WHERE AJID = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = '",
+    TableName,
+    "')GROUP6 on BANK.JYDFMC = GROUP6.GROUPMEMBER  )ALLBANK)GROUPBANKTABLE"
+  );
+}
 //数据处理类型
 function DataRule(
   RULE_NAME = "",
@@ -644,7 +664,60 @@ let graphicMoneySectionList = [
   //   selected: false,
   // },
 ];
-module.exports = {
+
+function Dictionary() {
+  this.add = add;
+  this.datastore = new Array();
+  this.find = find;
+  this.remove = remove;
+  this.showAll = showAll;
+  this.count = count;
+  this.clear = clear;
+  this.ContainsKey = ContainsKey;
+}
+function add(key, value) {
+  this.datastore[key] = value;
+}
+function find(key) {
+  return this.datastore[key];
+}
+function remove(key) {
+  delete this.datastore[key];
+}
+function showAll() {
+  var str = "";
+  for (var key in this.datastore) {
+    str += key + " -> " + this.datastore[key] + "; ";
+  }
+  console.log(str);
+}
+function count() {
+  /*var ss = Object.keys(this.datastore).length;
+  console.log("ssss  "+ss);
+  return Object.keys(this.datastore).length;*/
+  /**/
+  var n = 0;
+  for (var key in Object.keys(this.datastore)) {
+    ++n;
+  }
+  console.log(n);
+  return n;
+}
+function clear() {
+  for (var key in this.datastore) {
+    delete this.datastore[key];
+  }
+}
+function ContainsKey(str) {
+  for (var key in this.datastore) {
+    if (key == str) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export default {
   defaultSelection,
   getNowFormatDate,
   ReportTableDic,
@@ -658,26 +731,12 @@ module.exports = {
   DataSourceType,
   IsNullOrEmpty,
   GetBankDetailTableSql,
+  GetBankDetailTableSumSql,
   BackFiltrateCondtion_DateTime,
   DataRuleType,
   DataRule,
   GetTimeType,
   graphicMoneySectionList,
   xianKuanSetting,
+  Dictionary,
 };
-// module.exports.getNowFormatDate = getNowFormatDate;
-// module.exports.ReportTableDic = ReportTableDic;
-// module.exports.HashSet = HashSet;
-// module.exports.Stack = Stack;
-// module.exports.FiltrateLogicID = FiltrateLogicID;
-// module.exports.DataFilter = DataFilter;
-// module.exports.DataType = DataType;
-// module.exports.NodeType = NodeType;
-// module.exports.FiltrateLogic = FiltrateLogic;
-// module.exports.DataSourceType = DataSourceType;
-// module.exports.IsNullOrEmpty = IsNullOrEmpty;
-// module.exports.GetBankDetailTableSql = GetBankDetailTableSumSql;
-// module.exports.BackFiltrateCondtion_DateTime = BackFiltrateCondtion_DateTime;
-// module.exports.DataRuleType = DataRuleType;
-// module.exports.DataRule = DataRule;
-// module.exports.GetTimeType = GetTimeType;

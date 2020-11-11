@@ -10,6 +10,7 @@
       stripe
       border
       @sort-change="sortChange"
+      @row-contextmenu="handleRightClickRow"
     >
       <!-- <el-table-column fixed type="index" width="50" label="编号"></el-table-column> -->
       <el-table-column
@@ -28,6 +29,7 @@
               style="color: #2e69b7"
               @click="
                 handleClickTableCellLink(
+                  header.showrightbtn_type,
                   scope.row,
                   header.fieldename,
                   header.link_mid,
@@ -92,7 +94,9 @@
 </template>
 
 <script>
+const { clipboard } = require("electron");
 import { mapState } from "vuex";
+
 export default {
   mounted() {
     for (let size = 1; size <= 60; size++) {
@@ -102,6 +106,7 @@ export default {
       });
     }
   },
+
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
@@ -123,6 +128,17 @@ export default {
         count: this.pageSize,
       });
       this.currentPage = 1;
+    },
+    async handleRightClickRow(row, column, event) {
+      let value = row[column.property].value;
+      console.log(row);
+      if (value) {
+        clipboard.writeText(value + "");
+        this.$message({
+          type: "success",
+          message: "已经将数据'" + value + "'放入到了剪贴板",
+        });
+      }
     },
     sortChange(column) {
       //获取字段名称和排序类型
@@ -155,19 +171,29 @@ export default {
         rows: newTableData.rows,
       });
     },
-    async handleClickTableCellLink(row, fieldename, linkMid, value) {
-      let newRow = {};
-      for (let k in row) {
-        newRow[k] = row[k].value;
-      }
+    async handleClickTableCellLink(
+      showrightbtn_type,
+      row,
+      fieldename,
+      linkMid,
+      value
+    ) {
+      console.log(showrightbtn_type);
+      if (showrightbtn_type === "link") {
+        let newRow = {};
+        for (let k in row) {
+          newRow[k] = row[k].value;
+        }
 
-      this.$store.dispatch("ShowTable/showLinkTable", {
-        tid: parseInt(this.tableData.tid),
-        linkMid,
-        selectCondition: this.tableData.selectCondition,
-        row: newRow,
-        fieldename: fieldename.toUpperCase(), // 注意列名需要传递大写
-      });
+        this.$store.dispatch("ShowTable/showLinkTable", {
+          tid: parseInt(this.tableData.tid),
+          linkMid,
+          selectCondition: this.tableData.selectCondition,
+          row: newRow,
+          fieldename: fieldename.toUpperCase(), // 注意列名需要传递大写
+        });
+      } else if (showrightbtn_type === "button") {
+      }
     },
 
     async handleCurrentChange(val) {

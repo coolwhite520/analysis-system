@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10416796",
+      "name": "环路",
+      "font_class": "huanlu",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "13484669",
+      "name": "两端对齐",
+      "font_class": "liangduanduiqi",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "16103931",
+      "name": "链路",
+      "font_class": "lianlu",
+      "unicode": "e7b8",
+      "unicode_decimal": 59320
+    },
+    {
       "icon_id": "2060150",
       "name": "单选 按钮",
       "font_class": "danxuananniu",

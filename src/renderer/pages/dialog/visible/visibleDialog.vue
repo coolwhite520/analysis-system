@@ -78,12 +78,16 @@
 
         <el-row style="margin-top: 20px">
           <el-col :span="6">最小交易次数:</el-col>
-          <el-col :span="14"> <el-input size="mini"></el-input></el-col>
+          <el-col :span="14">
+            <el-input size="mini" v-model="minJybs"></el-input
+          ></el-col>
           <el-col :span="4">&nbsp;</el-col>
         </el-row>
         <el-row style="margin-top: 10px">
           <el-col :span="6">最小交易金额:</el-col>
-          <el-col :span="14"> <el-input size="mini"></el-input></el-col>
+          <el-col :span="14">
+            <el-input size="mini" v-model="minJyje"></el-input
+          ></el-col>
           <el-col :span="4">&nbsp;</el-col>
         </el-row>
         <el-row style="margin-top: 30px">
@@ -113,6 +117,8 @@ export default {
     return {
       activeName: "first",
       selected: "1",
+      minJybs: 1,
+      minJyje: 10000,
     };
   },
   methods: {

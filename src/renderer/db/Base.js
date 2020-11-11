@@ -4,6 +4,21 @@ const fs = require("fs");
 
 import cases from "./Cases";
 export default {
+  GetModelSql: async (tid) => {
+    const client = await global.pool.connect();
+    try {
+      let sql = `SET search_path TO icap_base`;
+      await client.query(sql);
+      sql = "SELECT * FROM layout_model_info WHERE MID='" + tid + "'";
+      const res = await client.query(sql);
+      return {
+        gpsqltemplate: res.rows[0]["gpsqltemplate"],
+        orderby: res.rows[0]["orderby"],
+      }; //id , parent_id, name
+    } finally {
+      client.release();
+    }
+  },
   QueryCustom: async function(sql, ajid = "") {
     const client = await global.pool.connect();
     try {

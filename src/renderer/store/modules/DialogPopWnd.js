@@ -13,6 +13,9 @@ const state = {
   showErrorRowRecordVisible: false,
   dbConfigVisible: false,
   showDataVisibilityDialogVisible: false,
+  showLinkModelDialogVisible: false,
+  showCircleModelDialogVisible: false,
+  showTwoEndsDialogVisible: false,
 };
 
 const mutations = {
@@ -56,6 +59,15 @@ const mutations = {
   },
   SET_SHOWDATAVISIBILITYDIALOGVISIBLE(state, showDataVisibilityDialogVisible) {
     state.showDataVisibilityDialogVisible = showDataVisibilityDialogVisible;
+  },
+  SET_SHOWLINKMODELDIALOGVISIBLE(state, showLinkModelDialogVisible) {
+    state.showLinkModelDialogVisible = showLinkModelDialogVisible;
+  },
+  SET_SHOWCIRCLEMODELDIALOGVISIBLE(state, showCircleModelDialogVisible) {
+    state.showCircleModelDialogVisible = showCircleModelDialogVisible;
+  },
+  SET_SHOWTWOENDSDIALOGVISIBLE(state, showTwoEndsDialogVisible) {
+    state.showTwoEndsDialogVisible = showTwoEndsDialogVisible;
   },
 };
 
