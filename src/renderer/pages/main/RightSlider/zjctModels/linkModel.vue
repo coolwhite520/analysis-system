@@ -58,7 +58,13 @@
       </el-form-item>
 
       <el-form-item label="间隔(小时)：">
-        <el-input size="mini" v-model.number="form.timeSpan"></el-input>
+        <!-- <el-input size="mini" v-model.number="form.timeSpan"></el-input> -->
+        <el-input-number
+          size="mini"
+          v-model="form.timeSpan"
+          :min="1"
+          :max="1000000"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="层数(2-20)：">
         <el-col :span="11">
@@ -70,7 +76,12 @@
         </el-col>
       </el-form-item>
       <el-form-item label="最小交易金额：">
-        <el-input size="mini" v-model.number="form.minJe"></el-input>
+        <!-- <el-input size="mini" v-model.number="form.minJe"></el-input> -->
+        <el-input-number
+          size="mini"
+          v-model="form.minJe"
+          :min="5000"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="交易时间范围：">
         <el-col :span="11">
@@ -264,8 +275,30 @@ export default {
             "",
             ajid
           );
+          if (data && data.nodes && data.nodes.length > 2) {
+            let pageObj = {
+              tid: 401,
+              title: "资金链路查找结果",
+              componentName: "table-data-view",
+              dispatchName: "ShowTable/showModelTable",
+              tableType: "graph",
+              modelGraphType: "link",
+              showType: 2,
+              originGraphData: data,
+              rightTabs: [],
+              modelFilterChildList: [],
+            };
+            this.$store.commit(
+              "DialogPopWnd/SET_SHOWLINKMODELDIALOGVISIBLE",
+              false
+            );
+            this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", pageObj);
+          } else {
+            this.$message({
+              message: "当前查询无结果，请修改参数",
+            });
+          }
           this.loadingButn = false;
-          console.log(data);
         } else {
           console.log("error submit!!");
           this.loadingButn = false;

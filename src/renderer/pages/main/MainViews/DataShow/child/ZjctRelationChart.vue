@@ -76,8 +76,6 @@
         ></el-input>
       </el-col>
     </el-row>
-
-    <!-- <div :id="miniMapID" style="width:100px;"></div> -->
     <div
       :ref="graphid"
       style="position: relative"
@@ -147,6 +145,7 @@
           >&#xe649;</el-button
         >
         <el-button
+          :disabled="true"
           type="text"
           size="mini"
           class="iconfont"
@@ -383,22 +382,6 @@ export default {
           this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
           this.accordingSpreadNodeSwitchRefreshNodes();
           this.updateEntityList();
-        }
-      },
-      immediate: false,
-      deep: true,
-    },
-    "tableData.allrows": {
-      handler(newValue, oldValue) {
-        if (this.tempAllRowsStrMd5 === "") {
-          this.tempAllRowsStrMd5 = md5(JSON.stringify(newValue));
-        } else {
-          if (this.tempAllRowsStrMd5 !== md5(JSON.stringify(newValue))) {
-            this.tempAllRowsStrMd5 = md5(JSON.stringify(newValue));
-            this.graph.changeData(this.makeData()); // 加载数据
-            this.updateEntityList();
-            this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
-          }
         }
       },
       immediate: false,
@@ -981,399 +964,34 @@ export default {
     // 最早交易日期(zzjyrq)，
     // 最晚交易日期(zwjyrq)
     makeData() {
-      switch (this.tableData.tid) {
-        case "202":
-          return this.makeData202();
-          break;
-        case "203":
-          return this.makeData203();
-          break;
-        case "213":
-          return this.makeData213();
-          break;
-      }
-    },
-    makeSankeyData() {
-      switch (this.tableData.tid) {
-        case "202":
-          {
-            let data = this.makeSankeyData202();
-            this.cleanLinksForSankey(data.links);
-            return data;
-          }
-
-          break;
-        case "203":
-          {
-            let data = this.makeSankeyData203();
-            this.cleanLinksForSankey(data.links);
-            return data;
-          }
-
-          break;
-        case "213":
-          {
-            let data = this.makeSankeyData213();
-            this.cleanLinksForSankey(data.links);
-            return data;
-          }
-
-          break;
-      }
-    },
-    // 由于桑基图不能存在环路， 所以重新整理一下边的数据
-    cleanLinksForSankey(links) {
-      // 1 清除无效的数据，target、source为空的 金额为0的
-      links = links.map((element) => {
-        if (
-          element.target !== "" &&
-          element.source !== "" &&
-          element.value > 0
-        ) {
-          return element;
-        }
-      });
-
-      // 2 寻找环路
-      let allCircleLinks = [];
-      for (let link1 of links) {
-        for (let link2 of links) {
-          if (link1.target === link2.source && link1.source === link2.target) {
-            allCircleLinks.push(link1, link2);
-          }
-        }
-      }
-      console.log({ allCircleLinks });
-    },
-
-    // 构造桑基数据
-    makeSankeyData202() {
-      let nodes = [];
-      let links = [];
-      this.tableData.allrows.forEach((row) => {
-        let jymc = row["jymc"];
-        let cxkh = row["cxkh"];
-        let jydfmc = row["jydfmc"];
-        let jydfzkh = row["jydfzkh"];
-        let jczce = parseFloat(row["jczce"]);
-
-        let data1 = {
-          name: cxkh + "\n" + jymc,
-        };
-        let data2 = {
-          name: jydfzkh + "\n" + jydfmc,
-        };
-
-        let bFindData1 = false;
-        let bFindData2 = false;
-        for (let item of nodes) {
-          if (item.name === data1.name) {
-            bFindData1 = true;
-            break;
-          }
-        }
-
-        if (!bFindData1) nodes.push(data1);
-        for (let item of nodes) {
-          if (item.name === data2.name) {
-            bFindData2 = true;
-            break;
-          }
-        }
-        if (!bFindData2) nodes.push(data2);
-
-        // 画线
-        let link = {
-          source: jczce > 0 ? cxkh + "\n" + jymc : jydfzkh + "\n" + jydfmc,
-          target: jczce > 0 ? jydfzkh + "\n" + jydfmc : cxkh + "\n" + jymc,
-          value: jczce > 0 ? jczce : -jczce,
-        };
-
-        links.push(link);
-      });
-      // antv 需要转换一下
-      // let newLinks = links.map((link) => {
-      //   let sourceIndex = nodes.findIndex((node) => node.name === link.source);
-      //   let targetIndex = nodes.findIndex((node) => node.name === link.target);
-      //   return {
-      //     source: sourceIndex,
-      //     target: targetIndex,
-      //     value: link.value,
-      //   };
-      // });
-
-      return { nodes, links };
-    },
-    makeSankeyData203() {
-      let nodes = [];
-      let links = [];
-      this.tableData.allrows.forEach((row) => {
-        let jymc = row["jymc"];
-        // let cxkh = row["jyzjhm"];
-
-        let jydfmc = row["jydfmc"];
-        // let jydfzkh = row["jydfzjhm"];
-
-        let jczce = parseFloat(row["jczce"]);
-
-        let data1 = {
-          name: jymc,
-        };
-        let data2 = {
-          name: jydfmc,
-        };
-        let bFindData1 = false;
-        let bFindData2 = false;
-        for (let item of nodes) {
-          if (item.name === data1.name) {
-            bFindData1 = true;
-            break;
-          }
-        }
-        if (!bFindData1) nodes.push(data1);
-        for (let item of nodes) {
-          if (item.name === data2.name) {
-            bFindData2 = true;
-            break;
-          }
-        }
-        if (!bFindData2) nodes.push(data2);
-
-        // 画线
-        let link = {
-          source: jczce > 0 ? jymc : jydfmc,
-          target: jczce > 0 ? jydfmc : jymc,
-          value: jczce > 0 ? jczce : -jczce,
-        };
-
-        links.push(link);
-      });
-      // antv 需要转换一下
-      // let newLinks = links.map((link) => {
-      //   let sourceIndex = nodes.findIndex((node) => node.name === link.source);
-      //   let targetIndex = nodes.findIndex((node) => node.name === link.target);
-      //   return {
-      //     source: sourceIndex,
-      //     target: targetIndex,
-      //     value: link.value,
-      //   };
-      // });
-
-      return { nodes, links };
-    },
-    makeSankeyData213() {
-      let nodes = [];
-      let links = [];
-      this.tableData.allrows.forEach((row) => {
-        let jymc =
-          row[
-            `${this.tableData.selectCondition.SelectThType.ThId.toLowerCase()}`
-          ];
-        let jydfmc =
-          row[
-            `${this.tableData.selectCondition.SelectThType.DsThId.toLowerCase()}`
-          ];
-        let jczce = parseFloat(row["jczce"]);
-
-        let data1 = {
-          name: jymc,
-        };
-        let data2 = {
-          name: jydfmc,
-        };
-        let bFindData1 = false;
-        let bFindData2 = false;
-        for (let item of nodes) {
-          if (item.name === data1.name) {
-            bFindData1 = true;
-            break;
-          }
-        }
-        if (!bFindData1) nodes.push(data1);
-        for (let item of nodes) {
-          if (item.name === data2.name) {
-            bFindData2 = true;
-            break;
-          }
-        }
-        if (!bFindData2) nodes.push(data2);
-        // 画线
-        let link = {
-          source: jczce > 0 ? jymc : jydfmc,
-          target: jczce > 0 ? jydfmc : jymc,
-          value: jczce > 0 ? jczce : -jczce,
-        };
-        if (jymc !== jydfmc) links.push(link);
-      });
-      // antv 需要转换一下
-      // let newLinks = links.map((link) => {
-      //   let sourceIndex = nodes.findIndex((node) => node.name === link.source);
-      //   let targetIndex = nodes.findIndex((node) => node.name === link.target);
-      //   return {
-      //     source: sourceIndex,
-      //     target: targetIndex,
-      //     value: link.value,
-      //   };
-      // });
-
-      return { nodes, links };
-    },
-    makeData213() {
-      // 重点交易对手团伙发现：参数 金额，笔数。参数可设置团伙分类 以 主体名称（JYMCGROUP），证件号码（JYZJHMGROUP），卡号（CXKHGROUP） 划分
       this.currentSelectedNodes = [];
-      let nodes = [];
-      let edges = [];
-      this.tableData.allrows.forEach((row) => {
-        let jymc =
-          row[
-            `${this.tableData.selectCondition.SelectThType.ThId.toLowerCase()}`
-          ];
-        let jydfmc =
-          row[
-            `${this.tableData.selectCondition.SelectThType.DsThId.toLowerCase()}`
-          ];
-        let czje = parseFloat(row["czje"]);
-        let czbs = parseInt(row["czbs"]);
-        let jzje = parseFloat(row["jzje"]);
-        let jzbs = parseInt(row["jzbs"]);
-        let jyzje = parseInt(row["jyzje"]);
-        let jyzbs = parseInt(row["jyzbs"]);
-        let data1 = {
-          id: jymc,
-          name: jymc,
-          label: jymc,
-          tid: this.tableData.tid, //tableid
+      let nodes = this.tableData.originGraphData.nodes.map((node) => {
+        let {
+          CardNo,
+          FieldName,
+          IdentityNo,
+          IsRoot,
+          UniqueKey,
+          Username,
+        } = node;
+        return {
+          id: UniqueKey,
+          kh: CardNo,
+          name: Username,
+          label: CardNo + "\n" + Username,
         };
-        let data2 = {
-          id: jydfmc,
-          name: jydfmc,
-          label: jydfmc,
-          tid: this.tableData.tid,
-        };
-        let bFindData1 = false;
-        let bFindData2 = false;
-        for (let item of nodes) {
-          if (item.id === data1.id) {
-            bFindData1 = true;
-            break;
-          }
-        }
-        if (!bFindData1) nodes.push(data1);
-        for (let item of nodes) {
-          if (item.id === data2.id) {
-            bFindData2 = true;
-            break;
-          }
-        }
-        if (!bFindData2) nodes.push(data2);
-
-        // 画线
-        let tempEdges = [];
-        if (czje > 0) {
-          let lineColor = this.calculateLineColorByJinE(czje);
-          let link1 = {
-            tid: this.tableData.tid,
-            source: jymc,
-            target: jydfmc,
-            je: czje,
-            bs: czbs,
-            label: `${czje}元（${czbs}笔）`,
-            style: {
-              endArrow: {
-                path: "M 0,0 L 8,4 L 8,-4 Z",
-                fill: lineColor,
-              },
-              stroke: lineColor,
-            },
-          };
-          if (lineColor !== "") tempEdges.push(link1);
-        }
-        if (jzje > 0) {
-          let lineColor = this.calculateLineColorByJinE(jzje);
-          let link2 = {
-            tid: this.tableData.tid,
-            source: jydfmc,
-            target: jymc,
-            je: jzje,
-            bs: jzbs,
-            label: `${jzje}元（${jzbs}笔）`,
-            style: {
-              endArrow: {
-                path: "M 0,0 L 8,4 L 8,-4 Z",
-                fill: lineColor,
-              },
-              stroke: lineColor,
-            },
-          };
-          if (lineColor !== "") tempEdges.push(link2);
-        }
-        if (tempEdges.length > 0) {
-          edges.push(...tempEdges);
-        }
       });
-      this.$G6.Util.processParallelEdges(edges);
-      this.entityCount = nodes.length;
-      this.linkCount = edges.length;
-      this.detailCount = this.entityCount + this.linkCount;
-      return { nodes, edges };
-    },
-    makeData203() {
-      this.currentSelectedNodes = [];
-      let nodes = [];
       let edges = [];
-      this.tableData.allrows.forEach((row) => {
-        let jymc = row["jymc"];
-
-        let jydfmc = row["jydfmc"];
-
-        let czje = parseFloat(row["czje"]);
-        let czbs = parseInt(row["czbs"]);
-        let jzje = parseFloat(row["jzje"]);
-        let jzbs = parseInt(row["jzbs"]);
-        let jyzje = parseInt(row["jyzje"]);
-        let jyzbs = parseInt(row["jyzbs"]);
-        let data1 = {
-          id: jymc,
-          kh: jymc,
-          name: jymc,
-          label: jymc,
-          tid: this.tableData.tid, //tableid
-        };
-        let data2 = {
-          id: jydfmc,
-          kh: jydfmc,
-          name: jydfmc,
-          label: jydfmc,
-          tid: this.tableData.tid,
-        };
-        let bFindData1 = false;
-        let bFindData2 = false;
-        for (let item of nodes) {
-          if (item.id === data1.id) {
-            bFindData1 = true;
-            break;
-          }
-        }
-        if (!bFindData1) nodes.push(data1);
-        for (let item of nodes) {
-          if (item.id === data2.id) {
-            bFindData2 = true;
-            break;
-          }
-        }
-        if (!bFindData2) nodes.push(data2);
-
-        // 画线
-        let tempEdges = [];
-        if (czje > 0) {
-          let lineColor = this.calculateLineColorByJinE(czje);
-          let link1 = {
-            tid: this.tableData.tid,
-            source: jymc,
-            target: jydfmc,
-            je: czje,
-            bs: czbs,
-            label: `${czje}元（${czbs}笔）`,
+      this.tableData.originGraphData.links.forEach((link) => {
+        let { source, target, tradeMoney, tradeTime, tradeCount } = link;
+        let lineColor = this.calculateLineColorByJinE(tradeMoney);
+        if (lineColor !== "") {
+          edges.push({
+            source: source,
+            target: target,
+            je: tradeMoney,
+            bs: tradeCount,
+            label: `${tradeMoney}元（${tradeCount}笔）`,
             style: {
               endArrow: {
                 path: "M 0,0 L 8,4 L 8,-4 Z",
@@ -1381,132 +999,8 @@ export default {
               },
               stroke: lineColor,
             },
-          };
-          if (lineColor !== "") tempEdges.push(link1);
+          });
         }
-        if (jzje > 0) {
-          let lineColor = this.calculateLineColorByJinE(jzje);
-          let link2 = {
-            tid: this.tableData.tid,
-            source: jydfmc,
-            target: jymc,
-            je: jzje,
-            bs: jzbs,
-            label: `${jzje}元（${jzbs}笔）`,
-            style: {
-              endArrow: {
-                path: "M 0,0 L 8,4 L 8,-4 Z",
-                fill: lineColor,
-              },
-              stroke: lineColor,
-            },
-          };
-          if (lineColor !== "") tempEdges.push(link2);
-        }
-        if (tempEdges.length > 0) {
-          edges.push(...tempEdges);
-        }
-      });
-      this.$G6.Util.processParallelEdges(edges);
-      this.entityCount = nodes.length;
-      this.linkCount = edges.length;
-      this.detailCount = this.entityCount + this.linkCount;
-      return { nodes, edges };
-    },
-    makeData202() {
-      this.currentSelectedNodes = [];
-      let nodes = [];
-      let edges = [];
-      this.tableData.allrows.forEach((row) => {
-        let cxkh = row["cxkh"];
-        let jymc = row["jymc"];
-        let jydfzkh = row["jydfzkh"];
-        let jydfmc = row["jydfmc"];
-        let czje = parseFloat(row["czje"]);
-        let czbs = parseInt(row["czbs"]);
-        let jzje = parseFloat(row["jzje"]);
-        let jzbs = parseInt(row["jzbs"]);
-        let jyzje = parseInt(row["jyzje"]);
-        let jyzbs = parseInt(row["jyzbs"]);
-        let data1 = {
-          tid: this.tableData.tid,
-          id: cxkh + "\n" + jymc,
-          kh: cxkh,
-          name: jymc,
-          label: cxkh + "\n" + jymc,
-        };
-        let data2 = {
-          tid: this.tableData.tid,
-          id: jydfzkh + "\n" + jydfmc,
-          kh: jydfzkh,
-          name: jydfmc,
-          label: jydfzkh + "\n" + jydfmc,
-        };
-        let bFindData1 = false;
-        let bFindData2 = false;
-        for (let item of nodes) {
-          if (item.id === data1.id) {
-            bFindData1 = true;
-            break;
-          }
-        }
-        if (!bFindData1) nodes.push(data1);
-
-        for (let item of nodes) {
-          if (item.id === data2.id) {
-            bFindData2 = true;
-            break;
-          }
-        }
-        if (!bFindData2) nodes.push(data2);
-
-        // 画线
-        let tempEdges = [];
-        if (czje > 0) {
-          let lineColor = this.calculateLineColorByJinE(czje);
-          let link1 = {
-            tid: this.tableData.tid,
-            source: cxkh + "\n" + jymc,
-            target: jydfzkh + "\n" + jydfmc,
-            je: czje,
-            bs: czbs,
-            label: `${czje}元（${czbs}笔）`,
-            style: {
-              endArrow: {
-                path: "M 0,0 L 8,4 L 8,-4 Z",
-                fill: lineColor,
-              },
-              stroke: lineColor,
-            },
-          };
-          if (lineColor !== "") tempEdges.push(link1);
-        }
-        if (jzje > 0) {
-          let lineColor = this.calculateLineColorByJinE(jzje);
-          let link2 = {
-            tid: this.tableData.tid,
-            source: jydfzkh + "\n" + jydfmc,
-            target: cxkh + "\n" + jymc,
-            je: jzje,
-            bs: jzbs,
-            label: `${jzje}元（${jzbs}笔）`,
-            style: {
-              endArrow: {
-                path: "M 0,0 L 8,4 L 8,-4 Z",
-                fill: lineColor,
-              },
-              stroke: lineColor,
-            },
-          };
-          if (lineColor !== "") tempEdges.push(link2);
-        }
-        // if (tempEdges.length > 0) {
-        //   if (!bFindData1) nodes.push(data1);
-        //   if (!bFindData2) nodes.push(data2);
-        //   edges.push(...tempEdges);
-        // }
-
-        edges.push(...tempEdges);
       });
       this.$G6.Util.processParallelEdges(edges);
       this.entityCount = nodes.length;
@@ -2172,6 +1666,13 @@ export default {
           ],
         },
       };
+      // 链路的时候使用分层布局
+      if (this.tableData.modelGraphType === "link") {
+        option.layout = {
+          type: "dagre",
+          preventOverlap: true,
+        };
+      }
       this.graph = new this.$G6.Graph(option);
       this.initPlugins();
       if (this.tableData.hasOwnProperty("relationGraphData")) {
@@ -2632,6 +2133,9 @@ export default {
 
   mounted() {
     this.loadGraphDefault();
+    setTimeout(() => {
+      this.graph.fitView(20);
+    }, 1000);
     // 监听页面元素的大小变化
     const erd = elementResizeDetectorMaker();
     erd.listenTo(document.getElementById(this.graphid), (element) => {

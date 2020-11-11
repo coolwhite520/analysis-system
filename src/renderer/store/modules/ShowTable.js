@@ -80,11 +80,23 @@ const mutations = {
     // 分配页面索引
     Vue.set(tableData, "pageIndex", String(newId));
     Vue.set(tableData, "uuid", uuid.v1());
-    if (
-      ["101", "102", "103", "202", "203", "213", "502", "802"].includes(
-        tableData.tid
-      )
-    ) {
+    if (tableData.showType === 3) {
+      Vue.set(
+        tableData,
+        "graphicMoneySectionList",
+        JSON.parse(JSON.stringify(Default.graphicMoneySectionList))
+      );
+      Vue.set(
+        tableData,
+        "xianKuanSetting",
+        JSON.parse(JSON.stringify(Default.xianKuanSetting))
+      );
+      tableData.SpreadNodeSwitch = false;
+
+      Vue.set(tableData, "graphid", uuid.v1());
+      Vue.set(tableData, "graphType", "");
+      Vue.set(tableData, "fullScrrenFlag", false);
+    } else if (tableData.showType === 2) {
       Vue.set(
         tableData,
         "graphicMoneySectionList",

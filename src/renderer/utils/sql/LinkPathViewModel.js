@@ -21,36 +21,36 @@ const SearchType = {
   zjhm: 1,
   mc: 2,
 };
-(async () => {
-  let linkParameters = new LinkParameters(
-    LinkPathType.link, //连接类型
-    SearchType.kh, //查询类型0卡号，1证件号，2名称
-    DataItemType.Detail, //维度
-    false, //是否为组
-    "xy", //方向
-    8, //查询最大层数
-    2, //查询最小层数
-    "6228480445779753174", //起点
-    "", //终点
-    "", //起始时间0001-01-01 00:00:00
-    "", //终止时间Default.getNowFormatDate(1)
-    2000, //最小交易金额
-    0, //最小笔数
-    48, //间隔时间
-    0.9, //最小进出比
-    1.1, //最大进出比
-    "" //condition
-    //ajid
-  );
-  const res = await GetVisualModelData(linkParameters, 100);
-  let retdata = StartComputeInternal(
-    res.rows,
-    new BaseDataProvider(linkParameters),
-    linkParameters.DataItemType
-  );
-  console.log(retdata);
-  return retdata;
-})();
+// (async () => {
+//   let linkParameters = new LinkParameters(
+//     LinkPathType.link, //连接类型
+//     SearchType.kh, //查询类型0卡号，1证件号，2名称
+//     DataItemType.Detail, //维度
+//     false, //是否为组
+//     "xy", //方向
+//     8, //查询最大层数
+//     2, //查询最小层数
+//     "6228480445779753174", //起点
+//     "", //终点
+//     "", //起始时间0001-01-01 00:00:00
+//     "", //终止时间Default.getNowFormatDate(1)
+//     2000, //最小交易金额
+//     0, //最小笔数
+//     48, //间隔时间
+//     0.9, //最小进出比
+//     1.1, //最大进出比
+//     "" //condition
+//     //ajid
+//   );
+//   const res = await GetVisualModelData(linkParameters, 100);
+//   let retdata = StartComputeInternal(
+//     res.rows,
+//     new BaseDataProvider(linkParameters),
+//     linkParameters.DataItemType
+//   );
+//   console.log(retdata);
+//   return retdata;
+// })();
 //string转时间
 function stringToTime(string) {
   var f = string.split(" ", 2);
