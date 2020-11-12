@@ -1,4 +1,12 @@
-import { app, protocol, BrowserWindow, screen, Menu, MenuItem } from "electron";
+import {
+  app,
+  protocol,
+  BrowserWindow,
+  screen,
+  Menu,
+  MenuItem,
+  globalShortcut,
+} from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
 import createExportWindow from "./modules/window/exportWindow";
@@ -108,7 +116,15 @@ function createWindow() {
   ];
   var m = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(m);
-
+  // if (process.platform === "darwin") {
+  //   let contents = mainWindow.webContents;
+  //   globalShortcut.register("CommandOrControl+C", () => {
+  //     contents.copy();
+  //   });
+  //   globalShortcut.register("CommandOrControl+V", () => {
+  //     contents.paste();
+  //   });
+  // }
   global.windowSize = screen.getPrimaryDisplay().workAreaSize;
   global.widthDivHeight = global.windowSize.width / global.windowSize.height;
   mainWindow.on("closed", () => {

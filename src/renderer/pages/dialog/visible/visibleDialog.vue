@@ -3,8 +3,9 @@
     v-dialogDrag
     :close-on-click-modal="false"
     class="standard-data-dialog"
+    :append-to-body="true"
     :visible="showDataVisibilityDialogVisible"
-    width="30%"
+    width="35%"
     @close="handleClose"
     :modal="true"
   >
@@ -17,20 +18,91 @@
     </div>
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="推荐" name="first" style="text-align: center">
+        <el-row>
+          <el-col :span="8">
+            <div
+              class="myRadioDataType"
+              @click="
+                handleClickDataType('1', '/static/images/icons/银行卡.png')
+              "
+              :style="{
+                backgroundColor:
+                  selectDataTypeValue === '1' ? '#f0fefe' : 'white',
+              }"
+            >
+              <img
+                src="/static/images/icons/银行卡.png"
+                width="40"
+                height="40"
+                style="vertical-align: middle"
+              />
+              <div>账户</div>
+              <div class="iconfont">
+                {{ selectDataTypeValue === "1" ? "&#xe627;" : "&#xe611;" }}
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div
+              class="myRadioDataType"
+              @click="handleClickDataType('2', '/static/images/icons/证件.png')"
+              :style="{
+                backgroundColor:
+                  selectDataTypeValue === '2' ? '#f0fefe' : 'white',
+              }"
+            >
+              <img
+                src="/static/images/icons/证件.png"
+                width="40"
+                height="40"
+                style="vertical-align: middle"
+              />
+              <div>证件号码</div>
+              <div class="iconfont">
+                {{ selectDataTypeValue === "2" ? "&#xe627;" : "&#xe611;" }}
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div
+              class="myRadioDataType"
+              @click="handleClickDataType('3', '/static/images/icons/主体.png')"
+              :style="{
+                backgroundColor:
+                  selectDataTypeValue === '3' ? '#f0fefe' : 'white',
+              }"
+            >
+              <img
+                src="/static/images/icons/主体.png"
+                width="40"
+                height="40"
+                style="vertical-align: middle"
+              />
+              <div>主体名称</div>
+              <div class="iconfont">
+                {{ selectDataTypeValue === "3" ? "&#xe627;" : "&#xe611;" }}
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+
         <div
           class="myRadio"
           @click="handleClickSelect('1')"
           type="text"
-          :style="{ color: selected === '1' ? '#1e1e1e' : 'gray' }"
+          :style="{
+            color: selectShowTypeValue === '1' ? '#1e1e1e' : 'gray',
+            backgroundColor: selectShowTypeValue === '1' ? '#f0fefe' : 'white',
+          }"
         >
           <span class="iconfont">
-            {{ selected === "1" ? "&#xe627;" : "&#xe611;" }}
+            {{ selectShowTypeValue === "1" ? "&#xe627;" : "&#xe611;" }}
           </span>
           <span>&nbsp;&nbsp;汇总&nbsp;&nbsp;</span>
           <img
-            src="/static/images/icons/银行卡.png"
-            width="50"
-            height="50"
+            :src="imgSrc"
+            width="40"
+            height="40"
             style="vertical-align: middle"
           />
           <img
@@ -40,9 +112,9 @@
             style="vertical-align: middle"
           />
           <img
-            src="/static/images/icons/银行卡.png"
-            width="50"
-            height="50"
+            :src="imgSrc"
+            width="40"
+            height="40"
             style="vertical-align: middle"
           />
         </div>
@@ -50,16 +122,19 @@
           class="myRadio"
           @click="handleClickSelect('2')"
           type="text"
-          :style="{ color: selected === '2' ? '#1e1e1e' : 'gray' }"
+          :style="{
+            color: selectShowTypeValue === '2' ? '#1e1e1e' : 'gray',
+            backgroundColor: selectShowTypeValue === '2' ? '#f0fefe' : 'white',
+          }"
         >
           <span class="iconfont">
-            {{ selected === "2" ? "&#xe627;" : "&#xe611;" }}
+            {{ selectShowTypeValue === "2" ? "&#xe627;" : "&#xe611;" }}
           </span>
           <span>&nbsp;&nbsp;差额&nbsp;&nbsp;</span>
           <img
-            src="/static/images/icons/银行卡.png"
-            width="50"
-            height="50"
+            :src="imgSrc"
+            width="40"
+            height="40"
             style="vertical-align: middle"
           />
           <img
@@ -69,39 +144,45 @@
             style="vertical-align: middle"
           />
           <img
-            src="/static/images/icons/银行卡.png"
-            width="50"
-            height="50"
+            :src="imgSrc"
+            width="40"
+            height="40"
             style="vertical-align: middle"
           />
         </div>
 
         <el-row style="margin-top: 20px">
           <el-col :span="6">最小交易次数:</el-col>
-          <el-col :span="14">
-            <el-input size="mini" v-model="minJybs"></el-input
+          <el-col :span="16">
+            <el-input size="small" v-model="minJybs"></el-input
           ></el-col>
-          <el-col :span="4">&nbsp;</el-col>
+          <el-col :span="2">&nbsp;</el-col>
         </el-row>
-        <el-row style="margin-top: 10px">
+        <el-row style="margin-top: 10px; text-align: center">
           <el-col :span="6">最小交易金额:</el-col>
-          <el-col :span="14">
-            <el-input size="mini" v-model="minJyje"></el-input
+          <el-col :span="16">
+            <el-input size="small" v-model="minJyje"></el-input
           ></el-col>
-          <el-col :span="4">&nbsp;</el-col>
+          <el-col :span="2">&nbsp;</el-col>
         </el-row>
         <el-row style="margin-top: 30px">
-          <el-button size="small" type="primary" style="width: 50%"
+          <el-button
+            type="primary"
+            style="width: 50%"
+            @click="handleClickSubmit"
             >确定</el-button
           >
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="自定义" name="second">自定义</el-tab-pane>
+      <!-- <el-tab-pane label="自定义" name="second">自定义</el-tab-pane> -->
     </el-tabs>
   </el-dialog>
 </template>
 <script>
+import { log } from "electron-log";
 import { mapState } from "vuex";
+import convertSql from "@/utils/sql/DataFiltrator.js";
+
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showDataVisibilityDialogVisible"]),
@@ -110,20 +191,24 @@ export default {
       return `数据可视化-${this.currentTableData.title}`;
     },
   },
-  mounted() {
-    // var canvas = document.getElementById("canvas1");
-  },
+  mounted() {},
   data() {
     return {
+      selectDataTypeValue: "1",
+      selectShowTypeValue: "1",
       activeName: "first",
-      selected: "1",
-      minJybs: 1,
-      minJyje: 10000,
+      minJybs: 100,
+      minJyje: 100000,
+      imgSrc: "/static/images/icons/银行卡.png",
     };
   },
   methods: {
+    handleClickDataType(value, imageSrc) {
+      this.selectDataTypeValue = value;
+      this.imgSrc = imageSrc;
+    },
     handleClickSelect(value) {
-      if (this.selected !== value) this.selected = value;
+      this.selectShowTypeValue = value;
     },
     handleClose() {
       this.$store.commit(
@@ -131,16 +216,87 @@ export default {
         false
       );
     },
+    async handleClickSubmit() {
+      console.log(this.selectDataTypeValue, this.selectShowTypeValue);
+      console.log(this.currentTableData.selectCondition);
+      let tid, title;
+      switch (this.selectDataTypeValue) {
+        case "1":
+          {
+            tid = "202";
+            title =
+              "资金交易-账户-" +
+              (this.selectShowTypeValue === "1" ? "汇总可视化" : "差额可视化");
+          }
+          break;
+        case "2":
+          {
+            tid = "204";
+            title =
+              "资金交易-证件号码-" +
+              (this.selectShowTypeValue === "1" ? "汇总可视化" : "差额可视化");
+          }
+          break;
+        case "3":
+          {
+            tid = "203";
+            title =
+              "资金交易-主体名称-" +
+              (this.selectShowTypeValue === "1" ? "汇总可视化" : "差额可视化");
+          }
+          break;
+      }
+      await this.getVisibleInfoByTid(tid, title);
+    },
+    async getVisibleInfoByTid(tid, title) {
+      let {
+        count,
+        offset,
+        selectCondition,
+        modelFilterStr,
+        modelFilterChildList,
+      } = this.currentTableData;
+      selectCondition.JYZEValue = this.minJyje; // 交易总额
+      selectCondition.JYCSValue = this.minJybs; // 交易笔数
+
+      let filterChildStr = convertSql.convertDataFilterToSqlStr(
+        parseInt(tid),
+        this.currentTableData.modelFilterChildList
+      );
+      await this.$store.dispatch("ShowTable/showDataVisibleTable", {
+        title,
+        tid,
+        count,
+        offset,
+        selectCondition,
+        modelFilterStr: filterChildStr,
+        modelFilterChildList: [],
+        offset: 0,
+        count: 30,
+      });
+    },
   },
 };
 </script>
 <style scoped>
 .myRadio {
+  border: 1px solid #dddfe5;
+  border-radius: 5px;
+  padding: 10px;
   margin: 20px;
 }
 .myRadio:hover {
+  border-color: #273144;
+  cursor: pointer;
+}
+.myRadioDataType {
   border: 1px solid #dddfe5;
   border-radius: 5px;
-  box-shadow: 1px 1px 10px 5px #ccdaee;
+  padding: 10px;
+  margin: 20px;
+}
+.myRadioDataType:hover {
+  border-color: #273144;
+  cursor: pointer;
 }
 </style>

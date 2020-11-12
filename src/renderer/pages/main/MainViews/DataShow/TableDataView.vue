@@ -9,10 +9,18 @@
       ></table-chart>
     </div>
     <div v-else-if="tableData.showType === 2">
-      <link-relation-chart
-        :tableData="tableData"
-        :limitHeight="contentViewHeight - 87"
-      ></link-relation-chart>
+      <template v-if="tableData.tableType === 'model'">
+        <link-relation-chart
+          :tableData="tableData"
+          :limitHeight="contentViewHeight - 87"
+        ></link-relation-chart>
+      </template>
+      <template v-else>
+        <relation-chart
+          :tableData="tableData"
+          :limitHeight="contentViewHeight - 87"
+        ></relation-chart>
+      </template>
     </div>
     <div v-else-if="tableData.showType === 3">
       <table-chart

@@ -725,6 +725,101 @@ const actions = {
 
     commit("SET_LOADINGSHOWDATA_STATE", false);
   },
+  // 执行数据可视化
+  async showDataVisibleTable(
+    { commit, state, rootState },
+    {
+      pageIndex,
+      tid,
+      pgsqlTemplateDecode,
+      count,
+      offset,
+      selectCondition,
+      modelFilterStr,
+      modelFilterChildList,
+      title,
+    }
+  ) {
+    commit("SET_LOADINGSHOWDATA_STATE", true);
+    let ajid = rootState.CaseDetail.caseBase.ajid;
+
+    if (typeof selectCondition === "undefined") {
+      // 添加新表
+      selectCondition = JSON.parse(JSON.stringify(Default.defaultSelection));
+    }
+    if (typeof modelFilterStr === "undefined") {
+      modelFilterStr = "";
+    }
+    if (typeof modelFilterChildList === "undefined") {
+      modelFilterChildList = [];
+    }
+
+    let {
+      pgsqltemplate,
+      orderby,
+      showType,
+      describe,
+    } = await models.QueryModelSqlTemplateByMid(tid);
+
+    if (typeof pgsqlTemplateDecode === "undefined") {
+      pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+      // 过滤结构体转sql字符串
+    }
+    let filterChildStr = convertSql.convertDataFilterToSqlStr(
+      parseInt(tid),
+      modelFilterChildList
+    );
+    let sql = modelSqlFormat.format(
+      pgsqlTemplateDecode,
+      orderby,
+      selectCondition,
+      ajid,
+      modelFilterStr,
+      filterChildStr
+    );
+    let data = await showTable.QueryModelDataTableBySql(
+      ajid,
+      tid,
+      sql,
+      offset,
+      count
+    );
+    if (data.success) {
+      let { headers, rows, sum, exportSql, allrows } = data;
+      // 判断是否add，还是update
+      if (pageIndex) {
+        // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
+        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows, sum, allrows });
+      } else {
+        let obj = {
+          tid,
+          title,
+          headers,
+          showHeaders: headers,
+          hideEmptyField: false,
+          sum,
+          rows,
+          componentName: "table-data-view",
+          dispatchName: "ShowTable/showDataVisibleTable",
+          tableType: "dataVisible",
+          describe,
+          pgsqlTemplateDecode,
+          selectCondition,
+          modelFilterStr,
+          modelFilterChildList,
+          showType: 2, // 数据可视化不显示table数据
+          rightTabs: [],
+          orderby,
+          exportSql,
+          allrows,
+        };
+        commit("ADD_TABLE_DATA_TO_LIST", obj);
+      }
+      commit("SET_LOADINGSHOWDATA_STATE", false);
+    } else {
+      log.info("errr...........");
+    }
+  },
 };
 export default {
   state,

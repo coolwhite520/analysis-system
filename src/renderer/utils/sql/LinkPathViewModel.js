@@ -605,6 +605,7 @@ function LinkModel(para) {
   };
   this.RET = function() {
     return {
+      dataType: this.linkParameters_0.DataItemType, // 单笔，汇总，差额
       source: this.From.ToString(),
       target: this.To.ToString(),
       tradeMoney: this.TradeMoney,
@@ -713,14 +714,6 @@ function BasePathFinder() {
       // console.log(this.resultNodes)
       let links = [];
       let nodes = [];
-      function exist(name) {
-        for (let node of nodes) {
-          if (node.name == name) {
-            return true;
-          }
-        }
-        return false;
-      }
       for (let i = 0; i < this.resultNodes.length; i++) {
         for (let j = 0; j < this.resultNodes[i].InLinks.length; j++) {
           let item = this.resultNodes[i].InLinks[j].RET();

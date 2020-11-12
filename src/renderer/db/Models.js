@@ -7,7 +7,7 @@ export default {
   QueryModelmidsByTid: async function(tid) {
     const client = await global.pool.connect();
     try {
-      let sql = ` SELECT model_mids,product_code FROM icap_base.layout_menu_model where length(model_mids)>0 and menu_tid='${tid}'`;
+      let sql = ` SELECT model_mids,product_code FROM icap_base.layout_menu_model where length(model_mids)>0 and menu_tid='${tid}' and product_code='200'`;
       const res = await client.query(sql);
       return res.rows.length > 0 ? res.rows[0].model_mids : "";
     } finally {

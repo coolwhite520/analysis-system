@@ -4,6 +4,7 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
+      :append-to-body="true"
       :visible="standardDataVisible"
       :width="
         standardViewSwitch === 'process-import' ||

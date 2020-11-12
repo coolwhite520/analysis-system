@@ -3,6 +3,7 @@
     v-dialogDrag
     :close-on-click-modal="false"
     class="standard-data-dialog"
+    :append-to-body="true"
     :visible="showLinkModelDialogVisible"
     width="35%"
     @close="handleClose"
@@ -67,13 +68,21 @@
         ></el-input-number>
       </el-form-item>
       <el-form-item label="层数(2-20)：">
-        <el-col :span="11">
-          <el-input size="mini" v-model.number="form.cengShuBegin"></el-input>
-        </el-col>
-        <el-col class="line" :span="2" style="text-align: center">-</el-col>
-        <el-col :span="11">
-          <el-input size="mini" v-model.number="form.cengShuEnd"></el-input>
-        </el-col>
+        <el-input-number
+          size="mini"
+          v-model="form.cengShuBegin"
+          :min="2"
+          :max="form.cengShuEnd - 1"
+        ></el-input-number>
+
+        <span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+
+        <el-input-number
+          size="mini"
+          v-model="form.cengShuEnd"
+          :min="form.cengShuBegin + 1"
+          :max="20"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="最小交易金额：">
         <!-- <el-input size="mini" v-model.number="form.minJe"></el-input> -->
@@ -190,7 +199,7 @@ export default {
         endPoint: "",
         dateBegin: "", //new Date().Format("yyyy-MM-dd"),
         dateEnd: "", //new Date().Format("yyyy-MM-dd"),
-        timeSpan: 2,
+        timeSpan: 48,
         cengShuBegin: 2,
         cengShuEnd: 8,
         minJe: 10000,
@@ -278,7 +287,7 @@ export default {
           if (data && data.nodes && data.nodes.length > 2) {
             let pageObj = {
               tid: 401,
-              title: "资金链路查找结果",
+              title: this.title,
               componentName: "table-data-view",
               dispatchName: "ShowTable/showModelTable",
               tableType: "graph",

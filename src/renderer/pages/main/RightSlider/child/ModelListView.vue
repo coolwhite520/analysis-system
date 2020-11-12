@@ -100,7 +100,7 @@ export default {
   methods: {
     async handleSelect(key, keyPath) {
       let tid = keyPath[1];
-      console.log(tid);
+      console.log({ tid });
       if (tid === "401") {
         this.$store.commit("DialogPopWnd/SET_SHOWLINKMODELDIALOGVISIBLE", true);
       } else if (tid == "402") {
@@ -110,6 +110,8 @@ export default {
         );
       } else if (tid == "403") {
         this.$store.commit("DialogPopWnd/SET_SHOWTWOENDSDIALOGVISIBLE", true);
+      } else if (tid == "901") {
+        // 资金用途模型
       } else {
         let pgsqlTemplate = "";
         let model = {};

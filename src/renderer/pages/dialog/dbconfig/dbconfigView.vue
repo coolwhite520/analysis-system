@@ -3,6 +3,7 @@
     v-dialogDrag
     :close-on-click-modal="false"
     class="standard-data-dialog"
+    :append-to-body="true"
     :visible="dbConfigVisible"
     width="40%"
     @close="handleClose"

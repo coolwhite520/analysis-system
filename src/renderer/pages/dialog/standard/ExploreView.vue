@@ -122,10 +122,10 @@
         :title="innerDlgTitle"
         :close-on-click-modal="false"
         class="standard-data-dialog"
+        :append-to-body="true"
         :visible.sync="innerVisible"
         v-dialogDrag
         top="30vh"
-        append-to-body
         :modal="true"
       >
         <el-row

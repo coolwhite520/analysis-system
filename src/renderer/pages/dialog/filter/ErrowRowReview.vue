@@ -3,6 +3,7 @@
     v-dialogDrag
     :close-on-click-modal="false"
     class="standard-data-dialog"
+    :append-to-body="true"
     :title="currentTableData.renderErrorData.title"
     :visible="showErrorRowRecordVisible"
     width="40%"

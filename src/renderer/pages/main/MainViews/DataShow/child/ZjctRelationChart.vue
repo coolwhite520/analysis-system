@@ -696,8 +696,10 @@ export default {
             let jzbsTotal = 0;
             let jcchae = 0; //进出帐差额
             let jczongbs = 0;
+            let dataType = 0;
             for (let edge of edges) {
               let edgeModel = edge.getModel();
+              dataType = edgeModel.dataType;
               if (edgeModel.isComboEdge) {
                 // 连接到combo的边存在问题
                 continue;
@@ -720,10 +722,23 @@ export default {
 
             const outDiv = document.createElement("div");
             outDiv.style.width = "180px";
-            outDiv.innerHTML = `
+            if (dataType === 0) {
+              // 单笔
+              outDiv.innerHTML = `
       <h4>${nodeModel.name || nodeModel.id}${
-              e.item.hasLocked() ? "(已锁定)" : ""
-            }</h4>
+                e.item.hasLocked() ? "(已锁定)" : ""
+              }</h4>
+      <ul>
+        <li class="tip-li">交易关联数：${jyEdgeCount}&nbsp;&nbsp;</li>
+        <li class="tip-li">出账总金额：${czjeTotal}&nbsp;&nbsp;元</li>
+        <li class="tip-li">进账总金额：${jzjeTotal}&nbsp;&nbsp;元</li>
+        <li class="tip-li">进出总差额：<span class="chae-style"><b>${jcchae}&nbsp;&nbsp;</b></span>元</li>
+      </ul>`;
+            } else {
+              outDiv.innerHTML = `
+      <h4>${nodeModel.name || nodeModel.id}${
+                e.item.hasLocked() ? "(已锁定)" : ""
+              }</h4>
       <ul>
         <li class="tip-li">交易关联数：${jyEdgeCount}&nbsp;&nbsp;</li>
         <li class="tip-li">出账总金额：${czjeTotal}&nbsp;&nbsp;元</li>
@@ -733,6 +748,8 @@ export default {
         <li class="tip-li">进出总差额：<span class="chae-style"><b>${jcchae}&nbsp;&nbsp;</b></span>元</li>
         <li class="tip-li">进出总笔数：<span><b>${jczongbs}&nbsp;&nbsp;</b></span></li>
       </ul>`;
+            }
+
             insertCss(`
         .tip-li{
           font-size: 10px;
@@ -756,6 +773,7 @@ export default {
             // style="color:#46962e"
           } else if (e.item.getType() === "edge") {
             let edgeModel = e.item.getModel();
+            let dataType = edgeModel.dataType;
             let zhuanChuFang = edgeModel.source; // 一定是combo
             let zhuanRuFang = edgeModel.target; // 可能是combo 也可能是普通节点
             const outDiv = document.createElement("div");
@@ -770,13 +788,23 @@ export default {
                 <li class="tip-li">展开分组后可观察资金走向</li>
               </ul>`;
             } else {
-              outDiv.innerHTML = `
+              if (dataType === 0) {
+                outDiv.innerHTML = `
+              <ul>
+                <li class="tip-li">转出方：${zhuanChuFang}</li>
+                <li class="tip-li">转入方：${zhuanRuFang}</li>
+                <li class="tip-li">转账金额：${edgeModel.je}&nbsp;&nbsp;元</li>
+                <li class="tip-li">交易日期：${edgeModel.rq}&nbsp;&nbsp;</li>
+              </ul>`;
+              } else {
+                outDiv.innerHTML = `
               <ul>
                 <li class="tip-li">转出方：${zhuanChuFang}</li>
                 <li class="tip-li">转入方：${zhuanRuFang}</li>
                 <li class="tip-li">转账金额：${edgeModel.je}&nbsp;&nbsp;元</li>
                 <li class="tip-li">转账笔数：${edgeModel.bs}&nbsp;&nbsp;</li>
               </ul>`;
+              }
             }
 
             insertCss(`
@@ -983,15 +1011,27 @@ export default {
       });
       let edges = [];
       this.tableData.originGraphData.links.forEach((link) => {
-        let { source, target, tradeMoney, tradeTime, tradeCount } = link;
+        let {
+          source,
+          target,
+          tradeMoney,
+          tradeTime,
+          tradeCount,
+          dataType,
+        } = link;
         let lineColor = this.calculateLineColorByJinE(tradeMoney);
         if (lineColor !== "") {
           edges.push({
+            dataType,
             source: source,
             target: target,
             je: tradeMoney,
-            bs: tradeCount,
-            label: `${tradeMoney}元（${tradeCount}笔）`,
+            bs: parseInt(tradeCount),
+            rq: tradeTime,
+            label:
+              dataType === 0
+                ? `${tradeMoney}元（${tradeTime}）`
+                : `${tradeMoney}元（${tradeCount}笔）`,
             style: {
               endArrow: {
                 path: "M 0,0 L 8,4 L 8,-4 Z",

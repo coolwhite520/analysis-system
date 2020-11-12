@@ -5,6 +5,7 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
+      :append-to-body="true"
       :visible="filterVisible"
       width="50%"
       @close="handleClose"

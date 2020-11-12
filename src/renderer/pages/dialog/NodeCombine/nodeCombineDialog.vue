@@ -4,6 +4,7 @@
       v-dialogDrag
       :close-on-click-modal="false"
       class="standard-data-dialog"
+      :append-to-body="true"
       :title="title"
       :visible="nodeCombineVisible"
       width="30%"

@@ -253,10 +253,17 @@ export default {
           };
           break;
       }
-      this.$bus.$emit("swichNormalLayout", {
-        graphid: this.currentTableData.graphid,
-        layout,
-      });
+      if (this.currentTableData.hasOwnProperty("graphid")) {
+        this.$bus.$emit("swichNormalLayout", {
+          graphid: this.currentTableData.graphid,
+          layout,
+        });
+      } else {
+        this.$message({
+          message: "当前视图不支持布局切换",
+        });
+      }
+
       // if (isNormalLayout) {
 
       // } else {
