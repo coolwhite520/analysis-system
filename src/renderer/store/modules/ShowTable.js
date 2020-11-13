@@ -325,7 +325,8 @@ const mutations = {
   },
   // 设置active
   SET_RIGHT_TAB_ACTIVE(state, componentName) {
-    state.currentTableData.rightActiveName = componentName;
+    // state.currentTableData.rightActiveName = componentName;
+    Vue.set(state.currentTableData, "rightActiveName", componentName);
   },
   CLEAR_ALL_RIGHT_TABS(state) {
     state.currentTableData.rightTabs = [];
@@ -336,7 +337,8 @@ const mutations = {
       for (let index = 0; index < tabs.length; index++) {
         let tab = tabs[index];
         if (componentName === tab.componentName) {
-          state.currentTableData.rightActiveName = componentName;
+          Vue.set(state.currentTableData, "rightActiveName", componentName);
+
           return;
         }
       }
@@ -396,7 +398,7 @@ const mutations = {
           });
           break;
       }
-      state.currentTableData.rightActiveName = componentName;
+      Vue.set(state.currentTableData, "rightActiveName", componentName);
       return;
     } else {
       for (let index = 0; index < tabs.length; index++) {
@@ -404,10 +406,13 @@ const mutations = {
         if (currentTab.componentName === componentName) {
           state.currentTableData.rightTabs.splice(index, 1);
           if (state.currentTableData.rightTabs.length > 0) {
-            state.currentTableData.rightActiveName =
+            Vue.set(
+              state.currentTableData,
+              "rightActiveName",
               state.currentTableData.rightTabs[
                 state.currentTableData.rightTabs.length - 1
-              ].componentName;
+              ].componentName
+            );
           }
           break;
         }

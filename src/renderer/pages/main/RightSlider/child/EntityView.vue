@@ -121,7 +121,16 @@ export default {
   },
   mounted() {
     this.iconsPath = "/static/images/icons/";
-    let iconNames = ["金融", "男", "女", "企业", "银行卡", "组织"];
+    let iconNames = [
+      "证件",
+      "主体",
+      "金融",
+      "男",
+      "女",
+      "企业",
+      "银行卡",
+      "组织",
+    ];
     this.iconList = iconNames.map((name) => {
       return {
         name,
