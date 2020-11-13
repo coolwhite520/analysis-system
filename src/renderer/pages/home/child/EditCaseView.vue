@@ -133,11 +133,11 @@
         </el-col>
       </el-form-item>
 
-      <el-form-item label="简述案情" prop="jyaq">
+      <el-form-item label="简述案情">
         <el-input type="textarea" v-model="ruleForm.jyaq"></el-input>
       </el-form-item>
 
-      <el-form-item label="综述案情" prop="zhaq">
+      <el-form-item label="综述案情">
         <el-input type="textarea" v-model="ruleForm.zhaq"></el-input>
       </el-form-item>
 

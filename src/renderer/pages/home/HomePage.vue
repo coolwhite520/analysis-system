@@ -19,8 +19,8 @@
           <div class="iconfont" style="font-size: 20px; color: white">
             &#xe60b;&nbsp;&nbsp;<b>时间轴</b>
           </div>
-          <div style="font-size: 10px; margin-top: 20px">
-            时间轴会在每次用户按下ctrl+s(保存的快捷键)时，记录下当前的操作数据以便后续进行下一步的分析。
+          <div style="font-size: 10px; margin-top: 20px; text-align: left">
+            时间轴会在每次用户按下ctrl+s(保存的快捷键)时，记录下当前的操作数据以便后续继续分析。
           </div>
           <time-line-view></time-line-view>
         </div>
@@ -42,6 +42,7 @@
                   type="primary"
                   size="mini"
                   @click="handleClickNewCase"
+                  round
                 >
                   &#xe6a3; 新增案件
                 </el-button>
@@ -57,6 +58,7 @@
                   type="danger"
                   size="mini"
                   @click="handleClickDeleteAllCase"
+                  round
                   >&#xe652; 清空所有案件</el-button
                 >
               </el-button-group>

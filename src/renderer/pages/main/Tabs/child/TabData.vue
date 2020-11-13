@@ -441,22 +441,22 @@ export default {
     },
     async handleClickWashingButton(opt) {
       console.log(opt);
-      let componentObj = {};
-      switch (opt) {
-        case "search-replace":
-          componentObj = {
-            componentName: "search-replace-view",
-            action: "add",
-          };
-          break;
-        case "special-char":
-          {
-            let { success, rows } = await DataCleanDb.queryRulesFromTable(
-              this.currentTableData.tableename,
-              "0"
-            );
-            if (success) {
-              if (rows.length > 0) {
+      try {
+        let componentObj = {};
+        switch (opt) {
+          case "search-replace":
+            componentObj = {
+              componentName: "search-replace-view",
+              action: "add",
+            };
+            break;
+          case "special-char":
+            {
+              let { success, rows } = await DataCleanDb.queryRulesFromTable(
+                this.currentTableData.tableename,
+                "0"
+              );
+              if (success && rows.length > 0) {
                 let keys = rows.map((row) => row.tid);
                 let rootNode = this.findRoot(rows);
                 let renderTree = this.makeTreeByList(rows, rootNode.tid);
@@ -464,23 +464,26 @@ export default {
                   checkedKeys: JSON.parse(JSON.stringify(keys)),
                   renderTree,
                 });
+              } else {
+                this.$message({
+                  message: "没有匹配的数据项",
+                });
+                return;
               }
+              componentObj = {
+                componentName: "special-char-view",
+                action: "add",
+              };
             }
-            componentObj = {
-              componentName: "special-char-view",
-              action: "add",
-            };
-          }
 
-          break;
-        case "ineffect-data":
-          {
-            let { success, rows } = await DataCleanDb.queryRulesFromTable(
-              this.currentTableData.tableename,
-              "1"
-            );
-            if (success) {
-              if (rows.length > 0) {
+            break;
+          case "ineffect-data":
+            {
+              let { success, rows } = await DataCleanDb.queryRulesFromTable(
+                this.currentTableData.tableename,
+                "1"
+              );
+              if (success && rows.length > 0) {
                 let keys = rows.map((row) => row.tid);
                 let rootNode = this.findRoot(rows);
                 let renderTree = this.makeTreeByList(rows, rootNode.tid);
@@ -488,24 +491,27 @@ export default {
                   checkedKeys: JSON.parse(JSON.stringify(keys)),
                   renderTree,
                 });
+              } else {
+                this.$message({
+                  message: "没有匹配的数据项",
+                });
+                return;
               }
+              componentObj = {
+                componentName: "ineffect-data-view",
+                action: "add",
+              };
             }
-            componentObj = {
-              componentName: "ineffect-data-view",
-              action: "add",
-            };
-          }
 
-          break;
-        case "data-diff":
-          {
-            let { success, rows } = await DataCleanDb.queryRulesFromTable(
-              this.currentTableData.tableename,
-              "2"
-            );
-            console.log(rows);
-            if (success) {
-              if (rows.length > 0) {
+            break;
+          case "data-diff":
+            {
+              let { success, rows } = await DataCleanDb.queryRulesFromTable(
+                this.currentTableData.tableename,
+                "2"
+              );
+              console.log(rows);
+              if (success && rows.length > 0) {
                 let { gpsqltemplate_select, gpsqltemplate_update } = rows[0];
                 let { keys, tree } = this.makeTreeByTableHeaders(
                   gpsqltemplate_select,
@@ -515,17 +521,27 @@ export default {
                   checkedKeys: keys,
                   renderTree: tree,
                 });
+              } else {
+                this.$message({
+                  message: "没有匹配的数据项",
+                });
+                return;
               }
+              componentObj = {
+                componentName: "data-diff-view",
+                action: "add",
+              };
             }
-            componentObj = {
-              componentName: "data-diff-view",
-              action: "add",
-            };
-          }
 
-          break;
+            break;
+        }
+        this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", componentObj);
+      } catch (e) {
+        this.$message.error({
+          message: e.message,
+        });
+        return;
       }
-      this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", componentObj);
     },
   },
 };

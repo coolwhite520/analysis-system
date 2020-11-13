@@ -190,7 +190,9 @@
           </div>
         </el-col>
         <el-col :span="8" style="text-align: right">
-          <el-button type="text" @click="handleClickGoHome">返回首页</el-button>
+          <el-button type="text" @click="handleClickGoHome"
+            >返回案件列表</el-button
+          >
         </el-col>
       </el-row>
     </div>

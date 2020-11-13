@@ -20,12 +20,17 @@
       <el-col class="colum" :span="4">
         <div>
           <span class="opterationBtn iconfont">
+            <el-tooltip content="待调单任务" placement="bottom">
+              <span @click="handleClickDbConfig" class="dbconfig"
+                >&#xe748;</span
+              >
+            </el-tooltip>
             <el-tooltip content="数据库设置" placement="bottom">
               <span @click="handleClickDbConfig" class="dbconfig"
                 >&#xe64f;</span
               >
             </el-tooltip>
-            <el-tooltip content="返回首页" placement="bottom">
+            <el-tooltip content="返回案件列表" placement="bottom">
               <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
             </el-tooltip>
             <span @click="handleClickMin" class="min">&#xe60c;</span>
@@ -250,7 +255,7 @@ export default {
   -webkit-app-region: no-drag;
 }
 .dbconfig {
-  font-size: 28px;
+  font-size: 20px;
   margin-right: 10px;
   border-right: 1px solid gray;
   padding-right: 10px;
@@ -259,7 +264,7 @@ export default {
   color: gray;
 }
 .gohome {
-  font-size: 25px;
+  font-size: 20px;
   margin-right: 10px;
   border-right: 1px solid gray;
   padding-right: 10px;

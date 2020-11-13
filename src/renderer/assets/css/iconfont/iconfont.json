@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6773118",
+      "name": "文件-调动申请",
+      "font_class": "wj-ddsq",
+      "unicode": "e748",
+      "unicode_decimal": 59208
+    },
+    {
       "icon_id": "4954907",
       "name": "开心",
       "font_class": "kaixin",

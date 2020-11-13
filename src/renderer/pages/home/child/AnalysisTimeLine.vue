@@ -10,6 +10,7 @@
         type="danger"
         size="mini"
         @click="handleClickDeleteAllTimeLineData"
+        round
         >&#xe652; 清空所有时间轴数据</el-button
       >
     </div>
@@ -50,7 +51,7 @@
             </div>
           </el-tooltip>
         </template>
-        <div>
+        <div style="margin-top: 10px">
           <el-popover trigger="click" placement="right">
             <img
               :height="popOverPicHeigth"
@@ -261,15 +262,7 @@ export default {
   },
 };
 </script>
-<style >
-.el-popover {
-  box-shadow: #384e6e 10px 10px 20px 5px;
-}
-.myCollapse .el-collapse-item__header {
-  background-color: #1e2534;
-  color: white;
-}
-</style>
+
 <style scoped>
 .timeLine {
 }
@@ -279,5 +272,23 @@ export default {
 }
 .screenShotImage:hover {
   cursor: pointer;
+}
+/deep/.el-popover {
+  box-shadow: #384e6e 10px 10px 20px 5px;
+}
+/deep/.el-collapse {
+  border-radius: 5px;
+  border: 0px;
+}
+/deep/.el-collapse-item__header {
+  /* background-color: #1e2534; */
+  /* background-color: #3c4e6b; */
+  background-color: rgba(0, 0, 0, 0);
+  /* opacity: 0.1; */
+  color: white;
+  border-bottom: 0px;
+}
+/deep/.el-collapse-item__wrap {
+  border-radius: 5px;
 }
 </style>
