@@ -27,6 +27,9 @@ if (process.env.NODE_ENV !== "development") {
 }
 
 global.softVersion = require("../../package.json").version;
+global.levelPrefix = "RestoreDataCollection.";
+global.title = require("../../package.json").description;
+let appName = require("../../package.json").name;
 
 let mainWindow;
 
@@ -43,27 +46,25 @@ function createWindow() {
   /**
    * Initial window options
    */
-  global.levelPrefix = "RestoreDataCollection.";
-  global.title = require("../../package.json").description;
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
-  let appName = require("../../package.json").name;
+
   app.setName(appName);
   app.setPath(
     "userData",
     app.getPath("userData").replace(/Electron/i, appName)
   );
-  let appPath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
-  global.appPath = appPath;
+  let userDataPath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
+  global.userDataPath = userDataPath;
 
   // 初始化config路径
-  let configPath = require("path").join(appPath, "config");
+  let configPath = require("path").join(userDataPath, "config");
   log.info(configPath);
   if (!fs.existsSync(configPath)) {
     fs.mkdirSync(configPath, { recursive: true });
   }
   global.configPath = configPath;
   // 初始化db路径
-  let resoreDbPath = require("path").join(appPath, "db");
+  let resoreDbPath = require("path").join(userDataPath, "db");
   log.info(resoreDbPath);
   if (!fs.existsSync(resoreDbPath)) {
     fs.mkdirSync(resoreDbPath, { recursive: true });

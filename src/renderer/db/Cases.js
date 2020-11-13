@@ -402,7 +402,8 @@ export default {
     const client = await global.pool.connect();
     try {
       // 获取配置文件
-      let conf = new DbConfig();
+      let configPath = this.$electron.remote.getGlobal("configPath");
+      let conf = new DbConfig(configPath);
       let obj = await conf.readDbConfig();
       let ajid = (await this.QueryCaseMaxCount()) + 1;
       let scheamName = await this.CreateNewCaseSchema(ajid, obj.user);

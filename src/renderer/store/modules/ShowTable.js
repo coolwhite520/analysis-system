@@ -737,6 +737,9 @@ const actions = {
       selectCondition,
       modelFilterStr,
       modelFilterChildList,
+      selectShowTypeValue,
+      selectDataTypeValue,
+      imgSrc,
       title,
     }
   ) {
@@ -757,10 +760,9 @@ const actions = {
     let {
       pgsqltemplate,
       orderby,
-      showType,
       describe,
     } = await models.QueryModelSqlTemplateByMid(tid);
-
+    console.log({ pgsqltemplate });
     if (typeof pgsqlTemplateDecode === "undefined") {
       pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
       // 过滤结构体转sql字符串
@@ -777,6 +779,7 @@ const actions = {
       modelFilterStr,
       filterChildStr
     );
+    console.log(sql);
     let data = await showTable.QueryModelDataTableBySql(
       ajid,
       tid,
@@ -812,6 +815,9 @@ const actions = {
           orderby,
           exportSql,
           allrows,
+          selectShowTypeValue,
+          selectDataTypeValue,
+          imgSrc,
         };
         commit("ADD_TABLE_DATA_TO_LIST", obj);
       }

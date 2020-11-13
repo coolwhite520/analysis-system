@@ -243,7 +243,7 @@ export default {
         .replace(/\$SJD\$/g, "'" + selectCondition.SJD + "'")
         .replace(/\$XSGS\$/g, "'" + selectCondition.XSGS + "'")
         .replace(/\$SORTPATH\$/g, selectCondition.XSMZ)
-        .replace(/\$ZXJYZCS\$/g, "'" + selectCondition.JYCSValue + "'")
+        .replace(/\$ZXJYZCS\$/g, selectCondition.JYCSValue)
         .replace(/\$KYZT_KEYS\$/g, newValue8)
         .replace(/\$SFJEZB\$/g, "'" + selectCondition.SFJEZB.ToString + "'")
         .replace(/\$JCZCSB_MIN\$/g, "'" + selectCondition.JCZCSB_MIN + "'")

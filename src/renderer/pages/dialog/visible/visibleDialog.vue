@@ -17,7 +17,7 @@
       </div>
     </div>
     <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="推荐" name="first" style="text-align: center">
+      <el-tab-pane label="推荐设定" name="first" style="text-align: center">
         <el-row>
           <el-col :span="8">
             <div
@@ -45,27 +45,6 @@
           <el-col :span="8">
             <div
               class="myRadioDataType"
-              @click="handleClickDataType('2', '/static/images/icons/证件.png')"
-              :style="{
-                backgroundColor:
-                  selectDataTypeValue === '2' ? '#f0fefe' : 'white',
-              }"
-            >
-              <img
-                src="/static/images/icons/证件.png"
-                width="40"
-                height="40"
-                style="vertical-align: middle"
-              />
-              <div>证件号码</div>
-              <div class="iconfont">
-                {{ selectDataTypeValue === "2" ? "&#xe627;" : "&#xe611;" }}
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div
-              class="myRadioDataType"
               @click="handleClickDataType('3', '/static/images/icons/主体.png')"
               :style="{
                 backgroundColor:
@@ -81,6 +60,27 @@
               <div>主体名称</div>
               <div class="iconfont">
                 {{ selectDataTypeValue === "3" ? "&#xe627;" : "&#xe611;" }}
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div
+              class="myRadioDataType"
+              @click="handleClickDataType('2', '/static/images/icons/证件.png')"
+              :style="{
+                backgroundColor:
+                  selectDataTypeValue === '2' ? '#f0fefe' : 'white',
+              }"
+            >
+              <img
+                src="/static/images/icons/证件.png"
+                width="40"
+                height="40"
+                style="vertical-align: middle"
+              />
+              <div>证件号码</div>
+              <div class="iconfont">
+                {{ selectDataTypeValue === "2" ? "&#xe627;" : "&#xe611;" }}
               </div>
             </div>
           </el-col>
@@ -247,8 +247,12 @@ export default {
           break;
       }
       await this.getVisibleInfoByTid(tid, title);
+      this.handleClose();
     },
     async getVisibleInfoByTid(tid, title) {
+      let selectShowTypeValue = this.selectShowTypeValue;
+      let selectDataTypeValue = this.selectDataTypeValue;
+      let imgSrc = this.imgSrc;
       let {
         count,
         offset,
@@ -256,8 +260,9 @@ export default {
         modelFilterStr,
         modelFilterChildList,
       } = this.currentTableData;
-      selectCondition.JYZEValue = this.minJyje; // 交易总额
-      selectCondition.JYCSValue = this.minJybs; // 交易笔数
+      selectCondition = JSON.parse(JSON.stringify(selectCondition));
+      selectCondition.JYZEValue = parseInt(this.minJyje); // 交易总额
+      selectCondition.JYCSValue = parseInt(this.minJybs); // 交易笔数
 
       let filterChildStr = convertSql.convertDataFilterToSqlStr(
         parseInt(tid),
@@ -271,6 +276,9 @@ export default {
         selectCondition,
         modelFilterStr: filterChildStr,
         modelFilterChildList: [],
+        selectShowTypeValue,
+        selectDataTypeValue,
+        imgSrc,
         offset: 0,
         count: 30,
       });

@@ -40,7 +40,7 @@ import analysisSkeleton from "./analysisSkeleton.vue";
 // const HomePage = () => import("@/pages/home/HomePage");
 // const MainPage = () => import("@/pages/main/MainPage");
 
-import { DbConfig, OtherConfig } from "@/utils/config";
+import { DbConfig } from "@/utils/config";
 import SaveProjectView from "@/pages/dialog/save/SaveCurrentProject.vue";
 import levelDb from "../../level/leveldb";
 import { Pool, Client } from "pg";
@@ -113,7 +113,8 @@ export default {
     this.$store.commit("AppPageSwitch/SET_MAIN_VIEW_HEIGHT", MainViewHeight);
     this.stateBarTop = height;
     try {
-      let dbconfig = new DbConfig();
+      let configPath = this.$electron.remote.getGlobal("configPath");
+      let dbconfig = new DbConfig(configPath);
       let dbCon = dbconfig.readDbConfig();
       let pool = new Pool(dbCon);
       let connFlag = await new Promise(function (resolve, reject) {

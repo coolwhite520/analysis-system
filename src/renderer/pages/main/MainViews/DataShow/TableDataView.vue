@@ -16,10 +16,10 @@
         ></link-relation-chart>
       </template>
       <template v-else>
-        <relation-chart
+        <relation-chart-visible
           :tableData="tableData"
           :limitHeight="contentViewHeight - 87"
-        ></relation-chart>
+        ></relation-chart-visible>
       </template>
     </div>
     <div v-else-if="tableData.showType === 3">
@@ -60,6 +60,7 @@ import { mapState } from "vuex";
 import TableChart from "./child/TableChart";
 import GraphicBarChart from "./child/GraphicBarChart";
 import RelationChart from "./child/RelationChart";
+import RelationChartVisible from "./child/RelationChartVisible";
 import linkRelationChart from "./child/ZjctRelationChart";
 export default {
   mounted() {
@@ -77,6 +78,7 @@ export default {
     "table-chart": TableChart,
     "relation-chart": RelationChart,
     "link-relation-chart": linkRelationChart,
+    "relation-chart-visible": RelationChartVisible,
   },
   props: ["tableData"],
 };

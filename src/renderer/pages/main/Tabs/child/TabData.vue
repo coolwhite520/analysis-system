@@ -161,10 +161,7 @@
           class="ctrl-button"
           @click="handleClickDataVisibleView"
           :disabled="
-            !(
-              currentTableData &&
-              currentTableData.componentName !== 'no-data-view'
-            )
+            !(currentTableData && currentTableData.title === '资金交易明细')
           "
         >
           <span class="iconfont selfIcont">&#xe607;</span>
