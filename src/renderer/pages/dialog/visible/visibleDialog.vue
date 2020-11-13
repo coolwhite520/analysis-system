@@ -170,6 +170,7 @@
             type="primary"
             style="width: 50%"
             @click="handleClickSubmit"
+            :loading="loading"
             >确定</el-button
           >
         </el-row>
@@ -200,6 +201,7 @@ export default {
       minJybs: 100,
       minJyje: 100000,
       imgSrc: "/static/images/icons/银行卡.png",
+      loading: false,
     };
   },
   methods: {
@@ -217,37 +219,50 @@ export default {
       );
     },
     async handleClickSubmit() {
-      console.log(this.selectDataTypeValue, this.selectShowTypeValue);
-      console.log(this.currentTableData.selectCondition);
-      let tid, title;
-      switch (this.selectDataTypeValue) {
-        case "1":
-          {
-            tid = "202";
-            title =
-              "资金交易-账户-" +
-              (this.selectShowTypeValue === "1" ? "汇总可视化" : "差额可视化");
-          }
-          break;
-        case "2":
-          {
-            tid = "204";
-            title =
-              "资金交易-证件号码-" +
-              (this.selectShowTypeValue === "1" ? "汇总可视化" : "差额可视化");
-          }
-          break;
-        case "3":
-          {
-            tid = "203";
-            title =
-              "资金交易-主体名称-" +
-              (this.selectShowTypeValue === "1" ? "汇总可视化" : "差额可视化");
-          }
-          break;
+      try {
+        this.loading = true;
+        let tid, title;
+        switch (this.selectDataTypeValue) {
+          case "1":
+            {
+              tid = "202";
+              title =
+                "资金交易-账户-" +
+                (this.selectShowTypeValue === "1"
+                  ? "汇总可视化"
+                  : "差额可视化");
+            }
+            break;
+          case "2":
+            {
+              tid = "204";
+              title =
+                "资金交易-证件号码-" +
+                (this.selectShowTypeValue === "1"
+                  ? "汇总可视化"
+                  : "差额可视化");
+            }
+            break;
+          case "3":
+            {
+              tid = "203";
+              title =
+                "资金交易-主体名称-" +
+                (this.selectShowTypeValue === "1"
+                  ? "汇总可视化"
+                  : "差额可视化");
+            }
+            break;
+        }
+        await this.getVisibleInfoByTid(tid, title);
+        this.handleClose();
+        this.loading = false;
+      } catch (e) {
+        this.$message.error({
+          message: e.message,
+        });
+        this.loading = false;
       }
-      await this.getVisibleInfoByTid(tid, title);
-      this.handleClose();
     },
     async getVisibleInfoByTid(tid, title) {
       let selectShowTypeValue = this.selectShowTypeValue;
