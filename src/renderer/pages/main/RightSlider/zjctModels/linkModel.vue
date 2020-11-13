@@ -47,7 +47,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="维度：">
-        <el-radio-group v-model="form.radioWeidu">
+        <el-radio-group v-model="form.radioWeidu" @change="handleChangeRadio">
           <el-radio label="0">单笔</el-radio>
           <el-radio label="1">汇总</el-radio>
           <el-radio label="2">差额</el-radio>
@@ -58,7 +58,7 @@
         <el-checkbox v-model="form.checkGroup"></el-checkbox>
       </el-form-item>
 
-      <el-form-item label="间隔(小时)：">
+      <el-form-item label="间隔(小时)：" v-show="form.radioWeidu === '0'">
         <!-- <el-input size="mini" v-model.number="form.timeSpan"></el-input> -->
         <el-input-number
           size="mini"
@@ -114,7 +114,7 @@
           ></el-date-picker>
         </el-col>
       </el-form-item>
-      <el-form-item label="上下层金额比例：">
+      <el-form-item label="上下层金额比例：" v-show="form.radioWeidu === '0'">
         <el-col :span="11">
           <el-input size="mini" v-model.number="form.biLiBegin"></el-input>
         </el-col>
@@ -210,6 +210,10 @@ export default {
     };
   },
   methods: {
+    handleChangeRadio(value) {
+      console.log(value);
+      this.form.radioWeidu = value;
+    },
     handleClose() {
       this.$store.commit("DialogPopWnd/SET_SHOWLINKMODELDIALOGVISIBLE", false);
     },
