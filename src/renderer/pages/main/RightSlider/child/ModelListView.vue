@@ -27,7 +27,7 @@
           :index="String(father.mid)"
         >
           <template slot="title">
-            <i class="iconfont">&#xe61c;</i>
+            <i class="iconfont" style="font-size: 20px">&#xe628;</i>
             <span slot="title">{{ father.modelname }}</span>
           </template>
 
@@ -47,7 +47,7 @@
               :open-delay="1000"
               :hide-after="10000"
             >
-              <div>{{ child.modelname }}</div>
+              <div>&#xe61c;&nbsp;&nbsp;{{ child.modelname }}</div>
             </el-tooltip>
           </el-menu-item>
         </el-submenu>
@@ -226,6 +226,7 @@ export default {
 }
 .menu-item {
   font-size: 12px;
+  color: #3c4e6b;
 }
 .close {
   font-size: 10px;

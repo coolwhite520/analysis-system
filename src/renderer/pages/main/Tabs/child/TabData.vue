@@ -90,7 +90,7 @@
           :disabled="disabledWashingButtons"
           @click="handleClickWashingButton('special-char')"
         >
-          <span class="iconfont selfIcont">&#xe669;</span>
+          <span class="iconfont selfIcont">&#xe66c;</span>
           <br />
           <span class="title-content">特殊字符</span>
         </el-button>
@@ -102,7 +102,7 @@
           :disabled="disabledWashingButtons"
           @click="handleClickWashingButton('ineffect-data')"
         >
-          <span class="iconfont selfIcont">&#xe61d;</span>
+          <span class="iconfont selfIcont">&#xe660;</span>
           <br />
           <span class="title-content">无效数据</span>
         </el-button>
@@ -114,7 +114,7 @@
           :disabled="disabledWashingButtons"
           @click="handleClickWashingButton('data-diff')"
         >
-          <span class="iconfont selfIcont">&#xe6ff;</span>
+          <span class="iconfont selfIcont">&#xe624;</span>
           <br />
           <span class="title-content">数据去重</span>
         </el-button>
@@ -149,7 +149,6 @@
           :disabled="!isModelVisible"
           @click="handleClickShowModel"
         >
-          >
           <span class="iconfont selfIcont">&#xe66b;</span>
           <br />
           <span class="title-content">模型参数</span>

@@ -1016,9 +1016,9 @@ export default {
           tid: this.tableData.tid, //tableid
         };
         let data2 = {
-          id: jydfmc,
+          id: jydfmc + "\n" + jydfzjhm,
           name: jydfmc,
-          label: jydfmc,
+          label: jydfmc + "\n" + jydfzjhm,
           tid: this.tableData.tid,
         };
         let bFindData1 = false;
@@ -1045,8 +1045,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(czje);
             let link1 = {
               tid: this.tableData.tid,
-              source: jymc,
-              target: jydfmc,
+              source: jymc + "\n" + jyzjhm,
+              target: jydfmc + "\n" + jydfzjhm,
               je: czje,
               bs: czbs,
               label: `${czje}元（${czbs}笔）`,
@@ -1064,8 +1064,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(jzje);
             let link2 = {
               tid: this.tableData.tid,
-              source: jydfmc,
-              target: jymc,
+              source: jydfmc + "\n" + jydfzjhm,
+              target: jymc + "\n" + jyzjhm,
               je: jzje,
               bs: jzbs,
               label: `${jzje}元（${jzbs}笔）`,
@@ -1084,8 +1084,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(jczce);
             let link2 = {
               tid: this.tableData.tid,
-              source: jydfmc,
-              target: jymc,
+              source: jydfmc + "\n" + jydfzjhm,
+              target: jymc + "\n" + jyzjhm,
               je: jczce,
               bs: jyzbs,
               label: `净${jczce}元（${jyzbs}笔）`,
@@ -2471,6 +2471,9 @@ export default {
 
   mounted() {
     this.loadGraphDefault();
+    setTimeout(() => {
+      this.graph.fitView(20);
+    }, 1000);
     // 监听页面元素的大小变化
     const erd = elementResizeDetectorMaker();
     erd.listenTo(document.getElementById(this.graphid), (element) => {

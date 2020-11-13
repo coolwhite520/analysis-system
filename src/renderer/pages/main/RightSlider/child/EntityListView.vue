@@ -22,6 +22,7 @@
         @row-click="handleClickRow"
         @cell-mouse-enter="handleMouseEnter"
         @cell-mouse-leave="handleMouseLeave"
+        @row-contextmenu="handleRightClickRow"
       >
         <el-table-column label="序号" fixed type="index"></el-table-column>
         <el-table-column
@@ -47,6 +48,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+const { clipboard } = require("electron");
 export default {
   data() {
     return { currentFocusRow: null };
@@ -76,6 +78,17 @@ export default {
         nodeid: row.id,
         state: "clear",
       });
+    },
+    async handleRightClickRow(row, column, event) {
+      let value = row[column.property];
+      console.log(row);
+      if (value) {
+        clipboard.writeText(value + "");
+        this.$message({
+          type: "success",
+          message: "已经将数据'" + value + "'放入到了剪贴板",
+        });
+      }
     },
     handleClickRow(row, column, event) {
       this.$bus.$emit("clickEntityRow", {

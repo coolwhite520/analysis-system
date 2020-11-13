@@ -209,7 +209,7 @@
       </div>
 
       <el-row style="text-align: center">
-        <el-button size="medium" @click="handleClickSaveFilter"
+        <el-button size="medium" @click="handleClickSaveFilter" v-if="false"
           >保存条件</el-button
         >
         <el-button size="medium" @click="handleClickInvokeFilter" type="primary"
@@ -223,9 +223,10 @@
 <script>
 import { mapState } from "vuex";
 const UUID = require("uuid");
+import Default from "@/utils/sql/Default";
 export default {
   mounted() {
-    this.DefaultData = require("@/utils/sql/Default");
+    this.DefaultData = Default;
     let headerFirst = this.currentTableData.headers[0];
     if (this.currentTableData.modelFilterChildList.length === 0) {
       this.filterList.push({

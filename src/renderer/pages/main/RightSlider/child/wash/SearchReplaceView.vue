@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;查找替换</span>
+            <span class="iconfont">&#xe89a;&nbsp;&nbsp;&nbsp;查找替换</span>
           </div>
         </el-col>
         <el-col :span="2">

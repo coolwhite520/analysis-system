@@ -6,6 +6,76 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4954907",
+      "name": "开心",
+      "font_class": "kaixin",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "5483283",
+      "name": "开心",
+      "font_class": "kaixin1",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "1788624",
+      "name": "信息",
+      "font_class": "xinxi",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
+      "icon_id": "12975011",
+      "name": "信息",
+      "font_class": "xinxi1",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "14122670",
+      "name": "模型库",
+      "font_class": "moxingku",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "12683721",
+      "name": "数据",
+      "font_class": "icon_huabanfuben1",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "11734536",
+      "name": "字号,字体,字体大小,字符大小,Word",
+      "font_class": "Word",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "1331084",
+      "name": "数据库",
+      "font_class": "shujuku",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "8771188",
+      "name": "无数据",
+      "font_class": "wushuju",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "12686569",
+      "name": "模型",
+      "font_class": "icon_moxing-",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
       "icon_id": "10416796",
       "name": "环路",
       "font_class": "huanlu",

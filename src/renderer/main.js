@@ -9,6 +9,7 @@ import "./assets/theme/index.css";
 import "./assets/css/iconfont/iconfont.css";
 import "./assets/css/iconfont/iconfont.js";
 import "./assets/css/animate.css";
+import "./assets/css/stars.css";
 import "echarts";
 import "./utils/dialog";
 import echarts from "echarts";

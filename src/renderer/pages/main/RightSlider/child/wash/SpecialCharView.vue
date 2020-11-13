@@ -11,7 +11,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;特殊字符</span>
+            <span class="iconfont">&#xe66c;&nbsp;&nbsp;&nbsp;特殊字符</span>
           </div>
         </el-col>
         <el-col :span="2">

@@ -31,7 +31,8 @@
           class="menu-item"
           :index="child.tid"
         >
-          {{ child.title }}
+          <span class="iconfont" style="font-size: 12px">&#xe693;</span>
+          <span>{{ child.title }}</span>
           <span style="color: gray; font-size: 10px"
             >&nbsp;{{ child.count }}条</span
           >
@@ -141,6 +142,7 @@ export default {
 .menu-item {
   font-size: 12px;
   text-align: left;
+  color: #3c4e6b;
 }
 .titleBar {
   height: 40px;

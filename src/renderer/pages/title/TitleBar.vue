@@ -2,7 +2,15 @@
   <div class="titleBar" @dblclick="handleDbClick">
     <el-row>
       <el-col :span="2">
-        <div class="logo iconfont">&#xe66a;</div>
+        <el-tooltip placement="bottom">
+          <div slot="content">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-kaixin1"></use>
+            </svg>
+            <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
+          </div>
+          <div class="logo iconfont" @click="handleClickStar">&#xe66a;</div>
+        </el-tooltip>
       </el-col>
       <el-col class="colum" :span="18">
         <div class="titleContent">
@@ -12,9 +20,9 @@
       <el-col class="colum" :span="4">
         <div>
           <span class="opterationBtn iconfont">
-            <el-tooltip content="数据库连接设置" placement="bottom">
+            <el-tooltip content="数据库设置" placement="bottom">
               <span @click="handleClickDbConfig" class="dbconfig"
-                >&#xe71a;</span
+                >&#xe64f;</span
               >
             </el-tooltip>
             <el-tooltip content="返回首页" placement="bottom">
@@ -49,6 +57,11 @@
         </div>
       </el-col>
     </el-row>
+    <div v-if="showStar">
+      <div id="stars"></div>
+      <div id="stars2"></div>
+      <div id="stars3"></div>
+    </div>
   </div>
 </template>
 
@@ -61,6 +74,7 @@ export default {
   components: {},
   data() {
     return {
+      showStar: false,
       softVersion: this.$electron.remote.getGlobal("softVersion"),
     };
   },
@@ -71,6 +85,9 @@ export default {
     ...mapState("ShowTable", ["tableDataList"]),
   },
   methods: {
+    handleClickStar() {
+      this.showStar = !this.showStar;
+    },
     handleClickShowTabBar() {
       if (this.showTabBarView) {
         let newContentViewHeight = this.contentViewHeight + 100; // titelbar tabbar footbar lineheight
@@ -240,7 +257,6 @@ export default {
 }
 .dbconfig:hover {
   color: gray;
-  cursor: pointer;
 }
 .gohome {
   font-size: 25px;
@@ -253,15 +269,12 @@ export default {
 }
 
 .gohome:hover {
-  cursor: pointer;
   color: gray;
 }
 .min:hover {
   color: green;
-  cursor: pointer;
 }
 .close:hover {
   color: red;
-  cursor: pointer;
 }
 </style>

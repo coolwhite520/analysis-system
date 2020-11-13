@@ -17,6 +17,7 @@
 
       <el-table
         :data="currentTableData.entity.entityTableData"
+        @row-contextmenu="handleRightClickRow"
         :height="tableHeight"
         size="mini"
         style="width: 100%"
@@ -112,6 +113,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+const { clipboard } = require("electron");
 export default {
   data() {
     return {
@@ -157,6 +159,17 @@ export default {
     },
   },
   methods: {
+    async handleRightClickRow(row, column, event) {
+      let value = row[column.property];
+      console.log(row);
+      if (value) {
+        clipboard.writeText(value + "");
+        this.$message({
+          type: "success",
+          message: "已经将数据'" + value + "'放入到了剪贴板",
+        });
+      }
+    },
     onChangeColor(row) {
       console.log(row);
       this.$bus.$emit("nodeStyleSetting", {

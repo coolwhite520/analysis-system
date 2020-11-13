@@ -7,7 +7,7 @@
       <el-row class="title">
         <el-col :span="22">
           <div>
-            <span class="iconfont">&#xe61c;&nbsp;&nbsp;&nbsp;数据去重</span>
+            <span class="iconfont">&#xe624;&nbsp;&nbsp;&nbsp;数据去重</span>
           </div>
         </el-col>
         <el-col :span="2">
