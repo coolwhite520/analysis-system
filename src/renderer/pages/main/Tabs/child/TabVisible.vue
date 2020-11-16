@@ -180,6 +180,7 @@ export default {
   methods: {
     handleClickNewView() {
       // 新建一个空白视图
+      
     },
     handleClickShowEntityListView() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {

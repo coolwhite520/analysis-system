@@ -21,7 +21,10 @@
         <div>
           <span class="opterationBtn iconfont">
             <el-tooltip content="待调单任务" placement="bottom">
-              <span @click="handleClickDbConfig" class="dbconfig"
+              <span
+                @click="handleClickNewAwaitTask"
+                class="dbconfig"
+                v-if="currentViewName === 'main-page'"
                 >&#xe748;</span
               >
             </el-tooltip>
@@ -90,6 +93,9 @@ export default {
     ...mapState("ShowTable", ["tableDataList"]),
   },
   methods: {
+    handleClickNewAwaitTask() {
+      this.$store.commit("DialogPopWnd/SET_SHOWAWAITTASKDIALOGVISIBLE", true);
+    },
     handleClickStar() {
       this.showStar = !this.showStar;
     },

@@ -16,6 +16,7 @@ const state = {
   showLinkModelDialogVisible: false,
   showCircleModelDialogVisible: false,
   showTwoEndsDialogVisible: false,
+  showAwaitTaskDialogVisible: false,
 };
 
 const mutations = {
@@ -56,6 +57,9 @@ const mutations = {
   },
   SET_DBCONFIGVISIBLE(state, dbConfigVisible) {
     state.dbConfigVisible = dbConfigVisible;
+  },
+  SET_SHOWAWAITTASKDIALOGVISIBLE(state, showAwaitTaskDialogVisible) {
+    state.showAwaitTaskDialogVisible = showAwaitTaskDialogVisible;
   },
   SET_SHOWDATAVISIBILITYDIALOGVISIBLE(state, showDataVisibilityDialogVisible) {
     state.showDataVisibilityDialogVisible = showDataVisibilityDialogVisible;

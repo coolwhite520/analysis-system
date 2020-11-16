@@ -13,6 +13,7 @@
       ref="ruleForm"
       label-width="100px"
       class="demo-ruleForm"
+      size="mini"
     >
       <el-row>
         <el-col :span="10">

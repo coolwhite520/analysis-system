@@ -27,6 +27,7 @@
       </el-row>
     </div>
     <dbconfig-view v-if="dbConfigVisible"></dbconfig-view>
+    <await-task-view v-if="showAwaitTaskDialogVisible"></await-task-view>
   </div>
 </template>
 
@@ -36,6 +37,7 @@ import TitleBar from "@/pages/title/TitleBar";
 import HomePage from "@/pages/home/HomePage";
 import MainPage from "@/pages/main/MainPage";
 import analysisSkeleton from "./analysisSkeleton.vue";
+
 // 使用es6的懒加载模式
 // const HomePage = () => import("@/pages/home/HomePage");
 // const MainPage = () => import("@/pages/main/MainPage");
@@ -52,6 +54,7 @@ const path = require("path");
 const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
+import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
 
 // const html2canvas = require("html2canvas");
 export default {
@@ -177,12 +180,17 @@ export default {
     "save-dialog": SaveProjectView,
     "analysis-skeleton": analysisSkeleton,
     "dbconfig-view": dbConfigView,
+    "await-task-view": awaitTaskView,
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
     ...mapState("ShowTable", ["tableDataList"]),
-    ...mapState("DialogPopWnd", ["showSaveProjectVisible", "dbConfigVisible"]),
+    ...mapState("DialogPopWnd", [
+      "showSaveProjectVisible",
+      "dbConfigVisible",
+      "showAwaitTaskDialogVisible",
+    ]),
   },
   methods: {
     delDir(path) {

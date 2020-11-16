@@ -493,7 +493,7 @@ export default {
                 });
               } else {
                 this.$message({
-                  message: "没有匹配的数据项",
+                  message: "没有匹配的数据规则项",
                 });
                 return;
               }
@@ -523,7 +523,7 @@ export default {
                 });
               } else {
                 this.$message({
-                  message: "没有匹配的数据项",
+                  message: "没有匹配的数据规则项",
                 });
                 return;
               }

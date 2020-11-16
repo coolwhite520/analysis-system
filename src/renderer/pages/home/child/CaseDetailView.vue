@@ -159,7 +159,9 @@
         待调单任务：
         <span class="caseContent">{{ awaitTaskCount }} 个</span>
         <span>
-          <el-button type="text" size="mini">查看待调单任务</el-button>
+          <el-button type="text" size="mini" @click="handleClickShowAwaitTask"
+            >查看待调单任务</el-button
+          >
         </span>
       </p>
       <p>
@@ -168,28 +170,18 @@
       </p>
       <!-- <el-divider></el-divider> -->
       <el-row>
-        <el-col :span="8">&nbsp;</el-col>
-        <el-col :span="8">
-          <div>
-            <div style="text-align: center">
-              <el-button
-                class="button"
-                type="primary"
-                @click="handleClickBeginAnalysis"
-                round
-                >开始分析</el-button
-              >
-              <el-button
-                round
-                class="button"
-                type="primary"
-                @click="handleClickBeginAnalysisReport"
-                >分析报告</el-button
-              >
-            </div>
-          </div>
+        <el-col style="text-align: center">
+          <el-button type="primary" @click="handleClickBeginAnalysis" round
+            >开始分析</el-button
+          >
+          <el-button
+            round
+            type="primary"
+            @click="handleClickBeginAnalysisReport"
+            >分析报告</el-button
+          >
         </el-col>
-        <el-col :span="8" style="text-align: right">
+        <el-col style="text-align: right">
           <el-button type="text" @click="handleClickGoHome"
             >返回案件列表</el-button
           >
@@ -275,6 +267,9 @@ export default {
     },
   },
   methods: {
+    async handleClickShowAwaitTask() {
+      this.$store.commit("DialogPopWnd/SET_SHOWAWAITTASKDIALOGVISIBLE", true);
+    },
     // 采集记录
     async handleClickCollectionRecord() {
       try {

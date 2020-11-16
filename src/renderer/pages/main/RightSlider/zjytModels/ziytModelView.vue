@@ -1,9 +1,5 @@
 <template>
   <div>
-    <error-row-view
-      v-if="showErrorRowRecordVisible"
-      v-on:refreshErrorCharTree="refreshErrorCharTree"
-    ></error-row-view>
     <div
       class="searchReplace"
       :style="{ height: contentViewHeight - 40 - 15 + 'px' }"
