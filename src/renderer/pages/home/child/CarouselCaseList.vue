@@ -133,11 +133,11 @@ export default {
 </script>
 <style scoped>
 .el-carousel__item:nth-child(2n) {
-  border-radius: 15px;
+  border-radius: 3px;
 }
 
 .el-carousel__item:nth-child(2n + 1) {
-  border-radius: 15px;
+  border-radius: 3px;
 }
 
 .cardStyle {
