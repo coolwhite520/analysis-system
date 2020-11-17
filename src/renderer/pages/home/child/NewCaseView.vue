@@ -157,7 +157,9 @@
             >&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</el-button
           >
         </el-col>
-        <el-col :span="8">&nbsp;</el-col>
+        <el-col style="text-align: right">
+          <el-button type="text" @click="handleClickGoHome">返回首页</el-button>
+        </el-col>
       </el-row>
     </el-form>
   </div>
@@ -284,6 +286,12 @@ export default {
           break;
         }
       }
+    },
+    handleClickGoHome() {
+      this.$store.commit(
+        "HomePageSwitch/SET_VIEW_NAME",
+        "show-exist-case-view"
+      );
     },
     handleChangeAjlb(ajlbArr) {
       this.ajlb = ajlbArr[ajlbArr.length - 1];

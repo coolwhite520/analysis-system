@@ -597,6 +597,10 @@ export default {
         this.caseBase.ajid
       );
       this.$store.commit("CaseDetail/SET_AWAITTASKLIST", rows);
+      await this.$store.dispatch(
+        "CaseDetail/queryAwaitTaskCount",
+        this.caseBase.ajid
+      );
     },
     async handleClickSure(formName) {
       this.$refs[formName].validate(async (valid) => {

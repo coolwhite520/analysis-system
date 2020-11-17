@@ -5,7 +5,7 @@
         <!-- <h3>已有案件轮播列表：</h3> -->
       </div></el-col
     >
-    <el-col :span="16">
+    <el-col :span="16" v-if="existCaseList.length > 0">
       <el-carousel
         :interval="100000"
         type="card"
@@ -57,6 +57,9 @@
         </el-carousel-item>
       </el-carousel></el-col
     >
+    <el-col :span="16" v-else>
+      <div style="height: 120px"></div>
+    </el-col>
     <el-col :span="4">&nbsp;</el-col>
   </el-row>
 </template>
