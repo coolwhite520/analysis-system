@@ -182,9 +182,7 @@
           >
         </el-col>
         <el-col style="text-align: right">
-          <el-button type="text" @click="handleClickGoHome"
-            >返回案件列表</el-button
-          >
+          <el-button type="text" @click="handleClickGoHome">返回首页</el-button>
         </el-col>
       </el-row>
     </div>
@@ -198,28 +196,13 @@ import CollectionRecordDialog from "@/pages/dialog/record/CollectionRecordDialog
 import { mapState, mapGetters } from "vuex";
 import cases from "@/db/Cases";
 import base from "@/db/Base";
+import awaitTask from "@/db/AwaitTask";
 import log from "electron-log";
 const fs = require("fs");
 const path = require("path");
 export default {
   async beforeMount() {
     shell.config.execPath = shell.which("node").toString();
-    await this.$store.dispatch(
-      "CaseDetail/queryEntityCount",
-      this.caseBase.ajid
-    );
-    await this.$store.dispatch(
-      "CaseDetail/queryBatchCount",
-      this.caseBase.ajid
-    );
-    await this.$store.dispatch(
-      "CaseDetail/queryAwaitTaskCount",
-      this.caseBase.ajid
-    );
-    await this.$store.dispatch(
-      "CaseDetail/queryCaseDataCenter",
-      this.caseBase.ajid
-    );
   },
   data() {
     return {
@@ -268,7 +251,18 @@ export default {
   },
   methods: {
     async handleClickShowAwaitTask() {
-      this.$store.commit("DialogPopWnd/SET_SHOWAWAITTASKDIALOGVISIBLE", true);
+      try {
+        console.log(this.caseBase.ajid);
+        let { success, rows } = await awaitTask.QueryAwaitTaskInfo(
+          this.caseBase.ajid
+        );
+        this.$store.commit("CaseDetail/SET_AWAITTASKLIST", rows);
+        this.$store.commit("DialogPopWnd/SET_SHOWAWAITTASKDIALOGVISIBLE", true);
+      } catch (e) {
+        this.$message({
+          message: e.message,
+        });
+      }
     },
     // 采集记录
     async handleClickCollectionRecord() {

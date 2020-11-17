@@ -60,7 +60,17 @@ export default {
         const result = client.query(query);
         let index = 0;
         let currentPercentage = 0;
+
+        function convert(row) {
+          for (let k in row) {
+            if (row[k] instanceof Date) {
+              row[k] = row[k].Format("yyyy-MM-dd hh:mm:ss");
+            }
+          }
+        }
+
         query.on("row", (row) => {
+          convert(row);
           worksheet.addRow(row).commit();
           index++;
           let percentage = parseInt(parseFloat(index / sumRowCount) * 100);

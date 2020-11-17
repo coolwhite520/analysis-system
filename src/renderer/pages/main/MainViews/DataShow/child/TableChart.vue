@@ -96,6 +96,7 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
+import awaitTask from "@/db/AwaitTask";
 
 export default {
   mounted() {
@@ -193,6 +194,43 @@ export default {
           fieldename: fieldename.toUpperCase(), // 注意列名需要传递大写
         });
       } else if (showrightbtn_type === "button") {
+        console.log(row);
+        if (["251", "252", "253", "254", "255"].includes(this.tableData.tid)) {
+          try {
+            let {
+              success,
+              havesame,
+            } = await awaitTask.QueryHaveSameInfoInModelTable(
+              this.caseBase.ajid,
+              row["zh"].value
+            );
+            if (success && havesame) {
+              this.$message({
+                message: `存在相同的数据项，已经被添加。`,
+              });
+              return;
+            }
+            awaitTask.InsertNewAwaitTaskToTable(
+              this.caseBase.ajid,
+              row["zh"].value,
+              row["mc"].value,
+              this.tableData.tid
+            );
+            this.$message({
+              type: "success",
+              message:
+                "成功添加了调单项目，可在调单任务窗口进行查看、修改、删除等操作",
+            });
+          } catch (e) {
+            this.$message.error({
+              message: e.message,
+            });
+          }
+        } else {
+          this.$message({
+            message: `请移步到待调单窗口进行手动添加。`,
+          });
+        }
       }
     },
 

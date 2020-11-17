@@ -11,6 +11,7 @@ const state = {
   dataCenterList: [], // 数据中心tree列表数据
   openeds: [], // 数据中心默认展开项目
   CollectionRecords: {},
+  awaitTaskList: [],
 };
 const mutations = {
   SET_CASE_DETAIL(state, caseBase) {
@@ -42,6 +43,9 @@ const mutations = {
   },
   SET_COLLECTIONRECORDS(state, { rows, headers, rowCount }) {
     Vue.set(state, "CollectionRecords", { rows, headers, rowCount });
+  },
+  SET_AWAITTASKLIST(state, awaitTaskList) {
+    Vue.set(state, "awaitTaskList", awaitTaskList);
   },
   RESET_ALL_DATA(state) {
     state.caseBase = {}; //  st_case表对应的字段对象

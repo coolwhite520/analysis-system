@@ -33,7 +33,7 @@
                 >&#xe64f;</span
               >
             </el-tooltip>
-            <el-tooltip content="返回案件列表" placement="bottom">
+            <el-tooltip content="返回首页" placement="bottom">
               <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
             </el-tooltip>
             <span @click="handleClickMin" class="min">&#xe60c;</span>
@@ -77,6 +77,7 @@
 const log = require("@/utils/log");
 const fs = require("fs");
 const path = require("path");
+import awaitTask from "@/db/AwaitTask";
 import { mapState } from "vuex";
 export default {
   components: {},
@@ -91,10 +92,22 @@ export default {
     ...mapState("MainPageSwitch", ["showTabBarView"]),
     ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"]),
     ...mapState("ShowTable", ["tableDataList"]),
+    ...mapState("CaseDetail", ["caseBase"]),
   },
   methods: {
-    handleClickNewAwaitTask() {
-      this.$store.commit("DialogPopWnd/SET_SHOWAWAITTASKDIALOGVISIBLE", true);
+    async handleClickNewAwaitTask() {
+      try {
+        console.log(this.caseBase.ajid);
+        let { success, rows } = await awaitTask.QueryAwaitTaskInfo(
+          this.caseBase.ajid
+        );
+        this.$store.commit("CaseDetail/SET_AWAITTASKLIST", rows);
+        this.$store.commit("DialogPopWnd/SET_SHOWAWAITTASKDIALOGVISIBLE", true);
+      } catch (e) {
+        this.$message({
+          message: e.message,
+        });
+      }
     },
     handleClickStar() {
       this.showStar = !this.showStar;

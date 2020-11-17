@@ -2,7 +2,7 @@
   <el-row>
     <el-col :span="4">
       <div style="color: white; margin-top: 35px; text-align: right">
-        <h3>已有案件轮播列表：</h3>
+        <!-- <h3>已有案件轮播列表：</h3> -->
       </div></el-col
     >
     <el-col :span="16">
@@ -79,6 +79,16 @@ export default {
   methods: {
     async handleClickCase(caseBase) {
       // 把数据提交
+      await this.$store.dispatch("CaseDetail/queryEntityCount", caseBase.ajid);
+      await this.$store.dispatch("CaseDetail/queryBatchCount", caseBase.ajid);
+      await this.$store.dispatch(
+        "CaseDetail/queryAwaitTaskCount",
+        caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        caseBase.ajid
+      );
       this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },

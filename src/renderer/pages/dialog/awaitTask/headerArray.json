@@ -1,0 +1,72 @@
+[
+  [
+    {
+      "fieldename": "jyhm",
+      "fieldcname": "涉案个人名称"
+    },
+    {
+      "fieldename": "zz_name",
+      "fieldcname": "证件类型"
+    },
+    {
+      "fieldename": "zz_code",
+      "fieldcname": "证件号码"
+    },
+    {
+      "fieldename": "tjsj",
+      "fieldcname": "任务添加时间"
+    },
+    {
+      "fieldename": "xgsj",
+      "fieldcname": "任务修改时间"
+    }
+  ],
+  [
+    {
+      "fieldename": "jyhm",
+      "fieldcname": "涉案单位名称"
+    },
+    {
+      "fieldename": "zz_name",
+      "fieldcname": "证照类型"
+    },
+    {
+      "fieldename": "zz_code",
+      "fieldcname": "证照号码"
+    },
+    {
+      "fieldename": "tjsj",
+      "fieldcname": "任务添加时间"
+    },
+    {
+      "fieldename": "xgsj",
+      "fieldcname": "任务修改时间"
+    }
+  ],
+  [
+    {
+      "fieldename": "cxzh",
+      "fieldcname": "账卡号"
+    },
+    {
+      "fieldename": "jyhm",
+      "fieldcname": "户名"
+    },
+    {
+      "fieldename": "zh_ztlb_name",
+      "fieldcname": "主体类别"
+    },
+    {
+      "fieldename": "yh_name",
+      "fieldcname": "银行名称"
+    },
+    {
+      "fieldename": "tjsj",
+      "fieldcname": "任务添加时间"
+    },
+    {
+      "fieldename": "xgsj",
+      "fieldcname": "任务修改时间"
+    }
+  ]
+]

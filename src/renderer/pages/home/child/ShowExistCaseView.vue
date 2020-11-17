@@ -77,6 +77,16 @@ export default {
   methods: {
     async handleClickCase(caseBase) {
       // 把数据提交
+      await this.$store.dispatch("CaseDetail/queryEntityCount", caseBase.ajid);
+      await this.$store.dispatch("CaseDetail/queryBatchCount", caseBase.ajid);
+      await this.$store.dispatch(
+        "CaseDetail/queryAwaitTaskCount",
+        caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        caseBase.ajid
+      );
       this.$store.commit("CaseDetail/SET_CASE_DETAIL", caseBase);
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "case-detail-view");
     },

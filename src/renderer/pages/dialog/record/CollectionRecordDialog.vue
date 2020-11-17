@@ -7,7 +7,7 @@
     :append-to-body="true"
     :title="title"
     :visible="showCollectionRecordVisible"
-    width="40%"
+    width="45%"
     @close="handleClose"
     :modal="true"
   >
@@ -88,8 +88,12 @@
           </el-select>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 40px; text-align: center">
-        <el-button type="primary" @click="handleClickDelCollection"
+      <el-row style="margin-top: 20px; text-align: center">
+        <el-button
+          type="primary"
+          @click="handleClickDelCollection"
+          size="small"
+          style="width: 50%"
           >删除数据</el-button
         >
       </el-row>
