@@ -19,6 +19,24 @@ const mutations = {
   DELETE_DATA_LIST_BY_INDEX(state, index) {
     state.exampleDataList.splice(index, 1);
   },
+  DELETE_DATA_LIST_BY_ID(state, id) {
+    let index = 0;
+    for (let item of state.exampleDataList) {
+      if (id === item.id) {
+        state.exampleDataList.splice(index, 1);
+        break;
+      }
+      index++;
+    }
+  },
+  SET_IMPORT_DATA_PROCESS(state, { id, progress }) {
+    for (let index = 0; index < state.exampleDataList.length; index++) {
+      if (id === state.exampleDataList[index].id) {
+        Vue.set(state.exampleDataList[index], "progress", progress);
+        break;
+      }
+    }
+  },
   // 根据传递的索引修改最佳匹配的模版
   MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, matchedMbdm }) {
     state.exampleDataList[index].matchedMbdm = matchedMbdm;
@@ -138,6 +156,16 @@ const mutations = {
     Vue.set(state.exampleDataList[sheetIndex], "showRows", rows);
     Vue.set(state.exampleDataList[sheetIndex], "errorFields", errorFields);
   },
+
+  MODIFY_SHOW_DATA_LIMIT_EX(state, { id, errorFields }) {
+    for (let item of state.exampleDataList) {
+      if (item.id === id) {
+        Vue.set(item, "errorFields", errorFields);
+        Vue.set(item, "isChecked", true);
+        break;
+      }
+    }
+  },
 };
 
 const getters = {};
@@ -212,6 +240,35 @@ const actions = {
       commit("MODIFY_SHOW_DATA_LIMIT", {
         sheetIndex,
         rows: result.rows,
+        errorFields: result.errorFields,
+      });
+    }
+  },
+  async QueryErrorData(
+    { commit },
+    {
+      id, // 表示exampleList中的每个子项
+      ajid,
+      tableName,
+      matchedFields,
+      index,
+      limit,
+      filterList,
+      headers,
+    }
+  ) {
+    let result = await dataImport.queryDataFromTable(
+      ajid,
+      tableName,
+      matchedFields,
+      index,
+      limit,
+      filterList,
+      headers
+    );
+    if (result.success) {
+      commit("MODIFY_SHOW_DATA_LIMIT_EX", {
+        id,
         errorFields: result.errorFields,
       });
     }

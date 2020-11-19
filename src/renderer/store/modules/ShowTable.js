@@ -562,7 +562,8 @@ const actions = {
           exportSql,
         };
         if (modelTreeList && modelTreeList.length > 0) {
-          obj.modelTree = { treeList: modelTreeList, openeds: [] };
+          let openeds = modelTreeList.map((item) => `${item.mid}`);
+          obj.modelTree = { treeList: modelTreeList, openeds };
           obj.rightActiveName = "model-list-view";
           obj.rightTabs.push({
             title: "&#xe60f;&nbsp;&nbsp;&nbsp;模型库",

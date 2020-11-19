@@ -232,8 +232,7 @@
   </div>
 </template>
 <script >
-import StandardDataCollectionDialog from "@/pages/dialog/StandardDataCollectionDialog";
-import AutoDataCollectionDialog from "@/pages/dialog/AutoDataCollectionDialog";
+import StandardDataCollectionDialog from "@/pages/dialog/standard/StandardDataCollectionDialog";
 import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import ShowDataVisibleView from "@/pages/dialog/visible/visibleDialog";
@@ -255,7 +254,6 @@ export default {
     "standard-dialog": StandardDataCollectionDialog,
     "filter-dialog": FilterDialog,
     "show-fields-dialog": ShowFieldsDialog,
-    "auto-dialog": AutoDataCollectionDialog,
     "show-visible-dialog": ShowDataVisibleView,
   },
   computed: {

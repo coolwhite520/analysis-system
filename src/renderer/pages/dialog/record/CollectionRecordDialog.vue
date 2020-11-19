@@ -11,7 +11,7 @@
     @close="handleClose"
     :modal="true"
   >
-    <div :loading="loading">
+    <div v-loading="loading">
       <el-table
         ref="multipleTable"
         style="width: 100%"
@@ -94,6 +94,7 @@
           @click="handleClickDelCollection"
           size="small"
           style="width: 50%"
+          :loading="loading"
           >删除数据</el-button
         >
       </el-row>

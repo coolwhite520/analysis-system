@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4628492",
+      "name": "CSV",
+      "font_class": "CSV",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "7684624",
+      "name": "csv",
+      "font_class": "csv",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "7684653",
+      "name": "txt",
+      "font_class": "txt",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "12600976",
+      "name": "xls",
+      "font_class": "xls",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
       "icon_id": "6773118",
       "name": "文件-调动申请",
       "font_class": "wj-ddsq",

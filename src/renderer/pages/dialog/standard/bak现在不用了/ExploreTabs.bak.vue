@@ -10,7 +10,7 @@
       <el-tab-pane
         v-for="(item, index) of exampleDataList"
         :key="index"
-        :label="item.fileName+'-'+item.sheetName+'-'+item.mbmc"
+        :label="item.fileName + '-' + item.sheetName + '-' + item.mbmc"
         :name="String(index)"
       >
         <explore-view :sheetItem="item" :activeName="index"></explore-view>

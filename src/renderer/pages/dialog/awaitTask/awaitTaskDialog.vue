@@ -414,7 +414,15 @@ export default {
           item_name: "单位",
         },
       ],
-      form: {}, // 个人、单位、zkh
+      form: {
+        id: "",
+        zz_code: "",
+        zz_name: "",
+        jyhm: "",
+        yh_name: "",
+        cxzh: "",
+        zh_ztlb_name: "",
+      },
       formRules: {
         jyhm: [{ required: true, message: "不能为空", trigger: "blur" }],
         zz_code: [{ required: true, message: "不能为空", trigger: "blur" }],
@@ -635,7 +643,15 @@ export default {
       });
     },
     async handleClickNew() {
-      this.form = {};
+      this.form = {
+        id: "",
+        zz_code: "",
+        zz_name: "",
+        jyhm: "",
+        yh_name: "",
+        cxzh: "",
+        zh_ztlb_name: "",
+      };
       this.opration = 0;
       this.showChildPopWnd = true;
       try {

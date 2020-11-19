@@ -169,7 +169,7 @@ export default {
       tjrw = '00000000',
       jyhm = '${jyhm}',
       xgsj = '${new Date().Format("yyyy-MM-dd hh:mm:ss")}',
-      target= '${target}',
+      target= '${target}'
       WHERE id = ${id};`;
     }
     console.log(sql);

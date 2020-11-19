@@ -372,6 +372,7 @@ export default {
         await cases.SwitchCase(client, ajid);
         let { rows } = await client.query(exportSql);
         for (let index = 0; index < rows.length; index++) {
+          console.log(rows[index]);
           worksheet.addRow(rows[index]).commit();
         }
         worksheet.commit();
@@ -621,6 +622,7 @@ export default {
               PageItem,
               this.ReportParams
             );
+            console.log(sql);
             let tableDic = Default.ReportTableDic[item.id];
             let filePath = path.join(homedir, item.label + ".xls");
             let dataResult = await this.WriteToExcelFile(
@@ -630,6 +632,7 @@ export default {
               tableDic,
               sql
             );
+            console.log("success");
 
             let { tableDataRows, subTitle, p, mainTitle } = dataResult;
             if (mainTitle.length !== 0) {

@@ -227,13 +227,13 @@ export default {
         if (rows.length === 0) {
           continue;
         }
+        console.log(worksheetReader.name);
         let result = {
           fileName: path.basename(filePathName),
           sheetName: worksheetReader.name,
           fileAllCols: rows.length > 0 ? rows[0] : [],
           ins1: rows.length > 1 ? rows[1] : [],
           ins2: rows.length > 2 ? rows[2] : [],
-          sheetId: worksheetReader.id,
         };
         resultList.push(result);
         log.info(worksheetReader.rowCount);
@@ -487,6 +487,7 @@ export default {
 
             data.dataList = dataList;
             data.success = true;
+            data.id = UUID.v1();
             this.$electron.ipcRenderer.send(
               "parse-one-example-sheet-over",
               data
@@ -497,6 +498,7 @@ export default {
           data.filePathName = filePathName;
           data.success = false;
           data.errormsg = e.message;
+          data.id = UUID.v1();
           this.$electron.ipcRenderer.send("parse-one-example-sheet-over", data);
         }
       }
@@ -929,23 +931,9 @@ export default {
       }
     },
     async onCopyTempDataToRealTable(e, args) {
-      let { tabIndex } = args;
-      try {
-        await this.copyTempDataToRealTable(args);
-        this.$electron.ipcRenderer.send("import-one-table-complete", {
-          tabIndex,
-          success: true,
-          msg: "success",
-        });
-      } catch (e) {
-        log.info(e);
-        this.$electron.ipcRenderer.send("import-one-table-process", {
-          tabIndex,
-          sumRow: 100,
-          index: 100,
-          success: false,
-          msg: e.message,
-        });
+      let { list } = args;
+      for (let item of list) {
+        await this.copyTempDataToRealTable(item);
       }
     },
     // 从temp表格导入到真正的数据表
@@ -959,7 +947,7 @@ export default {
         publicFields,
         matchedFields,
         externFields,
-        tabIndex,
+        id,
       } = args;
 
       let tempTableName = tableName;
@@ -967,7 +955,7 @@ export default {
       let client = await global.pool.connect();
       let client2 = await global.pool.connect();
       try {
-        return await new Promise(async function (resolve, rejcect) {
+        return await new Promise(async (resolve, rejcect) => {
           await cases.SwitchCase(client, ajid);
           await cases.SwitchCase(client2, ajid);
           let targetTableStruct = await dataImport.showTableStruct(
@@ -1043,8 +1031,12 @@ export default {
               matchedMbdm,
               sjlyid
             );
-            // 清理temp表
             await dataImport.deleteTempTable(ajid, tempTableName);
+            this.$electron.ipcRenderer.send("import-one-table-complete", {
+              id,
+              success: true,
+              msg: "success",
+            });
             resolve("done");
           });
           streamFrom.on("drain", () => {
@@ -1055,22 +1047,28 @@ export default {
           stream
             .pipe(
               through2.obj(function (row, enc, callback) {
-                row = importModel.TestingHandle(Columns, row, targetTableName);
-                if (Object.keys(row).length !== postHandleFields.length) {
+                console.log(row);
+                let rowNew = importModel.TestingHandle(
+                  Columns,
+                  row,
+                  targetTableName
+                );
+                console.log(rowNew);
+                if (Object.keys(rowNew).length !== postHandleFields.length) {
                   callback();
                   return;
                 }
                 let values = [];
-                for (let k of Object.keys(row)) {
+                for (let k of Object.keys(rowNew)) {
                   let obj = targetTableStruct.rows.find(
                     (el) => el.fieldename.toLowerCase() === k
                   );
                   if (obj.fieldtype === 1 || obj.fieldtype === 6) {
-                    values.push(`${row[k].trim()}`);
+                    values.push(`${rowNew[k].trim()}`);
                   } else if (obj.fieldtype === 4) {
-                    values.push(row[k]);
+                    values.push(rowNew[k]);
                   } else {
-                    let temValue = row[k].trim() ? row[k].trim() : 0;
+                    let temValue = rowNew[k].trim() ? rowNew[k].trim() : 0;
                     values.push(`${temValue}`);
                   }
                 }
@@ -1083,7 +1081,7 @@ export default {
             .on("data", (data) => {
               index++;
               _this.$electron.ipcRenderer.send("import-one-table-process", {
-                tabIndex,
+                id,
                 sumRow,
                 index,
                 success: true,
@@ -1100,6 +1098,15 @@ export default {
               log.info("querystream.end");
               streamFrom.end();
             });
+        });
+      } catch (e) {
+        log.info(e);
+        this.$electron.ipcRenderer.send("import-one-table-process", {
+          id,
+          sumRow: 100,
+          index: 100,
+          success: false,
+          msg: e.message,
         });
       } finally {
         client.release();

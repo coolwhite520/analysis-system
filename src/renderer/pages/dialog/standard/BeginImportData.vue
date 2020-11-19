@@ -56,7 +56,33 @@
           prop="fileName"
           label="工作簿（文件名）"
           show-overflow-tooltip
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+            <div>
+              <span
+                v-if="
+                  scope.row.fileName.endsWith('.xls') ||
+                  scope.row.fileName.endsWith('.xlsx')
+                "
+              >
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-xls"></use>
+                </svg>
+              </span>
+              <span v-else-if="scope.row.fileName.endsWith('.csv')">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-CSV"></use>
+                </svg>
+              </span>
+              <span v-if="scope.row.fileName.endsWith('.txt')">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-txt"></use>
+                </svg>
+              </span>
+              {{ scope.row.fileName }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="sheetName"
           label="工作表（sheet）"

@@ -1,6 +1,7 @@
 import moment from "moment";
 import cases from "./Cases";
 const log = require("electron-log");
+const uuid = require("uuid");
 
 export default {
   // 根据导入数据类型获取对应的匹配表
@@ -135,7 +136,8 @@ export default {
         tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
       }
       let like = `${tablecname}_${mbdm}`;
-      let valueName = (await this.showLikeTempTableCount(ajid, like)) + 1;
+      let valueName = uuid.v1();
+      valueName = valueName.replace(/-/g, "");
       let createTableName = `${like}_${valueName}_temp`;
       // 查询全字段
       await cases.SwitchDefaultCase(client);
@@ -256,47 +258,47 @@ export default {
               })()
             );
           } else if (item.fieldtype === 2 || item.fieldtype === 3) {
-            if (item.fieldename.toUpperCase() === "JYJE") {
-              taskArray.push(
-                (async () => {
-                  let temp = await this.QueryJyjeMoreThanZero(
-                    ajid,
-                    tableName,
-                    matchedFieldsNew,
-                    item.fieldename
-                  );
-                  if (temp.success && temp.rows.length > 0) {
-                    let rownums = [];
-                    for (let row of temp.rows) {
-                      let newRow = [];
-                      rownums.push(row["rownum"]);
-                      if (rownums.length === 1) {
-                        // 只要一行示例错误
-                        for (let k in row) {
-                          let value = row[k];
-                          let key = k;
-                          let error =
-                            key.toLowerCase() === item.fieldename.toLowerCase()
-                              ? true
-                              : false; //这个地方需要判定
+            // if (item.fieldename.toUpperCase() === "JYJE") {
+            //   taskArray.push(
+            //     (async () => {
+            //       let temp = await this.QueryJyjeMoreThanZero(
+            //         ajid,
+            //         tableName,
+            //         matchedFieldsNew,
+            //         item.fieldename
+            //       );
+            //       if (temp.success && temp.rows.length > 0) {
+            //         let rownums = [];
+            //         for (let row of temp.rows) {
+            //           let newRow = [];
+            //           rownums.push(row["rownum"]);
+            //           if (rownums.length === 1) {
+            //             // 只要一行示例错误
+            //             for (let k in row) {
+            //               let value = row[k];
+            //               let key = k;
+            //               let error =
+            //                 key.toLowerCase() === item.fieldename.toLowerCase()
+            //                   ? true
+            //                   : false; //这个地方需要判定
 
-                          let cell = { key, value, error };
-                          newRow.push(cell);
-                        }
-                        newRows.push(newRow);
-                      }
-                    }
-                    return {
-                      filterName: "JyjeNotBiggerThanZero",
-                      fieldcname: item.fieldcname,
-                      fieldename: item.fieldename.toLowerCase(),
-                      rownums,
-                    };
-                  }
-                  return null;
-                })()
-              );
-            }
+            //               let cell = { key, value, error };
+            //               newRow.push(cell);
+            //             }
+            //             newRows.push(newRow);
+            //           }
+            //         }
+            //         return {
+            //           filterName: "JyjeNotBiggerThanZero",
+            //           fieldcname: item.fieldcname,
+            //           fieldename: item.fieldename.toLowerCase(),
+            //           rownums,
+            //         };
+            //       }
+            //       return null;
+            //     })()
+            //   );
+            // }
             taskArray.push(
               (async () => {
                 let temp = await this.QueryFieldNotNumberRows(

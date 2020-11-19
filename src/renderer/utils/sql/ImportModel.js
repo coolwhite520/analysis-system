@@ -37,7 +37,6 @@ class Dictionary {
     return false;
   }
 }
-
 const ImportFileClass = {
   // Token: 0x0400050C RID: 1292
   Normal: 0, //资金
@@ -83,8 +82,8 @@ const list_1 = [
 const specialstr = "_x000D_";
 const Judge = [1, 2, 3, 4, 5, 6];
 
-let MatchDic = new Dictionary();
-let ReplaceDic = new Dictionary();
+let MatchDic = new Default.Dictionary();
+let ReplaceDic = new Default.Dictionary();
 const xmldata = [{ Grade: "0", OldStr: "钟", NewStr: "" }]; //Grade:序号,将旧值替换为新值
 
 const companys = ["公司", "企业", "集团", "工作室", "研究院", "研究所", "中心"];
@@ -119,7 +118,7 @@ function GetReplaceString(fieldname) {
       MatchDic.add(fieldname, concurrentDictionary);
     }
   } catch (e) {
-    log.error("数据替换的时候出错", e);
+    console.log("数据替换的时候出错", e.message);
   }
 }
 function ChangeField(text, fieldname) {
@@ -159,7 +158,7 @@ function ChangeField(text, fieldname) {
     }
     result = text;
   } catch (e) {
-    log.error("替换转化的时候失败", e);
+    console.log("替换转化的时候失败");
     result = text;
   }
   return result;
@@ -225,7 +224,7 @@ function CangeTime(strtime1) {
     }
     result = String(num);
   } catch (e) {
-    log.info("通话时间转化出错");
+    console.log("通话时间转化出错");
     result = strtime1;
   }
   return result;
@@ -239,36 +238,25 @@ function TestingHandle(
   outFlag = "出"
 ) {
   try {
-    // if (Columns.includes("hjrq")) {
-    //   dataRow["hjrq"] = dataRow["hjrq"].replace(/\//g, "-");
-    // }
-    // if (Columns.includes("thsj")) {
-    //   dataRow["thsj"] = dataRow["thsj"].replace(/\//g, "-");
-    // }
-    // if (Columns.includes("cxsj")) {
-    //   dataRow["cxsj"] = dataRow["cxsj"].replace(/\//g, "-");
-    // }
-    // if (Columns.includes("kprq")) {
-    //   dataRow["kprq"] = dataRow["kprq"].replace(/\//g, "-");
-    // }
-    // if (Columns.includes("jyrq")) {
-    //   dataRow["jyrq"] = dataRow["jyrq"].replace(/\//g, "-");
-    // }
-    // if (Columns.includes("jysj")) {
-    //   dataRow["jysj"] = dataRow["jysj"].replace(/\//g, "-");
-    // }
     if (tablename.startsWith("gas_phone_call_info")) {
-      if (
-        Columns.includes("thsj") &&
-        Columns.includes("hjrq") &&
-        Columns.includes("hjsj")
-      ) {
-        let array = dataRow["hjsj"].trim().split(" ");
-        dataRow["thsj"] =
-          dataRow["hjrq"].trim().split(" ")[0] + " " + array[array.length - 1];
+      if (Columns.includes("hjrq")) {
+        dataRow["hjrq"] = dataRow["hjrq"].replace(/\//g, "-");
+      }
+      if (Columns.includes("thsj")) {
+        dataRow["thsj"] = dataRow["thsj"].replace(/\//g, "-");
+        if (Columns.includes("hjrq") && Columns.includes("hjsj")) {
+          let array = dataRow["hjsj"].trim().split(" ");
+          dataRow["thsj"] =
+            dataRow["hjrq"].trim().split(" ")[0] +
+            " " +
+            array[array.length - 1];
+        }
       }
       if (Columns.includes("cxsj")) {
-        let text = dataRow["cxsj"] == null ? "" : dataRow["cxsj"];
+        dataRow["cxsj"] = dataRow["cxsj"].replace(/\//g, "-");
+        let text = Default.IsNullOrEmpty(dataRow["cxsj"])
+          ? ""
+          : dataRow["cxsj"];
         if (text != "" && !RegExp(/^\d+$/).test(text)) {
           text = CangeTime(text);
           dataRow["cxsj"] = text;
@@ -279,12 +267,19 @@ function TestingHandle(
       try {
         if (Columns.includes("kpyf")) {
           if (Columns.includes("kprq")) {
-            let text2 = dataRow["kprq"] == null ? "" : dataRow["kprq"];
-            if (RegExp(/^\d{4}[-]\d+[-].*$/).test(text2)) {
-              let array2 = text2.split("-");
-              let value = array2[0] + "-" + array2[1];
-              dataRow["kpyf"] = value;
-            } else if (Columns.includes("kpyf") && dataRow["kpyf"] != null) {
+            dataRow["kprq"] = dataRow["kprq"].replace(/\//g, "-");
+            let text2 = Default.IsNullOrEmpty(dataRow["kprq"])
+              ? ""
+              : dataRow["kprq"];
+            let res = RegExp(
+              /(^[2-9]\d{3})(?:\-|\/)?([0]{1}\d{1}|[1]{1}[0-2]{1}|[1-9]{1}).*$/
+            ).exec(text2);
+            if (res) {
+              dataRow["kpyf"] = res[1] + "-" + res[2];
+            } else if (
+              Columns.includes("kpyf") &&
+              !Default.IsNullOrEmpty(dataRow["kpyf"])
+            ) {
               let text3 = dataRow["kpyf"];
               if (
                 RegExp(/^\d{6}$/).test(text3) ||
@@ -293,7 +288,10 @@ function TestingHandle(
                 dataRow["kpyf"] = text3.slice(0, 4) + "-" + text3.slice(4);
               }
             }
-          } else if (Columns.includes("kpyf") && dataRow["kpyf"] != null) {
+          } else if (
+            Columns.includes("kpyf") &&
+            !Default.IsNullOrEmpty(dataRow["kpyf"])
+          ) {
             let text4 = dataRow["kpyf"];
             if (
               RegExp(/^\d{6}$/).test(text4) ||
@@ -304,7 +302,7 @@ function TestingHandle(
           }
         }
       } catch (e) {
-        log.error("开票月份读取出错", e);
+        console.log("开票月份读取出错", e);
       }
     }
     if (
@@ -411,7 +409,7 @@ function TestingHandle(
           dataRow["jdbz"] = "出";
         }
       } catch (e) {
-        log.error("借贷标志转，交易金额先关转化化出错", e);
+        console.log("借贷标志转，交易金额先关转化化出错");
       }
     }
     if (
@@ -502,59 +500,80 @@ function TestingHandle(
           !Default.IsNullOrEmpty(text6) ||
           !Default.IsNullOrEmpty(dataRow["jyrq"])
         ) {
-          if (Default.IsNullOrEmpty(dataRow["jyrq"])) {
-            let str = "0001-01-01";
-            if (text6.length == 6) {
-              text6 =
-                text6.substring(0, 2) +
-                ":" +
-                text6.substring(2, 4) +
-                ":" +
-                text6.substring(4, 6);
-              dataRow["jysj"] = text6;
-            }
-            if (text6.length == 8) {
-              dataRow["jyrq"] = str + " " + text6;
-              dataRow["jysj"] = str + " " + text6;
-            } else if (text6.split(" ").length > 1) {
-              dataRow["jyrq"] = text6;
-            } else {
-              dataRow["jyrq"] = str + " " + text6;
-              dataRow["jysj"] = str + " " + text6;
-            }
-          } else if (Default.IsNullOrEmpty(dataRow["jysj"])) {
-            let str2 = "00:00:00";
-            let text7 = dataRow["jyrq"];
-            if (text7.split(" ").length > 1) {
-              dataRow["jysj"] = text7;
-            } else {
-              dataRow["jyrq"] = text7 + " " + str2;
-              dataRow["jysj"] = text7 + " " + str2;
-            }
-          } else {
-            if (text6.length == 6) {
-              text6 =
-                text6.substring(0, 2) +
-                ":" +
-                text6.substring(2, 4) +
-                ":" +
-                text6.substring(4, 6);
-              dataRow["jysj"] = text6;
-            }
-            let array3 = text6.split(" ");
-            let array4 = dataRow["jyrq"].split(" ");
-            dataRow["jyrq"] = array4[0] + " " + array3[array3.length - 1];
-            dataRow["jysj"] = array4[0] + " " + array3[array3.length - 1];
+          let jyrq = null;
+          let jysj = null;
+          if (!Default.IsNullOrEmpty(text6)) {
+            jysj = getfulltime_(text6);
           }
+          if (!Default.IsNullOrEmpty(dataRow["jyrq"])) {
+            jyrq = getfulltime_(dataRow["jyrq"]);
+          }
+          let date = !jyrq ? (!jysj ? "0001-01-01" : jysj.date) : jyrq.date;
+          let time = !jysj ? (!jyrq ? "00:00:00" : jyrq.time) : jysj.time;
+          let fulltime = date + " " + time;
+          dataRow["jyrq"] = fulltime;
+          dataRow["jysj"] = fulltime;
         }
       }
     }
-  } catch (e) {
-    log.error(e);
-  }
+  } catch (e) {}
   return dataRow;
 }
-
+function getfulltime_(str) {
+  try {
+    if (!isNaN(str) || str.split(" ").length > 1) {
+      let reg = RegExp(
+        /([2-9]\d{3})(?:\-|\/|\s)?([0]{1}\d{1}|[1]{1}[0-2]{1}|[1-9]{1})(?:\-|\/|\s)?([0-2]{1}\d{1}|[3]{1}[0-1]{1}|[1-9]{1})(?:\s)?([0-1]{1}\d{1}|[2]{1}[0-3]{1}|[0-9]{1})(?::)?([0-5]{1}\d{1}|[1-9]{1})(?::)?([0-5]{1}\d{1}|[1-9]{1})?/
+      ).exec(str);
+      if (reg) {
+        //console.log(reg )
+        let year = reg[1];
+        let month = reg[2].length == 1 ? "0" + reg[2] : reg[2];
+        let day = reg[3].length == 1 ? "0" + reg[3] : reg[3];
+        let hour = reg[4].length == 1 ? "0" + reg[4] : reg[4];
+        let minute = reg[5].length == 1 ? "0" + reg[5] : reg[5];
+        let sec =
+          reg[6] == undefined
+            ? "00"
+            : reg[6].length == 1
+            ? "0" + reg[6]
+            : reg[6];
+        return {
+          date: year + "-" + month + "-" + day,
+          time: hour + ":" + minute + ":" + sec,
+        };
+      }
+    }
+    let reg_data = RegExp(
+      /([2-9]\d{3})(?:\-|\/)?([0]{1}\d{1}|[1]{1}[0-2]{1}|[1-9]{1})(?:\-|\/)?([0-2]{1}\d{1}|[3]{1}[0-1]{1}|[1-9]{1})/
+    ).exec(str);
+    if (reg_data) {
+      //console.log(reg_data )
+      let year = reg_data[1];
+      let month = reg_data[2].length == 1 ? "0" + reg_data[2] : reg_data[2];
+      let day = reg_data[3].length == 1 ? "0" + reg_data[3] : reg_data[3];
+      return { date: year + "-" + month + "-" + day, time: "00:00:00" };
+    }
+    let reg_time = RegExp(
+      /([0-1]{1}\d{1}|[2]{1}[0-3]{1}|[0-9]{1})(?::)?([0-5]{1}\d{1}|[0-9]{1})(?::)?([0-5]{1}\d{1}|[0-9]{1})?/
+    ).exec(str);
+    if (reg_time) {
+      let hour = reg_time[1].length == 1 ? "0" + reg_time[1] : reg_time[1];
+      let minute = reg_time[2].length == 1 ? "0" + reg_time[2] : reg_time[2];
+      let sec =
+        reg_time[3] == undefined
+          ? "00"
+          : reg_time[3].length == 1
+          ? "0" + reg_time[3]
+          : reg_time[3];
+      return { date: "0001-01-01", time: hour + ":" + minute + ":" + sec };
+    }
+    return { date: "0001-01-01", time: "00:00:00" };
+  } catch (e) {
+    console.log(e.message);
+    return { date: "0001-01-01", time: "00:00:00" };
+  }
+}
 // let e = TestingHandle(
 //   ["hjrq", "hjsj", "thsj", "fx", "cxsj"],
 //   { hjrq: "2019/4/5", hjsj: "12:12:12", thsj: "", cxsj: "1时1分1秒", fx: "1" },

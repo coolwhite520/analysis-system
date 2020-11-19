@@ -14,6 +14,7 @@ import "echarts";
 import "./utils/dialog";
 import echarts from "echarts";
 import "./utils/extern";
+
 import VueLazyComponent from "@xunlei/vue-lazy-component";
 Vue.use(VueLazyComponent);
 

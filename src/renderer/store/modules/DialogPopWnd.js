@@ -17,6 +17,7 @@ const state = {
   showCircleModelDialogVisible: false,
   showTwoEndsDialogVisible: false,
   showAwaitTaskDialogVisible: false,
+  showUpdateErrorDialogVisible: false,
 };
 
 const mutations = {
@@ -72,6 +73,9 @@ const mutations = {
   },
   SET_SHOWTWOENDSDIALOGVISIBLE(state, showTwoEndsDialogVisible) {
     state.showTwoEndsDialogVisible = showTwoEndsDialogVisible;
+  },
+  SET_SHOWUPDATEERRORDIALOGVISIBLE(state, showUpdateErrorDialogVisible) {
+    state.showUpdateErrorDialogVisible = showUpdateErrorDialogVisible;
   },
 };
 

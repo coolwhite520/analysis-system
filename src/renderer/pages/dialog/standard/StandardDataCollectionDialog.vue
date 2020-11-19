@@ -29,9 +29,9 @@
 
 <script >
 import { mapState, mapGetters } from "vuex";
-import BeginImportData from "./standard/BeginImportData";
-import ProcessImportData from "./standard/ProcessImportData";
-import ExploreTabs from "./standard/ExploreTabs";
+import BeginImportData from "./BeginImportData";
+import ProcessImportData from "./ProcessImportData";
+import ExploreTabs from "./AutoDataCheck";
 
 export default {
   components: {
@@ -66,6 +66,10 @@ export default {
       this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "begin-import");
       this.$store.commit("DialogPopWnd/SET_STANDARDDATAVISIBLE", false);
       this.$store.commit("DataCollection/CLEAR_CSV_DATA_LIST");
+      this.$store.commit(
+        "DialogPopWnd/SET_SHOWUPDATEERRORDIALOGVISIBLE",
+        false
+      );
       // this.$electron.ipcRenderer.removeAllListeners("read-csv-file-over");
       await this.$electron.ipcRenderer.send("data-collection-close");
     },
