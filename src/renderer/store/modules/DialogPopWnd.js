@@ -18,6 +18,7 @@ const state = {
   showTwoEndsDialogVisible: false,
   showAwaitTaskDialogVisible: false,
   showUpdateErrorDialogVisible: false,
+  showJdbzDialogVisible: false,
 };
 
 const mutations = {
@@ -76,6 +77,9 @@ const mutations = {
   },
   SET_SHOWUPDATEERRORDIALOGVISIBLE(state, showUpdateErrorDialogVisible) {
     state.showUpdateErrorDialogVisible = showUpdateErrorDialogVisible;
+  },
+  SET_SHOWJDBZDIALOGVISIBLE(state, showJdbzDialogVisible) {
+    state.showJdbzDialogVisible = showJdbzDialogVisible;
   },
 };
 

@@ -44,13 +44,22 @@
         @selection-change="handleSelectionChange"
         highlight-current-row
         @current-change="handleCurrentChange"
+        :row-class-name="rowClassName"
       >
+        >
         <el-table-column type="selection"></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           label="序号"
           width="60"
           fixed
           type="index"
+        ></el-table-column> -->
+        <el-table-column
+          prop="rowIndex"
+          label="序号"
+          width="60"
+          header-align="center"
+          align="center"
         ></el-table-column>
         <el-table-column
           prop="fileName"
@@ -88,13 +97,13 @@
           label="工作表（sheet）"
           show-overflow-tooltip
         >
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <el-input
               :value="scope.row.sheetName"
               size="mini"
               disabled
             ></el-input>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="mc" label="数据类型" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -217,10 +226,17 @@
             prop="operation"
             label="操作/提示"
             show-overflow-tooltip
+            header-align="center"
+            align="center"
           >
             <template slot-scope="scope">
               <div v-show="scope.row.matchedFieldName.toLowerCase() === 'jdbz'">
-                <el-button size="mini" type="text">进出设置</el-button>
+                <el-button
+                  size="mini"
+                  type="success"
+                  @click="handleClickJdbz(scope.row)"
+                  >收付标志设置</el-button
+                >
               </div>
               <div v-show="scope.row.sameMatchedRow" style="color: #d07d76">
                 重复的字段选取
@@ -228,12 +244,34 @@
             </template>
           </el-table-column>
         </el-table>
-        <div style="margin-top: 20px; text-align: center">
-          <el-button @click="handleClickSubmit" type="primary"
-            >数据临时导入</el-button
+        <el-row style="margin-top: 20px">
+          <el-col :span="8">&nbsp;</el-col>
+          <el-col :span="8"
+            ><div style="text-align: center">
+              <el-button
+                @click="handleClickSubmit"
+                type="primary"
+                size="small"
+                style="width: 100%"
+                >导入到临时数据表</el-button
+              >
+            </div></el-col
           >
-        </div>
+          <el-col :span="8">
+            <div v-if="errorRowNumArr.length > 0" style="text-align: right">
+              <el-button
+                type="text"
+                @click="handleClickCancelErrorRow"
+                size="mini"
+                >取消勾选错误的行?</el-button
+              >
+            </div></el-col
+          >
+        </el-row>
       </div>
+    </div>
+    <div v-if="showJdbzDialogVisible">
+      <jdbz-dialog :formData="formData"></jdbz-dialog>
     </div>
   </div>
 </template>
@@ -241,7 +279,9 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import path from "path";
+import fs from "fs";
 import { BrowserWindow } from "electron";
+import JdbzDialog from "./child/jdbzDialog";
 export default {
   mounted() {
     let _this = this;
@@ -283,73 +323,133 @@ export default {
   computed: {
     ...mapState("DataCollection", ["buttonGroupList", "exampleDataList"]),
     ...mapState("CaseDetail", ["caseBase", "batchCount"]),
+    ...mapState("DialogPopWnd", ["showJdbzDialogVisible"]),
   },
   data() {
     return {
+      formData: null,
       loadingText: "拼命加载中，请耐心等待...",
       loading: false,
       value: "",
       currentRow: null, // 其实是一个指针，指向了exampleDataList中的某条数据
       parseFileCount: 0,
       multipleSelection: [],
+      errorRowNumArr: [], // 记录不符合规矩的文件行号
     };
   },
-  components: {},
+  components: { JdbzDialog },
   methods: {
-    handleClickSubmit() {
-      if (this.multipleSelection.length > 0) {
-        for (let data of this.multipleSelection) {
-          if (data.matchedMbdm === "") {
-            this.$message.error({
-              title: "错误",
-              message: `[${data.fileName}]的[${data.sheetName}]没有匹配的目标表, 请修改后继续！`,
+    rowClassName({ row, rowIndex }) {
+      row.rowIndex = rowIndex + 1;
+    },
+    async handleClickCancelErrorRow() {
+      for (let row of this.$refs.multipleTable.selection) {
+        if (this.errorRowNumArr.includes(row.rowIndex)) {
+          console.log(row.rowIndex);
+          await this.$refs.multipleTable.toggleRowSelection(row, false);
+          await this.sleep(10);
+        }
+      }
+    },
+    async sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("done");
+        }, ms);
+      });
+    },
+
+    async checkFileRowError(data) {
+      if (data.matchedMbdm === "") {
+        this.$message.error({
+          title: "错误",
+          message: `[${data.fileName}]的[${data.sheetName}]没有匹配的目标表, 请修改后继续！错误行号：${data.rowIndex}`,
+        });
+        this.errorRowNumArr.push(data.rowIndex);
+        return;
+      }
+      let allFieldList = [];
+      for (let item of data.dataList) {
+        if (item.sameMatchedRow) {
+          this.$message.error({
+            title: "错误",
+            message: `[${data.fileName}]的[${data.sheetName}]存在重复字段, 请修改后继续！错误行号：${data.rowIndex}`,
+          });
+          this.errorRowNumArr.push(data.rowIndex);
+          return;
+        }
+        allFieldList.push(item.matchedFieldName);
+      }
+      let matchedTemplateObj = data.matchedMbdmList.filter((el) => {
+        return el.mbdm === data.matchedMbdm;
+      });
+      switch (matchedTemplateObj[0].tablecname) {
+        case "gas_account_info":
+          {
+            let filterTemp = allFieldList.filter((el) => {
+              return el.toUpperCase() === "ZH" || el.toUpperCase() === "KH";
             });
-            return;
-          }
-          let allFieldList = [];
-          for (let item of data.dataList) {
-            if (item.sameMatchedRow) {
+            if (filterTemp.length === 0) {
               this.$message.error({
                 title: "错误",
-                message: `[${data.fileName}]的[${data.sheetName}]存在重复字段, 请修改后继续！`,
+                message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项，错误行号：${data.rowIndex}`,
               });
+              this.errorRowNumArr.push(data.rowIndex);
               return;
             }
-            allFieldList.push(item.matchedFieldName);
           }
-          let matchedTemplateObj = data.matchedMbdmList.filter((el) => {
-            return el.mbdm === data.matchedMbdm;
-          });
-          switch (matchedTemplateObj[0].tablecname) {
-            case "gas_account_info":
-              {
-                let filterTemp = allFieldList.filter((el) => {
-                  return el.toUpperCase() === "ZH" || el.toUpperCase() === "KH";
-                });
-                if (filterTemp.length === 0) {
+          break;
+        case "gas_tax_records":
+          {
+            // let filterTemp = allFieldList.filter((el) => {
+            //   return el === "ZH" || el === "KH";
+            // });
+            // if (filterTemp.length === 0) {
+            //   this.$message.error({
+            //     title: "错误",
+            //     message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项`,
+            //   });
+            //   return;
+            // }
+          }
+          break;
+        case "gas_bank_records_source":
+          {
+            for (let item of data.dataList) {
+              if (item.matchedFieldName.toLowerCase() === "jdbz") {
+                if (
+                  !["进", "出", ""].includes(item.ins1) &&
+                  !["进", "出", ""].includes(item.ins2)
+                ) {
                   this.$message.error({
                     title: "错误",
-                    message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项`,
+                    message: `[${data.fileName}]的[${data.sheetName}]收付标志错误, 请进行收付设置后继续！`,
                   });
+                  this.errorRowNumArr.push(data.rowIndex);
                   return;
+                } else {
+                  this.$store.commit("DataCollection/SET_INOUT_FLAG_BY_ID", {
+                    id: data.id,
+                    inFlag: "进",
+                    outFlag: "出",
+                  });
                 }
               }
-              break;
-            case "gas_tax_records":
-              {
-                // let filterTemp = allFieldList.filter((el) => {
-                //   return el === "ZH" || el === "KH";
-                // });
-                // if (filterTemp.length === 0) {
-                //   this.$message.error({
-                //     title: "错误",
-                //     message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项`,
-                //   });
-                //   return;
-                // }
-              }
-              break;
+            }
           }
+          break;
+      }
+    },
+
+    async handleClickSubmit() {
+      if (this.multipleSelection.length > 0) {
+        this.errorRowNumArr = [];
+        for (let data of this.multipleSelection) {
+          await this.sleep(5);
+          await this.checkFileRowError(data);
+        }
+        if (this.errorRowNumArr.length > 0) {
+          return;
         }
         this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "process-import");
         // 数据加工和处理，给每个sheet生成headers、matchedFields
@@ -423,13 +523,49 @@ export default {
         currentRow: this.currentRow,
       });
     },
+    handleClickJdbz(rowData) {
+      console.log(rowData, this.currentRow);
+      let { ins1, ins2 } = rowData;
+      this.formData = {
+        id: this.currentRow.id,
+        tips: `系统检测的两行数据中对应列内容分别为'${ins1}', '${ins2}'`,
+        inFlag: "",
+        outFlag: "",
+        filePathName: this.currentRow.filePathName,
+      };
+      this.$store.commit("DialogPopWnd/SET_SHOWJDBZDIALOGVISIBLE", true);
+    },
     // table表点击事件
-    handleCurrentChange(val) {
-      this.currentRow = val;
+    handleCurrentChange(currentRow) {
+      this.currentRow = currentRow;
     },
     // multipleSelection 代表当前选中的行数据
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    handleSelectionChange(multipleSelection) {
+      this.multipleSelection = multipleSelection;
+    },
+    readFileList(dir, filesList = []) {
+      const stat = fs.statSync(dir);
+      if (!stat.isDirectory()) {
+        if ([".xls", ".txt", ".csv", ".xlsx"].includes(path.extname(dir))) {
+          filesList.push(dir);
+        }
+        return;
+      }
+      const files = fs.readdirSync(dir);
+      files.forEach((item, index) => {
+        var fullPath = path.join(dir, item);
+        const stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          this.readFileList(path.join(dir, item), filesList); //递归读取文件
+        } else {
+          if (
+            [".xls", ".txt", ".csv", ".xlsx"].includes(path.extname(fullPath))
+          ) {
+            filesList.push(fullPath);
+          }
+        }
+      });
+      return filesList;
     },
     // 导入数据
     async handleClickImportData(pdm) {
@@ -443,17 +579,22 @@ export default {
           filters: [
             { name: "Files", extensions: ["txt", "csv", "xls", "xlsx"] },
           ],
-          properties: ["openFile", "multiSelections"],
+          properties: ["openFile", "openDirectory", "multiSelections"],
         }
       );
-      if (typeof filePathList === "undefined") return;
-      this.parseFileCount = filePathList.length;
       if (typeof filePathList !== "undefined") {
+        console.log(filePathList);
+        let allFileList = [];
+        filePathList.forEach((item) => {
+          this.readFileList(item, allFileList);
+        });
+        allFileList = this.$lodash.uniq(allFileList);
+        this.parseFileCount = allFileList.length;
         this.loading = true;
         this.$electron.ipcRenderer.send("parse-all-example-file", {
           caseBase: this.caseBase,
           batchCount: this.batchCount,
-          filePathList,
+          filePathList: allFileList,
           pdm,
         });
         setTimeout(function () {

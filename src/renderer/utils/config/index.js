@@ -38,6 +38,7 @@ class DbConfig {
   // 写入配置
   writeDbConfig(configObj) {
     try {
+      configObj.max = 10000;
       let content = aes.encrypt(JSON.stringify(configObj));
       fs.writeFileSync(this.configFilePath, content);
       return { success: true };

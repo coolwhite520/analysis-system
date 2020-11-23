@@ -1,5 +1,7 @@
 var regedit = require("regedit");
 const moment = require("moment");
+const path = require("path");
+const fs = require("fs");
 //in electrion
 // "extraResources": [
 //   {
@@ -46,10 +48,24 @@ async function listRegPath(regPath) {
   });
 }
 
+function readFileList(dir, filesList = []) {
+  const files = fs.readdirSync(dir);
+  files.forEach((item, index) => {
+    var fullPath = path.join(dir, item);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      readFileList(path.join(dir, item), filesList); //递归读取文件
+    } else {
+      if ([".xls", ".txt", ".csv", ".xlsx"].includes(path.extname(fullPath))) {
+        filesList.push(fullPath);
+      }
+    }
+  });
+  return filesList;
+}
+
 (async () => {
-  var str = "19700405030201";
-  var str2 = "20090522081601999";
-  var regExp = /(\d{4})(?:\-)?([0]{1}\d{1}|[1]{1}[0-2]{1})(?:\-)?([0-2]{1}\d{1}|[3]{1}[0-1]{1})(?:\s)?([0-1]{1}\d{1}|[2]{1}[0-3]{1})(?::)?([0-5]{1}\d{1})(?::)?([0-5]{1}\d{1})/; //未使用g选项
-  var res = str2.match(regExp);
-  console.log(res); //输出[ 'aaa', index: 0, input: 'aaabbbcccaaabbbccc' ]
+  let fsList = [];
+  readFileList("/Users/baiyang/Desktop/3709318620200623160533", fsList);
+  console.log(fsList);
 })();

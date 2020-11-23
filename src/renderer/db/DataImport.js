@@ -206,11 +206,6 @@ export default {
           newRows.push(newRow);
         }
       } else {
-        log.info({
-          totalCount: global.pool.totalCount,
-          idleCount: global.pool.idleCount,
-          waitingCount: global.pool.waitingCount,
-        });
         let taskArray = [];
         for (let matchedField of matchedFields) {
           let arr = headers.filter((el) => el.fieldename === matchedField);

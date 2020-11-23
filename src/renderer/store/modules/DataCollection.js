@@ -29,6 +29,16 @@ const mutations = {
       index++;
     }
   },
+
+  SET_INOUT_FLAG_BY_ID(state, { id, inFlag, outFlag }) {
+    for (let index = 0; index < state.exampleDataList.length; index++) {
+      if (id === state.exampleDataList[index].id) {
+        Vue.set(state.exampleDataList[index], "inFlag", inFlag);
+        Vue.set(state.exampleDataList[index], "outFlag", outFlag);
+        break;
+      }
+    }
+  },
   SET_IMPORT_DATA_PROCESS(state, { id, progress }) {
     for (let index = 0; index < state.exampleDataList.length; index++) {
       if (id === state.exampleDataList[index].id) {
@@ -174,6 +184,10 @@ const actions = {
   async changeMatchList({ commit }, { index, matchedMbdm }) {
     commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", { index, matchedMbdm });
     let dbColsName = await dataImport.QueryColsNameByMbdm(matchedMbdm);
+    dbColsName.unshift({
+      fieldcname: "",
+      fieldename: "",
+    });
     // 查询log表获取数据
     let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
       matchedMbdm

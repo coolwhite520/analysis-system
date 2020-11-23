@@ -111,7 +111,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="错误数据"
+        label="检测结果"
         v-if="clickedCheckBtn && !loadingTable"
         header-align="center"
         align="center"
@@ -139,7 +139,7 @@
               class="iconfont"
               style="text-align: center; color: #377645; font-size: 20px"
             >
-              &#xe650;
+              &#xe659;
             </div>
           </div>
         </template>
@@ -154,10 +154,10 @@
             type="line"
             :text-inside="true"
             :percentage="scope.row.progress"
-            status="success"
+            :color="scope.row.progressColor"
             :stroke-width="30"
-            stroke-linecap="butt"
           ></el-progress>
+          <!-- <progress-bar :options="options" :value="scope.row.progress" /> -->
         </template>
       </el-table-column>
     </el-table>
@@ -223,6 +223,31 @@ export default {
       isMounted: false,
       loadingTable: false,
       currentImportRows: [],
+      options: {
+        text: {
+          color: "#FFFFFF",
+          shadowEnable: true,
+          shadowColor: "#000000",
+          fontSize: 14,
+          fontFamily: "Helvetica",
+          dynamicPosition: false,
+          hideText: false,
+        },
+        progress: {
+          color: "#2dbd2d",
+          backgroundColor: "#333333",
+        },
+        layout: {
+          height: 35,
+          width: 140,
+          verticalTextAlign: 61,
+          horizontalTextAlign: 43,
+          zeroOffset: 0,
+          strokeWidth: 30,
+          progressPadding: 0,
+          type: "line",
+        },
+      },
     };
   },
   computed: {
@@ -234,7 +259,7 @@ export default {
       if (this.isMounted) {
         let selectedRows = this.$refs[`myImportTable`].selection;
         for (let row of selectedRows) {
-          if (row.errorFields.length > 0) {
+          if (row.errorFields.length > 0 && this.clickedCheckBtn) {
             return true;
           }
         }
@@ -300,24 +325,20 @@ export default {
   methods: {
     // 导入消息的回调
     async onRecvImportMsg(e, args) {
-      let { sumRow, index, id, success, msg } = args;
-      let progress;
+      let { percentage, id, success, msg } = args;
+      console.log(id, percentage);
       if (!success) {
         this.$message.error({
           title: "错误",
           message: msg,
         });
       } else {
-        progress = parseInt(parseFloat(index / sumRow) * 100);
-        if (progress >= 100) {
-          progress = 100;
-        }
-        for (let item of this.exampleDataList) {
-          if (item.id === id && item.progress === progress) return;
+        if (percentage >= 100) {
+          percentage = 100;
         }
         this.$store.commit("DataCollection/SET_IMPORT_DATA_PROCESS", {
           id,
-          progress,
+          progress: percentage,
         });
       }
     },

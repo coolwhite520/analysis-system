@@ -60,7 +60,14 @@ import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
 export default {
   async mounted() {
     let _this = this;
-
+    // setInterval(() => {
+    //   if (global.pool && process.env.NODE_ENV === "development")
+    //     log.info({
+    //       totalCount: global.pool.totalCount,
+    //       idleCount: global.pool.idleCount,
+    //       waitingCount: global.pool.waitingCount,
+    //     });
+    // }, 1000 * 5);
     this.$electron.ipcRenderer.on("save-state", async (event, data) => {
       if (this.currentViewName === "home-page") {
         this.$message({
@@ -119,6 +126,7 @@ export default {
       let configPath = this.$electron.remote.getGlobal("configPath");
       let dbconfig = new DbConfig(configPath);
       let dbCon = dbconfig.readDbConfig();
+      log.info(dbCon);
       let pool = new Pool(dbCon);
       let connFlag = await new Promise(function (resolve, reject) {
         pool.connect((err) => {

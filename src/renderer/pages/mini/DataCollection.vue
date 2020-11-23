@@ -327,7 +327,7 @@ export default {
         if (encoding !== "UTF-8") {
           readFileStream.on("data", function (chuck) {
             let str = iconv.decode(chuck, encoding);
-            log.info(str);
+            // log.info(str);
             csvParseStream.write(Buffer.from(str));
           });
         } else {
@@ -338,21 +338,17 @@ export default {
         });
       });
     },
+    GetRandomNum(Min, Max) {
+      var Range = Max - Min;
+      var Rand = Math.random();
+      return Min + Math.round(Rand * Range);
+    },
     // 事件响应函数
     async onReadExampleFile(e, args) {
-      let { filePathList, pdm, caseBase, batchCount } = args;
-      let publicFields = [
-        "batch",
-        "sjlylx",
-        "crrq",
-        "ajid",
-        "sjlyid",
-        "rownum",
-      ];
-      let data = {};
-      let resultList = [];
+      let { filePathList } = args;
       for (let filePathName of filePathList) {
         try {
+          let resultList = [];
           let ext = path.extname(filePathName).slice(1);
           switch (ext) {
             case "txt":
@@ -371,129 +367,9 @@ export default {
           if (resultList.length === 0) {
             continue;
           }
-          for (let result of resultList) {
-            let { fileName, sheetName, fileAllCols, ins1, ins2 } = result;
-            // 文件的所有列名称去掉空格
-            fileAllCols.forEach((element, index) => {
-              fileAllCols[index] = element.trim();
-            });
-            data.fileAllCols = fileAllCols;
-            let queryResult = await dataImport.QueryBestMatchMbdm(
-              pdm,
-              fileAllCols
-            );
-            log.info(fileName, queryResult);
-            let matchedMbdm = queryResult.mbdm;
-            // 说明是自动匹配
-            if (pdm === "") {
-              pdm = queryResult.pdm;
-            }
-            data.mc = DataTypeList.find((ele) => {
-              return ele.pdm === pdm;
-            }).mc;
-            data.DataTypeList = DataTypeList;
-            data.enableModify = false;
-            data.sheetName = sheetName;
-            data.fileName = fileName;
-            data.filePathName = filePathName;
-            data.caseBase = caseBase;
-            data.batchCount = batchCount;
-
-            // 根据点击的按钮获取对应的模版表
-            let matchedMbdmList = await dataImport.QueryMatchTableListByPdm(
-              pdm
-            );
-            data.matchedMbdmList = matchedMbdmList;
-            // 获取tablecname
-            let tabletemp = data.matchedMbdmList.filter((value) => {
-              return value.mbdm === matchedMbdm;
-            });
-            let tablecname =
-              tabletemp.length > 0 ? tabletemp[0].tablecname : "";
-
-            let externFields =
-              tabletemp.length > 0 ? tabletemp[0].extern_field.split(",") : [];
-            let mbmc = tabletemp.length > 0 ? tabletemp[0].mbmc : "";
-            data.publicFields = publicFields;
-            data.tablecname = tablecname;
-            data.mbmc = mbmc;
-            data.externFields = externFields;
-            data.matchedMbdm = matchedMbdm;
-            // 最佳匹配的模版对应的字段名称
-            let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
-              matchedMbdm
-            );
-            data.templateToFieldObjList = templateToFieldObjList;
-
-            // 读取log表中的匹配list
-            let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
-              matchedMbdm
-            );
-            let dataList = [];
-            for (let i = 0; i < fileAllCols.length; i++) {
-              let fileColName = fileAllCols[i];
-              // 这个地方需要参考log表进行匹配
-              let bestArray = templateToFieldObjList.filter((ele) => {
-                return ele.fieldcname === fileColName;
-              });
-              let obj = {
-                fileColName, // 文件中的列名
-                ins1: ins1.length > 0 ? ins1[i] : "",
-                ins2: ins2.length > 0 ? ins2[i] : "",
-                matchedFieldName:
-                  bestArray.length > 0 ? bestArray[0].fieldename : "",
-                matchedFieldType:
-                  bestArray.length > 0 ? bestArray[0].fieldtype : "",
-              };
-              // 如果没有直接匹配上，那么和log表再次进行匹配。
-              if (obj.matchedFieldName === "") {
-                bestArray = logMatchList.filter((ele) => {
-                  return ele.columnname === fileColName;
-                });
-                if (bestArray.length > 0) {
-                  bestArray = templateToFieldObjList.filter((ele) => {
-                    return ele.fieldcname === bestArray[0].fieldname;
-                  });
-                  obj.matchedFieldName =
-                    bestArray.length > 0 ? bestArray[0].fieldename : "";
-                } else {
-                  obj.matchedFieldName = "";
-                }
-              }
-              dataList.push(obj);
-            }
-
-            // 查找相同的列
-            let resultSameArr = [];
-            for (let item of dataList) {
-              for (let item2 of dataList) {
-                if (
-                  item !== item2 &&
-                  item.matchedFieldName === item2.matchedFieldName &&
-                  item.matchedFieldName !== "" &&
-                  item2.matchedFieldName !== ""
-                ) {
-                  resultSameArr.push(item);
-                  resultSameArr.push(item2);
-                }
-              }
-            }
-            for (let item of dataList) {
-              item.sameMatchedRow = false;
-            }
-            for (let item of resultSameArr) {
-              item.sameMatchedRow = true;
-            }
-
-            data.dataList = dataList;
-            data.success = true;
-            data.id = UUID.v1();
-            this.$electron.ipcRenderer.send(
-              "parse-one-example-sheet-over",
-              data
-            );
-          }
+          await this.makeExampleDataStruct(filePathName, resultList, args);
         } catch (e) {
+          let data = {};
           log.error(e);
           data.filePathName = filePathName;
           data.success = false;
@@ -505,7 +381,146 @@ export default {
       this.$electron.ipcRenderer.send("parse-all-example-file-over", {});
       // this.$store.commit("DataCollection/SET_CSV_LIST", data); // 如果需要多进程访问vuex，需要启用插件功能并所有的commit都需要改成dispatch
     },
+    async makeExampleDataStruct(filePathName, resultList, args) {
+      let { pdm, caseBase, batchCount } = args;
+      let publicFields = [
+        "batch",
+        "sjlylx",
+        "crrq",
+        "ajid",
+        "sjlyid",
+        "rownum",
+      ];
+      for (let result of resultList) {
+        let data = {};
+        let { fileName, sheetName, fileAllCols, ins1, ins2 } = result;
+        // 文件的所有列名称去掉空格
+        fileAllCols.forEach((element, index) => {
+          fileAllCols[index] = element.trim();
+        });
+        data.fileAllCols = fileAllCols;
+        let queryResult = await dataImport.QueryBestMatchMbdm(pdm, fileAllCols);
+        // log.info(fileName, queryResult);
+        let matchedMbdm = queryResult.mbdm;
+        // 说明是自动匹配
+        if (pdm === "") {
+          pdm = queryResult.pdm;
+        }
+        let itemTemp = DataTypeList.find((ele) => {
+          return ele.pdm === pdm;
+        });
+        data.mc = itemTemp ? itemTemp.mc : "";
+        data.DataTypeList = DataTypeList;
+        data.enableModify = false;
+        data.sheetName = sheetName;
+        data.fileName = fileName;
+        data.filePathName = filePathName;
+        data.caseBase = caseBase;
+        data.batchCount = batchCount;
 
+        // 根据点击的按钮获取对应的模版表
+        let matchedMbdmList = await dataImport.QueryMatchTableListByPdm(pdm);
+        data.matchedMbdmList = matchedMbdmList;
+        // 获取tablecname
+        let tabletemp = data.matchedMbdmList.filter((value) => {
+          return value.mbdm === matchedMbdm;
+        });
+        let tablecname = tabletemp.length > 0 ? tabletemp[0].tablecname : "";
+
+        let externFields =
+          tabletemp.length > 0 ? tabletemp[0].extern_field.split(",") : [];
+        let mbmc = tabletemp.length > 0 ? tabletemp[0].mbmc : "";
+        data.publicFields = publicFields;
+        data.tablecname = tablecname;
+        data.mbmc = mbmc;
+        data.externFields = externFields;
+        data.matchedMbdm = matchedMbdm;
+        // 最佳匹配的模版对应的字段名称
+        let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
+          matchedMbdm
+        );
+        templateToFieldObjList.unshift({
+          fieldcname: "",
+          fieldename: "",
+        });
+        data.templateToFieldObjList = templateToFieldObjList;
+
+        // 读取log表中的匹配list
+        let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
+          matchedMbdm
+        );
+        let dataList = [];
+        for (let i = 0; i < fileAllCols.length; i++) {
+          let fileColName = fileAllCols[i];
+          // 这个地方需要参考log表进行匹配
+          let bestArray = templateToFieldObjList.filter((ele) => {
+            return ele.fieldcname === fileColName;
+          });
+          let obj = {
+            fileColName, // 文件中的列名
+            ins1: ins1.length > 0 ? ins1[i] : "",
+            ins2: ins2.length > 0 ? ins2[i] : "",
+            matchedFieldName:
+              bestArray.length > 0 ? bestArray[0].fieldename : "",
+            matchedFieldType:
+              bestArray.length > 0 ? bestArray[0].fieldtype : "",
+          };
+          // 如果没有直接匹配上，那么和log表再次进行匹配。
+          if (obj.matchedFieldName === "") {
+            bestArray = logMatchList.filter((ele) => {
+              return ele.columnname === fileColName;
+            });
+            if (bestArray.length > 0) {
+              bestArray = templateToFieldObjList.filter((ele) => {
+                return ele.fieldcname === bestArray[0].fieldname;
+              });
+              obj.matchedFieldName =
+                bestArray.length > 0 ? bestArray[0].fieldename : "";
+            } else {
+              obj.matchedFieldName = "";
+            }
+          }
+          dataList.push(obj);
+        }
+
+        // 查找相同的列
+        let resultSameArr = [];
+        for (let item of dataList) {
+          for (let item2 of dataList) {
+            if (
+              item !== item2 &&
+              item.matchedFieldName === item2.matchedFieldName &&
+              item.matchedFieldName !== "" &&
+              item2.matchedFieldName !== ""
+            ) {
+              resultSameArr.push(item);
+              resultSameArr.push(item2);
+            }
+          }
+        }
+        for (let item of dataList) {
+          item.sameMatchedRow = false;
+        }
+        for (let item of resultSameArr) {
+          item.sameMatchedRow = true;
+        }
+        data.dataList = dataList;
+        data.success = true;
+        data.id = UUID.v1();
+        data.progressColor = this.getRandomColor();
+        data.inFlag = "";
+        data.outFlag = "";
+        this.$electron.ipcRenderer.send("parse-one-example-sheet-over", data);
+      }
+    },
+    /*随机获取颜色*/
+    getRandomColor() {
+      // var r = Math.floor(Math.random() * 256);
+      // var g = Math.floor(Math.random() * 256);
+      // var b = Math.floor(Math.random() * 256);
+      // return "rgb(" + r + "," + g + "," + b + ")";
+      return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
+    },
     async onReadAllFile(e, args) {
       try {
         let _this = this;
@@ -932,8 +947,18 @@ export default {
     },
     async onCopyTempDataToRealTable(e, args) {
       let { list } = args;
-      for (let item of list) {
-        await this.copyTempDataToRealTable(item);
+      let chunkCount = 5;
+      let newChunkList = this.$lodash.chunk(list, chunkCount);
+      for (let innerList of newChunkList) {
+        let promiseArr = [];
+        for (let item of innerList) {
+          promiseArr.push(
+            (async () => {
+              await this.copyTempDataToRealTable(item);
+            })()
+          );
+        }
+        await Promise.all(promiseArr);
       }
     },
     // 从temp表格导入到真正的数据表
@@ -947,6 +972,8 @@ export default {
         publicFields,
         matchedFields,
         externFields,
+        inFlag,
+        outFlag,
         id,
       } = args;
 
@@ -954,6 +981,7 @@ export default {
       let targetTableName = tablecname;
       let client = await global.pool.connect();
       let client2 = await global.pool.connect();
+      let lastPercentage = 0;
       try {
         return await new Promise(async (resolve, rejcect) => {
           await cases.SwitchCase(client, ajid);
@@ -1047,13 +1075,15 @@ export default {
           stream
             .pipe(
               through2.obj(function (row, enc, callback) {
-                console.log(row);
+                // console.log(row);
                 let rowNew = importModel.TestingHandle(
                   Columns,
                   row,
-                  targetTableName
+                  targetTableName,
+                  inFlag,
+                  outFlag
                 );
-                console.log(rowNew);
+                // console.log(rowNew);
                 if (Object.keys(rowNew).length !== postHandleFields.length) {
                   callback();
                   return;
@@ -1073,20 +1103,26 @@ export default {
                   }
                 }
                 let valueStr = values.join("\t") + "\n";
-                console.log(valueStr);
+                // console.log(valueStr);
                 this.push(valueStr);
                 callback();
               })
             )
             .on("data", (data) => {
               index++;
-              _this.$electron.ipcRenderer.send("import-one-table-process", {
-                id,
-                sumRow,
-                index,
-                success: true,
-                msg: "success",
-              });
+              let percentage = parseInt(parseFloat(index / sumRow) * 100);
+              if (
+                lastPercentage !== percentage &&
+                percentage - lastPercentage > this.GetRandomNum(4, 10)
+              ) {
+                lastPercentage = percentage;
+                _this.$electron.ipcRenderer.send("import-one-table-process", {
+                  id,
+                  percentage,
+                  success: true,
+                  msg: "success",
+                });
+              }
               if (!streamFrom.write(data)) {
                 stream.pause();
               }
@@ -1103,8 +1139,6 @@ export default {
         log.info(e);
         this.$electron.ipcRenderer.send("import-one-table-process", {
           id,
-          sumRow: 100,
-          index: 100,
           success: false,
           msg: e.message,
         });

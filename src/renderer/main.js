@@ -18,6 +18,9 @@ import "./utils/extern";
 import VueLazyComponent from "@xunlei/vue-lazy-component";
 Vue.use(VueLazyComponent);
 
+import ProgressBar from "vuejs-progress-bar";
+Vue.use(ProgressBar);
+
 const lodash = require("lodash");
 
 Vue.prototype.$lodash = lodash;
