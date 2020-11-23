@@ -171,6 +171,79 @@ export default {
       return value;
     },
     // 解析示例xlsx文件
+    async parseSheet(worksheetReader, filePathName) {
+      let rows = [];
+      let loopCount = 0;
+      for await (const row of worksheetReader) {
+        loopCount++;
+        // 寻找前十行中行内拥有最多cell的行, 列数最多的项作为header
+        if (loopCount === 10) {
+          break;
+        }
+        let newRow = [];
+        if (!row.hasValues) continue;
+        for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
+          let cell = row.getCell(cindex);
+          if (cell.type === 4) {
+            console.log(cell.type, cell.value);
+            let cellDate = new Date(cell.value);
+            let m = moment(cellDate).utc();
+            let year = m.year();
+            let month = m.month() + 1;
+            month = String(month).length === 1 ? "0" + month : month;
+            let day = m.date();
+            day = String(day).length === 1 ? "0" + day : day;
+            let hour = m.hour();
+            hour = String(hour).length === 1 ? "0" + hour : hour;
+            let minute = m.minute();
+            minute = String(minute).length === 1 ? "0" + minute : minute;
+            let sec = m.second();
+            sec = String(sec).length === 1 ? "0" + sec : sec;
+            if (year === 1899) {
+              cell = `${hour}:${minute}:${sec}`;
+            } else {
+              if (hour === "00" && minute === "00" && sec === "00") {
+                cell = `${year}-${month}-${day}`;
+              } else {
+                cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
+              }
+            }
+          } else {
+            cell = cell.toString().trim();
+          }
+          newRow.push(cell);
+        }
+        rows.push(newRow);
+      }
+      console.log(rows);
+      if (rows.length < 3) {
+        return null;
+      }
+      function findHaveMoreCellsIndex(rows) {
+        let max = 0;
+        let findindex = 0;
+        for (let index = 0; index < rows.length; index++) {
+          let row = rows[index];
+          if (row.length > max) {
+            max = row.length;
+            findindex = index;
+          }
+        }
+        return findindex;
+      }
+      let index = findHaveMoreCellsIndex(rows);
+      let result = {
+        fileName: path.basename(filePathName),
+        sheetName: worksheetReader.name,
+        fileAllCols: rows[index],
+        ins1: rows[index + 1],
+        ins2: rows[index + 2],
+        skipLines: index,
+      };
+      console.log(result);
+      return result;
+    },
+
     async parseExampleExcelFile(filePathName) {
       let resultList = [];
       const workbookReader = new excel.stream.xlsx.WorkbookReader(
@@ -184,59 +257,8 @@ export default {
         }
       );
       for await (const worksheetReader of workbookReader) {
-        let rows = [];
-        for await (const row of worksheetReader) {
-          let newRow = [];
-          if (!row.hasValues) continue;
-          for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
-            let cell = row.getCell(cindex);
-            if (cell.type === 4) {
-              console.log(cell.type, cell.value);
-              let cellDate = new Date(cell.value);
-              let m = moment(cellDate).utc();
-              let year = m.year();
-              let month = m.month() + 1;
-              month = String(month).length === 1 ? "0" + month : month;
-              let day = m.date();
-              day = String(day).length === 1 ? "0" + day : day;
-              let hour = m.hour();
-              hour = String(hour).length === 1 ? "0" + hour : hour;
-              let minute = m.minute();
-              minute = String(minute).length === 1 ? "0" + minute : minute;
-              let sec = m.second();
-              sec = String(sec).length === 1 ? "0" + sec : sec;
-              if (year === 1899) {
-                cell = `${hour}:${minute}:${sec}`;
-              } else {
-                if (hour === "00" && minute === "00" && sec === "00") {
-                  cell = `${year}-${month}-${day}`;
-                } else {
-                  cell = `${year}-${month}-${day} ${hour}:${minute}:${sec}`;
-                }
-              }
-            } else {
-              cell = cell.toString().trim();
-            }
-            newRow.push(cell);
-          }
-          if (rows.length === 3) {
-            break;
-          }
-          if (newRow.length > 0) rows.push(newRow);
-        }
-        if (rows.length === 0) {
-          continue;
-        }
-        console.log(worksheetReader.name);
-        let result = {
-          fileName: path.basename(filePathName),
-          sheetName: worksheetReader.name,
-          fileAllCols: rows.length > 0 ? rows[0] : [],
-          ins1: rows.length > 1 ? rows[1] : [],
-          ins2: rows.length > 2 ? rows[2] : [],
-        };
-        resultList.push(result);
-        log.info(worksheetReader.rowCount);
+        let result = await this.parseSheet(worksheetReader, filePathName);
+        if (result) resultList.push(result);
       }
       return resultList;
     },
@@ -264,9 +286,10 @@ export default {
     /**
      * 解析示例csv文件
      */
-    async parseExampleCsvFile(filePathName) {
+    async parseExampleCsvFile(filePathName, skipLines = 0) {
+      console.log("parseExampleCsvFile: ", filePathName, skipLines);
       let encoding = await this.getFileEncoding(filePathName);
-      return new Promise(function (resolve, reject) {
+      let result = await new Promise((resolve, reject) => {
         let rows = [];
         let csvParseStream = csv.parse({
           trim: true,
@@ -274,6 +297,7 @@ export default {
           objectMode: true,
           ignoreEmpty: true,
           maxRows: 2,
+          skipLines,
         });
         let readFileStream = fs.createReadStream(filePathName);
 
@@ -292,10 +316,9 @@ export default {
             }
           })
           .on("end", (rowCount) => {
-            log.info(`Parsed ${rowCount} rows`);
             if (rows.length < 2) {
               readFileStream.close();
-              resolve([]);
+              resolve(null);
               return;
             }
             let fileAllCols = [];
@@ -319,8 +342,9 @@ export default {
               fileAllCols,
               ins1,
               ins2,
+              skipLines,
             };
-            resolve([result]);
+            resolve(result);
             readFileStream.close();
           });
         // 判断编码格式并进行转换
@@ -337,6 +361,16 @@ export default {
           csvParseStream.end();
         });
       });
+
+      if (result) {
+        if (result.fileAllCols.length < 5) {
+          return await this.parseExampleCsvFile(filePathName, ++skipLines);
+        } else {
+          return [result];
+        }
+      } else {
+        return [];
+      }
     },
     GetRandomNum(Min, Max) {
       var Range = Max - Min;
@@ -393,7 +427,14 @@ export default {
       ];
       for (let result of resultList) {
         let data = {};
-        let { fileName, sheetName, fileAllCols, ins1, ins2 } = result;
+        let {
+          fileName,
+          sheetName,
+          fileAllCols,
+          ins1,
+          ins2,
+          skipLines,
+        } = result;
         // 文件的所有列名称去掉空格
         fileAllCols.forEach((element, index) => {
           fileAllCols[index] = element.trim();
@@ -417,7 +458,7 @@ export default {
         data.filePathName = filePathName;
         data.caseBase = caseBase;
         data.batchCount = batchCount;
-
+        data.skipLines = skipLines;
         // 根据点击的按钮获取对应的模版表
         let matchedMbdmList = await dataImport.QueryMatchTableListByPdm(pdm);
         data.matchedMbdmList = matchedMbdmList;
@@ -539,6 +580,7 @@ export default {
             caseBase,
             fileName,
             sheetName,
+            skipLines,
           } = data;
           let { ajid, ajmc } = caseBase;
           let filepath = path.dirname(data.filePathName);
@@ -616,7 +658,8 @@ export default {
                   caseBase,
                   batchCount,
                   sjlyid,
-                  createTableName
+                  createTableName,
+                  skipLines
                 );
               }
               break;
@@ -637,7 +680,8 @@ export default {
                 caseBase,
                 batchCount,
                 sjlyid,
-                createTableName
+                createTableName,
+                skipLines
               );
             }
           }
@@ -654,8 +698,8 @@ export default {
         }, ms);
       });
     },
-    // 解析excel文件并通过异步bulk insert 流的方式进行数据导入。 存在的问题：exceljs模块无法获取row的条目数量和sheetname,
-    // 需要处理 日期、事件格式的转换
+    // 解析excel文件并通过异步bulk insert 流的方式进行数据导入
+
     async parseExcelFile(
       matchedMbdm,
       sheetIndex,
@@ -671,7 +715,8 @@ export default {
       caseBase,
       batchCount,
       sjlyid,
-      createTableName
+      createTableName,
+      skipLines
     ) {
       let _this = this;
       let client = await global.pool.connect();
@@ -710,7 +755,6 @@ export default {
           let rownum = 0;
           let readSize = 0;
           let fileSize = stats.size;
-          let bFirstRow = true;
           const workbookReader = new excel.stream.xlsx.WorkbookReader(
             filePathName,
             {
@@ -724,14 +768,13 @@ export default {
           let templateToFieldObjList = await dataImport.QueryColsNameByMbdm(
             matchedMbdm
           );
+
           for await (const worksheetReader of workbookReader) {
             if (worksheetReader.name !== sheetName) continue;
             for await (const row of worksheetReader) {
               if (!row.hasValues) continue;
-              if (bFirstRow) {
-                bFirstRow = false;
-                continue;
-              }
+              console.log(row.number, skipLines + 1);
+              if (row.number <= skipLines + 1) continue;
               let rowDataValues = [];
               let matchedFieldIndex = 0;
               for (let cindex of matchedColNumList) {
@@ -835,7 +878,8 @@ export default {
       caseBase,
       batchCount,
       sjlyid,
-      createTableName
+      createTableName,
+      skipLines // 跳过的行数，非法行
     ) {
       let _this = this;
       let client = await global.pool.connect();
@@ -846,6 +890,7 @@ export default {
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
           let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
+          console.log(sqlStr, matchedFileCols, { skipLines });
           await cases.SwitchCase(client, ajid);
           let streamFrom = await client.query(copyFrom(sqlStr));
           let matchedColNumList = [];
@@ -870,9 +915,10 @@ export default {
             .pipe(
               csv.parse({
                 trim: true,
-                headers: true,
+                headers: fileAllCols,
                 objectMode: true,
                 ignoreEmpty: true,
+                skipLines: skipLines + 1,
               })
             )
             .pipe(

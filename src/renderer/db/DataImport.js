@@ -135,7 +135,7 @@ export default {
       if (tablecname.endsWith("_source")) {
         tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
       }
-      let like = `${tablecname}_${mbdm}`;
+      let like = `${tablecname}`;
       let valueName = uuid.v1();
       valueName = valueName.replace(/-/g, "");
       let createTableName = `${like}_${valueName}_temp`;
@@ -444,7 +444,6 @@ export default {
       await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE 1=1  and TRIM(both '  ' FROM ${fieldName}) is not null
       and TRIM(both '  ' FROM ${fieldName}) !='' and not icap_base.isnumeric(${fieldName});`;
-      log.info(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*) from ${tableName} WHERE 1=1 and TRIM(both '  ' FROM ${fieldName}) is not null

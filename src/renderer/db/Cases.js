@@ -108,14 +108,14 @@ export default {
               // console.log(result.rows);
               let findResult = result.rows.find((row) => {
                 if (row.fieldename) {
-                  return row.fieldename === "sjlyid";
+                  return row.fieldename.toLowerCase() === "sjlyid";
                 } else {
                   return false;
                 }
               });
               if (findResult) {
                 console.log(row.table_name);
-                let sqlDelRows = `DELETE FROM ${row.table_name} WHERE ajid =${ajid} AND SJLYID IN(${sjlyid})`;
+                let sqlDelRows = `DELETE FROM ${row.table_name} WHERE  SJLYID IN(${sjlyid})`; //ajid =${ajid} AND
                 await base.QueryCustom(sqlDelRows, ajid);
               }
               return true;

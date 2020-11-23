@@ -152,7 +152,6 @@ export default {
           dbCon,
         }
       );
-      log.info(msg);
       global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
       // 创建聚合函数
       await base.CreateAggregateFunction();

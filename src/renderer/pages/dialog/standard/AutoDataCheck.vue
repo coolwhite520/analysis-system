@@ -12,6 +12,7 @@
               round
               size="mini"
               @click="handleClickBtnGroupAll(item)"
+              :disabled="loadingDelete"
               >{{ item.title }}({{ item.count }})条</el-button
             >
           </el-button-group>
@@ -19,7 +20,11 @@
         </div>
       </el-col>
       <el-col :span="6" style="text-align: right">
-        <el-button type="success" size="mini" @click="handleClearAllError"
+        <el-button
+          type="success"
+          size="mini"
+          @click="handleClearAllError"
+          :loading="loadingDelete"
           >错误数据一键清理</el-button
         >
       </el-col>
@@ -215,6 +220,7 @@ export default {
   },
   data() {
     return {
+      loadingDelete: false,
       filterList: ["exceedLen", "notNum", "notDate"],
       clickedCheckBtn: false,
       isCheckingLoading: false,
@@ -391,6 +397,7 @@ export default {
     },
     async handleClearAllError() {
       try {
+        this.loadingDelete = true;
         let selectedRows = this.$refs[`myImportTable`].selection;
         if (selectedRows.length === 0) {
           this.$message({
@@ -425,10 +432,12 @@ export default {
           message: `数据删除成功！`,
           type: "success",
         });
+        this.loadingDelete = false;
       } catch (e) {
         this.$message.error({
           message: `数据删除错误！${e.message}`,
         });
+        this.loadingDelete = false;
       }
     },
     // 执行导入所有文件的操作

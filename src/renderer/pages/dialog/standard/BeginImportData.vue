@@ -258,7 +258,10 @@
             </div></el-col
           >
           <el-col :span="8">
-            <div v-if="errorRowNumArr.length > 0" style="text-align: right">
+            <div
+              v-if="errorRowNumArr.length > 0 && checkOver"
+              style="text-align: right"
+            >
               <el-button
                 type="text"
                 @click="handleClickCancelErrorRow"
@@ -289,8 +292,12 @@ export default {
       "parse-one-example-sheet-over",
       (event, data) => {
         if (!data.success) {
+          let tip;
+          if (data.errormsg.includes("invalid signature")) {
+            tip = "为老版本（2003）之前的格式，请使用工具进行批量转换！";
+          }
           const h = _this.$createElement;
-          let message = `文件：[${data.filePathName}] 解析错误信息：${data.errormsg}`;
+          let message = `文件：[${data.filePathName}] ${tip}`;
           _this.$message({
             title: "解析文件出错",
             message: h("i", { style: "color: teal" }, `${message}`),
@@ -327,6 +334,7 @@ export default {
   },
   data() {
     return {
+      checkOver: false,
       formData: null,
       loadingText: "拼命加载中，请耐心等待...",
       loading: false,
@@ -347,9 +355,12 @@ export default {
         if (this.errorRowNumArr.includes(row.rowIndex)) {
           console.log(row.rowIndex);
           await this.$refs.multipleTable.toggleRowSelection(row, false);
-          await this.sleep(10);
         }
       }
+      this.$message({
+        type: "success",
+        message: "取消勾选成功",
+      });
     },
     async sleep(ms) {
       return new Promise((resolve, reject) => {
@@ -444,10 +455,12 @@ export default {
     async handleClickSubmit() {
       if (this.multipleSelection.length > 0) {
         this.errorRowNumArr = [];
+        this.checkOver = false;
         for (let data of this.multipleSelection) {
           await this.sleep(5);
           await this.checkFileRowError(data);
         }
+        this.checkOver = true;
         if (this.errorRowNumArr.length > 0) {
           return;
         }

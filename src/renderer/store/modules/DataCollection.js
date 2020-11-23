@@ -40,12 +40,8 @@ const mutations = {
     }
   },
   SET_IMPORT_DATA_PROCESS(state, { id, progress }) {
-    for (let index = 0; index < state.exampleDataList.length; index++) {
-      if (id === state.exampleDataList[index].id) {
-        Vue.set(state.exampleDataList[index], "progress", progress);
-        break;
-      }
-    }
+    let item = state.exampleDataList.find((c) => c.id === id);
+    Vue.set(item, "progress", progress);
   },
   // 根据传递的索引修改最佳匹配的模版
   MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, matchedMbdm }) {

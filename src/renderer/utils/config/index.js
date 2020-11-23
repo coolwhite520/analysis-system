@@ -17,7 +17,7 @@ class DbConfig {
         database: "",
         password: "",
         port: 5432, //5432,
-        max: 100,
+        max: 1000,
       };
       this.writeDbConfig(obj);
     }
@@ -38,7 +38,7 @@ class DbConfig {
   // 写入配置
   writeDbConfig(configObj) {
     try {
-      configObj.max = 10000;
+      configObj.max = 1000;
       let content = aes.encrypt(JSON.stringify(configObj));
       fs.writeFileSync(this.configFilePath, content);
       return { success: true };
