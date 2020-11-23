@@ -59,6 +59,7 @@
             type="primary"
             :disabled="errorCount <= 0"
             @click="handleClickResolve"
+            :loading="loading"
             >数据处理</el-button
           >
         </el-row>
@@ -120,6 +121,7 @@ export default {
           message: `存在${sumErrCount}条特殊字符数据`,
           type: "success",
         });
+        this.loading = false;
       } catch (e) {
         this.$message.error({
           message: `数据检测失败：` + e.message,
@@ -130,6 +132,7 @@ export default {
     },
     async handleClickResolve() {
       try {
+        this.loading = true;
         let allCheckedNodes = this.$refs.tree.getCheckedNodes();
         if (allCheckedNodes.length === 0) return;
 
@@ -161,11 +164,13 @@ export default {
           message: `数据处理完毕`,
           type: "success",
         });
+        this.loading = false;
       } catch (e) {
         this.$message.error({
           message: `数据处理失败：` + e.message,
         });
         log.info(e.message);
+        this.loading = false;
       }
     },
     async freshTreeErrorCount() {

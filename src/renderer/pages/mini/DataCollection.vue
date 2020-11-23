@@ -219,28 +219,33 @@ export default {
       if (rows.length < 3) {
         return null;
       }
+      // 非空字段个数最多的行作为header
       function findHaveMoreCellsIndex(rows) {
         let max = 0;
         let findindex = 0;
         for (let index = 0; index < rows.length; index++) {
           let row = rows[index];
-          if (row.length > max) {
-            max = row.length;
+          let notEmptyLen = 0;
+          row.forEach((element) => {
+            if (element.length > 0) notEmptyLen++;
+          });
+          if (notEmptyLen > max) {
+            max = notEmptyLen;
             findindex = index;
           }
         }
         return findindex;
       }
       let index = findHaveMoreCellsIndex(rows);
+      rows = rows.slice(index);
       let result = {
         fileName: path.basename(filePathName),
         sheetName: worksheetReader.name,
-        fileAllCols: rows[index],
-        ins1: rows[index + 1],
-        ins2: rows[index + 2],
+        fileAllCols: rows[0],
+        ins1: rows.length > 1 ? rows[1] : [],
+        ins2: rows.length > 2 ? rows[2] : [],
         skipLines: index,
       };
-      console.log(result);
       return result;
     },
 
@@ -258,6 +263,7 @@ export default {
       );
       for await (const worksheetReader of workbookReader) {
         let result = await this.parseSheet(worksheetReader, filePathName);
+        console.log(result);
         if (result) resultList.push(result);
       }
       return resultList;
@@ -286,21 +292,17 @@ export default {
     /**
      * 解析示例csv文件
      */
-    async parseExampleCsvFile(filePathName, skipLines = 0) {
-      console.log("parseExampleCsvFile: ", filePathName, skipLines);
+    async parseExampleCsvFile(filePathName) {
       let encoding = await this.getFileEncoding(filePathName);
-      let result = await new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         let rows = [];
         let csvParseStream = csv.parse({
           trim: true,
-          headers: true,
           objectMode: true,
           ignoreEmpty: true,
-          maxRows: 2,
-          skipLines,
+          maxRows: 10,
         });
         let readFileStream = fs.createReadStream(filePathName);
-
         csvParseStream
           .on("error", (error) => {
             log.info(error);
@@ -308,43 +310,41 @@ export default {
             reject(error);
           })
           .on("data", (row) => {
-            // log.info(row);
             rows.push(row);
-            if (rows.length >= 2) {
-              readFileStream.close();
-              csvParseStream.end();
-            }
           })
           .on("end", (rowCount) => {
-            if (rows.length < 2) {
+            if (rows.length < 1) {
               readFileStream.close();
-              resolve(null);
+              resolve([]);
               return;
             }
-            let fileAllCols = [];
-            let ins1 = [];
-            let ins2 = [];
-            for (let row of rows) {
-              if (fileAllCols.length === 0) {
-                for (let k in row) {
-                  fileAllCols.push(k);
-                  ins1.push(row[k]);
-                }
-              } else {
-                for (let k in row) {
-                  ins2.push(row[k]);
+            function findHaveMoreCellsIndex(rows) {
+              let max = 0;
+              let findindex = 0;
+              for (let index = 0; index < rows.length; index++) {
+                let row = rows[index];
+                let notEmptyLen = 0;
+                row.forEach((element) => {
+                  if (element.length > 0) notEmptyLen++;
+                });
+                if (notEmptyLen > max) {
+                  max = notEmptyLen;
+                  findindex = index;
                 }
               }
+              return findindex;
             }
+            let index = findHaveMoreCellsIndex(rows);
+            rows = rows.slice(index);
             let result = {
               fileName: path.basename(filePathName),
               sheetName: path.basename(filePathName),
-              fileAllCols,
-              ins1,
-              ins2,
-              skipLines,
+              fileAllCols: rows[0],
+              ins1: rows.length > 1 ? rows[1] : [],
+              ins2: rows.length > 2 ? rows[2] : [],
+              skipLines: index,
             };
-            resolve(result);
+            resolve([result]);
             readFileStream.close();
           });
         // 判断编码格式并进行转换
@@ -361,16 +361,6 @@ export default {
           csvParseStream.end();
         });
       });
-
-      if (result) {
-        if (result.fileAllCols.length < 5) {
-          return await this.parseExampleCsvFile(filePathName, ++skipLines);
-        } else {
-          return [result];
-        }
-      } else {
-        return [];
-      }
     },
     GetRandomNum(Min, Max) {
       var Range = Max - Min;
@@ -824,6 +814,7 @@ export default {
               let insertStr = realValues.join("\t") + "\n";
               // 写入流中
               streamFrom.write(insertStr, function (err) {
+                console.log({ insertStr });
                 if (!err) {
                   let percentage = parseInt(
                     parseFloat(readSize / fileSize) * 100

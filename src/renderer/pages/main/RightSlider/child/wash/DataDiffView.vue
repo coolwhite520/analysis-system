@@ -54,6 +54,7 @@
             size="mini"
             type="primary"
             @click="handleClickResolve"
+            :loading="loading"
             >数据处理</el-button
           >
         </el-row>
@@ -120,18 +121,27 @@ export default {
     },
     async handleClickResolve() {
       try {
+        this.loading = true;
         let allCheckedNodes = this.$refs.tree.getCheckedNodes();
         if (allCheckedNodes.length === 0) return;
         let _this = this;
         let filterArr = [];
+        let emptyArr = [];
         let template = "";
         for (let nodeData of allCheckedNodes) {
           filterArr.push(nodeData.tid);
           template = nodeData.gpsqltemplate_update;
         }
+        for (let nodeData of this.myTreeList.renderTree) {
+          console.log({ nodeData });
+          if (!filterArr.includes(nodeData.tid)) {
+            emptyArr.push(nodeData.tid);
+          }
+        }
         if (template) {
           let decode = aes.decrypt(template);
           let sql = decode
+            .replace(/\$EMPTYFILTER\$/g, emptyArr.length > 0 ? emptyArr : 0)
             .replace(/\$MODEL_FILTER\$/g, this.currentTableData.modelFilterStr)
             .replace(/\$FILTER\$/g, filterArr)
             .replace(/\$AJID\$/g, this.caseBase.ajid);
@@ -146,9 +156,11 @@ export default {
               message: `数据处理完毕`,
               type: "success",
             });
-            return rows.length;
+            this.loading = false;
           }
+          this.loading = false;
         }
+        this.loading = false;
         //
       } catch (e) {
         this.$message.error({
@@ -156,6 +168,7 @@ export default {
           message: `数据处理失败：` + e.message,
         });
         log.info(e.message);
+        this.loading = false;
       }
     },
     async freshTreeErrorCount() {
@@ -174,6 +187,7 @@ export default {
           .replace(/\$MODEL_FILTER\$/g, this.currentTableData.modelFilterStr)
           .replace(/\$FILTER\$/g, filterArr)
           .replace(/\$AJID\$/g, this.caseBase.ajid);
+        console.log(sql);
         let { success, rows } = await baseDb.QueryCustom(
           sql,
           _this.caseBase.ajid

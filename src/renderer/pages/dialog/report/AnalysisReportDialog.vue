@@ -379,58 +379,93 @@ export default {
         workbook.commit();
         let mainTitle = "";
         let subTitle = "";
-        let p = "";
+        let pPre = "";
+        let pTail = "";
+        let linkContent = "";
+        let link = "";
         switch (item.id) {
           case 603:
             {
               subTitle = `（一）调取银行卡交易记录情况表`;
-              p = `银行卡账号交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【调取银行卡交易记录情况表.xls】`;
+              pPre = `银行卡账号交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【`;
+              linkContent = `调取银行卡交易记录情况表.xls`;
+              pTail = "】";
+              link = "./调取银行卡交易记录情况表.xls";
             }
             break;
           case 604:
             {
               subTitle = `（二）调集人员交易进出情况分析`;
-              p = `调单方人员交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【调集人员交易进出情况分析.xls】`;
+              pPre = `调单方人员交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【`;
+              pTail = "】";
+              linkContent = `调集人员交易进出情况分析.xls`;
+              link = "file://./调集人员交易进出情况分析.xls";
             }
             break;
           case 605:
             {
               mainTitle = item.label;
-              p = `此分析根据进出账差额，找出与调集账号交易过程中，主要的获利的对手账号。此分析目的用于找出资金的最终流向。全部数据请查看附件Excel文件【${mainTitle}.xls】`;
+              pPre = `此分析根据进出账差额，找出与调集账号交易过程中，主要的获利的对手账号。此分析目的用于找出资金的最终流向。全部数据请查看附件Excel文件【`;
+              pTail = "】";
+              linkContent = `${mainTitle}.xls`;
+              link = `file://./${linkContent}`;
             }
             break;
           case 606:
             {
               mainTitle = item.label;
-              p = `此分析用于找出与调集账号多重联系的对手，其关联调集人员个数，指的是，该对手账号，曾与几名调集账号的人员有过交易。此分析的目的，是找出团伙内部成员。全部数据请查看附件Excel文件【${mainTitle}.xls】`;
+              pPre = `此分析用于找出与调集账号多重联系的对手，其关联调集人员个数，指的是，该对手账号，曾与几名调集账号的人员有过交易。此分析的目的，是找出团伙内部成员。全部数据请查看附件Excel文件【`;
+              pTail = "】";
+              linkContent = `${mainTitle}.xls`;
+              link = `file://./${linkContent}`;
             }
             break;
           case 607:
             {
               mainTitle = item.label;
-              p = `按转出总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【${mainTitle}.xls】`;
+              pPre = `按转出总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【`;
+              pTail = "】";
+              linkContent = `${mainTitle}.xls`;
+              link = `file://./${linkContent}`;
             }
             break;
           case 608:
             {
               mainTitle = item.label;
-              p = `按转入总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【${mainTitle}.xls】`;
+              pPre = `按转入总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【`;
+              pTail = "】";
+              linkContent = `${mainTitle}.xls`;
+              link = `file://./${linkContent}`;
             }
             break;
           case 609:
             {
               mainTitle = item.label;
-              p = `即进即出账户如下所示，全部数据请查看附件Excel文件【${mainTitle}.xls】`;
+              pPre = `即进即出账户如下所示，全部数据请查看附件Excel文件【`;
+              pTail = "】";
+              linkContent = `${mainTitle}.xls`;
+              link = `file://./${linkContent}`;
             }
             break;
           case 610:
             {
               mainTitle = item.label;
-              p = `不同交易方式数据汇总如下所示，全部数据请查看附件Excel文件【${mainTitle}.xls】`;
+              pPre = `不同交易方式数据汇总如下所示，全部数据请查看附件Excel文件【`;
+              pTail = "】";
+              linkContent = `${mainTitle}.xls`;
+              link = `file://./${linkContent}`;
             }
             break;
         }
-        return { tableDataRows: rows.slice(0, 30), subTitle, p, mainTitle };
+        return {
+          tableDataRows: rows.slice(0, 30),
+          subTitle,
+          pPre,
+          pTail,
+          linkContent,
+          link,
+          mainTitle,
+        };
       } finally {
         client.release();
       }
@@ -513,14 +548,11 @@ export default {
         let header = {
           val: tableDic[k],
           opts: {
-            // cellColWidth: 4261,
             b: true,
-            sz: "5",
-            align: "left",
+            sz: "12",
+            align: "center",
             shd: {
-              fill: "7F7F7F",
-              themeFill: "text1",
-              themeFillTint: "40",
+              fill: "F5F7FA",
             },
             fontFamily: "Avenir Book",
           },
@@ -531,16 +563,32 @@ export default {
       for (let row of tableDataRows) {
         let values = [];
         for (let k in row) {
-          values.push(row[k]);
+          values.push({
+            val: row[k],
+            opts: {
+              sz: "12",
+              align: "center",
+              fontFamily: "Avenir Book",
+            },
+          });
         }
+        console.log(values);
         resultTable.push(values);
       }
       var tableStyle = {
-        // tableColWidth: 4261,
-        tableSize: 1,
+        tableColWidth: 4261,
+        tableSize: 12,
         tableColor: "ada",
         tableAlign: "left",
-        borders: true,
+        tableFontFamily: "Comic Sans MS",
+        spacingBefor: 120, // default is 100
+        spacingAfter: 120, // default is 100
+        spacingLine: 240, // default is 240
+        spacingLineRule: "atLeast", // default is atLeast
+        indent: 100, // table indent, default is 0
+        // fixedLayout: true, // default is false
+        borders: true, // default is false. if true, default border size is 4
+        borderSize: 2, // To use this option, the 'borders' must set as true, default is 4
       };
 
       return { resultTable, tableStyle };
@@ -634,7 +682,15 @@ export default {
             );
             console.log("success");
 
-            let { tableDataRows, subTitle, p, mainTitle } = dataResult;
+            let {
+              tableDataRows,
+              subTitle,
+              mainTitle,
+              pPre,
+              pTail,
+              linkContent,
+              link,
+            } = dataResult;
             if (mainTitle.length !== 0) {
               let title = this.convertNumToCh(this.activeStep);
               pObj = docx.createP();
@@ -644,9 +700,11 @@ export default {
               pObj = docx.createP();
               pObj.addText(subTitle, subTitle);
             }
-            if (p.length !== 0) {
+            if (pPre.length !== 0) {
               pObj = docx.createP();
-              pObj.addText(p, mainPageFontSytle);
+              pObj.addText(pPre, mainPageFontSytle);
+              pObj.addText(linkContent, { link, ...mainPageFontSytle });
+              pObj.addText(pTail, mainPageFontSytle);
             }
             let { resultTable, tableStyle } = await this.makeTableDataToWord(
               tableDataRows,
@@ -669,6 +727,7 @@ export default {
           message: "生成报告成功，保存在目录：" + homedir,
           type: "success",
         });
+        await this.$electron.shell.openPath(homedir);
         this.activeStep = 0;
         this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", false);
       } catch (e) {
