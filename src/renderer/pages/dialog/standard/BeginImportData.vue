@@ -171,9 +171,19 @@
           <span style="font-size: 16px">
             <b>数据文件实例表</b>
           </span>
-          <span style="font-size: 12px"
-            >{{ currentRow.fileName }}\{{ currentRow.sheetName }}</span
+          <el-tooltip
+            effect="dark"
+            content="点击查看文件"
+            placement="top-start"
           >
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleClickLookFile(currentRow.filePathName)"
+            >
+              {{ currentRow.fileName }}</el-button
+            >
+          </el-tooltip>
         </div>
         <el-table
           stripe
@@ -525,6 +535,9 @@ export default {
         row,
         enableModify,
       });
+    },
+    async handleClickLookFile(filePathName) {
+      await this.$electron.shell.openPath(filePathName);
     },
     // 选择模版下拉框
     handleChangeMatchTemplate(selValue, index, row) {

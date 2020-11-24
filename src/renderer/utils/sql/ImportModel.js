@@ -430,12 +430,12 @@ function TestingHandle(
     if (Columns.includes("cxzh") && Columns.includes("cxkh")) {
       if (
         !Default.IsNullOrEmpty(dataRow["cxkh"]) &&
-        !Default.IsNullOrEmpty(dataRow["cxzh"])
+        Default.IsNullOrEmpty(dataRow["cxzh"])
       ) {
         dataRow["cxzh"] = dataRow["cxkh"];
       } else if (
         !Default.IsNullOrEmpty(dataRow["cxzh"]) &&
-        !Default.IsNullOrEmpty(dataRow["cxkh"])
+        Default.IsNullOrEmpty(dataRow["cxkh"])
       ) {
         dataRow["cxkh"] = dataRow["cxzh"];
       }
@@ -443,12 +443,12 @@ function TestingHandle(
     if (Columns.includes("zh") && Columns.includes("kh")) {
       if (
         !Default.IsNullOrEmpty(dataRow["kh"]) &&
-        !Default.IsNullOrEmpty(dataRow["zh"])
+        Default.IsNullOrEmpty(dataRow["zh"])
       ) {
         dataRow["zh"] = dataRow["kh"];
       } else if (
         !Default.IsNullOrEmpty(dataRow["zh"]) &&
-        !Default.IsNullOrEmpty(dataRow["kh"])
+        Default.IsNullOrEmpty(dataRow["kh"])
       ) {
         dataRow["kh"] = dataRow["zh"];
       }

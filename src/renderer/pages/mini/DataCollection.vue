@@ -17,9 +17,10 @@ import DataTypeList from "@/json/buttonGroup.json";
 import importModel from "@/utils/sql/ImportModel.js";
 const UUID = require("uuid");
 import path from "path";
+import { create } from "domain";
 const copyFrom = require("pg-copy-streams").from;
 const csv = require("@fast-csv/parse");
-
+const lodash = require("lodash");
 export default {
   data() {
     return {
@@ -571,6 +572,8 @@ export default {
             fileName,
             sheetName,
             skipLines,
+            inFlag,
+            outFlag,
           } = data;
           let { ajid, ajmc } = caseBase;
           let filepath = path.dirname(data.filePathName);
@@ -611,7 +614,10 @@ export default {
             sheetName,
           });
           // 创建temp表存储数据
-          let { createTableName } = await dataImport.createTempTable(
+          let {
+            createTableName,
+            createFields,
+          } = await dataImport.createTempTable(
             ajid,
             tablecname,
             matchedMbdm,
@@ -634,6 +640,10 @@ export default {
             case "csv":
               {
                 await this.parseCsvFile(
+                  tablecname,
+                  createFields,
+                  inFlag,
+                  outFlag,
                   matchedMbdm,
                   sheetIndex,
                   fileName,
@@ -656,6 +666,10 @@ export default {
             case "xls":
             case "xlsx": {
               await this.parseExcelFile(
+                tablecname,
+                createFields, // temp表全列
+                inFlag,
+                outFlag,
                 matchedMbdm,
                 sheetIndex,
                 fileName,
@@ -691,6 +705,10 @@ export default {
     // 解析excel文件并通过异步bulk insert 流的方式进行数据导入
 
     async parseExcelFile(
+      tablecname,
+      createFields, // temp表全列
+      inFlag,
+      outFlag,
       matchedMbdm,
       sheetIndex,
       fileName,
@@ -715,7 +733,7 @@ export default {
           let { ajid } = caseBase;
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
-          let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
+          let sqlStr = `COPY ${createTableName}(${createFields}) FROM STDIN`;
           console.log(sqlStr);
           let streamFrom;
           await cases.SwitchCase(client, ajid);
@@ -808,10 +826,29 @@ export default {
                 `${sjlyid}`,
                 `${rownum}`,
               ];
+
               let realValues = publicValues
                 .concat(rowDataValues)
                 .concat(externFieldsValues);
-              let insertStr = realValues.join("\t") + "\n";
+              let tempRow = lodash.zipObject(fields, realValues);
+              let newRowData = importModel.TestingHandle(
+                createFields,
+                tempRow,
+                tablecname,
+                inFlag,
+                outFlag
+              );
+              let values = [];
+              let keys = Object.keys(newRowData);
+
+              for (let field of createFields) {
+                if (keys.includes(field)) {
+                  values.push(newRowData[field]);
+                } else {
+                  values.push("");
+                }
+              }
+              let insertStr = values.join("\t") + "\n";
               // 写入流中
               streamFrom.write(insertStr, function (err) {
                 console.log({ insertStr });
@@ -855,6 +892,10 @@ export default {
     },
     // 解析csv文件全部内容
     async parseCsvFile(
+      tablecname,
+      createFields, // temp表全列
+      inFlag,
+      outFlag,
       matchedMbdm,
       sheetIndex,
       fileName,
@@ -880,7 +921,7 @@ export default {
           let { ajid } = caseBase;
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
-          let sqlStr = `COPY ${createTableName}(${fields}) FROM STDIN`;
+          let sqlStr = `COPY ${createTableName}(${createFields}) FROM STDIN`;
           console.log(sqlStr, matchedFileCols, { skipLines });
           await cases.SwitchCase(client, ajid);
           let streamFrom = await client.query(copyFrom(sqlStr));
@@ -933,7 +974,26 @@ export default {
                 let realValues = publicValues
                   .concat(rowDataValues)
                   .concat(externFieldsValues);
-                let insertStr = realValues.join("\t") + "\n";
+                // 把fields和realValues合并成一个对象row
+                let tempRow = lodash.zipObject(fields, realValues);
+                let newRowData = importModel.TestingHandle(
+                  createFields,
+                  tempRow,
+                  tablecname,
+                  inFlag,
+                  outFlag
+                );
+                let values = [];
+                let keys = Object.keys(newRowData);
+
+                for (let field of createFields) {
+                  if (keys.includes(field)) {
+                    values.push(newRowData[field]);
+                  } else {
+                    values.push("");
+                  }
+                }
+                let insertStr = values.join("\t") + "\n";
                 this.push(insertStr);
                 let percentage = parseInt(
                   parseFloat(readSize / fileSize) * 100
@@ -1030,8 +1090,6 @@ export default {
           let Columns = targetTableStruct.rows.map((el) => el.fieldename);
           // 拼接当前temp表的所有字段
           let sjlyid = 0;
-          let resFieldTypeList = [];
-          let selectList = [];
           // 公共字段去除行号
           publicFields = publicFields.filter(
             (el) => el.toLowerCase() !== "rownum"

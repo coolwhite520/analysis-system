@@ -131,7 +131,6 @@ export default {
       this.$store.commit("DialogPopWnd/SET_SHOWCOLLECTIONRECORDVISIBLE", false);
     },
     async handleClickDelCollection() {
-      this.loading = true;
       try {
         let selectedRows = this.$refs.multipleTable.selection;
         console.log(selectedRows);
@@ -142,12 +141,12 @@ export default {
           });
           return;
         }
+        this.loading = true;
+        let sjlyids = [];
         for (let row of selectedRows) {
-          await cases.DeleteCollectionRecords(
-            this.caseBase.ajid,
-            parseInt(row.sjlyid)
-          );
+          sjlyids.push(row.sjlyid);
         }
+        await cases.DeleteCollectionRecords(this.caseBase.ajid, sjlyids);
         // 更新采集批次等一批数据
         await this.$store.dispatch(
           "CaseDetail/queryEntityCount",

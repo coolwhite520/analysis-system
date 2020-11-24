@@ -4,6 +4,7 @@ import dataImport from "./DataImport";
 import base from "./Base";
 import { DbConfig } from "@/utils/config";
 import { remote } from "electron";
+import lodash from "lodash";
 
 // 小写字母转换设定快捷键 cmd+alt+s
 // 获取案件相关的内容
@@ -94,39 +95,49 @@ export default {
     try {
       let { success, rows } = await this.showLAllTableTableName(ajid);
       if (!success) return { success: false };
-      let promiseArr = [];
-      for (let row of rows) {
-        promiseArr.push(
-          (async function() {
-            if (row.table_name.endsWith("_temp")) {
-              let sqlDelTable = `DROP TABLE ${row.table_name}`;
-              await base.QueryCustom(sqlDelTable, ajid);
-              return true;
-            }
-            let result = await dataImport.showTableStruct(ajid, row.table_name);
-            if (result.success) {
-              // console.log(result.rows);
-              let findResult = result.rows.find((row) => {
-                if (row.fieldename) {
-                  return row.fieldename.toLowerCase() === "sjlyid";
-                } else {
-                  return false;
-                }
-              });
-              if (findResult) {
-                console.log(row.table_name);
-                let sqlDelRows = `DELETE FROM ${row.table_name} WHERE  SJLYID IN(${sjlyid})`; //ajid =${ajid} AND
-                await base.QueryCustom(sqlDelRows, ajid);
+      let chunkCount = 5;
+      let newChunkList = lodash.chunk(rows, chunkCount);
+      console.log(newChunkList);
+      for (let innerList of newChunkList) {
+        let promiseArr = [];
+        for (let row of innerList) {
+          promiseArr.push(
+            (async function() {
+              if (row.table_name.endsWith("_temp")) {
+                let sqlDelTable = `DROP TABLE ${row.table_name}`;
+                await base.QueryCustom(sqlDelTable, ajid);
+                return true;
               }
-              return true;
-            }
-          })()
-        );
+              let result = await dataImport.showTableStruct(
+                ajid,
+                row.table_name
+              );
+              if (result.success) {
+                // console.log(result.rows);
+                let findResult = result.rows.find((row) => {
+                  if (row.fieldename) {
+                    return row.fieldename.toLowerCase() === "sjlyid";
+                  } else {
+                    return false;
+                  }
+                });
+                if (findResult) {
+                  console.log(row.table_name);
+                  let sqlDelRows = `DELETE FROM ${row.table_name} WHERE  SJLYID IN(${sjlyid})`; //ajid =${ajid} AND
+                  await base.QueryCustom(sqlDelRows, ajid);
+                }
+                return true;
+              }
+            })()
+          );
+        }
+        let ret = await Promise.all(promiseArr);
+        console.log(ret);
       }
-      let ret = await Promise.all(promiseArr);
-      console.log(ret);
+
       // 把base库的记录表中的数据删除
       let sqlDelRows = `DELETE FROM  icap_base.st_data_source WHERE ajid =${ajid} AND SJLYID IN(${sjlyid})`;
+      console.log(sqlDelRows);
       await base.QueryCustom(sqlDelRows);
       return { success: true };
     } catch (e) {

@@ -37,7 +37,12 @@
               <span>最小获利金额：</span>
             </el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.MIN_HLJE"></el-input>
+              <!-- <el-input size="mini" v-model="ReportParams.MIN_HLJE"></el-input> -->
+              <el-input-number
+                v-model="ReportParams.MIN_HLJE"
+                :min="1"
+                size="mini"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -51,7 +56,12 @@
           <el-row>
             <el-col :span="3">最小关联人数：</el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.MIN_GLRS"></el-input>
+              <!-- <el-input size="mini" v-model="ReportParams.MIN_GLRS"></el-input> -->
+              <el-input-number
+                v-model="ReportParams.MIN_GLRS"
+                :min="1"
+                size="mini"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -86,10 +96,15 @@
               <span>排序前几:</span>
             </el-col>
             <el-col :span="4">
-              <el-input
+              <!-- <el-input
                 size="mini"
                 v-model="ReportParams.Soft_No607"
-              ></el-input>
+              ></el-input> -->
+              <el-input-number
+                v-model="ReportParams.Soft_No607"
+                :min="1"
+                size="mini"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -124,10 +139,15 @@
               <span>排序前几:</span>
             </el-col>
             <el-col :span="4">
-              <el-input
+              <!-- <el-input
                 size="mini"
                 v-model="ReportParams.Soft_No608"
-              ></el-input>
+              ></el-input> -->
+              <el-input-number
+                v-model="ReportParams.Soft_No608"
+                :min="1"
+                size="mini"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -141,25 +161,50 @@
           <el-row>
             <el-col :span="3">交易时间区间：</el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.JYSJQJ"></el-input>
+              <!-- <el-input size="mini" v-model="ReportParams.JYSJQJ"></el-input> -->
+              <el-input-number
+                v-model="ReportParams.JYSJQJ"
+                :min="1"
+                size="mini"
+              ></el-input-number>
             </el-col>
             <el-col :span="1">&nbsp;小时</el-col>
             <el-col :span="3">&nbsp;</el-col>
             <el-col :span="3">交易最小金额：</el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.MIN_JYJE"></el-input>
+              <!-- <el-input size="mini" v-model="ReportParams.MIN_JYJE"></el-input> -->
+              <el-input-number
+                v-model="ReportParams.MIN_JYJE"
+                size="mini"
+                :min="1"
+              ></el-input-number>
             </el-col>
             <el-col :span="1">&nbsp;元</el-col>
           </el-row>
           <el-row style="margin-top: 5px">
             <el-col :span="3">出进比最小值：</el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.MIN_CJB"></el-input>
+              <!-- <el-input size="mini" v-model="ReportParams.MIN_CJB"></el-input> -->
+              <el-input-number
+                v-model="ReportParams.MIN_CJB"
+                :precision="1"
+                size="mini"
+                :step="0.1"
+                :min="0.1"
+                :max="ReportParams.MAX_CJB"
+              ></el-input-number>
             </el-col>
             <el-col :span="4">&nbsp;</el-col>
             <el-col :span="3">出进比最大值：</el-col>
             <el-col :span="4">
-              <el-input size="mini" v-model="ReportParams.MAX_CJB"></el-input>
+              <!-- <el-input size="mini" v-model="ReportParams.MAX_CJB"></el-input> -->
+              <el-input-number
+                v-model="ReportParams.MAX_CJB"
+                :precision="1"
+                size="mini"
+                :step="0.1"
+                :min="ReportParams.MIN_CJB"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -173,10 +218,15 @@
           <el-row>
             <el-col :span="4">交易方式前几条：</el-col>
             <el-col :span="4">
-              <el-input
+              <!-- <el-input
                 size="mini"
                 v-model="ReportParams.JyfsSoftNo"
-              ></el-input>
+              ></el-input> -->
+              <el-input-number
+                v-model="ReportParams.JyfsSoftNo"
+                :min="1"
+                size="mini"
+              ></el-input-number>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -224,7 +274,7 @@ import os from "os";
 import path from "path";
 const excel = require("exceljs");
 const fs = require("fs");
-
+import { Pool } from "pg";
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showReportVisible"]),
@@ -262,10 +312,10 @@ export default {
         MIN_GLRS: "2", //最小关联人数
         Soft_No607: "10", //排序前几（主要转出对手）
         Soft_No608: "10", //排序前几（主要转入对手）
-        JYSJQJ: "48", //交易时间区间
-        MIN_JYJE: "0", //交易最小金额
-        MIN_CJB: "0.9", //出进比最小值
-        MAX_CJB: "1.1", //出进比最大值
+        JYSJQJ: 48, //交易时间区间
+        MIN_JYJE: 1, //交易最小金额
+        MIN_CJB: 0.9, //出进比最小值
+        MAX_CJB: 1.1, //出进比最大值
         JyfsSoftNo: "20", //交易方式前几条
         JyJCZCE: "100",
         JYZH: "",
@@ -320,9 +370,23 @@ export default {
   },
   methods: {
     handleChange(val) {},
-    handleClose() {
+    async handleClose() {
       if (this.buttonDisabled) {
-        return;
+        let result = await this.$electron.remote.dialog.showMessageBox(null, {
+          type: "warning",
+          title: "注意",
+          message: `当前正在执行查询，是否要退出操作？`,
+          buttons: ["确定", "取消"],
+          defaultId: 0,
+        });
+        if (result.response === 0) {
+          global.pool.end();
+          global.pool = new Pool(
+            await this.$electron.remote.getGlobal("dbCon")
+          );
+        } else {
+          return;
+        }
       }
       this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", false);
     },
