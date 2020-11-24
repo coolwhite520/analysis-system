@@ -22,4 +22,57 @@ export default {
       client.release();
     }
   },
+  GetMaxID: async function() {
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchDefaultCase(client);
+      let res = await client.query(
+        "SELECT MAX(ID)::int maxid FROM gas_report_records"
+      );
+      let count = res.rows[0].maxid;
+      return isNaN(count) ? 0 : count;
+    } finally {
+      client.release();
+    }
+  },
+  DelReportRecordById: async function(id) {
+    const client = await global.pool.connect();
+    try {
+      let sql = "DELETE FROM gas_report_records WHERE ID=" + id;
+      await cases.SwitchDefaultCase(client);
+      await client.query(sql);
+      return true;
+    } finally {
+      client.release();
+    }
+  },
+  InsertNewRow: async function(ajid, ajmc, reportName, dirPath) {
+    const client = await global.pool.connect();
+    try {
+      let id = (await this.GetMaxID()) + 1;
+      if (id < 1000000000) {
+        id = 1000000000;
+      }
+      await cases.SwitchDefaultCase(client);
+      let sql = `INSERT INTO gas_report_records(ID, ReportName, ReportAjid, CaseName, CreateTime, FileContent) 
+      VALUES ('${id}','${reportName}','${ajid}','${ajmc}','${new Date().Format(
+        "yyyy-MM-dd hh:mm:ss"
+      )}', E'${dirPath}'::bytea)`;
+      const res = await client.query(sql);
+      return { success: true, rows: res.rows };
+    } finally {
+      client.release();
+    }
+  },
+  QueryHistoryReport: async function() {
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchDefaultCase(client);
+      let sql = `SELECT * FROM gas_report_records  ORDER BY createtime DESC`;
+      const res = await client.query(sql);
+      return { success: true, rows: res.rows };
+    } finally {
+      client.release();
+    }
+  },
 };

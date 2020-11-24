@@ -399,7 +399,7 @@ export default {
               pPre = `调单方人员交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【`;
               pTail = "】";
               linkContent = `调集人员交易进出情况分析.xls`;
-              link = "file://./调集人员交易进出情况分析.xls";
+              link = "./调集人员交易进出情况分析.xls";
             }
             break;
           case 605:
@@ -408,7 +408,7 @@ export default {
               pPre = `此分析根据进出账差额，找出与调集账号交易过程中，主要的获利的对手账号。此分析目的用于找出资金的最终流向。全部数据请查看附件Excel文件【`;
               pTail = "】";
               linkContent = `${mainTitle}.xls`;
-              link = `file://./${linkContent}`;
+              link = `./${linkContent}`;
             }
             break;
           case 606:
@@ -417,7 +417,7 @@ export default {
               pPre = `此分析用于找出与调集账号多重联系的对手，其关联调集人员个数，指的是，该对手账号，曾与几名调集账号的人员有过交易。此分析的目的，是找出团伙内部成员。全部数据请查看附件Excel文件【`;
               pTail = "】";
               linkContent = `${mainTitle}.xls`;
-              link = `file://./${linkContent}`;
+              link = `./${linkContent}`;
             }
             break;
           case 607:
@@ -426,7 +426,7 @@ export default {
               pPre = `按转出总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
               linkContent = `${mainTitle}.xls`;
-              link = `file://./${linkContent}`;
+              link = `./${linkContent}`;
             }
             break;
           case 608:
@@ -435,7 +435,7 @@ export default {
               pPre = `按转入总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
               linkContent = `${mainTitle}.xls`;
-              link = `file://./${linkContent}`;
+              link = `./${linkContent}`;
             }
             break;
           case 609:
@@ -444,7 +444,7 @@ export default {
               pPre = `即进即出账户如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
               linkContent = `${mainTitle}.xls`;
-              link = `file://./${linkContent}`;
+              link = `./${linkContent}`;
             }
             break;
           case 610:
@@ -453,7 +453,7 @@ export default {
               pPre = `不同交易方式数据汇总如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
               linkContent = `${mainTitle}.xls`;
-              link = `file://./${linkContent}`;
+              link = `./${linkContent}`;
             }
             break;
         }
@@ -549,7 +549,7 @@ export default {
           val: tableDic[k],
           opts: {
             b: true,
-            sz: "12",
+            sz: "13",
             align: "center",
             shd: {
               fill: "F5F7FA",
@@ -566,7 +566,7 @@ export default {
           values.push({
             val: row[k],
             opts: {
-              sz: "12",
+              sz: "13",
               align: "center",
               fontFamily: "Avenir Book",
             },
@@ -606,15 +606,13 @@ export default {
           CurrentExeSql: "", //模板sql
           Tb_Name: "", //页面表名，目前报告中没有该参数
         };
-        let now = new Date().Format("yyyy_MM_dd_hh_mm_ss");
+        let now = new Date().Format("yyyyMMddhhmmss");
         let homedir = os.homedir();
-        homedir = path.join(homedir, "Desktop", ajmc + "_" + now);
+        let dirReportName = ajmc + "-智能分析报告-" + now;
+        homedir = path.join(homedir, "Desktop", dirReportName);
         fs.mkdirSync(homedir, { recursive: true });
 
-        let docfilePath = path.join(
-          homedir,
-          ajid + "-" + ajmc + uuid.v1() + ".docx"
-        );
+        let docfilePath = path.join(homedir, ajmc + "-智能分析报告.docx");
         // 引用officegen
         const officegen = require("officegen");
         let docx = officegen("docx");
@@ -698,7 +696,7 @@ export default {
             }
             if (subTitle.length !== 0) {
               pObj = docx.createP();
-              pObj.addText(subTitle, subTitle);
+              pObj.addText(subTitle, subTitleFontSylte);
             }
             if (pPre.length !== 0) {
               pObj = docx.createP();
@@ -727,6 +725,8 @@ export default {
           message: "生成报告成功，保存在目录：" + homedir,
           type: "success",
         });
+        let newDirName = homedir.replace(/\\/g, "/");
+        await Report.InsertNewRow(ajid, ajmc, dirReportName, newDirName);
         await this.$electron.shell.openPath(homedir);
         this.activeStep = 0;
         this.$store.commit("DialogPopWnd/SET_SHOWREPORTVISIBLE", false);

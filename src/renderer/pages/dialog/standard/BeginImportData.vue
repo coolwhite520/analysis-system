@@ -3,6 +3,11 @@
     <!-- <el-row>
       <span style="font-size:12px;">标准导入：</span>
     </el-row>-->
+    <div style="text-align: center">
+      导入数据方式：
+      <el-radio v-model="radioImportType" label="openDirectory">目录</el-radio>
+      <el-radio v-model="radioImportType" label="openFile">文件</el-radio>
+    </div>
     <el-row style="text-align: center; margin-top: 10px">
       <el-button-group>
         <el-button
@@ -334,6 +339,7 @@ export default {
   },
   data() {
     return {
+      radioImportType: "openDirectory",
       checkOver: false,
       formData: null,
       loadingText: "拼命加载中，请耐心等待...",
@@ -590,9 +596,12 @@ export default {
           title: "数据导入",
           buttonLabel: "打开",
           filters: [
-            { name: "Files", extensions: ["txt", "csv", "xls", "xlsx"] },
+            {
+              name: "Support Files",
+              extensions: ["xls", "xlsx", "txt", "csv"],
+            },
           ],
-          properties: ["openFile", "openDirectory", "multiSelections"],
+          properties: ["multiSelections"].concat(this.radioImportType),
         }
       );
       if (typeof filePathList !== "undefined") {

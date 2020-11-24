@@ -6,7 +6,6 @@ const state = {
   filterVisible: false,
   showFieldsVisible: false,
   showCollectionRecordVisible: false,
-  showReportVisible: false,
   graphicSettingVisible: false,
   nodeCombineVisible: false,
   showSaveProjectVisible: false,
@@ -19,6 +18,8 @@ const state = {
   showAwaitTaskDialogVisible: false,
   showUpdateErrorDialogVisible: false,
   showJdbzDialogVisible: false,
+  showReportVisible: false,
+  showReportHisVisible: false,
 };
 
 const mutations = {
@@ -80,6 +81,9 @@ const mutations = {
   },
   SET_SHOWJDBZDIALOGVISIBLE(state, showJdbzDialogVisible) {
     state.showJdbzDialogVisible = showJdbzDialogVisible;
+  },
+  SET_SHOWREPORTHISVISIBLE(state, showReportHisVisible) {
+    state.showReportHisVisible = showReportHisVisible;
   },
 };
 
