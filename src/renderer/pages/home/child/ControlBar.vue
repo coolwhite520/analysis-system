@@ -1,5 +1,10 @@
 <template>
-  <div style="margin-top: 20px; padding-bottom: 40px">
+  <div
+    style="margin-top: 20px; padding-bottom: 40px"
+    v-loading.fullscreen.lock="loading"
+    :element-loading-text="loadingText"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <div
       class="iconfont"
       style="font-size: 20px; text-align: center; color: white"
@@ -64,6 +69,7 @@ export default {
     return {
       loading: false,
       inputAnjianName: "",
+      loadingText: "数据导入中，请稍后...",
     };
   },
   watch: {
