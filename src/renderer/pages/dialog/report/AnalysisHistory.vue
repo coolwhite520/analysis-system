@@ -151,8 +151,16 @@ export default {
           });
         }
       } else {
+        await Report.DelReportRecordById(row.id);
+        for (let index = 0; index < this.reportCollection.length; index++) {
+          if (this.reportCollection[index].id === row.id) {
+            this.reportCollection.splice(index, 1);
+            break;
+          }
+        }
         this.$message({
-          message: `文件路径[${dirPath}]不存在。`,
+          type: "success",
+          message: "记录删除成功！",
         });
       }
     },

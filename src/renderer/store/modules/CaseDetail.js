@@ -1,6 +1,19 @@
 import cases from "../../db/Cases";
 import models from "../../db/Models";
 import Vue from "vue";
+
+function array2Tree(data, mid) {
+  let res = [];
+  data.forEach((item) => {
+    if (item.parentid_200 === mid) {
+      let itemChildren = array2Tree(data, item.mid);
+      if (itemChildren.length) item.children = itemChildren;
+      res.push(item);
+    }
+  });
+  return res;
+}
+
 const state = {
   caseBase: {}, //  st_case表对应的字段对象
   deleteState: "",
@@ -110,17 +123,20 @@ const actions = {
             let mids = await models.QueryModelmidsByTid(childItem.tid);
             if (mids.length > 0) {
               let modelsDetailList = await models.QueryModelListByMids(mids);
-              let newTreeList = [];
-              let parentList = modelsDetailList.filter((item) => {
-                return item.parentid_200 === -1;
-              });
-              for (let father of parentList) {
-                let childrenList = modelsDetailList.filter((item) => {
-                  return item.parentid_200 === father.mid;
-                });
-                father.childrenList = childrenList;
-                newTreeList.push(father);
-              }
+              let newTreeList = array2Tree(modelsDetailList, -1);
+              console.log(newTreeList);
+              // console.log(tree);
+              // let newTreeList = [];
+              // let parentList = modelsDetailList.filter((item) => {
+              //   return item.parentid_200 === -1;
+              // });
+              // for (let father of parentList) {
+              //   let childrenList = modelsDetailList.filter((item) => {
+              //     return item.parentid_200 === father.mid;
+              //   });
+              //   father.childrenList = childrenList;
+              //   newTreeList.push(father);
+              // }
               // 把模型库添加到datacenter的项目中
               Vue.set(childrenArr[index], "modelTreeList", newTreeList);
             }

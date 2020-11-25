@@ -14,44 +14,38 @@
       class="capital-right-slider"
       :style="{ height: contentViewHeight - 40 * 2 - 15 + 'px' }"
     >
-      <el-menu
-        :default-openeds="openeds"
-        @close="handleClose"
-        @open="handleOpen"
-        @select="handleSelect"
-        :style="{ height: contentViewHeight - 200 + 'px' }"
+      <el-tree
+        :data="currentTableData.modelTree.treeList"
+        :props="defaultProps"
+        @node-click="handleSelect"
+        :default-expand-all="true"
+        :highlight-current="true"
+        :indent="5"
       >
-        <el-submenu
-          v-for="father of currentTableData.modelTree.treeList"
-          :key="father.mid"
-          :index="String(father.mid)"
-        >
-          <template slot="title">
-            <i class="iconfont" style="font-size: 20px">&#xe628;</i>
-            <span slot="title">{{ father.modelname }}</span>
-          </template>
-
-          <el-menu-item
-            v-for="child of father.childrenList"
-            :key="child.mid"
-            :index="String(child.mid)"
-            class="menu-item iconfont"
+        <template slot-scope="{ node, data }">
+          <div
+            v-if="data.hasOwnProperty('children')"
+            style="font-size: 14px; color: #303133"
+            class="iconfont"
           >
+            <i class="iconfont">&#xe640;</i>
+            {{ data.modelname }}
+          </div>
+          <div v-else style="font-size: 12px; color: #3c4e6b" class="iconfont">
             <el-tooltip
-              :disabled="child.describe === null"
+              :disabled="data.describe === null"
               class="item"
               effect="dark"
-              :content="child.describe"
+              :content="data.describe"
               placement="top"
               :enterable="false"
               :open-delay="1000"
               :hide-after="10000"
+              ><div>&#xe61c;&nbsp;&nbsp;{{ data.modelname }}</div></el-tooltip
             >
-              <div>&#xe61c;&nbsp;&nbsp;{{ child.modelname }}</div>
-            </el-tooltip>
-          </el-menu-item>
-        </el-submenu>
-      </el-menu>
+          </div>
+        </template>
+      </el-tree>
     </div>
     <link-model v-if="showLinkModelDialogVisible"></link-model>
     <cricle-model v-if="showCircleModelDialogVisible"></cricle-model>
@@ -88,42 +82,32 @@ export default {
       "showCircleModelDialogVisible",
       "showTwoEndsDialogVisible",
     ]),
-    openeds() {
-      return JSON.parse(
-        JSON.stringify(this.currentTableData.modelTree.openeds)
-      );
-    },
   },
   data() {
-    return {};
+    return {
+      defaultProps: {
+        children: "children",
+        label: "modelname",
+      },
+    };
   },
   methods: {
-    async handleSelect(key, keyPath) {
-      let tid = keyPath[1];
+    async handleSelect(data) {
+      if (data.hasOwnProperty("children")) return;
+      let { mid: tid, pgsqlTemplate } = data;
       console.log({ tid });
-      if (tid === "401") {
+      if (tid === 401) {
         this.$store.commit("DialogPopWnd/SET_SHOWLINKMODELDIALOGVISIBLE", true);
-      } else if (tid == "402") {
+      } else if (tid == 402) {
         this.$store.commit(
           "DialogPopWnd/SET_SHOWCIRCLEMODELDIALOGVISIBLE",
           true
         );
-      } else if (tid == "403") {
+      } else if (tid == 403) {
         this.$store.commit("DialogPopWnd/SET_SHOWTWOENDSDIALOGVISIBLE", true);
-      } else if (tid == "901") {
+      } else if (tid == 901) {
         // 资金用途模型
       } else {
-        let pgsqlTemplate = "";
-        let model = {};
-        for (let item of this.currentTableData.modelTree.treeList) {
-          for (let childitem of item.childrenList) {
-            if (tid === String(childitem.mid)) {
-              pgsqlTemplate = childitem.gpsqltemplate;
-              model = childitem;
-              break;
-            }
-          }
-        }
         if (pgsqlTemplate === null) {
           this.$message.error({
             title: "错误",
@@ -140,7 +124,7 @@ export default {
         } = this.currentTableData;
 
         let filterChildStr = convertSql.convertDataFilterToSqlStr(
-          parseInt(tid),
+          tid,
           this.currentTableData.modelFilterChildList
         );
         await this.$store.dispatch("ShowTable/showModelTable", {
@@ -155,36 +139,7 @@ export default {
         });
       }
     },
-    handleOpen(openIndex) {
-      let bFindSame = false;
-      for (let index = 0; index < this.openeds.length; index++) {
-        let value = this.openeds[index];
-        if (value === openIndex) {
-          bFindSame = true;
-          break;
-        }
-      }
-      if (!bFindSame) this.openeds.push(openIndex);
-      console.log(this.openeds);
-      this.$store.commit(
-        "ShowTable/SET_MODELTREE_OPENEDS",
-        JSON.parse(JSON.stringify(this.openeds))
-      );
-    },
-    handleClose(closeIndex) {
-      for (let index = 0; index < this.openeds.length; index++) {
-        let value = this.openeds[index];
-        if (value === closeIndex) {
-          this.openeds.splice(index, 1);
-          break;
-        }
-      }
-      console.log(this.openeds);
-      this.$store.commit(
-        "ShowTable/SET_MODELTREE_OPENEDS",
-        JSON.parse(JSON.stringify(this.openeds))
-      );
-    },
+
     handleClickClose() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "model-list-view",
@@ -196,6 +151,9 @@ export default {
 </script>
 
 <style scoped>
+/deep/.el-tree-node__content {
+  height: 40px;
+}
 .all-slider {
   -webkit-user-select: none;
 }

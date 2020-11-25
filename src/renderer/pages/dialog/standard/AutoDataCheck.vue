@@ -162,6 +162,9 @@
             :color="scope.row.progressColor"
             :stroke-width="30"
           ></el-progress>
+          <!-- <div :style="{ color: scope.row.progressColor }">
+            {{ scope.row.progress }}
+          </div> -->
           <!-- <progress-bar :options="options" :value="scope.row.progress" /> -->
         </template>
       </el-table-column>

@@ -267,10 +267,7 @@ const mutations = {
       }
     }
   },
-  // 主要是考虑模型中节点的展开和关闭的状态保存
-  SET_MODELTREE_OPENEDS(state, openeds) {
-    Vue.set(state.currentTableData.modelTree, "openeds", openeds);
-  },
+
   SET_SPREADNODESWITCH(state, SpreadNodeSwitch) {
     state.currentTableData.SpreadNodeSwitch = SpreadNodeSwitch;
   },
