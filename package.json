@@ -92,6 +92,7 @@
     "element-ui": "^2.13.2",
     "exceljs": "^4.2.0",
     "fast-csv": "^4.3.2",
+    "ffi": "^2.3.0",
     "iconv-lite": "^0.6.2",
     "insert-css": "^2.0.0",
     "jschardet": "^2.2.1",
