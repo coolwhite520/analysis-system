@@ -5,8 +5,9 @@
     </el-row>-->
     <div style="text-align: center">
       导入数据方式：
-      <el-radio v-model="radioImportType" label="openDirectory">目录</el-radio>
+
       <el-radio v-model="radioImportType" label="openFile">文件</el-radio>
+      <el-radio v-model="radioImportType" label="openDirectory">目录</el-radio>
     </div>
     <el-row style="text-align: center; margin-top: 10px">
       <el-button-group>
@@ -349,7 +350,7 @@ export default {
   },
   data() {
     return {
-      radioImportType: "openDirectory",
+      radioImportType: "openFile",
       checkOver: false,
       formData: null,
       loadingText: "拼命加载中，请耐心等待...",
@@ -369,7 +370,7 @@ export default {
     async handleClickCancelErrorRow() {
       for (let row of this.$refs.multipleTable.selection) {
         if (this.errorRowNumArr.includes(row.rowIndex)) {
-          console.log(row.rowIndex);
+          //console.log(row.rowIndex);
           await this.$refs.multipleTable.toggleRowSelection(row, false);
         }
       }
@@ -556,7 +557,7 @@ export default {
       });
     },
     handleClickJdbz(rowData) {
-      console.log(rowData, this.currentRow);
+      //console.log(rowData, this.currentRow);
       let { ins1, ins2 } = rowData;
       this.formData = {
         id: this.currentRow.id,
@@ -618,7 +619,7 @@ export default {
         }
       );
       if (typeof filePathList !== "undefined") {
-        console.log(filePathList);
+        //console.log(filePathList);
         let allFileList = [];
         filePathList.forEach((item) => {
           this.readFileList(item, allFileList);

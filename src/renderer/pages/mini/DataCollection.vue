@@ -186,7 +186,7 @@ export default {
         for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
           let cell = row.getCell(cindex);
           if (cell.type === 4) {
-            console.log(cell.type, cell.value);
+            // //console.log(cell.type, cell.value);
             let cellDate = new Date(cell.value);
             let m = moment(cellDate).utc();
             let year = m.year();
@@ -216,7 +216,7 @@ export default {
         }
         rows.push(newRow);
       }
-      console.log(rows);
+      // //console.log(rows);
       if (rows.length < 3) {
         return null;
       }
@@ -264,7 +264,7 @@ export default {
       );
       for await (const worksheetReader of workbookReader) {
         let result = await this.parseSheet(worksheetReader, filePathName);
-        console.log(result);
+        // //console.log(result);
         if (result) resultList.push(result);
       }
       return resultList;
@@ -276,16 +276,16 @@ export default {
         readFileStream.on("data", function (chunk) {
           let { encoding, confidence } = jschardet.detect(chunk);
           if (confidence > 0.6) {
-            log.info({ filePathName, confidence, encoding });
+            // log.info({ filePathName, confidence, encoding });
             resolve(encoding);
           } else {
             resolve("UTF-8");
-            log.info({ filePathName, confidence, encoding });
+            // log.info({ filePathName, confidence, encoding });
           }
           readFileStream.close();
         });
         readFileStream.on("close", function () {
-          console.log("close file");
+          //console.log("close file");
         });
       });
     },
@@ -557,9 +557,9 @@ export default {
       try {
         let _this = this;
         let ryid = UUID.v1();
-        for (let sheetIndex = 0; sheetIndex < args.length; sheetIndex++) {
-          let data = args[sheetIndex];
+        for (let data of args) {
           let {
+            id,
             filePathName,
             fileAllCols,
             batchCount,
@@ -589,7 +589,7 @@ export default {
               matchedFileCols.push(item.fileColName);
             }
           }
-          console.log(matchedFields, matchedFileCols);
+          // //console.log(matchedFields, matchedFileCols);
           fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((value) => {
             return value.toLowerCase();
@@ -645,7 +645,7 @@ export default {
                   inFlag,
                   outFlag,
                   matchedMbdm,
-                  sheetIndex,
+                  id,
                   fileName,
                   filePathName,
                   sheetName,
@@ -671,7 +671,7 @@ export default {
                 inFlag,
                 outFlag,
                 matchedMbdm,
-                sheetIndex,
+                id,
                 fileName,
                 filePathName,
                 sheetName,
@@ -710,7 +710,7 @@ export default {
       inFlag,
       outFlag,
       matchedMbdm,
-      sheetIndex,
+      id,
       fileName,
       filePathName,
       sheetName,
@@ -728,13 +728,14 @@ export default {
     ) {
       let _this = this;
       let client = await global.pool.connect();
+      let needInsertFields = [];
       try {
         return await new Promise(async function (resolve, reject) {
           let { ajid } = caseBase;
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
           let sqlStr = `COPY ${createTableName}(${createFields}) FROM STDIN`;
-          console.log(sqlStr);
+          // //console.log(sqlStr);
           let streamFrom;
           await cases.SwitchCase(client, ajid);
           streamFrom = await client.query(copyFrom(sqlStr));
@@ -747,8 +748,10 @@ export default {
             _this.$electron.ipcRenderer.send("read-one-file-over", {
               fileName,
               sheetName,
-              sheetIndex,
+              id,
               tableName: createTableName,
+              needInsertFields,
+              sjlyid,
             });
             resolve("done");
           });
@@ -781,7 +784,7 @@ export default {
             if (worksheetReader.name !== sheetName) continue;
             for await (const row of worksheetReader) {
               if (!row.hasValues) continue;
-              console.log(row.number, skipLines + 1);
+              //console.log(row.number, skipLines + 1);
               if (row.number <= skipLines + 1) continue;
               let rowDataValues = [];
               let matchedFieldIndex = 0;
@@ -840,7 +843,7 @@ export default {
               );
               let values = [];
               let keys = Object.keys(newRowData);
-
+              needInsertFields = lodash.union(needInsertFields, keys);
               for (let field of createFields) {
                 if (keys.includes(field)) {
                   values.push(newRowData[field]);
@@ -851,7 +854,7 @@ export default {
               let insertStr = values.join("\t") + "\n";
               // 写入流中
               streamFrom.write(insertStr, function (err) {
-                console.log({ insertStr });
+                //console.log({ insertStr });
                 if (!err) {
                   let percentage = parseInt(
                     parseFloat(readSize / fileSize) * 100
@@ -897,7 +900,7 @@ export default {
       inFlag,
       outFlag,
       matchedMbdm,
-      sheetIndex,
+      id,
       fileName,
       filePathName,
       sheetName,
@@ -916,13 +919,14 @@ export default {
       let _this = this;
       let client = await global.pool.connect();
       let encoding = await this.getFileEncoding(filePathName);
+      let needInsertFields = [];
       try {
         return await new Promise(async function (resolve, reject) {
           let { ajid } = caseBase;
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
           let sqlStr = `COPY ${createTableName}(${createFields}) FROM STDIN`;
-          console.log(sqlStr, matchedFileCols, { skipLines });
+          //console.log(sqlStr, matchedFileCols, { skipLines });
           await cases.SwitchCase(client, ajid);
           let streamFrom = await client.query(copyFrom(sqlStr));
           let matchedColNumList = [];
@@ -985,7 +989,7 @@ export default {
                 );
                 let values = [];
                 let keys = Object.keys(newRowData);
-
+                needInsertFields = lodash.union(needInsertFields, keys);
                 for (let field of createFields) {
                   if (keys.includes(field)) {
                     values.push(newRowData[field]);
@@ -1022,8 +1026,10 @@ export default {
               _this.$electron.ipcRenderer.send("read-one-file-over", {
                 fileName,
                 sheetName,
-                sheetIndex,
+                id,
                 tableName: createTableName,
+                needInsertFields,
+                sjlyid,
               });
               resolve("done");
             })
@@ -1045,6 +1051,7 @@ export default {
     async onCopyTempDataToRealTable(e, args) {
       let { list } = args;
       let chunkCount = 5;
+      //console.log(list);
       let newChunkList = this.$lodash.chunk(list, chunkCount);
       for (let innerList of newChunkList) {
         let promiseArr = [];
@@ -1066,11 +1073,8 @@ export default {
         tableName, // temp表
         tablecname, // 真实表
         matchedMbdm,
-        publicFields,
-        matchedFields,
-        externFields,
-        inFlag,
-        outFlag,
+        needInsertFields,
+        sjlyid,
         id,
       } = args;
 
@@ -1079,6 +1083,7 @@ export default {
       let client = await global.pool.connect();
       let client2 = await global.pool.connect();
       let lastPercentage = 0;
+      let index = 0;
       try {
         return await new Promise(async (resolve, rejcect) => {
           await cases.SwitchCase(client, ajid);
@@ -1087,60 +1092,28 @@ export default {
             ajid,
             targetTableName
           );
-          let Columns = targetTableStruct.rows.map((el) => el.fieldename);
-          // 拼接当前temp表的所有字段
-          let sjlyid = 0;
-          // 公共字段去除行号
-          publicFields = publicFields.filter(
-            (el) => el.toLowerCase() !== "rownum"
+          let realTableAllFields = targetTableStruct.rows.map(
+            (row) => row.fieldename
           );
-          let fields = publicFields.concat(matchedFields).concat(externFields);
-          fields = fields.map((el) => {
-            return el.toLowerCase();
-          });
-          fields = fields.filter((el) => Columns.includes(el));
-          // 查询临时表的总条数
-          let index = 0;
-
+          let tempneedInsertFields = [];
+          for (let field of needInsertFields) {
+            if (realTableAllFields.includes(field)) {
+              tempneedInsertFields.push(field);
+            }
+          }
+          needInsertFields = tempneedInsertFields;
           let countSql = `select count(*)::int count from ${tempTableName}`;
           let sumRow = await client.query(countSql);
           sumRow = sumRow.rows[0].count;
-          // 查询一行确定copyfrom的sql参数
-          let testRow = await client.query(
-            `select ${fields} from ${tempTableName} limit 1 offset 0`
-          );
-          testRow = testRow.rows[0];
-          // 判断列名称是否存在与Columns中不存在需要清理
-          let newTestRow = {};
-          for (let k in testRow) {
-            if (Columns.includes(k)) {
-              newTestRow[k] = testRow[k];
-            }
-          }
-          console.log(Object.keys(newTestRow));
-          console.log({ Columns, newTestRow, targetTableName });
-          newTestRow = importModel.TestingHandle(
-            Columns,
-            newTestRow,
-            targetTableName
-          );
-          console.log(Object.keys(newTestRow));
-          // 计算经过TestingHandle处理后的行
-          let postHandleFields = [];
-          for (let k in newTestRow) {
-            if (k === "sjlyid") {
-              sjlyid = newTestRow[k];
-            }
-            postHandleFields.push(k);
-          }
+
           // 创建queryStream
-          let sqlSelect = `select ${fields} from ${tempTableName}`;
+          let sqlSelect = `select ${needInsertFields} from ${tempTableName}`;
           const query = new QueryStream(sqlSelect);
           const stream = client.query(query);
 
           // 创建copyFrom流
-          let copyFromStr = `COPY ${targetTableName}(${postHandleFields}) FROM STDIN`;
-          console.log(copyFromStr);
+          let copyFromStr = `COPY ${targetTableName}(${needInsertFields}) FROM STDIN`;
+          //console.log(copyFromStr);
           let streamFrom = await client2.query(copyFrom(copyFromStr));
           streamFrom.on("error", (err) => {
             rejcect(err);
@@ -1170,35 +1143,22 @@ export default {
           stream
             .pipe(
               through2.obj(function (row, enc, callback) {
-                // console.log(row);
-                let rowNew = importModel.TestingHandle(
-                  Columns,
-                  row,
-                  targetTableName,
-                  inFlag,
-                  outFlag
-                );
-                // console.log(rowNew);
-                if (Object.keys(rowNew).length !== postHandleFields.length) {
-                  callback();
-                  return;
-                }
                 let values = [];
-                for (let k of Object.keys(rowNew)) {
+                for (let k in row) {
                   let obj = targetTableStruct.rows.find(
                     (el) => el.fieldename.toLowerCase() === k
                   );
                   if (obj.fieldtype === 1 || obj.fieldtype === 6) {
-                    values.push(`${rowNew[k].trim()}`);
+                    values.push(`${row[k].trim()}`);
                   } else if (obj.fieldtype === 4) {
-                    values.push(rowNew[k]);
+                    values.push(row[k]);
                   } else {
-                    let temValue = rowNew[k].trim() ? rowNew[k].trim() : 0;
+                    let temValue = row[k].trim() ? row[k].trim() : 0;
                     values.push(`${temValue}`);
                   }
                 }
                 let valueStr = values.join("\t") + "\n";
-                // console.log(valueStr);
+                // //console.log(valueStr);
                 this.push(valueStr);
                 callback();
               })

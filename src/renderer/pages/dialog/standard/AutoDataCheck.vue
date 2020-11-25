@@ -199,7 +199,7 @@ import dataImport from "@/db/DataImport";
 
 export default {
   mounted() {
-    console.log("monted.....");
+    //console.log("monted.....");
     this.isMounted = true;
     this.$electron.ipcRenderer.on(
       "import-one-table-process",
@@ -211,7 +211,7 @@ export default {
     );
   },
   destroyed() {
-    console.log("destroyed.....");
+    //console.log("destroyed.....");
     this.$electron.ipcRenderer.removeAllListeners("import-one-table-process");
     this.$electron.ipcRenderer.removeAllListeners("import-one-table-complete");
   },
@@ -265,7 +265,11 @@ export default {
       if (this.isMounted) {
         let selectedRows = this.$refs[`myImportTable`].selection;
         for (let row of selectedRows) {
-          if (row.errorFields.length > 0 && this.clickedCheckBtn) {
+          if (
+            row.hasOwnProperty("errorFields") &&
+            row.errorFields.length > 0 &&
+            this.clickedCheckBtn
+          ) {
             return true;
           }
         }
@@ -332,7 +336,7 @@ export default {
     // 导入消息的回调
     async onRecvImportMsg(e, args) {
       let { percentage, id, success, msg } = args;
-      console.log(id, percentage);
+      //console.log(id, percentage);
       if (!success) {
         this.$message.error({
           title: "错误",
@@ -362,7 +366,7 @@ export default {
 
     async onRecvImportCompleteMsg(e, args) {
       let { id } = args;
-      console.log("import data over: ", id);
+      //console.log("import data over: ", id);
       await this.$store.commit("DataCollection/DELETE_DATA_LIST_BY_ID", id);
       this.clearCurrentInportRow(id);
       if (this.currentImportRows.length === 0) {
@@ -450,13 +454,11 @@ export default {
           id,
           tableName,
           tablecname,
+          needInsertFields,
+          sjlyid,
           matchedMbdm,
-          matchedFields,
-          publicFields,
-          externFields,
-          templateToFieldObjList,
         } = sheetItem;
-        console.log(id, tableName);
+        // //console.log(sheetItem);
         if (tablecname.endsWith("_source")) {
           tablecname = tablecname.slice(0, tablecname.lastIndexOf("_source"));
         }
@@ -465,10 +467,9 @@ export default {
           ajid,
           tableName,
           tablecname,
+          needInsertFields,
+          sjlyid,
           matchedMbdm,
-          publicFields,
-          matchedFields,
-          externFields,
         });
       }
       this.$electron.ipcRenderer.send("import-one-table-begin", { list });
@@ -509,7 +510,7 @@ export default {
       }
     },
     handleClickBtnGroupAll(item) {
-      console.log(item);
+      //console.log(item);
       this.errorData = {
         errorList: item.errorList,
         title: item.title,

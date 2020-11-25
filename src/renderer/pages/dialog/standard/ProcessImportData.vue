@@ -110,31 +110,20 @@ export default {
     });
 
     this.$electron.ipcRenderer.on("read-one-file-over", (event, data) => {
-      const { sheetIndex, tableName } = data;
-      _this.$store.commit("DataCollection/SET_TABLENAME", {
-        sheetIndex,
-        tableName,
-      });
+      const { id, tableName, needInsertFields, sjlyid } = data;
+      //console.log(needInsertFields);
+      _this.$store.commit(
+        "DataCollection/SET_TABLENAME_AND_INSERTFIELDS_AND_SJLYID",
+        {
+          id,
+          tableName,
+          needInsertFields,
+          sjlyid,
+        }
+      );
     });
     // 监听到所有的文件都导入到temp完毕后，执行每个表的前30条数据查询
     this.$electron.ipcRenderer.on("read-all-file-over", async (e, data) => {
-      for (let index = 0; index < _this.exampleDataList.length; index++) {
-        let item = _this.exampleDataList[index];
-        let tableName = item.tableName;
-        let ajid = item.caseBase.ajid;
-        let matchedFields = item.matchedFields;
-        let headers = item.headers;
-        await this.$store.dispatch("DataCollection/QueryTableData", {
-          ajid,
-          sheetIndex: index,
-          tableName,
-          matchedFields,
-          filterList: [],
-          headers,
-          index: 0,
-          limit: 30,
-        });
-      }
       await _this.$store.commit(
         "DialogPopWnd/SET_STANDARDVIEW",
         "explore-data"

@@ -1230,6 +1230,13 @@ export default {
   extractDataFromTempTable: async function(ajid, tempTableName, mbdm, sjlyid) {
     const client = await global.pool.connect();
     try {
+      console.log(
+        "extractDataFromTempTable:",
+        ajid,
+        tempTableName,
+        mbdm,
+        sjlyid
+      );
       await cases.SwitchCase(client, ajid);
       let sql = "";
       if (mbdm === "110002") {
@@ -1246,6 +1253,7 @@ export default {
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
       await client.query(sql);
+
       return { success: true };
     } finally {
       client.release();

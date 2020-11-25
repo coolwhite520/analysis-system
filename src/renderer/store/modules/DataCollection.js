@@ -149,18 +149,28 @@ const mutations = {
     state.exampleDataList = list;
   },
 
-  SET_TABLENAME(state, { sheetIndex, tableName }) {
-    state.exampleDataList[sheetIndex].tableName = tableName;
+  SET_TABLENAME_AND_INSERTFIELDS_AND_SJLYID(
+    state,
+    { id, tableName, needInsertFields, sjlyid }
+  ) {
+    for (let item of state.exampleDataList) {
+      if (item.id === id) {
+        Vue.set(item, "tableName", tableName);
+        Vue.set(item, "needInsertFields", needInsertFields);
+        Vue.set(item, "sjlyid", sjlyid);
+        break;
+      }
+    }
   },
 
   // 设置每个页面的总条数
-  SET_ROWSUM(state, { sheetIndex, rowSum }) {
-    Vue.set(state.exampleDataList[sheetIndex], "rowSum", rowSum);
-  },
-  // 修改展示的数据
-  MODIFY_SHOW_DATA_LIMIT(state, { sheetIndex, rows, errorFields }) {
-    Vue.set(state.exampleDataList[sheetIndex], "showRows", rows);
-    Vue.set(state.exampleDataList[sheetIndex], "errorFields", errorFields);
+  SET_ROWSUM(state, { id, rowSum }) {
+    for (let item of state.exampleDataList) {
+      if (item.id === id) {
+        Vue.set(item, "rowSum", rowSum);
+        break;
+      }
+    }
   },
 
   MODIFY_SHOW_DATA_LIMIT_EX(state, { id, errorFields }) {
@@ -218,42 +228,7 @@ const actions = {
       logMatchList,
     });
   },
-  // sheetIndex（数据list对应的索引） ajid tableName， matchedFields，index（查询的索引） ， limit（查询的数量）
-  async QueryTableData(
-    { commit, state },
-    {
-      sheetIndex,
-      ajid,
-      tableName,
-      matchedFields,
-      index,
-      limit,
-      filterList,
-      headers,
-    }
-  ) {
-    let result = await dataImport.queryDataFromTable(
-      ajid,
-      tableName,
-      matchedFields,
-      index,
-      limit,
-      filterList,
-      headers
-    );
-    if (result.success) {
-      let rowSum = await dataImport.queryRowsum(ajid, tableName);
-      commit("SET_ROWSUM", {
-        sheetIndex,
-        rowSum: filterList.length > 0 ? result.rows.length : rowSum,
-      });
-      commit("MODIFY_SHOW_DATA_LIMIT", {
-        sheetIndex,
-        rows: result.rows,
-        errorFields: result.errorFields,
-      });
-    }
-  },
+
   async QueryErrorData(
     { commit },
     {

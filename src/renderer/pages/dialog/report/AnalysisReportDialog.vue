@@ -730,6 +730,7 @@ export default {
               PageItem,
               this.ReportParams
             );
+            console.log(sql);
             let tableDic = Default.ReportTableDic[item.id];
             let filePath = path.join(homedir, item.label + ".xls");
             let dataResult = await this.WriteToExcelFile(
