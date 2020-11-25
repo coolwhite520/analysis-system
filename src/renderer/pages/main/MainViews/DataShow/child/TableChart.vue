@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="myTableStyle">
     <el-table
       :id="tableData.uuid"
       style="width: 100%"
@@ -46,6 +46,7 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-row
       style="
         background-color: #f5f7fa;

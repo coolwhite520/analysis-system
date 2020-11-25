@@ -38,8 +38,30 @@ export default {
 #app {
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
 }
+
 ::-webkit-scrollbar {
-  display: none;
+  /*滚动条整体样式*/
+  width: 0px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 8px;
+  /* box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); */
+  /* background: #bfbebe; */
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb:hover {
+  /*滚动条里面小方块*/
+  border-radius: 8px;
+  /* box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); */
+  background: #636363;
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  /* box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); */
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0);
 }
 :focus {
   outline: 0;

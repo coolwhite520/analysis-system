@@ -2,7 +2,6 @@
   <div
     :style="{
       height: mainViewHeight - 140 + 'px',
-      overflow: 'auto',
       padding: 15 + 'px',
     }"
   >
