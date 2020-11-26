@@ -1,7 +1,7 @@
 <template>
   <div class="TabData">
     <el-row>
-      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="1" class="el-col">
         <el-button
           type="text"
           class="ctrl-button"
@@ -13,6 +13,19 @@
           <span class="title-content">数据采集</span>
         </el-button>
       </el-col>
+
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          @click="handleClickCollectionRecord"
+        >
+          <span class="iconfont selfIcont">&#xe614;</span>
+          <br />
+          <span class="title-content">采集记录</span>
+        </el-button>
+      </el-col>
+
       <el-col :span="1" class="el-col">
         <el-button
           type="text"
@@ -188,7 +201,7 @@
     </el-row>
 
     <el-row style="font-size: 8px; color: gray">
-      <el-col :span="1" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="2" style="border-right: 1px solid #e5e7ec">
         <div>采集</div>
       </el-col>
       <el-col
@@ -229,6 +242,7 @@
     <div v-if="showDataVisibilityDialogVisible">
       <show-visible-dialog></show-visible-dialog>
     </div>
+    <collection-record v-if="showCollectionRecordVisible"></collection-record>
   </div>
 </template>
 <script >
@@ -236,10 +250,13 @@ import StandardDataCollectionDialog from "@/pages/dialog/standard/StandardDataCo
 import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import ShowDataVisibleView from "@/pages/dialog/visible/visibleDialog";
+import CollectionRecord from "@/pages/dialog/record/CollectionRecordDialog";
 import { mapState } from "vuex";
 import path, { extname } from "path";
 import DataCleanDb from "@/db/DataClean.js";
+import cases from "@/db/Cases.js";
 import aes from "@/utils/aes";
+
 export default {
   data() {
     return {
@@ -255,6 +272,7 @@ export default {
     "filter-dialog": FilterDialog,
     "show-fields-dialog": ShowFieldsDialog,
     "show-visible-dialog": ShowDataVisibleView,
+    "collection-record": CollectionRecord,
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -263,6 +281,7 @@ export default {
       "filterVisible",
       "showFieldsVisible",
       "showDataVisibilityDialogVisible",
+      "showCollectionRecordVisible",
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
@@ -333,6 +352,31 @@ export default {
           this.loading = false;
         }
       );
+    },
+    async handleClickCollectionRecord() {
+      try {
+        let {
+          success,
+          rows,
+          headers,
+          rowCount,
+        } = await cases.QueryCollectionRecords(this.caseBase.ajid, 0, 30);
+        if (success) {
+          this.$store.commit("CaseDetail/SET_COLLECTIONRECORDS", {
+            rows,
+            headers,
+            rowCount,
+          });
+          this.$store.commit(
+            "DialogPopWnd/SET_SHOWCOLLECTIONRECORDVISIBLE",
+            true
+          );
+        }
+      } catch (e) {
+        this.$message.error({
+          message: "出错了：" + e.message,
+        });
+      }
     },
     async handleClickHideEmptyField() {
       // 计算空

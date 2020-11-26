@@ -389,7 +389,7 @@ export default {
         for (let tableData of this.tableDataList) {
           // 根据tableName获取表的数据
           if (tableData.componentName !== "no-data-view") {
-            await this.$store.dispatch(tableData.dispatchName, {
+            this.$store.dispatch(tableData.dispatchName, {
               ...tableData,
               offset: 0,
               count: 30,

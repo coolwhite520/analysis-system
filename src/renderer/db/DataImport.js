@@ -740,7 +740,6 @@ export default {
            AND jyzjhm != '' 
            AND jymc IS NOT NULL 
            AND jymc != '' 
-           LIMIT 200000 OFFSET 0 
          ) tt 
        WHERE
          tt.jyzjhm != '0' 
@@ -938,7 +937,7 @@ export default {
            AND jydfzjhm != '' 
            AND jydfmc IS NOT NULL 
            AND jydfmc != '' 
-           LIMIT 200000 OFFSET 0 
+      
          ) tt 
        WHERE
          tt.jydfzjhm != '0' 
@@ -979,7 +978,6 @@ export default {
          AND cxzh != '' 
          AND cxkh IS NOT NULL 
          AND cxkh != '' 
-         LIMIT 200000 OFFSET 0 
        ) ss 
      WHERE
        ss.ROW_NUMBER = 1;`;
@@ -1015,7 +1013,6 @@ export default {
          SJLYID IN ( '${sjlyid}' ) 
          AND jydfzkh IS NOT NULL 
          AND jydfzkh != '' 
-         LIMIT 200000 OFFSET 0 
        ) ss 
      WHERE
        ss.ROW_NUMBER = 1;`;
@@ -1032,7 +1029,7 @@ export default {
     TRIM(both '  ' FROM cxzh) zh,TRIM(both '  ' FROM cxkh) kh,TRIM(both '  ' FROM jymc) zhkhmc,TRIM(both '  ' FROM jyzjhm) khrzjhm, 
     TRIM(both '  ' FROM jykhh) zhkhyh, 
      row_number() OVER(PARTITION BY ajid,sjlylx,sjlyid,cxzh,cxkh,jymc,jyzjhm ) from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  AND 
-    cxzh is not null and cxzh != '' and cxkh is not null and cxkh != ''  limit 200000 offset 0)  ss where   ss.ROW_NUMBER = 1 
+    cxzh is not null and cxzh != '' and cxkh is not null and cxkh != '')  ss where   ss.ROW_NUMBER = 1 
     ;`;
     sql += `INSERT into gas_account_info (batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh) 
     SELECT batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh from ( SELECT TRIM(both '  ' FROM batch)::bigint batch,ryid, 
@@ -1040,7 +1037,7 @@ export default {
     TRIM(both '  ' FROM jydfzkh) zh,TRIM(both '  ' FROM jydfzkh) kh,TRIM(both '  ' FROM jydfmc) zhkhmc,TRIM(both '  ' FROM jydfzjhm) khrzjhm, 
     TRIM(both '  ' FROM jydfzhkhh) zhkhyh, 
      row_number() OVER(PARTITION BY ajid,sjlylx,sjlyid,jydfzkh,jydfmc,jydfzjhm ) from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  AND 
-    jydfzkh is not null and jydfzkh != ''   limit 200000 offset 0)  ss where   ss.ROW_NUMBER = 1; 
+    jydfzkh is not null and jydfzkh != '' )  ss where   ss.ROW_NUMBER = 1; 
     `;
     //抽取数据到person表
     sql += `INSERT into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
@@ -1068,7 +1065,7 @@ export default {
                     or  position('TRADING' in  upper(jydfmc))>0  or  position('TRADE' in  upper(jydfmc))>0  or  position('CO.' in  upper(jydfmc))>0  or  position('LTD' in  upper(jydfmc))>0  or  position('LLC' in  upper(jydfmc))>0  or  position('INC' in  upper(jydfmc))>0  or  position('LIMIT' in  upper(jydfmc))>0  or  position('COMPANY' in  upper(jydfmc))>0  or  position('IMP AND EXP' in  upper(jydfmc))>0  )))     
                      THEN   '98'  ELSE '99' END sjlx , 
     '0' sfdd  from ( select *, row_number() OVER(PARTITION BY sjlyid,jydfzjhm,jydfmc) from  (SELECT batch,ryid,ajid,sjlyid,jydfzjhm,jydfmc,sfddbs,sjlylx 
-    from ${tempTableName} WHERE SJLYID IN('${sjlyid}') and jydfzjhm is not null and jydfzjhm != '' and jydfmc is not null and jydfmc != ''  limit 200000 offset 0) tt  where tt.jydfzjhm!='0' ) ss where ss.ROW_NUMBER = 1 
+    from ${tempTableName} WHERE SJLYID IN('${sjlyid}') and jydfzjhm is not null and jydfzjhm != '' and jydfmc is not null and jydfmc != '') tt  where tt.jydfzjhm!='0' ) ss where ss.ROW_NUMBER = 1 
     ;`;
     sql += `INSERT into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
@@ -1095,7 +1092,7 @@ export default {
                     or  position('TRADING' in  upper(jymc))>0  or  position('TRADE' in  upper(jymc))>0  or  position('CO.' in  upper(jymc))>0  or  position('LTD' in  upper(jymc))>0  or  position('LLC' in  upper(jymc))>0  or  position('INC' in  upper(jymc))>0  or  position('LIMIT' in  upper(jymc))>0  or  position('COMPANY' in  upper(jymc))>0  or  position('IMP AND EXP' in  upper(jymc))>0  )))     
                      THEN   '98'  ELSE '99' END sjlx , 
      case when sfddbs='1' then '0' else '1' end  sfdd  from ( select *, row_number() OVER(PARTITION BY sjlyid,jyzjhm,jymc) from  (SELECT batch,ryid,ajid,sjlyid,jyzjhm,jymc,sfddbs,sjlylx 
-    from ${tempTableName} WHERE SJLYID IN('${sjlyid}') and jyzjhm is not null and jyzjhm != '' and jymc is not null and jymc != ''  limit 200000 offset 0) tt  where tt.jyzjhm!='0' ) ss where ss.ROW_NUMBER = 1 
+    from ${tempTableName} WHERE SJLYID IN('${sjlyid}') and jyzjhm is not null and jyzjhm != '' and jymc is not null and jymc != '' ) tt  where tt.jyzjhm!='0' ) ss where ss.ROW_NUMBER = 1 
     ;`;
     return sql;
   },
@@ -1125,7 +1122,7 @@ export default {
                     or  position('TRADING' in  upper(nsrmc))>0  or  position('TRADE' in  upper(nsrmc))>0  or  position('CO.' in  upper(nsrmc))>0  or  position('LTD' in  upper(nsrmc))>0  or  position('LLC' in  upper(nsrmc))>0  or  position('INC' in  upper(nsrmc))>0  or  position('LIMIT' in  upper(nsrmc))>0  or  position('COMPANY' in  upper(nsrmc))>0  or  position('IMP AND EXP' in  upper(nsrmc))>0  )))     
                      THEN   '98'  ELSE '99' END sjlx 
     ,'1' sfdd from ${tempTableName}  
-    where SJLYID IN('${sjlyid}') and nssbh is not null and nssbh!=''  limit 200000 offset 0;`;
+    where SJLYID IN('${sjlyid}') and nssbh is not null and nssbh!='';`;
 
     sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
@@ -1150,7 +1147,7 @@ export default {
                     or  position('TRADING' in  upper(fddbrmc))>0  or  position('TRADE' in  upper(fddbrmc))>0  or  position('CO.' in  upper(fddbrmc))>0  or  position('LTD' in  upper(fddbrmc))>0  or  position('LLC' in  upper(fddbrmc))>0  or  position('INC' in  upper(fddbrmc))>0  or  position('LIMIT' in  upper(fddbrmc))>0  or  position('COMPANY' in  upper(fddbrmc))>0  or  position('IMP AND EXP' in  upper(fddbrmc))>0  )))     
                      THEN   '98'  ELSE '99' END sjlx 
     ,'1' sfdd from ${tempTableName}  
-    where SJLYID IN('${sjlyid}') and fddbrsfzh is not null and fddbrsfzh!='' limit 200000 offset 0;`;
+    where SJLYID IN('${sjlyid}') and fddbrsfzh is not null and fddbrsfzh!='';`;
 
     sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
@@ -1176,7 +1173,7 @@ export default {
       or  position('TRADING' in  upper(cwxm))>0  or  position('TRADE' in  upper(cwxm))>0  or  position('CO.' in  upper(cwxm))>0  or  position('LTD' in  upper(cwxm))>0  or  position('LLC' in  upper(cwxm))>0  or  position('INC' in  upper(cwxm))>0  or  position('LIMIT' in  upper(cwxm))>0  or  position('COMPANY' in  upper(cwxm))>0  or  position('IMP AND EXP' in  upper(cwxm))>0  )))     
                      THEN   '98'  ELSE '99' END sjlx 
     ,'1' sfdd from ${tempTableName}  
-    where SJLYID IN('${sjlyid}')  and cwsfzh is not null and cwsfzh!='' limit 200000 offset 0 ;`;
+    where SJLYID IN('${sjlyid}')  and cwsfzh is not null and cwsfzh!='';`;
 
     sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
@@ -1202,7 +1199,7 @@ export default {
                     or  position('TRADING' in  upper(bsrxm))>0  or  position('TRADE' in  upper(bsrxm))>0  or  position('CO.' in  upper(bsrxm))>0  or  position('LTD' in  upper(bsrxm))>0  or  position('LLC' in  upper(bsrxm))>0  or  position('INC' in  upper(bsrxm))>0  or  position('LIMIT' in  upper(bsrxm))>0  or  position('COMPANY' in  upper(bsrxm))>0  or  position('IMP AND EXP' in  upper(bsrxm))>0  )))     
                      THEN   '98'  ELSE '99' END sjlx 
     ,'1' sfdd from ${tempTableName}   
-    where SJLYID IN('${sjlyid}') and bsrsfzh is not null and bsrsfzh!='' limit 200000 offset 0 ;`;
+    where SJLYID IN('${sjlyid}') and bsrsfzh is not null and bsrsfzh!='';`;
     return sql;
   },
   extractDataByGas_tax_records: async function(tempTableName, sjlyid) {
@@ -1214,7 +1211,7 @@ export default {
     case when TRIM(both '  ' FROM gfsh) is not null and TRIM(both '  ' FROM gfsh) !='' then TRIM(both '  ' FROM gfsh) else '0' end zzhm, 
      TRIM(both '  ' FROM gfgsmc) khmc,'dz1' zzlx,'企业法人营业执照' zzlxmc ,'98' sjlx, 
     '1' sfdd 
-    from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  and gfsh is not null and gfsh != '' limit 200000 offset 0 ;`;
+    from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  and gfsh is not null and gfsh != '' ;`;
     sql += `insert into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,sjlx,sfdd)
     SELECT case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
     ryid, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
@@ -1222,8 +1219,7 @@ export default {
     case when TRIM(both '  ' FROM xfsh) is not null and TRIM(both '  ' FROM xfsh) !='' then TRIM(both '  ' FROM xfsh) else '0' end zzhm, 
      TRIM(both '  ' FROM xfgsmc) khmc,'dz1' zzlx ,'企业法人营业执照' zzlxmc ,'98' sjlx, 
     '1' sfdd 
-    from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  and xfsh is not null and xfsh != '' limit 200000 offset 0 
-    `;
+    from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  and xfsh is not null and xfsh != '';`;
     return sql;
   },
   // 数据抽取

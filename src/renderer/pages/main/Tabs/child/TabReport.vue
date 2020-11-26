@@ -1,7 +1,7 @@
 <template>
   <div class="TabReport">
     <el-row style="text-align: center">
-      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="1" class="el-col">
         <el-button
           type="text"
           class="ctrl-button"

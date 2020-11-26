@@ -5,12 +5,20 @@
     :close-on-click-modal="false"
     class="standard-data-dialog"
     :append-to-body="true"
-    :title="title"
     :visible="showCollectionRecordVisible"
     width="45%"
     @close="handleClose"
     :modal="true"
   >
+    <div slot="title" class="dialog-title">
+      <i class="iconfont" style="color: white; font-size: 30px">&#xe614;</i>
+      <span class="title-text" style="color: white; cursor: pointer">{{
+        title
+      }}</span>
+      <div class="button-right">
+        <span class="title-close" @click="handleClose"></span>
+      </div>
+    </div>
     <div v-loading="loading">
       <el-table
         ref="multipleTable"
@@ -108,6 +116,7 @@ export default {
   computed: {
     ...mapState("DialogPopWnd", ["showCollectionRecordVisible"]),
     ...mapState("CaseDetail", ["CollectionRecords", "caseBase"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   mounted() {
     for (let size = 1; size <= 60; size++) {
@@ -130,6 +139,37 @@ export default {
     handleClose() {
       this.$store.commit("DialogPopWnd/SET_SHOWCOLLECTIONRECORDVISIBLE", false);
     },
+    async freshNowUI() {
+      // 更新采集批次等一批数据
+      await this.$store.dispatch(
+        "CaseDetail/queryEntityCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryAwaitTaskCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      //
+      // 更新当前的展示列表中的数据;
+      for (let tableData of this.tableDataList) {
+        // 根据tableName获取表的数据
+        if (tableData.componentName !== "no-data-view") {
+          this.$store.dispatch(tableData.dispatchName, {
+            ...tableData,
+            offset: 0,
+            count: 30,
+          });
+        }
+      }
+    },
     async handleClickDelCollection() {
       try {
         let selectedRows = this.$refs.multipleTable.selection;
@@ -147,26 +187,9 @@ export default {
           sjlyids.push(row.sjlyid);
         }
         await cases.DeleteCollectionRecords(this.caseBase.ajid, sjlyids);
-        // 更新采集批次等一批数据
-        await this.$store.dispatch(
-          "CaseDetail/queryEntityCount",
-          this.caseBase.ajid
-        );
-        await this.$store.dispatch(
-          "CaseDetail/queryBatchCount",
-          this.caseBase.ajid
-        );
-        await this.$store.dispatch(
-          "CaseDetail/queryAwaitTaskCount",
-          this.caseBase.ajid
-        );
-        await this.$store.dispatch(
-          "CaseDetail/queryCaseDataCenter",
-          this.caseBase.ajid
-        );
+        await this.freshNowUI();
         // 刷新页面数据
         await this.handleChangePageSize();
-        //
         this.$message({
           type: "success",
           message: "数据删除成功！",

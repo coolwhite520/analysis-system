@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
-    ...mapState("ShowTable", ["currentTableData"]),
+    ...mapState("ShowTable", ["tableDataList", "currentTableData"]),
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("DialogPopWnd", ["showErrorRowRecordVisible"]),
     myTreeList() {
@@ -118,6 +118,37 @@ export default {
         log.info(e.message);
       }
       this.loading = false;
+    },
+    async freshNowUI() {
+      // 更新采集批次等一批数据
+      await this.$store.dispatch(
+        "CaseDetail/queryEntityCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryAwaitTaskCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      //
+      // 更新当前的展示列表中的数据;
+      for (let tableData of this.tableDataList) {
+        // 根据tableName获取表的数据
+        if (tableData.componentName !== "no-data-view") {
+          this.$store.dispatch(tableData.dispatchName, {
+            ...tableData,
+            offset: 0,
+            count: 30,
+          });
+        }
+      }
     },
     async handleClickResolve() {
       try {
@@ -151,6 +182,7 @@ export default {
             _this.caseBase.ajid
           );
           if (success) {
+            await this.freshNowUI();
             this.$message({
               title: "成功",
               message: `数据处理完毕`,

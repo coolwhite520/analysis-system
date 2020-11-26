@@ -1166,10 +1166,7 @@ export default {
             .on("data", (data) => {
               index++;
               let percentage = parseInt(parseFloat(index / sumRow) * 100);
-              if (
-                lastPercentage !== percentage &&
-                percentage - lastPercentage > this.GetRandomNum(4, 10)
-              ) {
+              if (lastPercentage !== percentage) {
                 lastPercentage = percentage;
                 _this.$electron.ipcRenderer.send("import-one-table-process", {
                   id,

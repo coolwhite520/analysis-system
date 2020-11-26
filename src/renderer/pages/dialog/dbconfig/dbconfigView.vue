@@ -10,7 +10,7 @@
     :modal="true"
   >
     <div slot="title" class="dialog-title">
-      <i class="iconfont" style="color: white; font-size: 30px">&#xe71a;</i>
+      <i class="iconfont" style="color: white; font-size: 30px">&#xe64f;</i>
       <span class="title-text" style="color: white; cursor: pointer"
         >数据库设置</span
       >
