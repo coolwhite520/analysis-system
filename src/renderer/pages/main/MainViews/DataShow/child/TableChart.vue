@@ -1,5 +1,5 @@
 <template>
-  <div class="myTableStyle">
+  <div>
     <el-table
       :id="tableData.uuid"
       style="width: 100%"
@@ -10,9 +10,17 @@
       stripe
       border
       @sort-change="sortChange"
+      :row-class-name="rowClassName"
       @row-contextmenu="handleRightClickRow"
     >
-      <!-- <el-table-column fixed type="index" width="50" label="编号"></el-table-column> -->
+      <el-table-column
+        prop="rowIndex"
+        label="序号"
+        width="60"
+        header-align="center"
+        align="center"
+      ></el-table-column>
+      <!--  -->
       <el-table-column
         v-for="header in tableData.showHeaders"
         :label="header.fieldcname"
@@ -20,6 +28,9 @@
         show-overflow-tooltip
         :prop="header.fieldename"
         sortable="custom"
+        header-align="center"
+        align="center"
+        :render-header="labelHead"
       >
         <template slot-scope="scope">
           <div v-if="header.showrightbtn_type">
@@ -122,6 +133,17 @@ export default {
     };
   },
   methods: {
+    labelHead(h, { column, index }) {
+      let l = column.label.length;
+      let f = 30; //每个字大小，其实是每个字的比例值，大概会比字体大小差不多大一点，
+      column.minWidth = f * (l + 1); //字大小乘个数即长度 ,注意不要加px像素，这里minWidth只是一个比例值，不是真正的长度 //然后将列标题放在一个div块中，注意块的宽度一定要100%，否则表格显示不完全
+      // console.log(column);
+      // fontSize: "14px"
+      return h("div", { style: { width: "100%" } }, [column.label]);
+    },
+    rowClassName({ row, rowIndex }) {
+      row.rowIndex = rowIndex + 1;
+    },
     async handleChangePageSize() {
       // 根据tableName获取表的数据
       await this.$store.dispatch(this.tableData.dispatchName, {
@@ -142,36 +164,28 @@ export default {
         });
       }
     },
-    sortChange(column) {
-      //获取字段名称和排序类型
+    async sortChange(column) {
       let fieldName = column.prop;
       let sortingType = column.order;
-      let newTableData = JSON.parse(JSON.stringify(this.tableData));
-      function compare(property, sortingType) {
-        return function (a, b) {
-          var value1 = a[property].value;
-          var value2 = b[property].value;
-          // 如果是中文
-          if (
-            /^[\u4e00-\u9fa5]+$/i.test(value1) &&
-            /^[\u4e00-\u9fa5]+$/i.test(value2)
-          ) {
-            return sortingType === "descending"
-              ? value1.localeCompare(value2)
-              : value2.localeCompare(value1);
-          }
-          return sortingType === "descending"
-            ? value1 - value2
-            : value2 - value1;
-        };
+      console.log(fieldName, sortingType);
+      if (sortingType) {
+        if (sortingType === "descending") {
+          sortingType = "DESC";
+        } else {
+          sortingType = "ASC";
+        }
+        let orderBy = ` ORDER BY ${fieldName} ${sortingType}`;
+        console.log(orderBy);
+        this.$store.commit("ShowTable/SET_TABLE_ORDERBY", orderBy);
+
+        this.currentPage = 1;
+        await this.$store.dispatch(this.tableData.dispatchName, {
+          ...this.tableData,
+          offset: 0,
+          count: this.pageSize,
+        });
       }
-      newTableData.rows = newTableData.rows.sort(
-        compare(fieldName, sortingType)
-      );
-      this.$store.commit("ShowTable/UPDATE_TABLE_DATA", {
-        pageIndex: this.tableData.pageIndex,
-        rows: newTableData.rows,
-      });
+      return;
     },
     async handleClickTableCellLink(
       showrightbtn_type,
@@ -236,6 +250,7 @@ export default {
     },
 
     async handleCurrentChange(val) {
+      this.currentPage = val;
       let offset = (val - 1) * this.pageSize;
       // 根据tableName获取表的数据
       await this.$store.dispatch(this.tableData.dispatchName, {
@@ -248,5 +263,13 @@ export default {
 };
 </script>
 <style scoped>
-</style>>
+/deep/.el-table .cell {
+  position: relative;
+}
+/deep/.el-table .caret-wrapper {
+  position: absolute;
+  top: -4px;
+  right: 0;
+}
+</style>
 

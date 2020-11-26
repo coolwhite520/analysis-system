@@ -1,3 +1,4 @@
+import { orderBy } from "lodash";
 import cases from "./Cases";
 const log = require("@/utils/log");
 function getSameFieldArray(arr1, arr2) {
@@ -61,8 +62,7 @@ const dataCenterTableTemplate = {
   WHERE
     1 = 1 
     $FILTER$
-  ORDER BY
-    shard_id DESC 
+    $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
     countSql: `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='01' OR ZZLX='z1') AND ajid = $AJID$ $FILTER$`,
   },
@@ -104,8 +104,7 @@ const dataCenterTableTemplate = {
   WHERE
     1 = 1 
     $FILTER$
-  ORDER BY
-    shard_id DESC 
+    $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
     countSql: `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='02' OR ZZLX='dz1') AND ajid = $AJID$ $FILTER$`,
   },
@@ -139,8 +138,7 @@ const dataCenterTableTemplate = {
     ) C 
   WHERE
     1 = 1 $FILTER$ 
-  ORDER BY
-    shard_id DESC 
+    $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
     countSql: `SELECT count(*)::int count FROM( SELECT *  ,(case WHEN cxkh is NULL then '未调单' else '已调单' end ) as sfdd 
     from((SELECT * FROM  gas_account_info  WHERE ajid = $AJID$  
@@ -176,8 +174,7 @@ const dataCenterTableTemplate = {
   WHERE
     1 = 1 
     $FILTER$
-  ORDER BY
-    shard_id DESC 
+  $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
     countSql: `
     SELECT COUNT
@@ -314,8 +311,10 @@ export default {
     tableename,
     filter,
     offset,
-    count
+    count,
+    orderby = " ORDER BY shard_id DESC"
   ) {
+    console.log(ajid, tid, tableename, filter, offset, count);
     const client = await global.pool.connect();
     try {
       let ret = await this.QueryTableShowCFields(tid);
@@ -361,7 +360,8 @@ export default {
         .replace(/\$TABLENAME\$/g, tableename)
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$COUNT\$/g, count)
-        .replace(/\$OFFSET\$/g, offset);
+        .replace(/\$OFFSET\$/g, offset)
+        .replace(/\$SQLORDERBY\$/g, orderby);
 
       let exportSql = querySqlTemp
         .replace(/\$AJID\$/g, ajid)
@@ -377,6 +377,7 @@ export default {
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$TABLENAME\$/g, tableename);
 
+      console.log(querySql);
       let result = await client.query(querySql);
       // 数据过滤
       let retRows = [];

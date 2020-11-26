@@ -1,8 +1,10 @@
 <template >
   <div
     class="view-style"
-    :style="{ height: contentViewHeight + 'px' }"
+    :style="{ height: contentViewHeight + 8 + 'px' }"
     v-loading="loadingShowData"
+    element-loading-text="数据加载中..."
+    element-loading-background="rgba(0, 0, 0, 0)"
   >
     <ul
       v-if="contextMenuVisible"

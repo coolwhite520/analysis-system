@@ -612,12 +612,11 @@ export default {
           val: tableDic[k],
           opts: {
             b: true,
-            sz: "13",
+            sz: "15",
             align: "center",
             shd: {
               fill: "F5F7FA",
             },
-            fontFamily: "Avenir Book",
           },
         };
         tableHeader.push(header);
@@ -629,9 +628,8 @@ export default {
           values.push({
             val: row[k],
             opts: {
-              sz: "13",
+              sz: "15",
               align: "center",
-              fontFamily: "Avenir Book",
             },
           });
         }
@@ -642,7 +640,7 @@ export default {
         tableSize: 12,
         tableColor: "ada",
         tableAlign: "left",
-        tableFontFamily: "Comic Sans MS",
+        // tableFontFamily: "Comic Sans MS",
         spacingBefor: 120, // default is 100
         spacingAfter: 120, // default is 100
         spacingLine: 240, // default is 240

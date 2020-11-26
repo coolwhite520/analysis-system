@@ -980,9 +980,25 @@ export default {
                   .concat(externFieldsValues);
                 // 把fields和realValues合并成一个对象row
                 let tempRow = lodash.zipObject(fields, realValues);
+                console.log(
+                  "1",
+                  createFields,
+                  tempRow,
+                  tablecname,
+                  inFlag,
+                  outFlag
+                );
                 let newRowData = importModel.TestingHandle(
                   createFields,
                   tempRow,
+                  tablecname,
+                  inFlag,
+                  outFlag
+                );
+                console.log(
+                  "2",
+                  createFields,
+                  newRowData,
                   tablecname,
                   inFlag,
                   outFlag

@@ -982,13 +982,13 @@ export default {
     // 最晚交易日期(zwjyrq)
     makeData() {
       switch (this.tableData.tid) {
-        case "202":
+        case 202:
           return this.makeData202();
           break;
-        case "203":
+        case 203:
           return this.makeData203();
           break;
-        case "204":
+        case 204:
           return this.makeData204();
           break;
       }

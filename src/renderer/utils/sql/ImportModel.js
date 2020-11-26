@@ -239,20 +239,19 @@ function TestingHandle(
 ) {
   try {
     if (tablename.startsWith("gas_phone_call_info")) {
-      if (Columns.includes("hjrq")) {
-        dataRow["hjrq"] = dataRow["hjrq"].replace(/\//g, "-");
-      }
       if (Columns.includes("thsj")) {
-        dataRow["thsj"] = dataRow["thsj"].replace(/\//g, "-");
-        if (Columns.includes("hjrq") && Columns.includes("hjsj")) {
-          let array = dataRow["hjsj"].trim().split(" ");
+        // dataRow["thsj"]=dataRow["thsj"].replace(/\//g,'-');
+        if (dataRow.hasOwnProperty("hjrq") && dataRow.hasOwnProperty("hjsj")) {
           dataRow["thsj"] =
-            dataRow["hjrq"].trim().split(" ")[0] +
+            getfulltime_(dataRow["hjrq"]).date +
             " " +
-            array[array.length - 1];
+            getfulltime_(dataRow["hjsj"]).time;
+        } else if (dataRow.hasOwnProperty("thsj")) {
+          let t = getfulltime_("thsj");
+          dataRow["thsj"] = t.date + " " + t.time;
         }
       }
-      if (Columns.includes("cxsj")) {
+      if (dataRow.hasOwnProperty("cxsj")) {
         dataRow["cxsj"] = dataRow["cxsj"].replace(/\//g, "-");
         let text = Default.IsNullOrEmpty(dataRow["cxsj"])
           ? ""
@@ -267,7 +266,6 @@ function TestingHandle(
       try {
         if (Columns.includes("kpyf")) {
           if (Columns.includes("kprq")) {
-            dataRow["kprq"] = dataRow["kprq"].replace(/\//g, "-");
             let text2 = Default.IsNullOrEmpty(dataRow["kprq"])
               ? ""
               : dataRow["kprq"];
@@ -276,10 +274,7 @@ function TestingHandle(
             ).exec(text2);
             if (res) {
               dataRow["kpyf"] = res[1] + "-" + res[2];
-            } else if (
-              Columns.includes("kpyf") &&
-              !Default.IsNullOrEmpty(dataRow["kpyf"])
-            ) {
+            } else if (!Default.IsNullOrEmpty(dataRow["kpyf"])) {
               let text3 = dataRow["kpyf"];
               if (
                 RegExp(/^\d{6}$/).test(text3) ||
@@ -288,16 +283,13 @@ function TestingHandle(
                 dataRow["kpyf"] = text3.slice(0, 4) + "-" + text3.slice(4);
               }
             }
-          } else if (
-            Columns.includes("kpyf") &&
-            !Default.IsNullOrEmpty(dataRow["kpyf"])
-          ) {
+          } else if (!Default.IsNullOrEmpty(dataRow["kpyf"])) {
             let text4 = dataRow["kpyf"];
             if (
               RegExp(/^\d{6}$/).test(text4) ||
               RegExp(/^\d{5}$/).test(text4)
             ) {
-              dataRow["kpyf"] = text4.slice(0, 4) + "-" + text3.slice(4);
+              dataRow["kpyf"] = text4.slice(0, 4) + "-" + text4.slice(4);
             }
           }
         }
@@ -311,13 +303,10 @@ function TestingHandle(
       ) /*&& impotrt == ImportFileClass.Normal*/
     ) {
       try {
-        if (!Columns.includes("jdbz")) {
+        if (!dataRow.hasOwnProperty("jdbz")) {
           dataRow["jdbz"] = "";
         }
-        if (
-          dataRow["jdbz"] != null &&
-          !Default.IsNullOrEmpty(dataRow["jdbz"])
-        ) {
+        if (!Default.IsNullOrEmpty(dataRow["jdbz"])) {
           let text5 = dataRow["jdbz"];
           if (text5.length > 0) {
             if (text5 == inFlag) {
@@ -330,78 +319,72 @@ function TestingHandle(
           } else {
             dataRow["jdbz"] = "出";
           }
-          if (Columns.includes("jyje") && dataRow["jyje"] != null) {
-            let num = Math.abs(parseFloat(dataRow["jyje"]));
-            if (num != 0.0) {
-              let jyje = String(num);
-              dataRow["jyje"] = jyje != null ? jyje : "";
+          if (dataRow.hasOwnProperty("jyje")) {
+            let double_money = parseFloat(dataRow["jyje"]);
+            if (!isNaN(double_money)) {
+              dataRow["jyje"] = String(Math.abs(double_money));
             }
           }
         } else if (!Columns.includes("jkje") && !Columns.includes("dkje")) {
           if (
             Columns.includes("jyje") &&
-            dataRow["jyje"] != null &&
+            dataRow.hasOwnProperty("jyje") &&
             dataRow["jyje"] != "0"
           ) {
             let num2 = parseFloat(dataRow["jyje"]);
-            if (num2 > 0.0) {
-              dataRow["jdbz"] = "进";
-            } else if (num2 < 0.0) {
-              dataRow["jdbz"] = "出";
-              let jyje = String(Math.abs(num2));
-              dataRow["jyje"] = jyje != null ? jyje : "";
+            if (!isNaN(num2)) {
+              if (num2 > 0) {
+                dataRow["jdbz"] = "进";
+              } else if (num2 < 0) {
+                dataRow["jdbz"] = "出";
+                dataRow["jyje"] = String(Math.abs(num2));
+              }
             }
           }
         } else {
-          let num3 = 0.0;
-          let num4 = 0.0;
-          if (Columns.includes("jkje") && dataRow["jkje"] != null) {
-            num3 = parseFloat(dataRow["jkje"]);
+          let num3 = 0;
+          let num4 = 0;
+          if (Columns.includes("jkje") && dataRow.hasOwnProperty("jkje")) {
+            let temp = parseFloat(dataRow["jkje"]);
+            num3 = isNaN(temp) ? 0 : temp;
           }
-          if (Columns.includes("dkje") && dataRow["dkje"] != null) {
-            num4 = parseFloat(dataRow["dkje"]);
+          if (Columns.includes("dkje") && dataRow.hasOwnProperty("dkje")) {
+            let temp = parseFloat(dataRow["dkje"]);
+            num4 = isNaN(temp) ? 0 : temp;
           }
-          if (
-            Columns.includes("jkje") &&
-            dataRow["jkje"] != null &&
-            num3 != 0.0
-          ) {
+          if (num3 != 0) {
             dataRow["jdbz"] = "出";
             if (!Columns.includes("jyje")) {
               dataRow["jyje"] = "";
             }
-            if (num3 < 0.0) {
+            if (num3 < 0) {
               num3 = Math.abs(num3);
               dataRow["jdbz"] = "进";
             }
             dataRow["jyje"] = num3;
-          } else if (
-            Columns.includes("dkje") &&
-            dataRow["dkje"] != null &&
-            num4 != 0.0
-          ) {
+          } else if (num4 != 0) {
             dataRow["jdbz"] = "进";
             if (!Columns.includes("jyje")) {
               dataRow["jyje"] = "";
             }
-            if (num4 < 0.0) {
+            if (num4 < 0) {
               num4 = Math.abs(num4);
               dataRow["jdbz"] = "出";
             }
             dataRow["jyje"] = num4;
           } else if (
             Columns.includes("jyje") &&
-            dataRow["jyje"] != null &&
+            dataRow.hasOwnProperty("jyje") &&
             dataRow["jyje"] != "0"
           ) {
             let num5 = parseFloat(dataRow["jyje"]);
-            if (num5 > 0.0) {
-              dataRow["jdbz"] = "进";
-            } else if (num5 < 0.0) {
-              dataRow["jdbz"] = "出";
-              num5 = Math.abs(num5);
-              let jyje = String(num5);
-              dataRow["jyje"] = jyje != null ? jyje : "";
+            if (!isNaN(num5)) {
+              if (num5 > 0) {
+                dataRow["jdbz"] = "进";
+              } else if (num5 < 0) {
+                dataRow["jdbz"] = "出";
+                dataRow["jyje"] = String(Math.abs(num5));
+              }
             }
           }
         }
@@ -415,16 +398,13 @@ function TestingHandle(
     if (
       tablename.startsWith("gas_phone_call_info") &&
       Columns.includes("fx") &&
-      dataRow["fx"] != null
+      dataRow.hasOwnProperty("fx")
     ) {
       let expr_9D5 = dataRow["fx"];
-      if ((expr_9D5 != null ? expr_9D5 : null) == inFlag) {
+      if (dataRow["fx"] == inFlag) {
         dataRow["fx"] = "主叫";
       } else {
-        let expr_A11 = dataRow["fx"];
-        if ((expr_A11 != null ? expr_A11 : null) == outFlag) {
-          dataRow["fx"] = "被叫";
-        }
+        dataRow["fx"] = "被叫";
       }
     }
     if (Columns.includes("cxzh") && Columns.includes("cxkh")) {
@@ -464,9 +444,9 @@ function TestingHandle(
       if (Default.IsNullOrEmpty(dataRow["je"])) {
         dataRow["je"] = "0.00";
       }
-      dataRow["jshj"] = String(
-        (parseFloat(dataRow["se"]) + parseFloat(dataRow["je"])).toFixed(2)
-      );
+      let se = isNaN(parseFloat(dataRow["se"])) ? 0 : parseFloat(dataRow["se"]);
+      let je = isNaN(parseFloat(dataRow["je"])) ? 0 : parseFloat(dataRow["je"]);
+      dataRow["jshj"] = String((se + je).toFixed(2));
       if (dataRow["jshj"].indexOf(",") >= 0) {
         dataRow["jshj"] = dataRow["jshj"].replace(/,/g, "");
       }
@@ -493,30 +473,31 @@ function TestingHandle(
           ? "98"
           : "99";
     }
-    if (Columns.includes("jysj")) {
-      let text6 = dataRow["jysj"];
-      if (Columns.includes("jyrq")) {
-        if (
-          !Default.IsNullOrEmpty(text6) ||
-          !Default.IsNullOrEmpty(dataRow["jyrq"])
-        ) {
-          let jyrq = null;
-          let jysj = null;
-          if (!Default.IsNullOrEmpty(text6)) {
-            jysj = getfulltime_(text6);
-          }
-          if (!Default.IsNullOrEmpty(dataRow["jyrq"])) {
-            jyrq = getfulltime_(dataRow["jyrq"]);
-          }
-          let date = !jyrq ? (!jysj ? "0001-01-01" : jysj.date) : jyrq.date;
-          let time = !jysj ? (!jyrq ? "00:00:00" : jyrq.time) : jysj.time;
-          let fulltime = date + " " + time;
-          dataRow["jyrq"] = fulltime;
-          dataRow["jysj"] = fulltime;
+    if (Columns.includes("jysj") && Columns.includes("jyrq")) {
+      if (
+        !Default.IsNullOrEmpty(dataRow["jysj"]) ||
+        !Default.IsNullOrEmpty(dataRow["jyrq"])
+      ) {
+        let jyrq = null;
+        let jysj = null;
+        if (!Default.IsNullOrEmpty(dataRow["jysj"])) {
+          jysj = getfulltime_(dataRow["jysj"]);
         }
+        if (!Default.IsNullOrEmpty(dataRow["jyrq"])) {
+          jyrq = getfulltime_(dataRow["jyrq"]);
+        }
+        let date =
+          jyrq == null ? (jysj == null ? "0001-01-01" : jysj.date) : jyrq.date;
+        let time =
+          jysj == null ? (jyrq == null ? "00:00:00" : jyrq.time) : jysj.time;
+        let fulltime = date + " " + time;
+        dataRow["jyrq"] = fulltime;
+        dataRow["jysj"] = fulltime;
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log(e.message);
+  }
   return dataRow;
 }
 function getfulltime_(str) {

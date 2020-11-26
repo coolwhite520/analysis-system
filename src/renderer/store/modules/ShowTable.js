@@ -7,6 +7,7 @@ import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 import { stat } from "fs";
+import { orderBy } from "lodash";
 const uuid = require("uuid");
 const log = require("@/utils/log");
 // 关系图设置的金额区间
@@ -267,7 +268,9 @@ const mutations = {
       }
     }
   },
-
+  SET_TABLE_ORDERBY(state, orderby) {
+    Vue.set(state.currentTableData, "orderby", orderby);
+  },
   SET_SPREADNODESWITCH(state, SpreadNodeSwitch) {
     state.currentTableData.SpreadNodeSwitch = SpreadNodeSwitch;
   },
@@ -524,14 +527,33 @@ const actions = {
     }
 
     // 需要累加过滤条件
-    let data = await showTable.QueryBaseTableData(
-      ajid,
-      tid,
-      tableename,
-      modelFilterStr,
-      offset,
-      count
-    );
+    let data;
+    if (
+      typeof pageIndex !== "undefined" &&
+      state.currentTableData &&
+      state.currentTableData.hasOwnProperty("orderby")
+    ) {
+      let orderby = state.currentTableData.orderby;
+      data = await showTable.QueryBaseTableData(
+        ajid,
+        tid,
+        tableename,
+        modelFilterStr,
+        offset,
+        count,
+        orderby
+      );
+    } else {
+      data = await showTable.QueryBaseTableData(
+        ajid,
+        tid,
+        tableename,
+        modelFilterStr,
+        offset,
+        count
+      );
+    }
+
     if (data.success) {
       let { headers, rows, sum, exportSql } = data;
       if (pageIndex) {
@@ -612,6 +634,14 @@ const actions = {
       describe,
     } = await models.QueryModelSqlTemplateByMid(tid);
 
+    if (
+      typeof pageIndex !== "undefined" &&
+      state.currentTableData &&
+      state.currentTableData.hasOwnProperty("orderby")
+    ) {
+      orderby = state.currentTableData.orderby;
+    }
+
     if (typeof pgsqlTemplateDecode === "undefined") {
       pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
       // 过滤结构体转sql字符串
@@ -628,6 +658,7 @@ const actions = {
       modelFilterStr,
       filterChildStr
     );
+    console.log(sql);
     let data = await showTable.QueryModelDataTableBySql(
       ajid,
       tid,

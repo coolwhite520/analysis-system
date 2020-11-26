@@ -164,4 +164,12 @@ export default {
 .iconfont {
   font-size: 20px;
 }
+/deep/.el-submenu__title {
+  height: 50px;
+  line-height: 50px;
+}
+/deep/.el-menu-item {
+  height: 40px;
+  line-height: 40px;
+}
 </style>
