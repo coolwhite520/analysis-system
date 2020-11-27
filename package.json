@@ -5,7 +5,7 @@
     }
   },
   "name": "analysis-system",
-  "version": "4.5.11",
+  "version": "4.5.12",
   "author": "Panda",
   "description": "Fanfu-资金流分析系统",
   "license": "MIT",
@@ -119,12 +119,16 @@
     "vuex-persistedstate": "^4.0.0-beta.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
     "ajv": "^6.12.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-minify-webpack-plugin": "^0.3.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "cfonts": "^2.8.0",
