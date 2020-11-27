@@ -185,6 +185,9 @@
               {{ currentRow.fileName }}</el-button
             >
           </el-tooltip>
+          <span style="color: #f29c38; font-size: 10px"
+            >首次进行某类文件导入时，建议手动对字段进行精确匹配，系统会记录以便后续自动匹配。</span
+          >
         </div>
         <el-table
           stripe

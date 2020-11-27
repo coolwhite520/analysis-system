@@ -748,7 +748,6 @@ export default {
         }-${new Date().Format("yyyyMMddhhmmss")}`,
         filters: [
           { name: "excel", extensions: ["xls", "xlsx"] },
-          { name: "txt", extensions: ["txt"] },
           { name: "csv", extensions: ["csv"] },
         ],
       });

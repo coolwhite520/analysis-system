@@ -55,7 +55,7 @@ const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
 import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
-
+import { PageItem } from "@/store/modules/PageItem";
 // const html2canvas = require("html2canvas");
 export default {
   async mounted() {
@@ -155,6 +155,7 @@ export default {
       global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
       // 创建聚合函数
       await base.CreateAggregateFunction();
+      await base.CreateFileMatchedTable();
       await this.$store.dispatch("PublicList/getAJLBList");
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");

@@ -122,8 +122,6 @@ export default {
         let { ajid, filePath, exportSql, headers, sumRowCount } = data;
         let extName = path.extname(filePath);
         switch (extName) {
-          case ".txt":
-            break;
           case ".xls":
           case ".xlsx":
           case ".csv":

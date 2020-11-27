@@ -2,6 +2,7 @@ import moment from "moment";
 import cases from "./Cases";
 const log = require("electron-log");
 const uuid = require("uuid");
+var crypto = require("crypto");
 
 export default {
   // 根据导入数据类型获取对应的匹配表
@@ -1302,6 +1303,89 @@ export default {
         resultList.push(obj);
       }
       return { success: true, rows: resultList };
+    } finally {
+      client.release();
+    }
+  },
+  // 根据文件全列查找之前匹配的数据
+  QueryMatchedRecordByFileAllCols: async function(matchedmbdm, fileAllColList) {
+    if (fileAllColList.length === 0 || matchedmbdm === "")
+      return { success: false, rows: [] };
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchDefaultCase(client);
+      let filecols_str = fileAllColList.join("&");
+      let md5_str = crypto
+        .createHash("md5")
+        .update(filecols_str)
+        .digest("hex");
+      let sql = `select * from icap_base.gas_match_file_record where md5='${md5_str}' and matchedmbdm='${matchedmbdm}'`;
+      let res = await client.query(sql);
+      if (res.rows.length > 0) {
+        return {
+          success: true,
+          rows: res.rows[0].dbfields.split("&"),
+          inFlag: res.rows[0].inflag,
+          outFlag: res.rows[0].outflag,
+        };
+      } else {
+        return { success: false, rows: [] };
+      }
+    } finally {
+      client.release();
+    }
+  },
+  InsertOrUpdateMatchedRecord: async function(
+    matchedmbdm,
+    filecolsList,
+    matchfieldsList,
+    inflag,
+    outflag
+  ) {
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchDefaultCase(client);
+      let createFields = [
+        "md5",
+        "matchedmbdm",
+        "filefields",
+        "dbfields",
+        "matchcount",
+        "inflag",
+        "outflag",
+        "datetime",
+      ];
+      if (filecolsList.length === 0 || matchfieldsList.length === 0) return;
+      let filecols_str = filecolsList.join("&");
+      let md5_str = crypto
+        .createHash("md5")
+        .update(filecols_str)
+        .digest("hex");
+      let matchedCount = matchfieldsList.filter((field) => field !== "").length;
+      let matchfields_str = matchfieldsList.join("&");
+      let values = [
+        md5_str,
+        matchedmbdm,
+        filecols_str,
+        matchfields_str,
+        matchedCount,
+        inflag,
+        outflag,
+        new Date().Format("yyyy-MM-dd hh:mm:ss"),
+      ];
+      let sql = `INSERT INTO icap_base.gas_match_file_record(${createFields})
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+      ON conflict(md5) DO UPDATE
+      set 
+      matchedmbdm = excluded.matchedmbdm,
+      filefields = excluded.filefields, 
+      dbfields = excluded.dbfields, 
+      matchcount = excluded.matchcount, 
+      inflag = excluded.inflag, 
+      outflag = excluded.outflag, 
+      datetime = excluded.datetime`;
+      await client.query(sql, values);
+      console.log(sql);
     } finally {
       client.release();
     }

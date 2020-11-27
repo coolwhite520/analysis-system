@@ -1,5 +1,4 @@
 const log = require("electron-log");
-var copyTo = require("pg-copy-streams").to;
 const fs = require("fs");
 
 import cases from "./Cases";
@@ -50,6 +49,40 @@ export default {
       await client.query(sql);
     } catch (e) {
       console.log(e);
+    } finally {
+      client.release();
+    }
+  },
+  // 创建匹配记录表
+  CreateFileMatchedTable: async function() {
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchDefaultCase(client);
+      let createTableName = "gas_match_file_record";
+      let createFields = [
+        "md5",
+        "matchedmbdm",
+        "filefields",
+        "dbfields",
+        "matchcount",
+        "inflag",
+        "outflag",
+        "datetime",
+      ];
+      let newFields = createFields.map(function(item, index) {
+        if (item === "md5") {
+          return `${item} varchar(80) not null PRIMARY KEY`;
+        } else if (item === "datetime") {
+          return `${item} timestamp`;
+        } else if (item === "matchcount") {
+          return `${item} int`;
+        }
+        return `${item} TEXT`;
+      });
+      let fieldsStr = newFields.join(",");
+      let sql = `CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
+      console.log(sql);
+      await client.query(sql);
     } finally {
       client.release();
     }

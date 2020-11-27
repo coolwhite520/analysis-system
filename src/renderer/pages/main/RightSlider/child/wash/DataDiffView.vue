@@ -72,7 +72,6 @@ import dataShowDb from "../../../../../db/DataShowTable";
 import errorDataTableView from "@/pages/dialog/filter/ErrowRowReview.vue";
 const log = require("electron-log");
 export default {
-  props: ["renderData"],
   components: {
     "error-row-view": errorDataTableView,
   },

@@ -208,7 +208,7 @@ export default {
         console.log({ row });
         this.$bus.$emit("nodeStyleSetting", {
           graphid: this.currentTableData.graphid,
-          nodeid: this.renderData.entity.nodeid,
+          nodeid: this.currentTableData.entity.nodeid,
           nodeStyle: row,
         });
       } else {

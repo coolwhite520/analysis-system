@@ -18,6 +18,7 @@ import importModel from "@/utils/sql/ImportModel.js";
 const UUID = require("uuid");
 import path from "path";
 import { create } from "domain";
+import { inflate } from "zlib";
 const copyFrom = require("pg-copy-streams").from;
 const csv = require("@fast-csv/parse");
 const lodash = require("lodash");
@@ -294,6 +295,12 @@ export default {
      * 解析示例csv文件
      */
     async parseExampleCsvFile(filePathName) {
+      // await dataImport.InsertOrUpdateMatchedRecord(
+      //   ["1", "2", "'3"],
+      //   ["a", "b", "c"],
+      //   "进",
+      //   "出"
+      // );
       let encoding = await this.getFileEncoding(filePathName);
       return new Promise((resolve, reject) => {
         let rows = [];
@@ -426,6 +433,7 @@ export default {
           ins2,
           skipLines,
         } = result;
+
         // 文件的所有列名称去掉空格
         fileAllCols.forEach((element, index) => {
           fileAllCols[index] = element.trim();
@@ -476,45 +484,61 @@ export default {
           fieldename: "",
         });
         data.templateToFieldObjList = templateToFieldObjList;
+        data.inFlag = "";
+        data.outFlag = "";
 
-        // 读取log表中的匹配list
-        let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
-          matchedMbdm
+        let retData = await dataImport.QueryMatchedRecordByFileAllCols(
+          matchedMbdm,
+          fileAllCols
         );
         let dataList = [];
-        for (let i = 0; i < fileAllCols.length; i++) {
-          let fileColName = fileAllCols[i];
-          // 这个地方需要参考log表进行匹配
-          let bestArray = templateToFieldObjList.filter((ele) => {
-            return ele.fieldcname === fileColName;
-          });
-          let obj = {
-            fileColName, // 文件中的列名
-            ins1: ins1.length > 0 ? ins1[i] : "",
-            ins2: ins2.length > 0 ? ins2[i] : "",
-            matchedFieldName:
-              bestArray.length > 0 ? bestArray[0].fieldename : "",
-            matchedFieldType:
-              bestArray.length > 0 ? bestArray[0].fieldtype : "",
-          };
-          // 如果没有直接匹配上，那么和log表再次进行匹配。
-          if (obj.matchedFieldName === "") {
-            bestArray = logMatchList.filter((ele) => {
-              return ele.columnname === fileColName;
-            });
-            if (bestArray.length > 0) {
-              bestArray = templateToFieldObjList.filter((ele) => {
-                return ele.fieldcname === bestArray[0].fieldname;
-              });
-              obj.matchedFieldName =
-                bestArray.length > 0 ? bestArray[0].fieldename : "";
-            } else {
-              obj.matchedFieldName = "";
-            }
+        if (retData.success) {
+          // 匹配上了record，那么直接取出来
+          data.inFlag = retData.inFlag;
+          data.outFlag = retData.outFlag;
+          for (let i = 0; i < fileAllCols.length; i++) {
+            let fileColName = fileAllCols[i];
+            let obj = {
+              fileColName, // 文件中的列名
+              ins1: ins1.length > 0 ? ins1[i] : "",
+              ins2: ins2.length > 0 ? ins2[i] : "",
+              matchedFieldName: retData.rows[i],
+            };
+            dataList.push(obj);
           }
-          dataList.push(obj);
-        }
+        } else {
+          // 查询log表获取数据
+          let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
+            matchedMbdm
+          );
+          console.log(logMatchList);
+          for (let i = 0; i < fileAllCols.length; i++) {
+            let fileColName = fileAllCols[i];
+            let bestArray = templateToFieldObjList.filter((ele) => {
+              return ele.fieldcname === fileColName;
+            });
+            // 如果没有直接匹配上，那么和log表再次进行匹配。
+            if (bestArray.length === 0) {
+              bestArray = logMatchList.filter((ele) => {
+                return ele.columnname === fileColName;
+              });
+              if (bestArray.length > 0) {
+                bestArray = templateToFieldObjList.filter((ele) => {
+                  return ele.fieldcname === bestArray[0].fieldname;
+                });
+              }
+            }
+            let obj = {
+              fileColName, // 文件中的列名
+              ins1: ins1.length > 0 ? ins1[i] : "",
+              ins2: ins2.length > 0 ? ins2[i] : "",
+              matchedFieldName:
+                bestArray.length > 0 ? bestArray[0].fieldename : "",
+            };
 
+            dataList.push(obj);
+          }
+        }
         // 查找相同的列
         let resultSameArr = [];
         for (let item of dataList) {
@@ -540,8 +564,6 @@ export default {
         data.success = true;
         data.id = UUID.v1();
         data.progressColor = this.getRandomColor();
-        data.inFlag = "";
-        data.outFlag = "";
         this.$electron.ipcRenderer.send("parse-one-example-sheet-over", data);
       }
     },
@@ -575,6 +597,7 @@ export default {
             inFlag,
             outFlag,
           } = data;
+
           let { ajid, ajmc } = caseBase;
           let filepath = path.dirname(data.filePathName);
           let fileExt = path.extname(fileName).slice(1);
@@ -582,14 +605,23 @@ export default {
           // 统计选中的列名称
           let fields = [];
           let matchedFields = [];
+          let matchedFieldsAll = [];
           let matchedFileCols = [];
           for (let item of data.dataList) {
             if (item.matchedFieldName !== "") {
               matchedFields.push(item.matchedFieldName);
               matchedFileCols.push(item.fileColName);
             }
+            matchedFieldsAll.push(item.matchedFieldName);
           }
-          // //console.log(matchedFields, matchedFileCols);
+          console.log(fileAllCols, matchedFieldsAll);
+          dataImport.InsertOrUpdateMatchedRecord(
+            matchedMbdm,
+            fileAllCols,
+            matchedFieldsAll,
+            inFlag,
+            outFlag
+          );
           fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((value) => {
             return value.toLowerCase();
@@ -608,7 +640,6 @@ export default {
             tablecname,
             this.softVersion
           );
-
           this.$electron.ipcRenderer.send("read-one-file-begin", {
             fileName,
             sheetName,
@@ -1221,7 +1252,7 @@ export default {
     // 每个子进程自己一个pool
     global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
   },
-  mounted() {
+  async mounted() {
     this.$electron.ipcRenderer.on("read-all-file", this.onReadAllFile);
     this.$electron.ipcRenderer.on(
       "parse-all-example-file",

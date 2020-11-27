@@ -284,11 +284,12 @@ export default {
         .replace(/\$FIELDS\$/g, showFields)
         .replace(/\$TABLENAME\$/g, tableename)
         .replace(/\$FILTER\$/g, filter)
+        .replace(/\$SQLORDERBY\$/g, " ")
         .replace(/\$COUNT\$/g, 1000000)
         .replace(/\$OFFSET\$/g, 0);
 
-      let sql = querySql.split("ORDER BY")[0];
-      let result = await client.query(sql);
+      // let sql = querySql.split("ORDER BY")[0];
+      let result = await client.query(querySql);
       // 数据过滤
       if (result.rows.length > 100) {
         result.rows = result.rows.slice(0, 100);
@@ -368,6 +369,7 @@ export default {
         .replace(/\$FIELDS\$/g, showFields)
         .replace(/\$TABLENAME\$/g, tableename)
         .replace(/\$FILTER\$/g, filter)
+        .replace(/\$SQLORDERBY\$/g, orderby)
         .replace(/\$COUNT\$/g, 100000)
         .replace(/\$OFFSET\$/g, 0);
 

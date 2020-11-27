@@ -83,6 +83,10 @@ export default {
             inFlag: inFlag,
             outFlag: outFlag,
           });
+          this.$message({
+            type: "success",
+            message: "设置进出标志成功",
+          });
           this.$store.commit("DialogPopWnd/SET_SHOWJDBZDIALOGVISIBLE", false);
         } else {
           console.log("error submit!!");
