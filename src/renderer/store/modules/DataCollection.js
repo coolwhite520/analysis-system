@@ -50,35 +50,45 @@ const mutations = {
   // 通过传递索引、对应的template对应的列名、日志list重新修改匹配的列名称
   MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA(
     state,
-    { index, dbColsName, logMatchList }
+    { index, dbColsName, logMatchList, recordMatched }
   ) {
     state.exampleDataList[index].templateToFieldObjList = dbColsName;
-    for (let item of state.exampleDataList[index].dataList) {
-      let { fileColName } = item;
-
-      let bestArray = state.exampleDataList[
-        index
-      ].templateToFieldObjList.filter((ele) => {
-        return ele.fieldcname === fileColName;
-      });
-      item.matchedFieldName =
-        bestArray.length > 0 ? bestArray[0].fieldename : "";
-      // 如果没有直接匹配上，那么和log表再次进行匹配。
-      if (item.matchedFieldName === "") {
-        bestArray = logMatchList.filter((ele) => {
-          return ele.columnname === fileColName;
+    if (recordMatched.success) {
+      let index = 0;
+      state.exampleDataList[index].inFlag = recordMatched.inFlag;
+      state.exampleDataList[index].outFlag = recordMatched.outFlag;
+      for (let item of state.exampleDataList[index].dataList) {
+        item.matchedFieldName = recordMatched.rows[index];
+        index++;
+      }
+    } else {
+      for (let item of state.exampleDataList[index].dataList) {
+        let { fileColName } = item;
+        let bestArray = state.exampleDataList[
+          index
+        ].templateToFieldObjList.filter((ele) => {
+          return ele.fieldcname === fileColName;
         });
-        if (bestArray.length > 0) {
-          bestArray = dbColsName.filter((ele) => {
-            return ele.fieldcname === bestArray[0].fieldname;
+        item.matchedFieldName =
+          bestArray.length > 0 ? bestArray[0].fieldename : "";
+        // 如果没有直接匹配上，那么和log表再次进行匹配。
+        if (item.matchedFieldName === "") {
+          bestArray = logMatchList.filter((ele) => {
+            return ele.columnname === fileColName;
           });
-          item.matchedFieldName =
-            bestArray.length > 0 ? bestArray[0].fieldename : "";
-        } else {
-          item.matchedFieldName = "";
+          if (bestArray.length > 0) {
+            bestArray = dbColsName.filter((ele) => {
+              return ele.fieldcname === bestArray[0].fieldname;
+            });
+            item.matchedFieldName =
+              bestArray.length > 0 ? bestArray[0].fieldename : "";
+          } else {
+            item.matchedFieldName = "";
+          }
         }
       }
     }
+
     // 查找相同的列,标示出来
     let resultSameArr = [];
     for (let item of state.exampleDataList[index].dataList) {
@@ -187,22 +197,28 @@ const mutations = {
 const getters = {};
 
 const actions = {
-  async changeMatchList({ commit }, { index, matchedMbdm }) {
+  async changeMatchList({ commit, state }, { index, matchedMbdm }) {
     commit("MODIFY_CSV_BESTMATCHTEMPLATE_DATA", { index, matchedMbdm });
     let dbColsName = await dataImport.QueryColsNameByMbdm(matchedMbdm);
     dbColsName.unshift({
       fieldcname: "",
       fieldename: "",
     });
+
+    let fileAllCols = state.exampleDataList[index].fileAllCols;
+    let recordMatched = await dataImport.QueryMatchedRecordByFileAllCols(
+      matchedMbdm,
+      fileAllCols
+    );
     // 查询log表获取数据
     let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
       matchedMbdm
     );
-
     commit("MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA", {
       index,
       dbColsName,
       logMatchList,
+      recordMatched,
     });
   },
   async modifyDataType({ commit, state }, { value, rowIndex }) {
