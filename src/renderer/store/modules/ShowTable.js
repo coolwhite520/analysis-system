@@ -492,7 +492,7 @@ const actions = {
     let tableename = "";
     for (let item of rootState.CaseDetail.dataCenterList) {
       for (let childItem of item.childrenArr) {
-        if (String(childItem.tid) === String(tid)) {
+        if (childItem.tid === tid) {
           modelTreeList = childItem.modelTreeList;
           title = childItem.title; // 表的名称显示在tab标签上面
           tableename = childItem.tablename; // 表格的英文名称
@@ -512,7 +512,7 @@ const actions = {
       state.currentTableData.componentName !== "no-data-view"
     ) {
       modelFilterStr =
-        tid !== "1"
+        tid !== 1
           ? state.currentTableData.modelFilterStr + filterChildStr
           : filterChildStr;
     } else {
@@ -719,7 +719,7 @@ const actions = {
         fieldename.toUpperCase()
       );
       await dispatch("showBaseTable", {
-        tid: String(linkMid),
+        tid: linkMid,
         count: 30,
         offset: 0,
         modelFilterChildList: res.msg.obj,
@@ -741,7 +741,7 @@ const actions = {
         state.currentTableData.modelFilterChildList
       );
       await dispatch("showModelTable", {
-        tid: type,
+        tid: parseInt(type),
         pgsqlTemplateDecode: msg.str,
         modelFilterStr: filterChildStr,
         modelFilterChildList: [],

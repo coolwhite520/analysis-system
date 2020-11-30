@@ -8,16 +8,14 @@
     </div>
     <el-menu
       :style="{ height: contentViewHeight - 80 + 'px' }"
-      :default-openeds="openeds"
+      :default-openeds="myOpeneds"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       :collapse="isCollapseLeftBar"
       @select="handleSelect"
     >
       <el-submenu
         v-for="(item, i) in dataCenterList"
-        :index="item.tid"
+        :index="String(item.tid)"
         :key="item.tid"
         :currentTid="item.tid"
       >
@@ -29,7 +27,7 @@
           v-for="child in item.childrenArr"
           :key="child.tid"
           class="menu-item"
-          :index="child.tid"
+          :index="String(child.tid)"
         >
           <span class="iconfont" style="font-size: 12px">&#xe693;</span>
           <span>{{ child.title }}</span>
@@ -62,47 +60,48 @@ export default {
     ...mapState("Models", ["existModelsDetailList"]),
     ...mapState("CaseDetail", ["caseBase", "dataCenterList", "openeds"]),
     ...mapState("ShowTable", ["tableDataList"]),
+    myOpeneds() {
+      return JSON.parse(JSON.stringify(this.openeds));
+    },
   },
   data() {
     return {
       iconsList: [
         {
-          tid: "-100",
+          tid: -100,
           icon: "&#xe638;",
         },
         {
-          tid: "0",
+          tid: 0,
           icon: "&#xe61b;",
         },
         {
-          tid: "5",
+          tid: 5,
           icon: "&#xe70f;",
         },
         {
-          tid: "13",
+          tid: 13,
           icon: "&#xe65f;",
         },
         {
-          tid: "17",
+          tid: 17,
           icon: "&#xe608;",
         },
         {
-          tid: "25",
+          tid: 25,
           icon: "&#xe615;",
         },
         {
-          tid: "50",
+          tid: 50,
           icon: "&#xe602;",
         },
       ],
     };
   },
   methods: {
-    handleOpen(key, keyPath) {},
-    handleClose(key, keyPath) {},
     async handleSelect(parentid, tableTid) {
       // 获取右侧的模型数据
-      let tid = tableTid[1];
+      let tid = parseInt(tableTid[1]);
       // 判断是否已经展示了这个基础页面，如果已经展示了，那么需要进行active
       for (let tableData of this.tableDataList) {
         if (tableData.tid === tid) {

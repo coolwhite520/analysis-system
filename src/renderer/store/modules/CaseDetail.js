@@ -106,9 +106,10 @@ const actions = {
   },
   async queryCaseDataCenter({ commit }, ajid) {
     let { list, dataSum } = await cases.QueryDataCenterTableInfo(ajid);
+    console.log(list);
     let treeList = [];
     let fatherNodes = list.filter((item) => {
-      return item.parentid === "-1";
+      return item.parentid === -1;
     });
     for (let item of fatherNodes) {
       let childrenArr = list.filter((child) => {
@@ -123,20 +124,8 @@ const actions = {
             let mids = await models.QueryModelmidsByTid(childItem.tid);
             if (mids.length > 0) {
               let modelsDetailList = await models.QueryModelListByMids(mids);
+              console.log(modelsDetailList);
               let newTreeList = array2Tree(modelsDetailList, -1);
-              console.log(newTreeList);
-              // console.log(tree);
-              // let newTreeList = [];
-              // let parentList = modelsDetailList.filter((item) => {
-              //   return item.parentid_200 === -1;
-              // });
-              // for (let father of parentList) {
-              //   let childrenList = modelsDetailList.filter((item) => {
-              //     return item.parentid_200 === father.mid;
-              //   });
-              //   father.childrenList = childrenList;
-              //   newTreeList.push(father);
-              // }
               // 把模型库添加到datacenter的项目中
               Vue.set(childrenArr[index], "modelTreeList", newTreeList);
             }
@@ -149,7 +138,7 @@ const actions = {
     }
     let listOpeneds = [];
     for (let item of fatherNodes) {
-      listOpeneds.push(item.tid);
+      listOpeneds.push(`${item.tid}`);
     }
     if (treeList.length > 0) commit("SET_DATACENTERLIST", treeList);
     if (listOpeneds.length > 0) commit("SET_LISTOPENEDS", listOpeneds);

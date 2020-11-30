@@ -474,10 +474,11 @@ function TestingHandle(
           : "99";
     }
     if (Columns.includes("jysj") && Columns.includes("jyrq")) {
-      if (
-        !Default.IsNullOrEmpty(dataRow["jysj"]) ||
-        !Default.IsNullOrEmpty(dataRow["jyrq"])
-      ) {
+      // if (
+      //   !Default.IsNullOrEmpty(dataRow["jysj"]) ||
+      //   !Default.IsNullOrEmpty(dataRow["jyrq"])
+      // )
+      {
         let jyrq = null;
         let jysj = null;
         if (!Default.IsNullOrEmpty(dataRow["jysj"])) {

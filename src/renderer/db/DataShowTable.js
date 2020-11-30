@@ -219,7 +219,7 @@ export default {
     try {
       // await cases.SwitchDefaultCase(client);
       let sql = `SELECT cname as fieldcname, lower(cfield) as fieldename, cid, showrightbtn_type, link_mid::int, data_type FROM icap_base.layout_table_column
-       WHERE TID='${tid}' and (SHOWABLE is null or SHOWABLE ='Y')  
+       WHERE TID=${tid} and (SHOWABLE is null or SHOWABLE ='Y')  
       ORDER BY thesort ASC;`;
       let result = await client.query(sql);
       return { success: true, rows: result.rows };
@@ -254,23 +254,23 @@ export default {
       let querySqlTemp = "";
       let countSqlTemp = "";
       switch (tid) {
-        case "1": //个人
+        case 1: //个人
           querySqlTemp = dataCenterTableTemplate.personTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.personTemplate.countSql;
           break;
-        case "2": // 单位
+        case 2: // 单位
           querySqlTemp = dataCenterTableTemplate.person2Template.querySql;
           countSqlTemp = dataCenterTableTemplate.person2Template.countSql;
           break;
-        case "3":
+        case 3:
           querySqlTemp = dataCenterTableTemplate.accountTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.accountTemplate.countSql;
           break;
-        case "4":
+        case 4:
           querySqlTemp = dataCenterTableTemplate.bankTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.bankTemplate.countSql;
           break;
-        case "14":
+        case 14:
           querySqlTemp = dataCenterTableTemplate.taxTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.taxTemplate.countSql;
           break;
@@ -330,23 +330,23 @@ export default {
       let countSqlTemp = "";
 
       switch (tid) {
-        case "1": //个人
+        case 1: //个人
           querySqlTemp = dataCenterTableTemplate.personTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.personTemplate.countSql;
           break;
-        case "2": // 单位
+        case 2: // 单位
           querySqlTemp = dataCenterTableTemplate.person2Template.querySql;
           countSqlTemp = dataCenterTableTemplate.person2Template.countSql;
           break;
-        case "3":
+        case 3:
           querySqlTemp = dataCenterTableTemplate.accountTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.accountTemplate.countSql;
           break;
-        case "4":
+        case 4:
           querySqlTemp = dataCenterTableTemplate.bankTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.bankTemplate.countSql;
           break;
-        case "14":
+        case 14:
           querySqlTemp = dataCenterTableTemplate.taxTemplate.querySql;
           countSqlTemp = dataCenterTableTemplate.taxTemplate.countSql;
           break;

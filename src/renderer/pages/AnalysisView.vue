@@ -55,7 +55,6 @@ const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
 import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
-import { PageItem } from "@/store/modules/PageItem";
 // const html2canvas = require("html2canvas");
 export default {
   async mounted() {

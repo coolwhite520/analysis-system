@@ -132,7 +132,6 @@ export default {
           );
         }
         let ret = await Promise.all(promiseArr);
-        console.log(ret);
       }
 
       // 把base库的记录表中的数据删除
@@ -8544,6 +8543,7 @@ export default {
          LEFT JOIN icap_base.layout_menu_model AS lm  ON lt.tid =lm.menu_tid and lm.product_code='200' ORDER BY tid,title`;
       let dataSum = 0;
       const res = await client.query(sql);
+      console.log(sql);
       let list = [];
       for (let item of res.rows) {
         if (
@@ -8569,16 +8569,16 @@ export default {
             dataSum += res.rows[0].count;
           }
           obj = {
-            parentid: item.parentid,
-            count: res.rows[0].count,
-            tid: item.tid,
+            parentid: parseInt(item.parentid),
+            count: parseInt(res.rows[0].count),
+            tid: parseInt(item.tid),
             tablename: item.tablename,
             title: item.title,
           };
         } else {
           obj = {
-            parentid: item.parentid,
-            tid: item.tid,
+            parentid: parseInt(item.parentid),
+            tid: parseInt(item.tid),
             tablename: item.tablename,
             title: item.title,
           };

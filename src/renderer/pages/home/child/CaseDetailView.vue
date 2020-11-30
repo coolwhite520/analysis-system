@@ -342,7 +342,7 @@ export default {
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
-        let tid = "";
+        let tid = -1;
         for (let item of this.dataCenterList) {
           for (let child of item.childrenArr) {
             if (child.count > 0) {
@@ -380,7 +380,7 @@ export default {
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
-        let tid = "";
+        let tid = -1;
         let maxCount = 0;
         for (let item of this.dataCenterList) {
           for (let child of item.childrenArr) {
@@ -401,6 +401,7 @@ export default {
       this.$store.commit("HomePageSwitch/SET_VIEW_NAME", "edit-case-view");
     },
     async handleClickBtnGroup(item) {
+      console.log({ item });
       // 获取右侧的模型数据
       let tid = item.tid;
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "main-page");
@@ -413,7 +414,7 @@ export default {
         this.caseBase.ajid
       );
       await this.$store.dispatch("ShowTable/showBaseTable", {
-        tid: String(tid),
+        tid,
         offset: 0,
         count: 30,
       });

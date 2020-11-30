@@ -20,7 +20,6 @@ export default {
     try {
       await cases.SwitchDefaultCase(client);
       let sql = `SELECT * FROM layout_model_info_sort s, layout_model_info m WHERE m.mid<>600 AND s.mid=m.mid AND  m.mid  in (${mids}) ORDER BY  s.soft_200  ASC `;
-      console.log(sql);
       const res = await client.query(sql);
       return res.rows;
     } finally {

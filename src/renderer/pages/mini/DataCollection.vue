@@ -187,7 +187,7 @@ export default {
         for (let cindex = 1; cindex <= row.actualCellCount; cindex++) {
           let cell = row.getCell(cindex);
           if (cell.type === 4) {
-            // //console.log(cell.type, cell.value);
+            // ////console.log(cell.type, cell.value);
             let cellDate = new Date(cell.value);
             let m = moment(cellDate).utc();
             let year = m.year();
@@ -217,7 +217,7 @@ export default {
         }
         rows.push(newRow);
       }
-      // //console.log(rows);
+      // ////console.log(rows);
       if (rows.length < 3) {
         return null;
       }
@@ -265,7 +265,7 @@ export default {
       );
       for await (const worksheetReader of workbookReader) {
         let result = await this.parseSheet(worksheetReader, filePathName);
-        // //console.log(result);
+        // ////console.log(result);
         if (result) resultList.push(result);
       }
       return resultList;
@@ -286,7 +286,7 @@ export default {
           readFileStream.close();
         });
         readFileStream.on("close", function () {
-          //console.log("close file");
+          ////console.log("close file");
         });
       });
     },
@@ -511,7 +511,7 @@ export default {
           let logMatchList = await dataImport.QueryInfoFromLogMatchByMbdm(
             matchedMbdm
           );
-          console.log(logMatchList);
+          //console.log(logMatchList);
           for (let i = 0; i < fileAllCols.length; i++) {
             let fileColName = fileAllCols[i];
             let bestArray = templateToFieldObjList.filter((ele) => {
@@ -614,7 +614,7 @@ export default {
             }
             matchedFieldsAll.push(item.matchedFieldName);
           }
-          console.log(fileAllCols, matchedFieldsAll);
+          // //console.log(fileAllCols, matchedFieldsAll);
           dataImport.InsertOrUpdateMatchedRecord(
             matchedMbdm,
             fileAllCols,
@@ -766,7 +766,7 @@ export default {
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
           let sqlStr = `COPY ${createTableName}(${createFields}) FROM STDIN`;
-          // //console.log(sqlStr);
+          // ////console.log(sqlStr);
           let streamFrom;
           await cases.SwitchCase(client, ajid);
           streamFrom = await client.query(copyFrom(sqlStr));
@@ -815,7 +815,7 @@ export default {
             if (worksheetReader.name !== sheetName) continue;
             for await (const row of worksheetReader) {
               if (!row.hasValues) continue;
-              //console.log(row.number, skipLines + 1);
+              ////console.log(row.number, skipLines + 1);
               if (row.number <= skipLines + 1) continue;
               let rowDataValues = [];
               let matchedFieldIndex = 0;
@@ -885,7 +885,7 @@ export default {
               let insertStr = values.join("\t") + "\n";
               // 写入流中
               streamFrom.write(insertStr, function (err) {
-                //console.log({ insertStr });
+                ////console.log({ insertStr });
                 if (!err) {
                   let percentage = parseInt(
                     parseFloat(readSize / fileSize) * 100
@@ -957,7 +957,7 @@ export default {
           let fields = publicFields.concat(matchedFields).concat(externFields);
           fields = fields.map((el) => el.toLowerCase());
           let sqlStr = `COPY ${createTableName}(${createFields}) FROM STDIN`;
-          //console.log(sqlStr, matchedFileCols, { skipLines });
+          ////console.log(sqlStr, matchedFileCols, { skipLines });
           await cases.SwitchCase(client, ajid);
           let streamFrom = await client.query(copyFrom(sqlStr));
           let matchedColNumList = [];
@@ -1011,14 +1011,7 @@ export default {
                   .concat(externFieldsValues);
                 // 把fields和realValues合并成一个对象row
                 let tempRow = lodash.zipObject(fields, realValues);
-                console.log(
-                  "1",
-                  createFields,
-                  tempRow,
-                  tablecname,
-                  inFlag,
-                  outFlag
-                );
+
                 let newRowData = importModel.TestingHandle(
                   createFields,
                   tempRow,
@@ -1026,14 +1019,7 @@ export default {
                   inFlag,
                   outFlag
                 );
-                console.log(
-                  "2",
-                  createFields,
-                  newRowData,
-                  tablecname,
-                  inFlag,
-                  outFlag
-                );
+
                 let values = [];
                 let keys = Object.keys(newRowData);
                 needInsertFields = lodash.union(needInsertFields, keys);
@@ -1098,7 +1084,7 @@ export default {
     async onCopyTempDataToRealTable(e, args) {
       let { list } = args;
       let chunkCount = 5;
-      //console.log(list);
+      ////console.log(list);
       let newChunkList = this.$lodash.chunk(list, chunkCount);
       for (let innerList of newChunkList) {
         let promiseArr = [];
@@ -1160,7 +1146,7 @@ export default {
 
           // 创建copyFrom流
           let copyFromStr = `COPY ${targetTableName}(${needInsertFields}) FROM STDIN`;
-          //console.log(copyFromStr);
+          ////console.log(copyFromStr);
           let streamFrom = await client2.query(copyFrom(copyFromStr));
           streamFrom.on("error", (err) => {
             rejcect(err);
@@ -1205,7 +1191,7 @@ export default {
                   }
                 }
                 let valueStr = values.join("\t") + "\n";
-                // //console.log(valueStr);
+                // ////console.log(valueStr);
                 this.push(valueStr);
                 callback();
               })

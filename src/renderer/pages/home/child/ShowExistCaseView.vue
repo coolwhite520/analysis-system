@@ -105,7 +105,7 @@ export default {
         });
       } else {
         // 查找第一个数据中心中的数据不为零的tid
-        let tid = "";
+        let tid = -1;
         let maxCount = 0;
         for (let item of this.dataCenterList) {
           for (let child of item.childrenArr) {

@@ -202,7 +202,7 @@ export default {
         }
 
         this.$store.dispatch("ShowTable/showLinkTable", {
-          tid: parseInt(this.tableData.tid),
+          tid: this.tableData.tid,
           linkMid,
           selectCondition: this.tableData.selectCondition,
           row: newRow,

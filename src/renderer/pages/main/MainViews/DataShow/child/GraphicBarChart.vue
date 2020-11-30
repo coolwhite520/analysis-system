@@ -1,12 +1,17 @@
 <template>
-  <div style="margin-top:15px;">
+  <div style="margin-top: 15px">
     <el-row>
       <el-col :span="8">&nbsp;</el-col>
-      <el-col :span="8" style="text-align:center;">
-        <h4>{{Title}}</h4>
+      <el-col :span="8" style="text-align: center">
+        <h4>{{ Title }}</h4>
       </el-col>
-      <el-col :span="8" style="text-align: right;">
-        <el-select v-model="selectValue" size="mini" placeholder="请选择" @change="handleChangeValue">
+      <el-col :span="8" style="text-align: right">
+        <el-select
+          v-model="selectValue"
+          size="mini"
+          placeholder="请选择"
+          @change="handleChangeValue"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -18,7 +23,10 @@
       <el-col :span="22"></el-col>
     </el-row>
     <el-row>
-      <div :id="id" :style="{height: limitHeight + 'px', marginTop: 0 + 'px'}"></div>
+      <div
+        :id="id"
+        :style="{ height: limitHeight + 'px', marginTop: 0 + 'px' }"
+      ></div>
     </el-row>
   </div>
 </template>
@@ -108,7 +116,7 @@ export default {
       this.LineBarArrayData = [];
       if (selValue === "1") {
         switch (tableData.tid) {
-          case "305":
+          case 305:
             this.Title = "进出账金额";
             this.OneBarTitle = "进账金额";
             this.TwoBarTitle = "出账金额";
@@ -120,7 +128,7 @@ export default {
               this.LineBarArrayData.push(row["jczce"].value);
             }
             break;
-          case "352":
+          case 352:
             {
               this.Title = "进出账金额";
               this.OneBarTitle = "进账金额";
@@ -133,7 +141,7 @@ export default {
               }
             }
             break;
-          case "358":
+          case 358:
             {
               this.Title = "进出账金额";
               this.OneBarTitle = "进账金额";
@@ -150,7 +158,7 @@ export default {
         }
       } else if (selValue === "2") {
         switch (this.tableData.tid) {
-          case "305":
+          case 305:
             {
               this.Title = "进出账笔数";
               this.OneBarTitle = "进账笔数";
@@ -164,7 +172,7 @@ export default {
             }
 
             break;
-          case "352":
+          case 352:
             {
               this.Title = "进出账笔数";
               this.OneBarTitle = "进账笔数";
@@ -177,7 +185,7 @@ export default {
               }
             }
             break;
-          case "358":
+          case 358:
             {
               this.Title = "进出账笔数";
               this.OneBarTitle = "进账笔数";

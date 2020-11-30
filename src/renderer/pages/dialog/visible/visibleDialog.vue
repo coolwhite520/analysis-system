@@ -225,7 +225,7 @@ export default {
         switch (this.selectDataTypeValue) {
           case "1":
             {
-              tid = "202";
+              tid = 202;
               title =
                 "资金交易-账户-" +
                 (this.selectShowTypeValue === "1"
@@ -235,7 +235,7 @@ export default {
             break;
           case "2":
             {
-              tid = "204";
+              tid = 204;
               title =
                 "资金交易-证件号码-" +
                 (this.selectShowTypeValue === "1"
@@ -245,7 +245,7 @@ export default {
             break;
           case "3":
             {
-              tid = "203";
+              tid = 203;
               title =
                 "资金交易-主体名称-" +
                 (this.selectShowTypeValue === "1"
