@@ -113,15 +113,36 @@
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5" style="text-align: right">
-        <el-button
-          type="text"
-          size="mini"
-          class="iconfont"
-          style="padding-left: 10px; border-left: 1px solid #dddfe5"
-          @click="handleClickFish"
-          >{{ !enableFish ? "&#xe730;" : "&#xe62a;" }}</el-button
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="!enableDragCavans ? '点击可拖拽画布' : '点击可框选节点'"
+          placement="top-start"
         >
-
+          <el-button
+            type="text"
+            size="mini"
+            class="iconfont"
+            style="padding-left: 10px; border-left: 1px solid #dddfe5"
+            @click="handleClickSwitchDragCavans"
+            >{{ !enableDragCavans ? "&#xe642;" : "&#xe625;" }}</el-button
+          >
+        </el-tooltip>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="局部放大镜"
+          placement="top-start"
+        >
+          <el-button
+            type="text"
+            size="mini"
+            class="iconfont"
+            style="padding-left: 10px; border-left: 1px solid #dddfe5"
+            @click="handleClickFish"
+            >{{ !enableFish ? "&#xe730;" : "&#xe62a;" }}</el-button
+          >
+        </el-tooltip>
         <el-button
           type="text"
           size="mini"
@@ -250,6 +271,7 @@ export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      enableDragCavans: false,
       menuId: uuid.v1(),
       menuVisible: false,
       rightClickType: "",
@@ -649,6 +671,16 @@ export default {
     async handleClick(value) {
       await this.$store.commit("ShowTable/MODIFY_MONDY_SECTION_CHECKED", value);
       // 重新渲染页面
+    },
+    handleClickSwitchDragCavans() {
+      this.enableDragCavans = !this.enableDragCavans;
+      if (this.enableDragCavans) {
+        this.graph && this.graph.setMode("dragCanvas");
+        console.log("drag");
+      } else {
+        this.graph && this.graph.setMode("default");
+        console.log("default");
+      }
     },
     handleClickFish() {
       this.enableFish = !this.enableFish;
@@ -1935,7 +1967,6 @@ export default {
             "drag-combo",
             "zoom-canvas",
             "activate-relations",
-            { type: "click-select", trigger: "ctrl" }, //点选
             {
               // 框选
               type: "brush-select",
@@ -1944,6 +1975,15 @@ export default {
               stroke: "red",
               trigger: "drag",
             },
+            { type: "click-select", trigger: "ctrl" }, //点选
+          ],
+          dragCanvas: [
+            "drag-node",
+            "drag-combo",
+            "zoom-canvas",
+            "activate-relations",
+            "drag-canvas",
+            { type: "click-select", trigger: "ctrl" }, //点选"drag-canvas"],
           ],
         },
       };
@@ -2264,144 +2304,6 @@ export default {
             break;
         }
       });
-    },
-    // g2 渲染，暂时没有使用 因为渲染效果太差
-    async loadSpecialLayout2() {
-      let data = await this.makeSankeyData();
-      console.log(data);
-      const ds = new DataSet();
-      const dv = ds.createView().source(data, {
-        type: "graph",
-        edges: (d) => d.links,
-      });
-      dv.transform({
-        type: "diagram.sankey",
-        sort: (a, b) => {
-          if (a.value > b.value) {
-            return 0;
-          } else if (a.value < b.value) {
-            return -1;
-          }
-          return 0;
-        },
-      });
-      const chart = new Chart({
-        container: this.graphid,
-        autoFit: true,
-        // height: 500,
-        padding: [40, 40],
-      });
-      chart.legend(false);
-      chart.tooltip({
-        showTitle: false,
-        showMarkers: false,
-      });
-      chart.axis(false);
-      chart.scale({
-        x: { sync: true, nice: true },
-        y: { sync: true, nice: true },
-      });
-
-      // edge view
-      const edges = dv.edges.map((edge) => {
-        return {
-          source: edge.source.name,
-          target: edge.target.name,
-          x: edge.x,
-          y: edge.y,
-          value: edge.value,
-        };
-      });
-      const edgeView = chart.createView();
-      edgeView.data(edges);
-      edgeView
-        .edge()
-        .position("x*y")
-        .shape("arc")
-        .color("value")
-        .tooltip("target*source*value", (target, source, value) => {
-          return {
-            name: source + " to " + target + "</span>",
-            value,
-          };
-        })
-        .style({
-          fillOpacity: 0.6,
-        });
-
-      // node view
-      const nodes = dv.nodes.map((node) => {
-        return {
-          x: node.x,
-          y: node.y,
-          name: node.name,
-        };
-      });
-      const nodeView = chart.createView();
-      nodeView.data(nodes);
-      nodeView
-        .polygon()
-        .position("x*y") // nodes数据的x、y由layout方法计算得出
-        .color("name")
-        .label("name", {
-          style: {
-            fill: "#545454",
-            textAlign: "start",
-          },
-          offset: 0,
-          content: (obj) => {
-            return "  " + obj.name;
-          },
-        })
-        .tooltip(false)
-        .style({
-          // stroke: "#ccc",
-        });
-
-      chart.interaction("element-active");
-
-      chart.render();
-    },
-    async loadSpecialLayout() {
-      try {
-        let el = document.getElementById(this.graphid);
-        this.myEchart = this.$echarts.init(el);
-        let { nodes, links } = await this.makeSankeyData();
-        window.onresize = this.myEchart.resize;
-        console.log(nodes, links);
-        // myChart.hideLoading();
-        this.myEchart.setOption({
-          tooltip: {
-            trigger: "item",
-            triggerOn: "mousemove",
-          },
-          series: [
-            {
-              type: "sankey",
-              data: nodes,
-              links: links,
-              focusNodeAdjacency: "allEdges",
-              itemStyle: {
-                borderWidth: 1,
-                borderColor: "#aaa",
-              },
-              lineStyle: {
-                color: "source",
-                curveness: 0.5,
-              },
-              label: {
-                color: "rgba(0,0,0,0.7)",
-                fontFamily: "Arial",
-                fontSize: 5,
-              },
-            },
-          ],
-        });
-      } catch (e) {
-        this.$message({
-          message: e.message,
-        });
-      }
     },
   },
 

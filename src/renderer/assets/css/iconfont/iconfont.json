@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6857178",
+      "name": "拖拽",
+      "font_class": "tuozhuai",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "17930617",
+      "name": "框选",
+      "font_class": "kuangxuan",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
       "icon_id": "4572455",
       "name": "记录",
       "font_class": "jilu",

@@ -74,12 +74,7 @@ const mutations = {
 
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
-    const uuid = require("uuid");
-    let newId = parseInt(state.pageIndex);
-    newId++;
-    // 分配页面索引
-    Vue.set(tableData, "pageIndex", String(newId));
-    Vue.set(tableData, "uuid", uuid.v1());
+    Vue.set(tableData, "pageIndex", uuid.v1());
     if (tableData.showType === 3) {
       Vue.set(
         tableData,
@@ -114,8 +109,7 @@ const mutations = {
       Vue.set(tableData, "fullScrrenFlag", false);
     }
     state.tableDataList.push(tableData);
-    state.pageIndex = String(newId);
-    state.activeIndex = state.pageIndex;
+    state.activeIndex = tableData.pageIndex;
     state.currentTableData = tableData;
   },
 

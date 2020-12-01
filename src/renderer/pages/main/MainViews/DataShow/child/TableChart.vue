@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table
-      :id="tableData.uuid"
+      :id="tableData.pageIndex"
       style="width: 100%"
       :data="tableData.rows"
       size="mini"

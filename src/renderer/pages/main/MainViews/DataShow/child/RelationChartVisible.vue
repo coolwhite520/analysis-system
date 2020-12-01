@@ -113,6 +113,21 @@
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5" style="text-align: right">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="!enableDragCavans ? '点击可拖拽画布' : '点击可框选节点'"
+          placement="top-start"
+        >
+          <el-button
+            type="text"
+            size="mini"
+            class="iconfont"
+            style="padding-left: 10px; border-left: 1px solid #dddfe5"
+            @click="handleClickSwitchDragCavans"
+            >{{ !enableDragCavans ? "&#xe642;" : "&#xe625;" }}</el-button
+          >
+        </el-tooltip>
         <el-button
           type="text"
           size="mini"
@@ -250,6 +265,7 @@ export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      enableDragCavans: false,
       menuId: uuid.v1(),
       menuVisible: false,
       rightClickType: "",
@@ -413,6 +429,16 @@ export default {
     },
   },
   methods: {
+    handleClickSwitchDragCavans() {
+      this.enableDragCavans = !this.enableDragCavans;
+      if (this.enableDragCavans) {
+        this.graph && this.graph.setMode("dragCanvas");
+        console.log("drag");
+      } else {
+        this.graph && this.graph.setMode("default");
+        console.log("default");
+      }
+    },
     keepTwoDecimal(value) {
       if (typeof value === "number") {
         let strNumber = value + "";
@@ -1999,7 +2025,6 @@ export default {
             "drag-combo",
             "zoom-canvas",
             "activate-relations",
-            { type: "click-select", trigger: "ctrl" }, //点选
             {
               // 框选
               type: "brush-select",
@@ -2008,6 +2033,15 @@ export default {
               stroke: "red",
               trigger: "drag",
             },
+            { type: "click-select", trigger: "ctrl" }, //点选
+          ],
+          dragCanvas: [
+            "drag-node",
+            "drag-combo",
+            "zoom-canvas",
+            "activate-relations",
+            "drag-canvas",
+            { type: "click-select", trigger: "ctrl" }, //点选"drag-canvas"],
           ],
         },
       };
