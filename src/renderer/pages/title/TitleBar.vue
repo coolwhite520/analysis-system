@@ -16,6 +16,12 @@
         <div class="titleContent">
           <span style="font-size: 25px"><b>FanFu</b>-资金流分析系统</span>
         </div>
+        <div
+          v-if="currentViewName === 'main-page'"
+          style="font-size: 10px; margin-top: 10px; color: #f29c38"
+        >
+          <b>当前案件：</b>{{ caseBase.ajmc }}
+        </div>
       </el-col>
       <el-col class="colum" :span="4">
         <div>
