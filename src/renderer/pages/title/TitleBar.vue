@@ -1,76 +1,163 @@
 <template>
   <div class="titleBar" @dblclick="handleDbClick">
-    <el-row>
-      <el-col :span="2">
-        <el-tooltip placement="bottom">
-          <div slot="content">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-kaixin1"></use>
-            </svg>
-            <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
+    <div v-if="oemname === 'ff'">
+      <el-row>
+        <el-col :span="2">
+          <el-tooltip placement="bottom">
+            <div slot="content">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-kaixin1"></use>
+              </svg>
+              <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
+            </div>
+
+            <div class="logo iconfont" @click="handleClickStar">&#xe66a;</div>
+          </el-tooltip>
+        </el-col>
+        <el-col class="colum" :span="18">
+          <div class="titleContent">
+            <span style="font-size: 25px"><b>FanFu</b>-资金流分析系统</span>
           </div>
-          <div class="logo iconfont" @click="handleClickStar">&#xe66a;</div>
-        </el-tooltip>
-      </el-col>
-      <el-col class="colum" :span="18">
-        <div class="titleContent">
-          <span style="font-size: 25px"><b>FanFu</b>-资金流分析系统</span>
-        </div>
-        <div
-          v-if="currentViewName === 'main-page'"
-          style="font-size: 10px; margin-top: 10px; color: #f29c38"
-        >
-          <b>当前案件：</b>{{ caseBase.ajmc }}
-        </div>
-      </el-col>
-      <el-col class="colum" :span="4">
-        <div>
-          <span class="opterationBtn iconfont">
-            <el-tooltip content="待调单任务" placement="bottom">
-              <span
-                @click="handleClickNewAwaitTask"
-                class="dbconfig"
-                v-if="currentViewName === 'main-page'"
-                >&#xe748;</span
-              >
-            </el-tooltip>
-            <el-tooltip content="数据库设置" placement="bottom">
-              <span @click="handleClickDbConfig" class="dbconfig"
-                >&#xe64f;</span
-              >
-            </el-tooltip>
-            <el-tooltip content="返回首页" placement="bottom">
-              <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
-            </el-tooltip>
-            <span @click="handleClickMin" class="min">&#xe60c;</span>
-            <span @click="handleClickClose" class="close">&#xe634;</span>
-          </span>
-        </div>
-        <div
-          style="
-            float: right;
-            margin-top: 20px;
-            font-size: 10px;
-            margin-right: 10px;
-          "
-        >
-          当前版本号：{{ softVersion }}
-        </div>
-        <div style="clear: both"></div>
-        <div
-          v-show="currentViewName === 'main-page'"
-          style="float: right; margin-right: 10px"
-        >
-          <el-button
-            style="color: white; padding: 0"
-            type="text"
-            @click="handleClickShowTabBar"
-            class="iconfont"
-            >{{ showTabBarView ? "&#xe6da;" : "&#xe6dd;" }}</el-button
+          <div
+            v-if="currentViewName === 'main-page'"
+            style="font-size: 10px; margin-top: 5px; color: #f29c38"
           >
-        </div>
-      </el-col>
-    </el-row>
+            <b>当前案件：</b>{{ caseBase.ajmc }}
+          </div>
+        </el-col>
+        <el-col class="colum" :span="4">
+          <div>
+            <span class="opterationBtn iconfont">
+              <el-tooltip content="待调单任务" placement="bottom">
+                <span
+                  @click="handleClickNewAwaitTask"
+                  class="dbconfig"
+                  v-if="currentViewName === 'main-page'"
+                  >&#xe748;</span
+                >
+              </el-tooltip>
+              <el-tooltip content="数据库设置" placement="bottom">
+                <span @click="handleClickDbConfig" class="dbconfig"
+                  >&#xe64f;</span
+                >
+              </el-tooltip>
+              <el-tooltip content="返回首页" placement="bottom">
+                <span @click="handleClickGotoHome" class="gohome"
+                  >&#xe6fe;</span
+                >
+              </el-tooltip>
+              <span @click="handleClickMin" class="min">&#xe60c;</span>
+              <span @click="handleClickClose" class="close">&#xe634;</span>
+            </span>
+          </div>
+          <div
+            style="
+              float: right;
+              margin-top: 20px;
+              font-size: 10px;
+              margin-right: 10px;
+            "
+          >
+            当前版本号：{{ softVersion }}
+          </div>
+          <div style="clear: both"></div>
+          <div
+            v-show="currentViewName === 'main-page'"
+            style="float: right; margin-right: 10px"
+          >
+            <el-button
+              style="color: white; padding: 0"
+              type="text"
+              @click="handleClickShowTabBar"
+              class="iconfont"
+              >{{ showTabBarView ? "&#xe6da;" : "&#xe6dd;" }}</el-button
+            >
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <div v-else-if="oemname === 'JD'">
+      <el-row>
+        <el-col :span="2">
+          <div style="margin-left: 10px">
+            <el-tooltip placement="bottom">
+              <div slot="content">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-kaixin1"></use>
+                </svg>
+                <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
+              </div>
+              <div>
+                <img
+                  class="logo"
+                  src="/static/logo/JD.png"
+                  alt=""
+                  height="50"
+                  @click="handleClickStar"
+                />
+              </div>
+            </el-tooltip>
+            <div
+              v-if="currentViewName === 'main-page'"
+              style="font-size: 10px; margin-top: 5px; color: #225ca6"
+            >
+              <b>当前案件：</b>{{ caseBase.ajmc }}
+            </div>
+          </div>
+        </el-col>
+        <el-col class="colum" :span="18">&nbsp; </el-col>
+        <el-col class="colum" :span="4">
+          <div>
+            <span class="opterationBtn iconfont">
+              <el-tooltip content="待调单任务" placement="bottom">
+                <span
+                  @click="handleClickNewAwaitTask"
+                  class="dbconfig"
+                  v-if="currentViewName === 'main-page'"
+                  >&#xe748;</span
+                >
+              </el-tooltip>
+              <el-tooltip content="数据库设置" placement="bottom">
+                <span @click="handleClickDbConfig" class="dbconfig"
+                  >&#xe64f;</span
+                >
+              </el-tooltip>
+              <el-tooltip content="返回首页" placement="bottom">
+                <span @click="handleClickGotoHome" class="gohome"
+                  >&#xe6fe;</span
+                >
+              </el-tooltip>
+              <span @click="handleClickMin" class="min">&#xe60c;</span>
+              <span @click="handleClickClose" class="close">&#xe634;</span>
+            </span>
+          </div>
+          <div
+            style="
+              float: right;
+              margin-top: 20px;
+              font-size: 10px;
+              margin-right: 10px;
+            "
+          >
+            当前版本号：{{ softVersion }}
+          </div>
+          <div style="clear: both"></div>
+          <div
+            v-show="currentViewName === 'main-page'"
+            style="float: right; margin-right: 10px"
+          >
+            <el-button
+              style="color: white; padding: 0"
+              type="text"
+              @click="handleClickShowTabBar"
+              class="iconfont"
+              >{{ showTabBarView ? "&#xe6da;" : "&#xe6dd;" }}</el-button
+            >
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+
     <div v-if="showStar">
       <div id="stars"></div>
       <div id="stars2"></div>
@@ -85,10 +172,12 @@ const fs = require("fs");
 const path = require("path");
 import awaitTask from "@/db/AwaitTask";
 import { mapState } from "vuex";
+
 export default {
   components: {},
   data() {
     return {
+      oemname: require("../../../../package.json").oemname, // 是否是fanfu产品
       showStar: false,
       softVersion: this.$electron.remote.getGlobal("softVersion"),
     };

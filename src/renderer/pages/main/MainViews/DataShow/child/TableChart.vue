@@ -200,7 +200,7 @@ export default {
         for (let k in row) {
           newRow[k] = row[k].value;
         }
-
+        console.log(newRow);
         this.$store.dispatch("ShowTable/showLinkTable", {
           tid: this.tableData.tid,
           linkMid,

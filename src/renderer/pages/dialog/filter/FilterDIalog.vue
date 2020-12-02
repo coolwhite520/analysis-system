@@ -73,7 +73,9 @@
               </el-select>
               <el-select
                 v-else-if="
-                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_1
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_1 ||
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_2 ||
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_3
                 "
                 v-model="data.condtion"
                 size="mini"
@@ -99,13 +101,56 @@
                   :value="item.LogicID"
                 ></el-option>
               </el-select>
+              <span
+                v-if="
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_1
+                "
+              >
+                <el-date-picker
+                  :editable="false"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder=""
+                  v-model="data.FiltrateValue"
+                  style="width: 50%"
+                  size="mini"
+                ></el-date-picker>
+              </span>
+              <span
+                v-else-if="
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_2
+                "
+              >
+                <el-date-picker
+                  :editable="false"
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder=""
+                  v-model="data.FiltrateValue"
+                  style="width: 50%"
+                  size="mini"
+                ></el-date-picker>
+              </span>
+              <span
+                v-else-if="
+                  data.FiltrateFieldType === DefaultData.DataType.DATATIME_3
+                "
+              >
+                <el-time-picker
+                  v-model="data.FiltrateValue"
+                  placeholder="任意时间点"
+                >
+                </el-time-picker>
+              </span>
+              <span v-else>
+                <el-input
+                  v-model="data.FiltrateValue"
+                  placeholder="请输入内容"
+                  style="width: 50%"
+                  size="mini"
+                ></el-input>
+              </span>
 
-              <el-input
-                v-model="data.FiltrateValue"
-                placeholder="请输入内容"
-                style="width: 50%"
-                size="mini"
-              ></el-input>
               <el-tooltip
                 class="item"
                 effect="dark"
@@ -226,8 +271,9 @@ const UUID = require("uuid");
 import Default from "@/utils/sql/Default";
 export default {
   mounted() {
-    this.DefaultData = Default;
+    this.DefaultData = JSON.parse(JSON.stringify(Default));
     let headerFirst = this.currentTableData.headers[0];
+    console.log(headerFirst);
     if (this.currentTableData.modelFilterChildList.length === 0) {
       this.filterList.push({
         id: UUID.v1(),
@@ -269,6 +315,7 @@ export default {
   methods: {
     // 执行筛选
     async handleClickInvokeFilter() {
+      console.log(this.filterList);
       await this.$store.commit("ShowTable/UPDATE_TABLE_FILTER", {
         pageIndex: this.currentTableData.pageIndex,
         modelFilterChildList: this.filterList,
@@ -287,11 +334,14 @@ export default {
       });
     },
     async handleChangeSelectionField(currentValue, data) {
+      console.log(currentValue, data);
       let header = this.currentTableData.headers.find((item) => {
         return item.fieldename.toUpperCase() === currentValue.toUpperCase();
       });
+      console.log({ header });
       data.FiltrateFieldType = this.convertDataTypeStrToNum(header.data_type);
       data.condtion = 0;
+      console.log(data);
     },
     async handleClose() {
       await this.$store.commit("DialogPopWnd/SET_FILTER_DIALOG_VISIBLE", false);
@@ -331,14 +381,25 @@ export default {
     },
     // 类型转换
     convertDataTypeStrToNum(data_type) {
+      console.log(data_type);
       let FiltrateFieldType = 0;
       if (data_type === null) {
         FiltrateFieldType = this.DefaultData.DataType.STR;
-      } else if (data_type.includes("int") || data_type.includes("money")) {
+      } else if (
+        data_type.indexOf("int") !== -1 ||
+        data_type.indexOf("money") !== -1
+      ) {
         FiltrateFieldType = this.DefaultData.DataType.DECIMAL;
-      } else if (data_type.includes("float")) {
+      } else if (data_type.indexOf("float") !== -1) {
         FiltrateFieldType = this.DefaultData.DataType.DOUBLE;
       } //判断日期
+      else if (data_type.indexOf("datetime") !== -1) {
+        FiltrateFieldType = this.DefaultData.DataType.DATATIME_1;
+      } else if (data_type.indexOf("date") !== -1) {
+        FiltrateFieldType = this.DefaultData.DataType.DATATIME_2;
+      } else if (data_type.indexOf("time") !== -1) {
+        FiltrateFieldType = this.DefaultData.DataType.DATATIME_3;
+      }
       return FiltrateFieldType;
     },
     // 父亲节点移除数据

@@ -21,6 +21,7 @@
     >
       <el-row v-if="exportProcessVisible">
         <el-progress
+          v-if="percentage"
           :percentage="percentage"
           :color="customColor"
         ></el-progress>

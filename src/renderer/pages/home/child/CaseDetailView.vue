@@ -496,7 +496,7 @@ export default {
           password.trim().length > 0
             ? `${envParam}&&"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`
             : `"${dumpFilePath}" -n icap_${this.caseBase.ajid} -T icap_${this.caseBase.ajid}.*_temp -O -f "${tempPathFile}" -U ${user} -p ${port} ${database}`;
-
+        log.info(cmd);
         if (process.platform === "win32") {
           let batFilePath = path.join(tempPath, uuid.v1() + ".bat");
           cmd = cmd.replace("&&", "\r\n");

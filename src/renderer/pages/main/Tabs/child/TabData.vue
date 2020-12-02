@@ -439,6 +439,7 @@ export default {
           headers: this.currentTableData.headers,
           sumRowCount: this.currentTableData.sum,
         };
+        console.log(exportSql);
         this.$electron.ipcRenderer.send("export-one-file-begin", args);
       }
     },

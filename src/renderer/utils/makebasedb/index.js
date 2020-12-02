@@ -4,6 +4,7 @@ const fs = require("fs");
 const passwordEn = new Buffer(process.env.PASS || "password");
 const encryptStream = crypto.createCipher("aes-256-cbc", passwordEn);
 const path = require("path");
+
 class Maker {
   async doEncryptFile(sqlFile) {
     return new Promise((resolve, reject) => {

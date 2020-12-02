@@ -192,10 +192,14 @@ const mutations = {
   },
 
   // 跟新table的数据
-  UPDATE_TABLE_DATA(state, { pageIndex, rows, headers, sum, allrows }) {
+  UPDATE_TABLE_DATA(
+    state,
+    { pageIndex, rows, headers, sum, allrows, exportSql }
+  ) {
     for (let index = 0; index < state.tableDataList.length; index++) {
       let tableData = state.tableDataList[index];
       if (tableData.pageIndex === pageIndex) {
+        Vue.set(state.tableDataList[index], "exportSql", exportSql);
         if (typeof rows !== "undefined")
           Vue.set(state.tableDataList[index], "rows", rows);
         if (typeof sum !== "undefined")
@@ -545,7 +549,13 @@ const actions = {
       let { headers, rows, sum, exportSql } = data;
       if (pageIndex) {
         // 更新数据
-        commit("UPDATE_TABLE_DATA", { pageIndex, rows, sum, headers });
+        commit("UPDATE_TABLE_DATA", {
+          pageIndex,
+          rows,
+          sum,
+          headers,
+          exportSql,
+        });
       } else {
         let obj = {
           ajid,
@@ -611,7 +621,6 @@ const actions = {
     if (typeof modelFilterChildList === "undefined") {
       modelFilterChildList = [];
     }
-
     let {
       title,
       pgsqltemplate,
@@ -637,6 +646,7 @@ const actions = {
       parseInt(tid),
       modelFilterChildList
     );
+    console.log({ filterChildStr });
     let sql = modelSqlFormat.format(
       pgsqlTemplateDecode,
       orderby,
@@ -655,10 +665,22 @@ const actions = {
     );
     if (data.success) {
       let { headers, rows, sum, exportSql, allrows } = data;
+      // 这三个模型需要展示图形，所以需要保存全数据
+      if (![202, 203, 213].includes(tid)) {
+        allrows = [];
+      }
+
       // 判断是否add，还是update
       if (pageIndex) {
         // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
-        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows, sum, allrows });
+        commit("UPDATE_TABLE_DATA", {
+          pageIndex,
+          headers,
+          rows,
+          sum,
+          allrows,
+          exportSql,
+        });
       } else {
         let obj = {
           tid,
@@ -813,7 +835,14 @@ const actions = {
       // 判断是否add，还是update
       if (pageIndex) {
         // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
-        commit("UPDATE_TABLE_DATA", { pageIndex, headers, rows, sum, allrows });
+        commit("UPDATE_TABLE_DATA", {
+          pageIndex,
+          headers,
+          // rows,
+          sum,
+          allrows,
+          exportSql,
+        });
       } else {
         let obj = {
           tid,
@@ -822,7 +851,7 @@ const actions = {
           showHeaders: headers,
           hideEmptyField: false,
           sum,
-          rows,
+          // rows,
           componentName: "table-data-view",
           dispatchName: "ShowTable/showDataVisibleTable",
           tableType: "dataVisible",

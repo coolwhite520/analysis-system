@@ -34,6 +34,7 @@ CA_PageItemDetail为详细参数：
 
 import Default from "./Default";
 const log = require("@/utils/log");
+
 String.prototype.startWith = function(str) {
   var reg = new RegExp("^" + str);
   return reg.test(this);
@@ -458,7 +459,9 @@ function GetListCondition(list, timeindex = [], timetype = []) {
         list[i].value = "0";
       }
     }
+    console.log("GetIndex", timeindex);
     let index = GetIndex(timeindex, i);
+    console.log(index);
     if (index != -1) {
       text =
         text +
@@ -483,6 +486,7 @@ function GetListCondition(list, timeindex = [], timetype = []) {
     }
   }
   text += " )";
+  console.log("ret: ", text);
   return text;
 }
 
@@ -1030,7 +1034,7 @@ function Get357DetailCondition(PageItemDetail, ColumnName) {
       type: Default.FiltrateLogicID.EqualTo,
       value: "进",
     });
-  } else if (ColumnName == "OUTCOUNT") {
+  } else if (ColumnName == "CZBS") {
     list.push({
       name: "JDBZ",
       type: Default.FiltrateLogicID.EqualTo,
@@ -1039,6 +1043,7 @@ function Get357DetailCondition(PageItemDetail, ColumnName) {
   }
   //return list
   //return (" AND "+ GetListCondition(list,[0],[1]));
+  // console.log(list);
   return {
     str: " AND " + GetListCondition(list, [0], [1]),
     obj: GetDataFilterFromList(list),
@@ -1389,6 +1394,7 @@ function AnalysePageGrid_OnLinkClick(
                 if (CurrTabItem.M_TYPE == 357) {
                   list = Get357DetailCondition(cA_PageItemDetail, ColumnName);
                   //method_8(cA_PageItemDetail, list, null);
+                  console.log("Get357DetailCondition", list);
                   return { type: "4", msg: list };
                 }
                 if (CurrTabItem.M_TYPE == 351) {
