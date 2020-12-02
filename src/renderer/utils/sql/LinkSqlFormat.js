@@ -1443,8 +1443,8 @@ function AnalysePageGrid_OnLinkClick(
                 //人员界面，此处非模型
                 if (CurrTabItem.M_TYPE == 1 || CurrTabItem.M_TYPE == 2) {
                   if (ColumnName == "JYBS") {
-                    let sql = GetPersonDetailCondition(cA_PageItemDetail);
-                    return { type: "4", msg: sql };
+                    let msgobj = GetPersonDetailCondition(cA_PageItemDetail);
+                    return { type: "4", msg: msgobj };
                   } else if (ColumnName == "GLZHS") {
                     let sql_tmp = Get309CA_PageItem(cA_PageItemDetail);
                     return { type: "309", msg: { str: sql_tmp, obj: null } };
@@ -1643,22 +1643,68 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
       CA_PageItemDetail.dfhm = item["sjhm"].trim();
       break;
   }
-  return AnalysePageGrid_OnLinkClick(
+  let  AnalysePageGrid_OnLinkClick_res=AnalysePageGrid_OnLinkClick(
     CA_PageItemDetail,
     CA_PageItem,
     ColumnName
   );
+  return SetFiltrateFieldType(AnalysePageGrid_OnLinkClick_res);
+}
+function SetFiltrateFieldType(linkres){
+  try{
+      if(linkres!=null && linkres!=undefined && linkres.msg!=undefined && linkres.msg!=null){
+          let tid=linkres.type;
+          if(tid!="4"&&tid !="18"){
+              return linkres;
+          }
+          let list1= linkres.msg.obj[0].children[0].children;
+          let list2=linkres.msg.obj[0].children.length==2?linkres.msg.obj[0].children[1].children:null;
+          if(tid=="4"){
+              for(let i=0,len=list1.length;i<len;i++){
+                  let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
+                  if(FiltrateFieldEN=="jysj"){
+                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
+                  }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
+                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DOUBLE;
+                  }
+              }
+              if(list2!=null){
+                  for(let i=0,len=list2.length;i<len;i++){
+                      let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
+                      if(FiltrateFieldEN=="jysj"){
+                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
+                      }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
+                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DOUBLE;
+                      }
+                  }
+              }
+          }else if(tid=="18"){
+             for(let i=0,len=list1.length;i<len;i++){
+                  let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
+                  if(FiltrateFieldEN=="thsj"||FiltrateFieldEN=="hjrq"||FiltrateFieldEN=="hjsj"){
+                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
+                  }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
+                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DECIMAL;
+                  }
+              }
+              if(list2!=null){
+                  for(let i=0,len=list2.length;i<len;i++){
+                      let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
+                      if(FiltrateFieldEN=="thsj"||FiltrateFieldEN=="hjrq"||FiltrateFieldEN=="hjsj"){
+                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
+                      }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
+                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DECIMAL;
+                      }
+                  }
+              }
+          }
+      }
+  }catch(e){
+      console.log( "SetFiltrateFieldType err:",e.message);
+  }
+  return linkres;
 }
 
-CA_PageItem.M_TYPE = 203;
-let res = OnLinkClick(
-  CA_PageItem,
-  { jydfmc: "zhangsan", jymc: "123456" },
-  { String_1: "jydfzkh,cxkh" },
-  "JZBS"
-);
-
-if (res != null) console.dir(res["msg"]["obj"][0]);
 
 export default {
   format: OnLinkClick,
