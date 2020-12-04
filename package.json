@@ -4,7 +4,7 @@
       "post-commit": "exec < /dev/tty && node ./check-version.js"
     }
   },
-  "oemname": "JD",
+  "oemname":"ff",    
   "name": "analysis-system",
   "version": "4.5.14",
   "author": "Panda",

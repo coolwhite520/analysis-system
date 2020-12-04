@@ -20,7 +20,7 @@
           </div>
           <div
             v-if="currentViewName === 'main-page'"
-            style="font-size: 10px; margin-top: 5px; color: #f29c38"
+            style="font-size: 10px; margin-top: 5px; color: white"
           >
             <b>当前案件：</b>{{ caseBase.ajmc }}
           </div>

@@ -604,7 +604,14 @@
             class="selectionItem"
           >
             <div class="childTitle">{{ MoneyIntervalDes }}</div>
-            <el-button type="text" size="mini">区间设置</el-button>
+            <div style="text-align: center; margin-top: 20px">
+              <el-button
+                type="primary"
+                size="small"
+                @click="handleClickMoneySection"
+                >金额区间设置</el-button
+              >
+            </div>
           </div>
 
           <div
@@ -651,17 +658,45 @@
               </el-select>
             </div>
           </div>
-          <!-- 33、34这个是个？ ？？？？？？？下面的不是哦-->
+
           <div
             v-show="currentTableData.mpids.includes('33')"
             class="selectionItem"
-          ></div>
+          >
+            <div class="childTitle">
+              分类维度：{{ selectCondition.String_0 }} 共{{
+                selectCondition.String_0.split(",").length
+              }}个
+              <el-button
+                size="mini"
+                type="text"
+                @click="
+                  () => {
+                    this.$store.commit(
+                      'DialogPopWnd/SET_SHOWWEISETTINGVISIBLE',
+                      true
+                    );
+                  }
+                "
+                >设置分类维度</el-button
+              >
+            </div>
+            <div class="childTitle">
+              统计维度：{{ selectCondition.String_0 }} 共{{
+                selectCondition.String_0.split(",").length
+              }}个
+              <el-button size="mini" type="text">设置统计维度</el-button>
+            </div>
+          </div>
           <div
             v-show="currentTableData.mpids.includes('34')"
             class="selectionItem"
           ></div>
           <div
-            v-show="currentTableData.mpids.length > 0"
+            v-show="
+              currentTableData.mpids.length > 0 &&
+              !currentTableData.mpids.includes('30')
+            "
             style="margin-top: 40px; text-align: center"
           >
             <el-button size="mini" @click="handleClickSaveCondition"
@@ -684,18 +719,24 @@
         </div>
       </el-col>
     </el-row>-->
+    <money-dalog v-if="showMoneySectionDialog"></money-dalog>
+    <weidu-dialog v-if="showWeiSettingVisible"></weidu-dialog>
   </div>
 </template>
 
 <script>
 import aes from "@/utils/aes";
 import { mapState, mapGetters } from "vuex";
-
+import MoneyDialog from "@/pages/dialog/moneySectionSetting/moneySectionDialog.vue";
+import WeiDuDialog from "@/pages/dialog/zjTouShiModel/weiduSetting.vue";
 export default {
+  components: {
+    "money-dalog": MoneyDialog,
+    "weidu-dialog": WeiDuDialog,
+  },
   data() {
     return {
       selectCondition: {},
-      MoneyIntervalDes: "",
       HourList: [],
       MinuteList: [],
       listst_jyje: [],
@@ -838,6 +879,32 @@ export default {
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", ["currentTableData"]),
+    ...mapState("DialogPopWnd", [
+      "showMoneySectionDialog",
+      "showWeiSettingVisible",
+    ]),
+    MoneyIntervalDes() {
+      let text = "";
+      let arrMoneyInterval = this.currentTableData.selectCondition.MoneyIntervalStr.split(
+        ","
+      );
+      text += "交易区间：";
+      for (let i = 0; i < arrMoneyInterval.length; i++) {
+        if (i === 0) {
+          text = text + arrMoneyInterval[i].toString() + "万以下,";
+        } else if (i === arrMoneyInterval.length - 1) {
+          text = text + arrMoneyInterval[i - 1].toString() + "万以上";
+        } else {
+          text = text.concat(
+            arrMoneyInterval[i - 1].toString(),
+            "万-",
+            arrMoneyInterval[i].toString(),
+            "万,"
+          );
+        }
+      }
+      return text;
+    },
     resultRowCount() {
       return this.currentTableData.sum;
     },
@@ -856,7 +923,6 @@ export default {
       JSON.stringify(this.currentTableData.selectCondition)
     );
     // 交易金额区间描述
-    this.initMoneyIntervalDes();
     for (let i = 0; i < 24; i++) {
       if (i.toString().length === 1) {
         this.HourList.push("0" + String(i));
@@ -883,26 +949,7 @@ export default {
         }
       }
     },
-    initMoneyIntervalDes() {
-      let text = "";
-      let arrMoneyInterval = this.selectCondition.MoneyIntervalStr.split(",");
-      text += "交易区间：";
-      for (let i = 0; i < arrMoneyInterval.length; i++) {
-        if (i === 0) {
-          text = text + arrMoneyInterval[i].toString() + "万以下,";
-        } else if (i === arrMoneyInterval.length - 1) {
-          text = text + arrMoneyInterval[i - 1].toString() + "万以上";
-        } else {
-          text = text.concat(
-            arrMoneyInterval[i - 1].toString(),
-            "万-",
-            arrMoneyInterval[i].toString(),
-            "万,"
-          );
-        }
-      }
-      this.MoneyIntervalDes = text;
-    },
+
     //
     visibleChange(value) {},
     async handleClickExecCondition() {
@@ -917,7 +964,19 @@ export default {
         count: 30,
       });
     },
-    handleClickSaveCondition() {},
+    async handleClickSaveCondition() {
+      this.$store.commit("ShowTable/UPDATE_MODEL_SELECTION", {
+        pageIndex: this.currentTableData.pageIndex,
+        selectCondition: this.selectCondition,
+      });
+      this.$message({
+        type: "success",
+        message: "保存条件成功",
+      });
+    },
+    handleClickMoneySection() {
+      this.$store.commit("DialogPopWnd/SET_SHOWMONEYSECTIONDIALOG", true);
+    },
     handleClickClose() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "model-view",

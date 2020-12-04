@@ -20,6 +20,8 @@ const state = {
   showJdbzDialogVisible: false,
   showReportVisible: false,
   showReportHisVisible: false,
+  showMoneySectionDialog: false,
+  showWeiSettingVisible: false,
 };
 
 const mutations = {
@@ -84,6 +86,12 @@ const mutations = {
   },
   SET_SHOWREPORTHISVISIBLE(state, showReportHisVisible) {
     state.showReportHisVisible = showReportHisVisible;
+  },
+  SET_SHOWMONEYSECTIONDIALOG(state, showMoneySectionDialog) {
+    state.showMoneySectionDialog = showMoneySectionDialog;
+  },
+  SET_SHOWWEISETTINGVISIBLE(state, showWeiSettingVisible) {
+    state.showWeiSettingVisible = showWeiSettingVisible;
   },
 };
 

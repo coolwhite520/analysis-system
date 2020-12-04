@@ -43,6 +43,7 @@ function GetJYQJstr(string_0, int_0) {
     return text;
   }
   let array = string_0.split(",");
+  // array.push(array[array.length - 1]);
   for (let i = 0; i < array.length; i++) {
     if (i == 0) {
       if (int_0 == 1) {
