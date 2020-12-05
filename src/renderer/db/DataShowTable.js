@@ -305,6 +305,7 @@ export default {
       client.release();
     }
   },
+
   // 查询所有的基础表的信息
   QueryBaseTableData: async function(
     ajid,

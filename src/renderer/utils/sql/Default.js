@@ -717,6 +717,65 @@ function ContainsKey(str) {
   return false;
 }
 
+function set421param(list) {
+  //设置421模型参数，传入所选维度list对象，每个对象包含字段中英文以及类型FiledENStr,FiledCNStr
+  let FiledCNStr = "";
+  let FiledENStr = "";
+  let FiledsEmptyToNullCondition = "";
+  let FiledsIsNullCondition = "";
+  for (let i = 0; i < list.length; i++) {
+    let CFIELD = list[i].FiledENStr;
+    let CNAME = list[i].FiltrateFieldCN;
+    if (i == 0) {
+      FiledENStr = CFIELD;
+      FiledCNStr = CNAME;
+    } else {
+      FiledENStr = FiledENStr + "," + CFIELD;
+      FiledCNStr = FiledCNStr + "," + CNAME;
+    }
+    let lowcaseEn = list[i].FiledENStr.toLowerCase();
+    if (
+      lowcaseEn != "jyje" &&
+      lowcaseEn != "jyye" &&
+      lowcaseEn != "dsjyye" &&
+      lowcaseEn != "batch"
+    ) {
+      //非数字
+      FiledsIsNullCondition =
+        FiledsIsNullCondition +
+        " AND " +
+        CFIELD +
+        " IS NOT NULL AND LENGTH( COALESCE(" +
+        CFIELD +
+        ", '0'))>0 ";
+      if (!IsNullOrEmpty(FiledsEmptyToNullCondition)) {
+        FiledsEmptyToNullCondition += ",";
+      }
+      FiledsEmptyToNullCondition =
+        FiledsEmptyToNullCondition +
+        " CASE WHEN " +
+        CFIELD +
+        "='' THEN NULL ELSE " +
+        CFIELD +
+        " END AS " +
+        CFIELD;
+    } else {
+      //数字
+      FiledsIsNullCondition =
+        FiledsIsNullCondition + " AND " + CFIELD + " IS NOT NULL ";
+      if (!IsNullOrEmpty(FiledsEmptyToNullCondition)) {
+        FiledsEmptyToNullCondition += ",";
+      }
+      FiledsEmptyToNullCondition = FiledsEmptyToNullCondition + " " + CFIELD;
+    }
+  }
+  return {
+    FiledENStr,
+    FiledCNStr,
+    FiledsEmptyToNullCondition,
+    FiledsIsNullCondition,
+  };
+}
 export default {
   defaultSelection,
   getNowFormatDate,
@@ -739,4 +798,5 @@ export default {
   graphicMoneySectionList,
   xianKuanSetting,
   Dictionary,
+  set421param,
 };

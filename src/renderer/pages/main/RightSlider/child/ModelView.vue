@@ -667,9 +667,11 @@
               分类维度：{{ selectCondition.String_0 }} 共{{
                 selectCondition.String_0.split(",").length
               }}个
+            </div>
+            <div style="text-align: center; margin-top: 15px">
               <el-button
                 size="mini"
-                type="text"
+                type="primary"
                 @click="
                   () => {
                     this.$store.commit(
@@ -685,7 +687,9 @@
               统计维度：{{ selectCondition.String_0 }} 共{{
                 selectCondition.String_0.split(",").length
               }}个
-              <el-button size="mini" type="text">设置统计维度</el-button>
+            </div>
+            <div style="text-align: center; margin-top: 15px">
+              <el-button size="mini" type="primary">设置统计维度</el-button>
             </div>
           </div>
           <div
@@ -695,7 +699,8 @@
           <div
             v-show="
               currentTableData.mpids.length > 0 &&
-              !currentTableData.mpids.includes('30')
+              !currentTableData.mpids.includes('30') &&
+              !currentTableData.mpids.includes('33')
             "
             style="margin-top: 40px; text-align: center"
           >
@@ -736,7 +741,6 @@ export default {
   },
   data() {
     return {
-      selectCondition: {},
       HourList: [],
       MinuteList: [],
       listst_jyje: [],
@@ -914,14 +918,15 @@ export default {
     describe() {
       return this.currentTableData.describe;
     },
+    selectCondition() {
+      return JSON.parse(JSON.stringify(this.currentTableData.selectCondition));
+    },
   },
   async beforeMount() {
     // this.currentTableData.mpids = JSON.parse(
     //   JSON.stringify(this.currentTableData.currentTableData.mpids)
     // );
-    this.selectCondition = JSON.parse(
-      JSON.stringify(this.currentTableData.selectCondition)
-    );
+
     // 交易金额区间描述
     for (let i = 0; i < 24; i++) {
       if (i.toString().length === 1) {

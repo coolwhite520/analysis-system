@@ -4,7 +4,7 @@
       "post-commit": "exec < /dev/tty && node ./check-version.js"
     }
   },
-  "oemname":"ff",    
+  "oemname": "ff",
   "name": "analysis-system",
   "version": "4.5.14",
   "author": "Panda",
@@ -105,6 +105,7 @@
     "pg": "^8.2.1",
     "pg-copy-streams": "^5.1.1",
     "pg-query-stream": "^3.2.3",
+    "readline": "^1.3.0",
     "regedit": "^3.0.3",
     "screenshot-desktop": "^1.12.2",
     "secure-ls": "^1.2.6",

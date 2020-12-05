@@ -22,6 +22,7 @@ import { inflate } from "zlib";
 const copyFrom = require("pg-copy-streams").from;
 const csv = require("@fast-csv/parse");
 const lodash = require("lodash");
+const readLine = require("readline");
 export default {
   data() {
     return {
@@ -309,6 +310,7 @@ export default {
           objectMode: true,
           ignoreEmpty: true,
           maxRows: 10,
+          strictColumnHandling: true,
         });
         let readFileStream = fs.createReadStream(filePathName);
         csvParseStream
@@ -966,13 +968,44 @@ export default {
           let readSize = 0;
           let fileSize = stats.size;
           let bFirstRow = true;
+          // var readLlineObj = readLine.createInterface({
+          //   input: fs.createReadStream(filePathName),
+          // });
+          // readLlineObj.on("line", (line) => {
+          //   console.log(line);
+          //   let newLine = iconv.decode(Buffer.from(line), encoding);
+          //   console.log(newLine);
+          // });
+          // return;
+          let lastOneBuffer = Buffer.from([]); // \n 后面的部分buffer
           let readFileStream = fs.createReadStream(filePathName);
           readFileStream
             .pipe(
               through2(function (chunk, enc, callback) {
                 if (encoding !== "UTF-8") {
-                  chunk = iconv.decode(chunk, encoding);
-                  this.push(Buffer.from(chunk));
+                  chunk = Buffer.concat([lastOneBuffer, chunk]);
+                  let returnChar = iconv.encode("\n", encoding)[0];
+                  let resolvedChunk = [];
+                  for (let index = chunk.length - 1; index >= 0; index--) {
+                    if (returnChar === chunk[index]) {
+                      resolvedChunk = Buffer.from(chunk.slice(0, index));
+                      lastOneBuffer = Buffer.from(chunk.slice(index + 1));
+                      break;
+                    }
+                  }
+                  let utf8Str = iconv.decode(resolvedChunk, encoding);
+                  utf8Str = utf8Str.replace(/\"/g, "").replace(/\'/g, "");
+                  // let arr = utf8Str.split("\n");
+                  // let newArr = [];
+                  // for (let line of arr) {
+                  //   let colValues = line.split(",");
+                  //   if (colValues.length <= fileAllCols.length) {
+                  //     newArr.push(line);
+                  //   } else {
+                  //     console.log("toooLOoog:", colValues);
+                  //   }
+                  // }
+                  this.push(utf8Str);
                 } else {
                   this.push(chunk);
                 }
@@ -986,10 +1019,14 @@ export default {
                 objectMode: true,
                 ignoreEmpty: true,
                 skipLines: skipLines + 1,
+                strictColumnHandling: true,
               })
             )
+            .on("error", (error) => console.error(rownum, error))
             .pipe(
               through2.obj(function (row, enc, callback) {
+                // console.log(rownum, row);
+
                 let rowDataValues = [];
                 for (let k in row) {
                   if (matchedFileCols.includes(k)) {
