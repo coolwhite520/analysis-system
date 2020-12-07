@@ -155,6 +155,9 @@
         v-if="isImportLoading"
       >
         <template slot-scope="scope">
+          <!-- <div :style="{ color: scope.row.progressColor, textAlign: 'center' }">
+            {{ scope.row.progress }}
+          </div> -->
           <el-progress
             type="line"
             :text-inside="true"
@@ -353,6 +356,9 @@ export default {
           id,
           progress: percentage,
         });
+        this.$nextTick(() => {
+          this.$refs[`myImportTable`].doLayout();
+        });
       }
     },
 
@@ -372,6 +378,9 @@ export default {
       //console.log("import data over: ", id);
       await this.$store.commit("DataCollection/DELETE_DATA_LIST_BY_ID", id);
       this.clearCurrentInportRow(id);
+      this.$nextTick(() => {
+        this.$refs[`myImportTable`].doLayout();
+      });
       if (this.currentImportRows.length === 0) {
         this.$message({
           title: "成功",

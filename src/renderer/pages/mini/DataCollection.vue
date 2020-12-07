@@ -968,97 +968,119 @@ export default {
           let readSize = 0;
           let fileSize = stats.size;
           let bFirstRow = true;
-          // var readLlineObj = readLine.createInterface({
-          //   input: fs.createReadStream(filePathName),
-          // });
-          // readLlineObj.on("line", (line) => {
-          //   console.log(line);
-          //   let newLine = iconv.decode(Buffer.from(line), encoding);
-          //   console.log(newLine);
-          // });
-          // return;
+          let indexList = []; // 获取匹配索引
+          fileAllCols.forEach((v, i) => {
+            if (matchedFileCols.includes(v)) {
+              indexList.push(i);
+            }
+          });
           let lastOneBuffer = Buffer.from([]); // \n 后面的部分buffer
           let readFileStream = fs.createReadStream(filePathName);
           readFileStream
             .pipe(
-              through2(function (chunk, enc, callback) {
-                if (encoding !== "UTF-8") {
-                  chunk = Buffer.concat([lastOneBuffer, chunk]);
-                  let returnChar = iconv.encode("\n", encoding)[0];
-                  let resolvedChunk = [];
-                  for (let index = chunk.length - 1; index >= 0; index--) {
-                    if (returnChar === chunk[index]) {
-                      resolvedChunk = Buffer.from(chunk.slice(0, index));
-                      lastOneBuffer = Buffer.from(chunk.slice(index + 1));
-                      break;
-                    }
+              through2({ objectMode: true }, function (chunk, enc, callback) {
+                chunk = Buffer.concat([lastOneBuffer, chunk]);
+                let returnChar = 10;
+                let resolvedChunk = [];
+                let bFind = false;
+                for (let index = chunk.length - 1; index >= 0; index--) {
+                  if (returnChar === chunk[index]) {
+                    bFind = true;
+                    resolvedChunk = Buffer.from(chunk.slice(0, index));
+                    lastOneBuffer = Buffer.from(chunk.slice(index + 1));
+                    break;
                   }
-                  let utf8Str = iconv.decode(resolvedChunk, encoding);
-                  utf8Str = utf8Str.replace(/\"/g, "").replace(/\'/g, "");
-                  this.push(utf8Str);
-                } else {
-                  this.push(chunk);
                 }
+                if (!bFind) {
+                  lastOneBuffer = Buffer.from(chunk);
+                  callback();
+                  return;
+                }
+                let utf8Str;
+                if (encoding !== "UTF-8") {
+                  utf8Str = iconv.decode(resolvedChunk, encoding);
+                } else {
+                  utf8Str = resolvedChunk.toString();
+                }
+                let fileAllColsStr = fileAllCols.toString();
+                let retRows = [];
+                utf8Str = utf8Str.replace(/\"/g, "").replace(/\'/g, "");
+                let lines = utf8Str.split("\n");
+                for (let line of lines) {
+                  let colValues = line.split(",");
+                  colValues = colValues.map((item) =>
+                    item.replace(/(^\s*)|(\s*$)/g, "")
+                  );
+                  if (
+                    colValues.length === fileAllCols.length &&
+                    colValues.toString() !== fileAllColsStr
+                  ) {
+                    let rowValues = lodash.pullAt(colValues, indexList); // 获取数据
+                    retRows.push(rowValues);
+                  }
+                }
+                if (retRows.length === 0) {
+                  callback();
+                  return;
+                }
+                this.push(retRows);
                 callback();
               })
             )
+            // .pipe(
+            //   csv.parse({
+            //     trim: true,
+            //     headers: fileAllCols,
+            //     objectMode: true,
+            //     ignoreEmpty: true,
+            //     skipLines: skipLines + 1,
+            //     strictColumnHandling: true,
+            //     renameHeaders: true,
+            //   })
+            // )
+            // .on("error", (error) => console.error(rownum, error))
             .pipe(
-              csv.parse({
-                trim: true,
-                headers: fileAllCols,
-                objectMode: true,
-                ignoreEmpty: true,
-                skipLines: skipLines + 1,
-                strictColumnHandling: true,
-              })
-            )
-            .on("error", (error) => console.error(rownum, error))
-            .pipe(
-              through2.obj(function (row, enc, callback) {
-                // console.log(rownum, row);
-
-                let rowDataValues = [];
-                for (let k in row) {
-                  if (matchedFileCols.includes(k)) {
-                    rowDataValues.push(row[k]);
+              through2.obj(function (rows, enc, callback) {
+                let insertValues = [];
+                for (let row of rows) {
+                  rownum++;
+                  let publicValues = [
+                    `${batchCount}`,
+                    `采集录入`,
+                    `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
+                    `${ajid}`,
+                    `${sjlyid}`,
+                    `${rownum}`,
+                  ];
+                  let realValues = publicValues
+                    .concat(row)
+                    .concat(externFieldsValues);
+                  // 把fields和realValues合并成一个对象row
+                  let tempRow = lodash.zipObject(fields, realValues);
+                  let newRowData = importModel.TestingHandle(
+                    createFields,
+                    tempRow,
+                    tablecname,
+                    inFlag,
+                    outFlag
+                  );
+                  let values = [];
+                  let keys = Object.keys(newRowData);
+                  needInsertFields = lodash.union(needInsertFields, keys);
+                  for (let field of createFields) {
+                    if (keys.includes(field)) {
+                      values.push(newRowData[field]);
+                    } else {
+                      values.push("");
+                    }
                   }
+                  let insertStr = values.join("\t") + "\n";
+                  insertValues.push(insertStr);
                 }
-                readSize += `${rowDataValues}`.length;
-                rownum++;
-                let publicValues = [
-                  `${batchCount}`,
-                  `采集录入`,
-                  `${new Date().Format("yyyy-MM-dd hh:mm:ss")}`,
-                  `${ajid}`,
-                  `${sjlyid}`,
-                  `${rownum}`,
-                ];
-                let realValues = publicValues
-                  .concat(rowDataValues)
-                  .concat(externFieldsValues);
-                // 把fields和realValues合并成一个对象row
-                let tempRow = lodash.zipObject(fields, realValues);
+                let insertAllStr = insertValues.join("");
+                this.push(insertAllStr);
 
-                let newRowData = importModel.TestingHandle(
-                  createFields,
-                  tempRow,
-                  tablecname,
-                  inFlag,
-                  outFlag
-                );
-
-                let values = [];
-                let keys = Object.keys(newRowData);
-                needInsertFields = lodash.union(needInsertFields, keys);
-                for (let field of createFields) {
-                  if (keys.includes(field)) {
-                    values.push(newRowData[field]);
-                  } else {
-                    values.push("");
-                  }
-                }
-                let insertStr = values.join("\t") + "\n";
-                this.push(insertStr);
+                readSize += 64 * 1024;
                 let percentage = parseInt(
                   parseFloat(readSize / fileSize) * 100
                 );

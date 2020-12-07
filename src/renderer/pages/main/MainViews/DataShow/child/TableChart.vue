@@ -120,7 +120,7 @@ export default {
           this.$refs[`${this.tableData.pageIndex}`].doLayout();
         });
       },
-      immediate: false,
+      immediate: true,
       deep: true,
     },
   },

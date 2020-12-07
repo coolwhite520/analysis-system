@@ -741,6 +741,7 @@ export default {
   },
   data() {
     return {
+      selectCondition: "",
       HourList: [],
       MinuteList: [],
       listst_jyje: [],
@@ -918,16 +919,25 @@ export default {
     describe() {
       return this.currentTableData.describe;
     },
-    selectCondition() {
-      return JSON.parse(JSON.stringify(this.currentTableData.selectCondition));
+  },
+  watch: {
+    "currentTableData.pageIndex": {
+      handler(newValue, oldValue) {
+        console.log(this.currentTableData.pageIndex);
+        // this.$forceUpdate();
+        this.selectCondition = JSON.parse(
+          JSON.stringify(this.currentTableData.selectCondition)
+        );
+      },
+      immediate: false,
+      deep: true,
     },
   },
   async beforeMount() {
-    // this.currentTableData.mpids = JSON.parse(
-    //   JSON.stringify(this.currentTableData.currentTableData.mpids)
-    // );
-
     // 交易金额区间描述
+    this.selectCondition = JSON.parse(
+      JSON.stringify(this.currentTableData.selectCondition)
+    );
     for (let i = 0; i < 24; i++) {
       if (i.toString().length === 1) {
         this.HourList.push("0" + String(i));
