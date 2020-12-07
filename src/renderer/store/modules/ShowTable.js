@@ -661,7 +661,8 @@ const actions = {
       tid,
       sql,
       offset,
-      count
+      count,
+      selectCondition
     );
     if (data.success) {
       let { headers, rows, sum, exportSql, allrows } = data;
@@ -669,6 +670,7 @@ const actions = {
       if (![202, 203, 213].includes(tid)) {
         allrows = [];
       }
+      // tid:421 资金透视
 
       // 判断是否add，还是update
       if (pageIndex) {
@@ -828,7 +830,8 @@ const actions = {
       tid,
       sql,
       offset,
-      count
+      count,
+      selectCondition
     );
     if (data.success) {
       let { headers, rows, sum, exportSql, allrows } = data;

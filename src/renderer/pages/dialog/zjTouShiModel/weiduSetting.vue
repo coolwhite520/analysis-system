@@ -89,11 +89,14 @@ export default {
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("CaseDetail", ["caseBase"]),
     currentWeiDuTips() {
-      return this.rightExistList
-        .map((key) => {
-          return this.data.find((item) => item.key === key).label;
-        })
-        .join(",");
+      let arr = [];
+      for (let key of this.rightExistList) {
+        let obj = this.data.find((item) => item.key === key);
+        if (obj) {
+          arr.push(obj.label);
+        }
+      }
+      return arr.join(",");
     },
   },
   async beforeMount() {
@@ -188,6 +191,12 @@ export default {
     },
     handleClickSure() {
       console.log(this.rightExistList);
+      if (this.rightExistList.length === 0) {
+        this.$message({
+          message: "请至少选择一个维度进行分析!",
+        });
+        return;
+      }
       let list = this.rightExistList.map((key) => {
         let obj = this.data.find((item) => item.key === key);
         return {
@@ -205,6 +214,12 @@ export default {
       this.$store.commit("ShowTable/UPDATE_MODEL_SELECTION", {
         pageIndex: this.currentTableData.pageIndex,
         selectCondition: this.selectCondition,
+      });
+      this.handleClose();
+      this.$store.dispatch(this.currentTableData.dispatchName, {
+        ...this.currentTableData,
+        offset: 0,
+        count: 30,
       });
     },
     handelRightChange(keys) {

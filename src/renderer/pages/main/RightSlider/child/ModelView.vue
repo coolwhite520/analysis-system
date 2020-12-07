@@ -683,12 +683,12 @@
                 >设置分类维度</el-button
               >
             </div>
-            <div class="childTitle">
+            <div class="childTitle" v-if="false">
               统计维度：{{ selectCondition.String_0 }} 共{{
                 selectCondition.String_0.split(",").length
               }}个
             </div>
-            <div style="text-align: center; margin-top: 15px">
+            <div style="text-align: center; margin-top: 15px" v-if="false">
               <el-button size="mini" type="primary">设置统计维度</el-button>
             </div>
           </div>

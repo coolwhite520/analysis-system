@@ -408,11 +408,32 @@ export default {
     }
   },
   // 执行模型并获取结果集
-  QueryModelDataTableBySql: async function(ajid, tid, sql, offset, count) {
+  QueryModelDataTableBySql: async function(
+    ajid,
+    tid,
+    sql,
+    offset,
+    count,
+    selectCondition
+  ) {
     const client = await global.pool.connect();
     try {
       let { rows } = await this.QueryTableShowCFields(tid);
       let headers = rows;
+      if (tid === 421) {
+        let arr1 = selectCondition.String_1.split(",");
+        let arr0 = selectCondition.String_0.split(",");
+        let arrExHeader = [];
+        for (let index = 0; index < arr1.length; index++) {
+          arrExHeader.push({
+            data_type: null,
+            fieldcname: arr0[index],
+            fieldename: arr1[index].toLowerCase(),
+          });
+        }
+        headers = arrExHeader.concat(headers);
+        console.log({ headers });
+      }
       let showFields = [];
       for (let item of headers) {
         showFields.push(item.fieldename.toLowerCase());

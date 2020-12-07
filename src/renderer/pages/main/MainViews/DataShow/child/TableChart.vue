@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-table
+      :ref="tableData.pageIndex"
       :id="tableData.pageIndex"
       style="width: 100%"
       :data="tableData.rows"
@@ -22,9 +23,9 @@
       ></el-table-column>
       <!--  -->
       <el-table-column
-        v-for="header in tableData.showHeaders"
+        v-for="(header, index) in tableData.showHeaders"
         :label="header.fieldcname"
-        :key="header.cid + Math.random()"
+        :key="index"
         show-overflow-tooltip
         :prop="header.fieldename"
         sortable="custom"
@@ -111,6 +112,18 @@ import { mapState } from "vuex";
 import awaitTask from "@/db/AwaitTask";
 
 export default {
+  watch: {
+    // 列的显示与否需要更新table
+    "tableData.showHeaders": {
+      handler(newValue, oldValue) {
+        this.$nextTick(() => {
+          this.$refs[`${this.tableData.pageIndex}`].doLayout();
+        });
+      },
+      immediate: false,
+      deep: true,
+    },
+  },
   mounted() {
     for (let size = 1; size <= 60; size++) {
       this.optionsPageSize.push({

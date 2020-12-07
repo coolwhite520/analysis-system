@@ -995,16 +995,6 @@ export default {
                   }
                   let utf8Str = iconv.decode(resolvedChunk, encoding);
                   utf8Str = utf8Str.replace(/\"/g, "").replace(/\'/g, "");
-                  // let arr = utf8Str.split("\n");
-                  // let newArr = [];
-                  // for (let line of arr) {
-                  //   let colValues = line.split(",");
-                  //   if (colValues.length <= fileAllCols.length) {
-                  //     newArr.push(line);
-                  //   } else {
-                  //     console.log("toooLOoog:", colValues);
-                  //   }
-                  // }
                   this.push(utf8Str);
                 } else {
                   this.push(chunk);
