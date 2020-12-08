@@ -6,7 +6,9 @@ import {
   Menu,
   MenuItem,
   globalShortcut,
+  ipcMain,
 } from "electron";
+import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
 import createExportWindow from "./modules/window/exportWindow";
@@ -15,6 +17,7 @@ import path from "path";
 import { ACHEME, LOAD_URL } from "./config";
 import log from "electron-log";
 const isDevelopment = process.env.NODE_ENV !== "production";
+const uuid = require("uuid");
 // const renderProcessApi = path.join(__dirname, './inject.js')
 /**
  * Set `__static` path to static files in production
@@ -41,6 +44,87 @@ const winURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#/`
     : `${LOAD_URL}`;
+
+// 通过main进程发送事件给renderer进程，提示更新信息
+function sendUpdateMessage(text) {
+  mainWindow.webContents.send("message", text);
+}
+//处理更新操作
+function handleUpdate() {
+  let returnData = {
+    error: { status: -1, msg: "检测更新查询异常。", logPath: "" },
+    checking: { status: 0, msg: "正在检查应用程序更新。" },
+    updateAva: {
+      status: 1,
+      msg: "检测到新版本，正在下载,请稍后。",
+      version: "",
+    },
+    updateNotAva: {
+      status: 2,
+      msg: `您现在使用的版本${global.softVersion}为最新版本,无需更新!`,
+    },
+  };
+
+  //和之前package.json配置的一样
+  let urls = require("../../package.json").publish;
+  autoUpdater.setFeedURL(urls[0].url);
+
+  //更新错误
+  autoUpdater.on("error", (error) => {
+    //  error;
+    let tempPath = app.getPath("temp");
+    let logErrPath = path.join(tempPath, uuid.v1() + ".txt");
+    fs.writeFileSync(logErrPath, error);
+    returnData.error.logPath = logErrPath;
+    sendUpdateMessage(returnData.error);
+  });
+
+  //检查中
+  autoUpdater.on("checking-for-update", () => {
+    sendUpdateMessage(returnData.checking);
+  });
+
+  //发现新版本
+  autoUpdater.on("update-available", (info) => {
+    returnData.updateAva.version = info.version;
+    sendUpdateMessage(returnData.updateAva);
+  });
+
+  //当前版本为最新版本
+  autoUpdater.on("update-not-available", (info) => {
+    log.info(info);
+    setTimeout(function() {
+      sendUpdateMessage(returnData.updateNotAva);
+    }, 1000);
+  });
+
+  // 更新下载进度事件
+  autoUpdater.on("download-progress", (progressObj) => {
+    mainWindow.webContents.send("downloadProgress", progressObj);
+  });
+
+  autoUpdater.on(
+    "update-downloaded",
+    (
+      event,
+      releaseNotes,
+      releaseName,
+      releaseDate,
+      updateUrl,
+      quitAndUpdate
+    ) => {
+      ipcMain.on("isUpdateNow", (e, arg) => {
+        autoUpdater.quitAndInstall();
+      });
+      mainWindow.webContents.send("isUpdateNow", {
+        releaseNotes,
+        releaseName,
+        releaseDate,
+        updateUrl,
+      });
+    }
+  );
+}
 
 function createWindow() {
   /**
@@ -140,6 +224,12 @@ function createWindow() {
     initIpcEvent();
     global.exportWindow = createExportWindow(BrowserWindow);
   });
+
+  handleUpdate();
+
+  ipcMain.on("checkForUpdate", (event, data) => {
+    autoUpdater.checkForUpdates();
+  });
 }
 app.on("activate", () => {
   // let wins = BrowserWindow.getAllWindows();
@@ -161,23 +251,3 @@ app.on("activate", () => {
     createWindow();
   }
 });
-
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
-import { autoUpdater } from 'electron-updater'
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
- */

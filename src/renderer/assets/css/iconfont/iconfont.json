@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "26701",
+      "name": "qq",
+      "font_class": "qq",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "978354",
+      "name": "微信",
+      "font_class": "gongzhonghao",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "2742687",
+      "name": "座机",
+      "font_class": "zuoji",
+      "unicode": "e683",
+      "unicode_decimal": 59011
+    },
+    {
+      "icon_id": "5878990",
+      "name": "联系人",
+      "font_class": "lianxiren",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "6240886",
+      "name": "手机",
+      "font_class": "shouji",
+      "unicode": "e6ba",
+      "unicode_decimal": 59066
+    },
+    {
+      "icon_id": "14401694",
+      "name": "email",
+      "font_class": "email",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "13400993",
+      "name": "升级",
+      "font_class": "shengji",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "5451372",
+      "name": "联系-A",
+      "font_class": "lianxi-A",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
       "icon_id": "6857178",
       "name": "拖拽",
       "font_class": "tuozhuai",

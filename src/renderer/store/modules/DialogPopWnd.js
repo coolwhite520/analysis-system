@@ -22,6 +22,8 @@ const state = {
   showReportHisVisible: false,
   showMoneySectionDialog: false,
   showWeiSettingVisible: false,
+  showContactUsVisible: false,
+  showUpdateVisible: false,
 };
 
 const mutations = {
@@ -92,6 +94,12 @@ const mutations = {
   },
   SET_SHOWWEISETTINGVISIBLE(state, showWeiSettingVisible) {
     state.showWeiSettingVisible = showWeiSettingVisible;
+  },
+  SET_SHOWCONTACTUSVISIBLE(state, showContactUsVisible) {
+    state.showContactUsVisible = showContactUsVisible;
+  },
+  SET_SHOWUPDATEVISIBLE(state, showUpdateVisible) {
+    state.showUpdateVisible = showUpdateVisible;
   },
 };
 

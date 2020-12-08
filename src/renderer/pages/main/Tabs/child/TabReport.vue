@@ -12,7 +12,7 @@
           <span class="title-content">新建报告</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="1" class="el-col">
         <el-button
           type="text"
           class="ctrl-button"
@@ -25,7 +25,7 @@
       </el-col>
     </el-row>
     <el-row style="font-size: 8px; color: gray; text-align: center">
-      <el-col :span="2" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="2">
         <div>报告</div>
       </el-col>
     </el-row>
