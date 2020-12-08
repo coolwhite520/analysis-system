@@ -110,6 +110,7 @@ export default {
       this.percentage = data.percent.toFixed(2);
       if (this.percentage >= 100) {
         this.percentage = 100;
+        this.loading = false;
       }
     });
     /**
