@@ -96,7 +96,7 @@ export default {
       stateCode: -999,
       logPath: "",
       newVersion: "",
-      downloadSuccess: true,
+      downloadSuccess: false,
       releaseNotes: "",
       releaseName: "",
       releaseDate: "",
