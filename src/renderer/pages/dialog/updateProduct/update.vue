@@ -43,12 +43,7 @@
       >
     </div>
     <div style="text-align: center; margin-top: 10px" v-if="percentage > 0">
-      <el-progress
-        :text-inside="true"
-        :percentage="percentage"
-        status="exception"
-        type="circle"
-      ></el-progress>
+      <el-progress :percentage="percentage" type="circle"></el-progress>
     </div>
     <div v-if="downloadSuccess" style="text-align: center">
       <div style="font-size: 10px; margin-bottom: 5px">
@@ -91,12 +86,12 @@ export default {
     return {
       title: "升级检测",
       checkMsg: "",
-      percentage: 0,
+      percentage: 10,
       loading: true,
       stateCode: -999,
       logPath: "",
       newVersion: "",
-      downloadSuccess: false,
+      downloadSuccess: true,
       releaseNotes: "",
       releaseName: "",
       releaseDate: "",
