@@ -112,7 +112,7 @@
                   type="datetime"
                   placeholder=""
                   v-model="data.FiltrateValue"
-                  style="width: 50%"
+                  style="width: 40%"
                   size="mini"
                 ></el-date-picker>
               </span>
@@ -127,7 +127,7 @@
                   type="date"
                   placeholder=""
                   v-model="data.FiltrateValue"
-                  style="width: 50%"
+                  style="width: 40%"
                   size="mini"
                 ></el-date-picker>
               </span>
@@ -146,7 +146,7 @@
                 <el-input
                   v-model="data.FiltrateValue"
                   placeholder="请输入内容"
-                  style="width: 50%"
+                  style="width: 40%"
                   size="mini"
                 ></el-input>
               </span>

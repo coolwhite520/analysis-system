@@ -848,7 +848,11 @@ export default {
                     }
                   }
                 } else {
-                  cell = cell.toString().trim();
+                  cell = cell
+                    .toString()
+                    .replace(/\"/g, "")
+                    .replace(/\'/g, "")
+                    .replace(/^\s+|\s+$/g, "");
                 }
                 matchedFieldIndex++;
                 rowDataValues.push(cell);

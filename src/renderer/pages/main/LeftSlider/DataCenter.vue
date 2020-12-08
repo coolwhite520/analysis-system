@@ -110,7 +110,7 @@ export default {
         }
       }
       let { ajid } = this.caseBase;
-      await this.$store.dispatch("ShowTable/showBaseTable", {
+      this.$store.dispatch("ShowTable/showBaseTable", {
         tid,
         offset: 0,
         count: 30,
