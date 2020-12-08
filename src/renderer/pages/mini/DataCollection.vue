@@ -2,6 +2,7 @@
   <div></div>
 </template>
 <script>
+import Papa from "papaparse";
 const jschardet = require("jschardet");
 const log = require("@/utils/log");
 const iconv = require("iconv-lite");
@@ -986,7 +987,7 @@ export default {
                 for (let index = chunk.length - 1; index >= 0; index--) {
                   if (returnChar === chunk[index]) {
                     bFind = true;
-                    resolvedChunk = Buffer.from(chunk.slice(0, index));
+                    resolvedChunk = Buffer.from(chunk.slice(0, index + 1));
                     lastOneBuffer = Buffer.from(chunk.slice(index + 1));
                     break;
                   }
@@ -1004,19 +1005,25 @@ export default {
                 }
                 let fileAllColsStr = fileAllCols.toString();
                 let retRows = [];
-                utf8Str = utf8Str.replace(/\"/g, "").replace(/\'/g, "");
                 let lines = utf8Str.split("\n");
                 for (let line of lines) {
-                  let colValues = line.split(",");
-                  colValues = colValues.map((item) =>
-                    item.replace(/(^\s*)|(\s*$)/g, "")
-                  );
+                  let rowObj = Papa.parse(line, {
+                    skipLines: "greedy",
+                    delimiter: ",",
+                  });
                   if (
-                    colValues.length === fileAllCols.length &&
-                    colValues.toString() !== fileAllColsStr
+                    rowObj.data.length > 0 &&
+                    rowObj.data[0].length === fileAllCols.length
                   ) {
-                    let rowValues = lodash.pullAt(colValues, indexList); // 获取数据
-                    retRows.push(rowValues);
+                    let row = rowObj.data[0].map((item) =>
+                      item
+                        .replace(/\"/g, "")
+                        .replace(/\'/g, "")
+                        .replace(/^\s+|\s+$/g, "")
+                    );
+                    if (row.toString() !== fileAllColsStr) {
+                      retRows.push(row);
+                    }
                   }
                 }
                 if (retRows.length === 0) {

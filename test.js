@@ -65,7 +65,10 @@ function readFileList(dir, filesList = []) {
 }
 
 (async () => {
-  let fsList = [];
-  readFileList("/Users/baiyang/Desktop/3709318620200623160533", fsList);
-  console.log(fsList);
+  let fsList = [0, 1, 2, 3, 10, 5, 6, 7];
+  console.log(fsList.slice(0, 4));
+  console.log(fsList.slice(5));
+
+  // readFileList("/Users/baiyang/Desktop/3709318620200623160533", fsList);
+  // console.log(fsList);
 })();
