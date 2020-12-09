@@ -74,7 +74,9 @@ const mutations = {
 
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
-    Vue.set(tableData, "pageIndex", uuid.v1());
+    let newPageUuidStr = uuid.v1();
+    newPageUuidStr = newPageUuidStr.replace(/-/g, "");
+    Vue.set(tableData, "pageIndex", newPageUuidStr);
     if (tableData.showType === 3) {
       Vue.set(
         tableData,

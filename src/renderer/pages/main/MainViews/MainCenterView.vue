@@ -12,6 +12,11 @@
       class="contextmenu"
     >
       <li>
+        <el-button size="mini" type="text" @click="closeCurrentTab"
+          >关闭当前</el-button
+        >
+      </li>
+      <li>
         <el-button size="mini" type="text" @click="closeAllTabs"
           >关闭所有</el-button
         >
@@ -147,10 +152,10 @@ export default {
       let indexs = [];
       for (let index = 0; index < this.tableDataList.length; index++) {
         let tableData = this.tableDataList[index];
-        if (tableData.tid === this.activeIndex) {
+        if (tableData.pageIndex === this.activeIndex) {
           break;
         }
-        indexs.push(tableData.tid);
+        indexs.push(tableData.pageIndex);
       }
       return indexs;
     },
@@ -172,6 +177,7 @@ export default {
       this.contextMenuVisible = false;
     },
     removeTab(targetName) {
+      this.contextMenuVisible = false;
       this.$store.commit("ShowTable/REMOVE_TABLE_DATA_FROM_LIST", {
         pageIndex: String(targetName),
       });
@@ -180,6 +186,11 @@ export default {
       this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
       this.closeContextMenu();
       this.contextMenuVisible = false;
+    },
+    closeCurrentTab() {
+      this.$store.commit("ShowTable/REMOVE_TABLE_DATA_FROM_LIST", {
+        pageIndex: String(this.activeIndex),
+      });
     },
     closeOtherTabs(param) {
       switch (param) {
