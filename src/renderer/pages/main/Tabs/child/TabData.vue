@@ -425,8 +425,7 @@ export default {
         buttonLabel: "保存",
         defaultPath: `案件${this.caseBase.ajmc}-${this.currentTableData.title}`,
         filters: [
-          { name: "excel", extensions: ["xls", "xlsx"] },
-          { name: "txt", extensions: ["txt"] },
+          { name: "excel", extensions: ["xlsx"] },
           { name: "csv", extensions: ["csv"] },
         ],
       });

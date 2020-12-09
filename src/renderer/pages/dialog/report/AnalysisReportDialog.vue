@@ -451,9 +451,9 @@ export default {
             {
               subTitle = `（一）调取银行卡交易记录情况表`;
               pPre = `银行卡账号交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【`;
-              linkContent = `调取银行卡交易记录情况表.xls`;
+              linkContent = `调取银行卡交易记录情况表.xlsx`;
               pTail = "】";
-              link = "./调取银行卡交易记录情况表.xls";
+              link = "./调取银行卡交易记录情况表.xlsx";
             }
             break;
           case 604:
@@ -461,8 +461,8 @@ export default {
               subTitle = `（二）调集人员交易进出情况分析`;
               pPre = `调单方人员交易总金额排名前30条如下所示，全部数据请查看附件Excel表格【`;
               pTail = "】";
-              linkContent = `调集人员交易进出情况分析.xls`;
-              link = "./调集人员交易进出情况分析.xls";
+              linkContent = `调集人员交易进出情况分析.xlsx`;
+              link = "./调集人员交易进出情况分析.xlsx";
             }
             break;
           case 605:
@@ -470,7 +470,7 @@ export default {
               mainTitle = item.label;
               pPre = `此分析根据进出账差额，找出与调集账号交易过程中，主要的获利的对手账号。此分析目的用于找出资金的最终流向。全部数据请查看附件Excel文件【`;
               pTail = "】";
-              linkContent = `${mainTitle}.xls`;
+              linkContent = `${mainTitle}.xlsx`;
               link = `./${linkContent}`;
             }
             break;
@@ -479,7 +479,7 @@ export default {
               mainTitle = item.label;
               pPre = `此分析用于找出与调集账号多重联系的对手，其关联调集人员个数，指的是，该对手账号，曾与几名调集账号的人员有过交易。此分析的目的，是找出团伙内部成员。全部数据请查看附件Excel文件【`;
               pTail = "】";
-              linkContent = `${mainTitle}.xls`;
+              linkContent = `${mainTitle}.xlsx`;
               link = `./${linkContent}`;
             }
             break;
@@ -488,7 +488,7 @@ export default {
               mainTitle = item.label;
               pPre = `按转出总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
-              linkContent = `${mainTitle}.xls`;
+              linkContent = `${mainTitle}.xlsx`;
               link = `./${linkContent}`;
             }
             break;
@@ -497,7 +497,7 @@ export default {
               mainTitle = item.label;
               pPre = `按转入总金额排序，关联对手账号汇总前30条数据如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
-              linkContent = `${mainTitle}.xls`;
+              linkContent = `${mainTitle}.xlsx`;
               link = `./${linkContent}`;
             }
             break;
@@ -506,7 +506,7 @@ export default {
               mainTitle = item.label;
               pPre = `即进即出账户如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
-              linkContent = `${mainTitle}.xls`;
+              linkContent = `${mainTitle}.xlsx`;
               link = `./${linkContent}`;
             }
             break;
@@ -515,7 +515,7 @@ export default {
               mainTitle = item.label;
               pPre = `不同交易方式数据汇总如下所示，全部数据请查看附件Excel文件【`;
               pTail = "】";
-              linkContent = `${mainTitle}.xls`;
+              linkContent = `${mainTitle}.xlsx`;
               link = `./${linkContent}`;
             }
             break;
@@ -730,7 +730,7 @@ export default {
             );
             console.log(sql);
             let tableDic = Default.ReportTableDic[item.id];
-            let filePath = path.join(homedir, item.label + ".xls");
+            let filePath = path.join(homedir, item.label + ".xlsx");
             let dataResult = await this.WriteToExcelFile(
               ajid,
               item,

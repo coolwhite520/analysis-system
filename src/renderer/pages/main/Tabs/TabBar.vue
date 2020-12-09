@@ -11,7 +11,10 @@
         <el-tab-pane label="分析报告" name="third">
           <tab-report></tab-report>
         </el-tab-pane>
-        <el-tab-pane label="关于" name="fourth">
+        <el-tab-pane label="工具" name="fourth">
+          <tab-tool></tab-tool>
+        </el-tab-pane>
+        <el-tab-pane label="关于" name="five">
           <tab-about></tab-about>
         </el-tab-pane>
       </el-tabs>
@@ -24,6 +27,7 @@ import TabData from "./child/TabData";
 import TabReport from "./child/TabReport";
 import TabVisible from "./child/TabVisible";
 import TabAbout from "./child/TabAbout";
+import TabTools from "./child/TabTools";
 import { mapState } from "vuex";
 export default {
   computed: {
@@ -45,6 +49,7 @@ export default {
     "tab-visible": TabVisible,
     "tab-report": TabReport,
     "tab-about": TabAbout,
+    "tab-tool": TabTools,
   },
   methods: {
     handleClick(tab, event) {},

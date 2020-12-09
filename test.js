@@ -65,10 +65,13 @@ function readFileList(dir, filesList = []) {
 }
 
 (async () => {
-  let fsList = [0, 1, 2, 3, 10, 5, 6, 7];
-  console.log(fsList.slice(0, 4));
-  console.log(fsList.slice(5));
-
+  const XLSX = require("xlsx");
+  var workbook = XLSX.readFile("/Users/baiyang/Desktop/2003excel.xls");
+  let output_file_name = "/Users/baiyang/Desktop/2003excel.csv";
+  var first_sheet_name = workbook.SheetNames[0];
+  var worksheet = workbook.Sheets[first_sheet_name];
+  let stream = XLSX.stream.to_csv(worksheet);
+  stream.pipe(fs.createWriteStream(output_file_name));
   // readFileList("/Users/baiyang/Desktop/3709318620200623160533", fsList);
   // console.log(fsList);
 })();

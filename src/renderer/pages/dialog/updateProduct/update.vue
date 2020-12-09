@@ -123,6 +123,7 @@ export default {
           break;
         case 1: // 存在新版本
           this.newVersion = data.version;
+          this.loading = false;
           break;
         case 2: // 已经是最新
           this.loading = false;
@@ -180,6 +181,10 @@ export default {
         }
         this.licenseExportFilePath = result.filePath;
         await this.copyFile(installPath, this.licenseExportFilePath);
+        this.$message({
+          type: "success",
+          message: `授权文件已经导出到${this.licenseExportFilePath}路径`,
+        });
       }
     },
     async handleClickInstallNew() {

@@ -5,7 +5,6 @@
     </el-row>-->
     <div style="text-align: center">
       导入数据方式：
-
       <el-radio v-model="radioImportType" label="openFile">文件</el-radio>
       <el-radio v-model="radioImportType" label="openDirectory">目录</el-radio>
     </div>
@@ -35,6 +34,20 @@
         >可自动分析文件字段并进行自动匹配</span
       >
       <!-- </el-tooltip> -->
+    </el-row>
+    <el-row v-if="oldVersionXlsFileList.length > 0" style="margin-top: 10px">
+      <span style="font-size: 10px; color: red">
+        检测到不兼容的数据文件：Office 2007 之前的excel文件
+        <b>{{ oldVersionXlsFileList.length }}</b> 个
+      </span>
+      <el-button size="mini" @click="handleClickShowOldVersionFile">
+        <span class="mybutton iconfont">&#xe678;</span>
+        <span>点击进行查看</span>
+      </el-button>
+      <el-button size="mini" @click="handleClickOpenConvert" type="success">
+        <span class="mybutton iconfont">&#xe631;</span>
+        <span>打开文件格式转换工具</span>
+      </el-button>
     </el-row>
     <div style="margin-top: 20px" v-show="exampleDataList.length > 0">
       <span style="font-size: 16px">
@@ -295,6 +308,10 @@
     <div v-if="showJdbzDialogVisible">
       <jdbz-dialog :formData="formData"></jdbz-dialog>
     </div>
+    <file-convert
+      v-if="showConvertDialog"
+      :iniImportDir="oldVersionTempPath"
+    ></file-convert>
   </div>
 </template>
 
@@ -302,8 +319,10 @@
 import { mapState, mapGetters } from "vuex";
 import path from "path";
 import fs from "fs";
+const uuid = require("uuid");
 import { BrowserWindow } from "electron";
 import JdbzDialog from "./child/jdbzDialog";
+import FileConvert from "@/pages/dialog/fileConvert/fileConvert";
 export default {
   mounted() {
     let _this = this;
@@ -313,8 +332,19 @@ export default {
         if (!data.success) {
           let tip;
           if (data.errormsg.includes("invalid signature")) {
-            tip = "为老版本（2003）之前的格式，请使用工具进行批量转换！";
+            tip = "为2007之前的版本xls格式，请切换到[工具]菜单进行批量转换！";
+            let fileName = path.basename(data.filePathName);
+            this.oldVersionXlsFileList.push(fileName);
+            console.log(fileName);
+            if (!fs.existsSync(this.oldVersionTempPath)) {
+              fs.mkdirSync(this.oldVersionTempPath, { recursive: true });
+            }
+            this.copyFile(
+              data.filePathName,
+              path.join(this.oldVersionTempPath, fileName)
+            );
           }
+          console.log(data);
           const h = _this.$createElement;
           let message = `文件：[${data.filePathName}] ${tip}`;
           _this.$message({
@@ -349,10 +379,11 @@ export default {
   computed: {
     ...mapState("DataCollection", ["buttonGroupList", "exampleDataList"]),
     ...mapState("CaseDetail", ["caseBase", "batchCount"]),
-    ...mapState("DialogPopWnd", ["showJdbzDialogVisible"]),
+    ...mapState("DialogPopWnd", ["showJdbzDialogVisible", "showConvertDialog"]),
   },
   data() {
     return {
+      oldVersionXlsFileList: [],
       radioImportType: "openFile",
       checkOver: false,
       formData: null,
@@ -363,10 +394,28 @@ export default {
       parseFileCount: 0,
       multipleSelection: [],
       errorRowNumArr: [], // 记录不符合规矩的文件行号
+      oldVersionTempPath: "",
     };
   },
-  components: { JdbzDialog },
+  components: { JdbzDialog, "file-convert": FileConvert },
   methods: {
+    async handleClickShowOldVersionFile() {
+      await this.$electron.shell.openPath(this.oldVersionTempPath);
+    },
+    async copyFile(filePathSrc, filePathDes) {
+      return new Promise((resolve, reject) => {
+        let file = fs.createReadStream(filePathSrc);
+        let out = fs.createWriteStream(filePathDes);
+        file
+          .pipe(out)
+          .on("finish", () => {
+            resolve("done");
+          })
+          .on("error", (err) => {
+            reject(err);
+          });
+      });
+    },
     rowClassName({ row, rowIndex }) {
       row.rowIndex = rowIndex + 1;
     },
@@ -471,7 +520,9 @@ export default {
           break;
       }
     },
-
+    async handleClickOpenConvert() {
+      this.$store.commit("DialogPopWnd/SET_SHOWCONVERTDIALOG", true);
+    },
     async handleClickSubmit() {
       if (this.multipleSelection.length > 0) {
         this.errorRowNumArr = [];
@@ -622,6 +673,9 @@ export default {
         }
       );
       if (typeof filePathList !== "undefined") {
+        this.oldVersionXlsFileList = [];
+        let tempPath = this.$electron.remote.app.getPath("temp");
+        this.oldVersionTempPath = path.join(tempPath, uuid.v1());
         //console.log(filePathList);
         let allFileList = [];
         filePathList.forEach((item) => {

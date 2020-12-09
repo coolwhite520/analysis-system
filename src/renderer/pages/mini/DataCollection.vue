@@ -1143,7 +1143,7 @@ export default {
     },
     async onCopyTempDataToRealTable(e, args) {
       let { list } = args;
-      let chunkCount = 5;
+      let chunkCount = 1; // 改动这个值可以更改并发导入数量
       ////console.log(list);
       let newChunkList = this.$lodash.chunk(list, chunkCount);
       for (let innerList of newChunkList) {

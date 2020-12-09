@@ -24,6 +24,7 @@ const state = {
   showWeiSettingVisible: false,
   showContactUsVisible: false,
   showUpdateVisible: false,
+  showConvertDialog: false,
 };
 
 const mutations = {
@@ -100,6 +101,9 @@ const mutations = {
   },
   SET_SHOWUPDATEVISIBLE(state, showUpdateVisible) {
     state.showUpdateVisible = showUpdateVisible;
+  },
+  SET_SHOWCONVERTDIALOG(state, showConvertDialog) {
+    state.showConvertDialog = showConvertDialog;
   },
 };
 

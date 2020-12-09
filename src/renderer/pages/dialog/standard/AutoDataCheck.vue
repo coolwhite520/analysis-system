@@ -149,15 +149,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="progress"
         label="数据导入进度"
         v-if="isImportLoading"
       >
         <template slot-scope="scope">
-          <!-- <div :style="{ color: scope.row.progressColor, textAlign: 'center' }">
-            {{ scope.row.progress }}
-          </div> -->
           <el-progress
             type="line"
             :text-inside="true"
@@ -165,14 +162,17 @@
             :color="scope.row.progressColor"
             :stroke-width="30"
           ></el-progress>
-          <!-- <div :style="{ color: scope.row.progressColor }">
-            {{ scope.row.progress }}
-          </div> -->
-          <!-- <progress-bar :options="options" :value="scope.row.progress" /> -->
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
-
+    <el-progress
+      style="margin-top: 10px"
+      v-if="isImportLoading && percentage > 0"
+      type="line"
+      :text-inside="true"
+      :percentage="percentage"
+      :stroke-width="20"
+    ></el-progress>
     <el-row style="margin-top: 20px; text-align: center">
       <el-button
         style="width: 30%"
@@ -226,6 +226,7 @@ export default {
   },
   data() {
     return {
+      percentage: 0,
       loadingDelete: false,
       filterList: ["exceedLen", "notNum", "notDate"],
       clickedCheckBtn: false,
@@ -235,6 +236,7 @@ export default {
       isMounted: false,
       loadingTable: false,
       currentImportRows: [],
+      currentImportCount: 0,
       options: {
         text: {
           color: "#FFFFFF",
@@ -352,13 +354,14 @@ export default {
         if (percentage >= 100) {
           percentage = 100;
         }
-        this.$store.commit("DataCollection/SET_IMPORT_DATA_PROCESS", {
-          id,
-          progress: percentage,
-        });
-        this.$nextTick(() => {
-          this.$refs[`myImportTable`].doLayout();
-        });
+        // 频繁的调用commit影响程序性能
+        // this.$store.commit("DataCollection/SET_IMPORT_DATA_PROCESS", {
+        //   id,
+        //   progress: percentage,
+        // });
+        // this.$nextTick(() => {
+        //   this.$refs[`myImportTable`].doLayout();
+        // });
       }
     },
 
@@ -378,9 +381,12 @@ export default {
       //console.log("import data over: ", id);
       await this.$store.commit("DataCollection/DELETE_DATA_LIST_BY_ID", id);
       this.clearCurrentInportRow(id);
-      this.$nextTick(() => {
-        this.$refs[`myImportTable`].doLayout();
-      });
+      this.percentage = parseInt(
+        100 -
+          parseFloat(
+            (this.currentImportRows.length / this.currentImportCount) * 100
+          )
+      );
       if (this.currentImportRows.length === 0) {
         this.$message({
           title: "成功",
@@ -459,6 +465,7 @@ export default {
     // 执行导入所有文件的操作
     execImportData(selectedRows) {
       this.currentImportRows = selectedRows;
+      this.currentImportCount = this.currentImportRows.length;
       let list = [];
       for (let sheetItem of selectedRows) {
         const { ajid } = this.caseBase;
@@ -502,6 +509,7 @@ export default {
             }
           }
           if (i === selectedRows.length) {
+            this.percentage = 0;
             this.isImportLoading = true;
             this.isCheckingLoading = true;
             this.execImportData(selectedRows);

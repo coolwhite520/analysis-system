@@ -747,7 +747,7 @@ export default {
           this.exportFileName
         }-${new Date().Format("yyyyMMddhhmmss")}`,
         filters: [
-          { name: "excel", extensions: ["xls", "xlsx"] },
+          { name: "excel", extensions: ["xlsx"] },
           { name: "csv", extensions: ["csv"] },
         ],
       });
