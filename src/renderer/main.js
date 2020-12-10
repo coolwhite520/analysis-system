@@ -25,6 +25,11 @@ const lodash = require("lodash");
 
 Vue.prototype.$lodash = lodash;
 
+var libqqwry = require("lib-qqwry");
+var qqwry = libqqwry(); //初始化IP库解析器
+qqwry.speed(); //启用急速模式;
+Vue.prototype.$qqwry = qqwry;
+
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;

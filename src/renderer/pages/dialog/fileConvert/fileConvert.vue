@@ -48,7 +48,7 @@
           :disabled="true"
           v-model="importDir"
           size="mini"
-          placeholder="请选择xls文件路径"
+          placeholder="请选择xls、xlsx文件路径"
           style="width: 70%"
         ></el-input>
         <el-button

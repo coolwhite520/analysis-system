@@ -25,6 +25,7 @@ const state = {
   showContactUsVisible: false,
   showUpdateVisible: false,
   showConvertDialog: false,
+  showIpDialogVisible: false,
 };
 
 const mutations = {
@@ -104,6 +105,9 @@ const mutations = {
   },
   SET_SHOWCONVERTDIALOG(state, showConvertDialog) {
     state.showConvertDialog = showConvertDialog;
+  },
+  SET_SHOWIPDIALOGVISIBLE(state, showIpDialogVisible) {
+    state.showIpDialogVisible = showIpDialogVisible;
   },
 };
 

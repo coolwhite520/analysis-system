@@ -35,6 +35,7 @@ export default {
   box-sizing: border-box;
   -webkit-user-select: none;
 }
+
 #app {
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
 }

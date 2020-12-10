@@ -11,42 +11,28 @@
       :style="{ position: 'fixed', left: left + 'px', top: top + 'px' }"
       class="contextmenu"
     >
-      <li>
-        <el-button size="mini" type="text" @click="closeCurrentTab"
-          >关闭当前</el-button
-        >
+      <li class="menu__item" @click="closeCurrentTab">关闭当前</li>
+      <li class="menu__item" @click="closeAllTabs">关闭所有</li>
+      <li
+        class="menu__item"
+        @click="closeOtherTabs('left')"
+        v-if="!isDisabledCloseLeftBtnFlag"
+      >
+        关闭左边
       </li>
-      <li>
-        <el-button size="mini" type="text" @click="closeAllTabs"
-          >关闭所有</el-button
-        >
+      <li
+        class="menu__item"
+        @click="closeOtherTabs('right')"
+        v-if="!isDisabledCloseRightBtnFlag"
+      >
+        关闭右边
       </li>
-      <li>
-        <el-button
-          size="mini"
-          type="text"
-          @click="closeOtherTabs('left')"
-          :disabled="isDisabledCloseLeftBtnFlag"
-          >关闭左边</el-button
-        >
-      </li>
-      <li>
-        <el-button
-          size="mini"
-          type="text"
-          @click="closeOtherTabs('right')"
-          :disabled="isDisabledCloseRightBtnFlag"
-          >关闭右边</el-button
-        >
-      </li>
-      <li>
-        <el-button
-          size="mini"
-          type="text"
-          @click="closeOtherTabs('other')"
-          :disabled="isDisabledCloseOtherBtnFlag"
-          >关闭其他</el-button
-        >
+      <li
+        class="menu__item"
+        @click="closeOtherTabs('other')"
+        v-if="!isDisabledCloseOtherBtnFlag"
+      >
+        关闭其他
       </li>
     </ul>
     <el-tabs
@@ -76,6 +62,7 @@ export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
     ...mapState("ShowTable", [
+      "currentTableData",
       "tableDataList",
       "activeIndex",
       "loadingShowData",
@@ -123,11 +110,16 @@ export default {
     };
   },
   methods: {
-    openContextMenu(e) {
+    async openContextMenu(e) {
+      e.preventDefault();
       if (e.srcElement.id) {
+        this.removeClass(e.srcElement, "is-focus");
         let currentContextTabId = e.srcElement.id.split("-")[1];
+        if (currentContextTabId !== this.currentTableData.pageIndex) {
+          this.$store.commit("ShowTable/SET_ACTIVEINDEX", currentContextTabId);
+        }
         this.contextMenuVisible = true;
-        this.$store.commit("ShowTable/SET_ACTIVEINDEX", currentContextTabId);
+
         //是否存在左边
         if (this.tableDataList.length > 1) {
           this.isDisabledCloseOtherBtnFlag = false;
@@ -146,6 +138,16 @@ export default {
         }
         this.left = e.clientX;
         this.top = e.clientY + 10;
+      }
+    },
+    removeClass(ele, txt) {
+      let str = ele.className;
+      console.log(str);
+      let index = str.indexOf(txt);
+      if (index > -1) {
+        let className = str.replace(txt, "");
+        ele.setAttribute("class", "");
+        ele.setAttribute("class", className);
       }
     },
     getLeftPageIndexs() {
@@ -171,6 +173,13 @@ export default {
         if (bfind) indexs.push(tableData.pageIndex);
       }
       return indexs;
+    },
+    async sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("done");
+        }, ms);
+      });
     },
     // 关闭contextMenu
     closeContextMenu() {
@@ -222,12 +231,19 @@ export default {
 .el-tabs .el-tabs__content {
   padding: 0;
 }
+.el-tabs__item:focus.is-active.is-focus:not(:active) {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
 </style>
 <style scoped>
 .el-tabs {
   overflow-x: scroll; /*横向滚动*/
   width: 100%;
   height: 100%;
+}
+/deep/.el-tabs_item {
+  box-shadow: none;
 }
 
 .contextmenu {
@@ -239,17 +255,27 @@ export default {
   position: absolute;
   list-style-type: none;
   padding: 0;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 11px;
-  color: #333;
+  color: #3c4e6b;
   box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.2);
 }
-.contextmenu li {
-  margin: 0;
-  padding: 7px;
+.menu__item:first-child {
+  margin-top: 5px;
 }
-.contextmenu li:hover {
-  background: #f2f2f2;
-  cursor: pointer;
+.menu__item:last-child {
+  margin-bottom: 5px;
+}
+.menu__item {
+  font-size: 12px;
+  display: block;
+  font-weight: bold;
+  padding: 5px 20px 5px 20px;
+  cursor: default;
+}
+
+.menu__item:hover {
+  color: white;
+  background-color: #2460c4;
 }
 </style>

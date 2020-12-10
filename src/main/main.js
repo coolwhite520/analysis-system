@@ -8,6 +8,7 @@ import {
   globalShortcut,
   ipcMain,
 } from "electron";
+const isOnline = require("is-online");
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
@@ -49,26 +50,28 @@ const winURL =
 function sendUpdateMessage(text) {
   mainWindow.webContents.send("message", text);
 }
+
+let returnData = {
+  error: { status: -1, msg: "检测更新查询异常。", logPath: "" },
+  errorNoInternet: {
+    status: -2,
+    msg: "当前未接入网络，请检查是否联网。",
+    logPath: "",
+  },
+  checking: { status: 0, msg: "正在检查应用程序更新。" },
+  updateAva: {
+    status: 1,
+    msg: "检测到新版本，正在下载,请稍后。",
+    version: "",
+  },
+  updateNotAva: {
+    status: 2,
+    msg: `您现在使用的版本${global.softVersion}为最新版本,无需更新!`,
+  },
+};
+
 //处理更新操作
 function handleUpdate() {
-  let returnData = {
-    error: { status: -1, msg: "检测更新查询异常。", logPath: "" },
-    checking: { status: 0, msg: "正在检查应用程序更新。" },
-    updateAva: {
-      status: 1,
-      msg: "检测到新版本，正在下载,请稍后。",
-      version: "",
-    },
-    updateNotAva: {
-      status: 2,
-      msg: `您现在使用的版本${global.softVersion}为最新版本,无需更新!`,
-    },
-  };
-
-  //和之前package.json配置的一样
-  let urls = require("../../package.json").publish;
-  autoUpdater.setFeedURL(urls[0].url);
-
   //更新错误
   autoUpdater.on("error", (error) => {
     //  error;
@@ -227,7 +230,14 @@ function createWindow() {
 
   handleUpdate();
 
-  ipcMain.on("checkForUpdate", (event, data) => {
+  ipcMain.on("checkForUpdate", async (event, data) => {
+    //和之前package.json配置的一样
+    if (!(await isOnline())) {
+      sendUpdateMessage(returnData.errorNoInternet);
+      return;
+    }
+    let publishList = require("../../package.json").publish;
+    autoUpdater.setFeedURL(publishList[0].url);
     autoUpdater.checkForUpdates();
   });
 }

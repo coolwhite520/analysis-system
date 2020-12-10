@@ -34,10 +34,11 @@
     </div>
     <div style="text-align: center; margin-top: 10px; font-size: 10px">
       <el-button
-        v-if="stateCode === -1"
+        v-if="stateCode === -1 || stateCode === -2"
         size="mini"
         type="primary"
         @click="handleClickReCheck"
+        :loading="loading"
         style="width: 90%"
         >重新检测</el-button
       >
@@ -118,6 +119,9 @@ export default {
         case -1: // 错误
           this.loading = false;
           this.logPath = data.logPath;
+          break;
+        case -2: // 错误
+          this.loading = false;
           break;
         case 0: // 正在检测
           break;
@@ -209,6 +213,7 @@ export default {
     },
     handleClickReCheck() {
       this.loading = true;
+      this.checkMsg = "";
       if (fs.existsSync(this.logPath)) {
         fs.unlinkSync(this.logPath);
       }

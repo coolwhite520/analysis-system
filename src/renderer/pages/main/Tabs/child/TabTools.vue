@@ -8,9 +8,16 @@
           <span class="title-content">文件格式转换</span>
         </el-button>
       </el-col>
+      <el-col :span="1" class="el-col">
+        <el-button type="text" class="ctrl-button" @click="handleClickIP">
+          <span class="iconfont selfIcont">&#xe651;</span>
+          <br />
+          <span class="title-content">IP查询</span>
+        </el-button>
+      </el-col>
     </el-row>
     <el-row style="font-size: 8px; color: gray; text-align: center">
-      <el-col :span="1">
+      <el-col :span="2">
         <div>工具</div>
       </el-col>
     </el-row>
@@ -18,11 +25,13 @@
       v-if="showConvertDialog"
       :iniImportDir="importDir"
     ></file-convert>
+    <ip-search v-if="showIpDialogVisible"></ip-search>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import FileConvert from "@/pages/dialog/fileConvert/fileConvert.vue";
+import IpSearch from "@/pages/dialog/ipSearch/ipSearch";
 export default {
   data() {
     return {
@@ -30,12 +39,16 @@ export default {
     };
   },
   computed: {
-    ...mapState("DialogPopWnd", ["showConvertDialog"]),
+    ...mapState("DialogPopWnd", ["showConvertDialog", "showIpDialogVisible"]),
   },
   components: {
     "file-convert": FileConvert,
+    "ip-search": IpSearch,
   },
   methods: {
+    handleClickIP() {
+      this.$store.commit("DialogPopWnd/SET_SHOWIPDIALOGVISIBLE", true);
+    },
     handleClickConvert() {
       this.$store.commit("DialogPopWnd/SET_SHOWCONVERTDIALOG", true);
     },
