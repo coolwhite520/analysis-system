@@ -16,14 +16,20 @@
         <span class="title-close" @click="handleClose"></span>
       </div>
     </div>
-    <el-row style="margin-left: 20px; text-align: center" v-if="result">
+    <el-row
+      style="margin-left: 20px; margin-bottom: 10px text-align: center"
+      v-if="result"
+    >
       <!-- <div><h3>查询结果</h3></div> -->
       <div style="font-size: 12px; color: green">IP地址：{{ result.ip }}</div>
       <div style="font-size: 12px; color: green">
         归属地：{{ result.Country }}
       </div>
+      <div style="font-size: 12px; color: green">
+        所在区域：{{ result.Area }}
+      </div>
     </el-row>
-    <el-row style="text-align: center; margin-top: 10px">
+    <el-row style="text-align: center">
       <el-input
         size="mini"
         v-model="ip"
@@ -80,6 +86,19 @@ export default {
       }
       this.result = this.$qqwry.searchIP(this.ip);
       console.log(this.result);
+      var reg = /.+?(省|市|自治区|自治州|县|区)/g;
+      let Country = this.result.Country;
+      let res = Country.match(reg);
+      if (res.length > 1) {
+        this.result.Country = "";
+        for (let item of res) {
+          this.result.Country += item + ",";
+        }
+        this.result.Country = this.result.Country.slice(
+          0,
+          this.result.Country.length - 1
+        );
+      }
     },
     handleClose() {
       this.$store.commit("DialogPopWnd/SET_SHOWIPDIALOGVISIBLE", false);
