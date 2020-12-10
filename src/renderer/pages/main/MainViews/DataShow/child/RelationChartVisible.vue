@@ -258,7 +258,6 @@ import NodeCombine from "@/pages/dialog/nodeCombine/nodeCombineDialog";
 const uuid = require("uuid");
 const elementResizeDetectorMaker = require("element-resize-detector");
 import DataSet from "@antv/data-set";
-import { Chart } from "@antv/g2";
 import insertCss from "insert-css";
 import { link } from "fs";
 export default {

@@ -269,7 +269,6 @@ export default {
 .menu__item {
   font-size: 12px;
   display: block;
-  font-weight: bold;
   padding: 5px 20px 5px 20px;
   cursor: default;
 }

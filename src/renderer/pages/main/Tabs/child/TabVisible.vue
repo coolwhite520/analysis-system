@@ -180,7 +180,6 @@ export default {
   methods: {
     handleClickNewView() {
       // 新建一个空白视图
-      
     },
     handleClickShowEntityListView() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
@@ -215,6 +214,7 @@ export default {
             preventOverlap: true,
             ordering: "degree",
             type: "circular",
+            nodeSpacing: 50,
           };
           break;
         case "grid": // 网格

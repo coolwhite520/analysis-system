@@ -83,6 +83,10 @@
       style="position: relative"
       :id="graphid"
       :style="{ height: limitHeight - 26 + 'px', width: '100%' }"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
     ></div>
 
     <el-row
@@ -264,13 +268,13 @@ import NodeCombine from "@/pages/dialog/nodeCombine/nodeCombineDialog";
 const uuid = require("uuid");
 const elementResizeDetectorMaker = require("element-resize-detector");
 import DataSet from "@antv/data-set";
-import { Chart } from "@antv/g2";
 import insertCss from "insert-css";
 import { link } from "fs";
 export default {
   props: ["tableData", "limitHeight"],
   data() {
     return {
+      loading: false,
       enableDragCavans: false,
       menuId: uuid.v1(),
       menuVisible: false,
@@ -1469,418 +1473,6 @@ export default {
       }
     },
 
-    async loadGraphDefaultSwitch(layout) {
-      let _this = this;
-      this.tempgraphicMoneySectionStrMd5 = md5(
-        JSON.stringify(this.tableData.graphicMoneySectionList)
-      );
-
-      this.registerSelfCombo();
-      let { clientWidth, clientHeight } = this.$refs[this.graphid];
-      let option = {
-        groupByTypes: false,
-        width: clientWidth,
-        height: clientHeight,
-        container: this.graphid, // 指定挂载容器
-        animate: true,
-        defaultCombo: {
-          type: "cCircle", // Combo 类型
-
-          // ... 其他配置
-        },
-        layout,
-        defaultNode: {
-          type: "circle",
-          style: {
-            // 默认是虚线
-            lineDash: [1, 1],
-            fill: "#d9dce1",
-            stroke: "#3c4e6b",
-          },
-          icon: {
-            show: true,
-            img: "/static/images/icons/银行卡.png",
-            width: 15,
-            height: 15,
-          },
-          labelCfg: {
-            position: "bottom",
-            offset: 0,
-            style: {
-              fontSize: 5,
-            },
-          },
-        },
-        defaultEdge: {
-          labelCfg: {
-            autoRotate: true,
-            style: {
-              fontSize: 5,
-            },
-          },
-          style: {
-            lineWidth: 1,
-            lineAppendWidth: 5,
-          },
-        },
-        nodeStateStyles: {
-          selected: {
-            shadowColor: "red",
-            shadowBlur: 10,
-          },
-          active: {
-            opacity: 1,
-          },
-          inactive: {
-            opacity: 0.2,
-          },
-        },
-        edgeStateStyles: {
-          active: {
-            opacity: 1,
-          },
-          inactive: {
-            opacity: 0.2,
-          },
-        },
-        comboStateStyles: {
-          dragenter: {
-            lineWidth: 4,
-            stroke: "#FE9797",
-          },
-        },
-        // linkCenter: true,
-        modes: {
-          default: [
-            "drag-node",
-            "drag-combo",
-            "zoom-canvas",
-            "activate-relations",
-            { type: "click-select", trigger: "ctrl" }, //点选
-            {
-              // 框选
-              type: "brush-select",
-              fillOpacity: 0.1,
-              lineWidth: 2,
-              stroke: "red",
-              trigger: "drag",
-            },
-          ],
-        },
-      };
-      this.graph = new this.$G6.Graph(option);
-      this.initPlugins();
-      this.graph.data(this.makeData()); // 加载数据
-      this.graph.render(); // 渲染
-
-      this.updateEntityList();
-      this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
-      this.accordingSpreadNodeSwitchRefreshNodes();
-      let nodes = this.graph.getNodes();
-      let edges = this.graph.getEdges();
-      this.entityCount = nodes.length;
-      this.linkCount = edges.length;
-      this.detailCount = this.entityCount + this.linkCount;
-      // 监听布局切换
-      // this.$store.commit("MainPageSwitch/SET_TABBARACTIVENAME", "second");
-      // 当 click-select 选中的元素集合发生变化时将会触发下面时机事件，e 中包含相关信息
-      this.graph.on("nodeselectchange", async (e) => {
-        console.log("nodeselectchange", e);
-        // 单个节点的select
-        let node = e.target;
-        if (node) {
-          let type = node.getType();
-          let nodeModel = node.get("model");
-          if (type === "node") {
-            let entity = this.calculateEntityInfo(node);
-            console.log({ entity });
-            this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-            this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-              componentName: "entity-view",
-              action: "add",
-            });
-          } else if (type === "combo") {
-            let comboentityList = [];
-            let allNodes = [];
-            let allEdges = [];
-            await this.travelCombo(comboentityList, node, allNodes, allEdges);
-            // 给所有边去重复
-            allEdges = this.$lodash.uniqWith(allEdges, this.$lodash.isEqual);
-            let zuNeiNodeCount = allNodes.length; // 组内成员数量
-            let zuNeiJjze = 0; // 组内交易总额
-            let zuNeiJjbs = 0; // 组内交易笔数
-            let zuNeiDuiWaiJjze = 0; // 组内对外交易总额
-            let zuNeiDuiWaiJjbs = 0; // 组内对外交易笔数
-            let zuNeiDuiWaiJjChaE = 0;
-            function belongsToNodes(id) {
-              for (let node of allNodes) {
-                if (node.getModel().id === id) {
-                  return true;
-                }
-              }
-              return false;
-            }
-
-            for (let edge of allEdges) {
-              let modelData = edge.getModel();
-              let sourceId = modelData.source;
-              let targetId = modelData.target;
-              if (belongsToNodes(sourceId) && belongsToNodes(targetId)) {
-                zuNeiJjze = new Decimal(zuNeiJjze).add(
-                  new Decimal(modelData.je)
-                );
-                zuNeiJjbs = new Decimal(zuNeiJjbs).add(
-                  new Decimal(modelData.bs)
-                );
-              } else {
-                zuNeiDuiWaiJjze = new Decimal(zuNeiDuiWaiJjze).add(
-                  new Decimal(modelData.je)
-                );
-                zuNeiDuiWaiJjbs = new Decimal(zuNeiDuiWaiJjbs).add(
-                  new Decimal(modelData.bs)
-                );
-                if (belongsToNodes(sourceId)) {
-                  zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).sub(
-                    modelData.je
-                  );
-                } else {
-                  zuNeiDuiWaiJjChaE = new Decimal(zuNeiDuiWaiJjChaE).add(
-                    modelData.je
-                  );
-                }
-              }
-            }
-            this.$store.commit("ShowTable/UPDATE_COMBO_ENTITY_LIST", {
-              comboName: nodeModel.label,
-              comboentityList,
-              comboTableData: [
-                {
-                  title: "组内成员数量",
-                  describe: zuNeiNodeCount,
-                },
-                {
-                  title: "组内成员间交易总额",
-                  describe: zuNeiJjze,
-                },
-                {
-                  title: "组内成员间交易笔数",
-                  describe: zuNeiJjbs,
-                },
-                {
-                  title: "组内对外交易总额",
-                  describe: zuNeiDuiWaiJjze,
-                },
-                {
-                  title: "组内对外交易笔数",
-                  describe: zuNeiDuiWaiJjbs,
-                },
-                {
-                  title: "组内对外交易差额",
-                  describe: zuNeiDuiWaiJjChaE,
-                },
-              ],
-            });
-            this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-              componentName: "combo-entity-list-view",
-              action: "add",
-            });
-          }
-        }
-
-        if (e.select) {
-          this.currentSelectedNodes = [];
-          e.selectedItems.nodes.forEach((cn) => {
-            if (cn._cfg.visible) {
-              this.currentSelectedNodes.push(cn);
-            }
-          });
-        } else {
-          this.currentSelectedNodes = [];
-        }
-      });
-      this.graph.on("click", () => {
-        this.menuVisible = false;
-      });
-      // collapse/expand when click the marker
-      this.graph.on("combo:click", async (e) => {
-        if (e.target.get("name") === "combo-marker-shape") {
-          // graph.collapseExpandCombo(e.item.getModel().id);
-          this.graph.collapseExpandCombo(e.item);
-          // 不知道怎么弄？？？？
-          if (false && e.item.getModel().collapsed) {
-            let comboId = e.item.getModel().id;
-            let comboentityList = [];
-            let allNodes = [];
-            let allEdges = [];
-            await this.travelCombo(comboentityList, e.item, allNodes, allEdges);
-            // 给所有边去重复
-            allEdges = this.$lodash.uniqWith(allEdges, this.$lodash.isEqual);
-            function belongsToNodes(id) {
-              for (let node of allNodes) {
-                if (node.getModel().id === id) {
-                  return true;
-                }
-              }
-              return false;
-            }
-            let outEdges = [];
-            for (let edge of allEdges) {
-              let modelData = edge.getModel();
-              let sourceId = modelData.source;
-              let targetId = modelData.target;
-              if (belongsToNodes(sourceId) && belongsToNodes(targetId)) {
-              } else {
-                let outEdgeModel = edge.getModel();
-                if (belongsToNodes(outEdgeModel.source)) {
-                  outEdgeModel.source = comboId;
-                }
-                if (belongsToNodes(outEdgeModel.target)) {
-                  outEdgeModel.target = comboId;
-                }
-
-                outEdges.push(outEdgeModel);
-              }
-            }
-            console.log(outEdges);
-            this.$G6.Util.processParallelEdges(outEdges);
-          }
-
-          if (this.graph.get("layout")) this.graph.layout();
-          else this.graph.refreshPositions(); // Refresh positions for items otherwise
-        }
-      });
-      this.graph.on("combo:dragend", (e) => {
-        this.graph.getCombos().forEach((combo) => {
-          this.graph.setItemState(combo, "dragenter", false);
-        });
-      });
-      this.graph.on("node:dragend", (e) => {
-        this.graph.getCombos().forEach((combo) => {
-          this.graph.setItemState(combo, "dragenter", false);
-        });
-      });
-      this.graph.on("combo:dragenter", (e) => {
-        this.graph.setItemState(e.item, "dragenter", true);
-      });
-      this.graph.on("combo:dragleave", (e) => {
-        this.graph.setItemState(e.item, "dragenter", false);
-      });
-
-      // 右键点击combo
-      this.graph.on("combo:contextmenu", (evt) => {
-        this.rightClickType = "combo";
-        console.log(evt);
-        this.rightClickComboInstance = evt.item;
-        //当前节点定位
-        this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
-        let menu = document.getElementById(this.menuId);
-        menu.style.left = evt.clientX + "px";
-        menu.style.top = evt.clientY + "px";
-      });
-      // 右键菜单node
-      this.graph.on("node:contextmenu", (evt) => {
-        this.rightClickType = "node";
-        let node = evt.item;
-        this.nodeBelongCombo = this.accordingNodeFindCombo(
-          this.graph.getCombos(),
-          node
-        );
-        let nodeid = node.get("model").id;
-        let filterNodes = this.currentSelectedNodes.filter((n) => {
-          let nId = n.get("model").id;
-          return nId === nodeid;
-        });
-        if (filterNodes.length === 0) {
-          this.currentSelectedNodes.forEach((cn) => {
-            this.graph.setItemState(cn, "selected", false);
-          });
-          this.graph.setItemState(node, "selected", true);
-          this.currentSelectedNodes = [];
-          this.currentSelectedNodes.push(node);
-        }
-        //当前节点定位
-        this.menuVisible = true;
-        let menu = document.getElementById(this.menuId);
-        menu.style.left = evt.clientX + "px";
-        menu.style.top = evt.clientY + "px";
-        console.log("右键被点击的event:", evt);
-      });
-
-      this.graph.on("node:mouseleave", (evt) => {
-        this.menuVisible = false;
-      });
-      this.graph.on("combo:mouseleave", (evt) => {
-        this.menuVisible = false;
-      });
-      // 画布监听keydown
-      this.graph.on("keydown", (ev) => {
-        // console.log(ev);
-      });
-
-      // node节点状态更新监听, 针对entitylist组件中鼠标移动进行图表中node的状态更新
-      this.$bus.$on("updateNodeState", this.onUpdateNodesState);
-
-      //保存当前图表数据
-      this.$bus.$on("saveGraphData", (data) => {
-        let { graphid } = data;
-        if (graphid !== _this.graphid) return;
-        // 包含nodes，edges，combos
-        let relationGraphData = this.graph.save();
-        console.log(relationGraphData);
-        this.$store.commit("ShowTable/SAVE_GRAPHDATA", {
-          graphid,
-          relationGraphData,
-        });
-      });
-      // 图表导出到图片
-      this.$bus.$on("exportPicture", async (data) => {
-        let { graphid } = data;
-        if (graphid !== _this.graphid) return;
-        let pngName = `案件${this.caseBase.ajmc}-${this.tableData.title}`;
-        console.log(pngName);
-        this.graph.downloadFullImage(pngName, "image/png");
-      });
-      // 监听右侧菜单中点击table中的每个实体消息
-      this.$bus.$on("clickEntityRow", (data) => {
-        let { graphid, nodeid } = data;
-        if (graphid !== _this.graphid) return;
-        console.log({ graphid, nodeid });
-        let node = this.graph.findById(nodeid);
-        let entity = this.calculateEntityInfo(node);
-        console.log({ entity });
-        this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
-        this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
-          componentName: "entity-view",
-          action: "add",
-        });
-      });
-      this.$bus.$on("nodeStyleSetting", (data) => {
-        console.log({ data });
-        let { graphid, nodeid, nodeStyle } = data;
-        if (graphid !== _this.graphid) return;
-        let node = this.graph.findById(nodeid);
-        this.graph.clearItemStates(node, "selected");
-        let nodeModel = node.getModel();
-        switch (nodeStyle.title) {
-          case "节点图标":
-            nodeModel.icon.img = nodeStyle.describe;
-            this.graph.updateItem(nodeid, nodeModel);
-            break;
-          case "节点背景色":
-            nodeModel.style.fill = nodeStyle.describe;
-            this.graph.updateItem(nodeid, nodeModel);
-            break;
-          case "节点边框色":
-            nodeModel.style.stroke = nodeStyle.describe;
-            this.graph.updateItem(nodeid, nodeModel);
-            break;
-          case "节点标签色":
-            nodeModel.labelCfg.style.fill = nodeStyle.describe;
-            this.graph.updateItem(nodeid, nodeModel);
-            break;
-        }
-      });
-    },
     async loadGraphDefault() {
       let _this = this;
       this.tempgraphicMoneySectionStrMd5 = md5(
@@ -1900,6 +1492,7 @@ export default {
 
           // ... 其他配置
         },
+
         defaultNode: {
           type: "circle",
           style: {
@@ -1996,6 +1589,13 @@ export default {
         this.graph.data(this.makeData()); // 加载数据
       }
       this.graph.render(); // 渲染
+
+      // this.graph.on("beforelayout", () => {
+      //   this.loading = true;
+      // });
+      // this.graph.on("afterlayout", () => {
+      //   this.loading = false;
+      // });
 
       this.updateEntityList();
       this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
