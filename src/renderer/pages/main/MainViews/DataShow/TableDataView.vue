@@ -49,9 +49,30 @@
       ></graphic-bar-chart>
     </div>
     <div v-else-if="tableData.showType === 5">
-      <div :style="{ height: 250 + 'px' }">这里是个饼状图</div>
-      <table-chart :tableData="tableData" limitHeight="580"></table-chart>
+      <!-- 两个饼图 -->
+      <el-row v-if="tableData.selectCondition.fundUsePicType === 'pie'">
+        <el-col
+          :gutter="20"
+          :span="12"
+          v-for="(item, index) of tableData.dataList"
+          :key="index"
+        >
+          <zjyt-pie-chart
+            :pie="item.pie"
+            :rows="item.rows"
+            :limitHeight="(contentViewHeight - 126) / 2"
+          ></zjyt-pie-chart>
+        </el-col>
+      </el-row>
+      <!-- 桑基图 -->
+      <el-row v-else>
+        <zjyt-sankey-chart
+          :dataList="tableData.dataList"
+          :limitHeight="(contentViewHeight - 126) / 2"
+        ></zjyt-sankey-chart>
+      </el-row>
     </div>
+    <!-- 两个table -->
   </div>
 </template>
 
@@ -62,6 +83,8 @@ import GraphicBarChart from "./child/GraphicBarChart";
 import RelationChart from "./child/RelationChart";
 import RelationChartVisible from "./child/RelationChartVisible";
 import linkRelationChart from "./child/ZjctRelationChart";
+import ZjytPieChart from "./child/ZjytPieChart";
+import ZjytSankeyChart from "./child/ZjytSankeyChart";
 export default {
   mounted() {
     console.log(this.tableData);
@@ -79,6 +102,8 @@ export default {
     "relation-chart": RelationChart,
     "link-relation-chart": linkRelationChart,
     "relation-chart-visible": RelationChartVisible,
+    "zjyt-pie-chart": ZjytPieChart,
+    "zjyt-sankey-chart": ZjytSankeyChart,
   },
   props: ["tableData"],
 };

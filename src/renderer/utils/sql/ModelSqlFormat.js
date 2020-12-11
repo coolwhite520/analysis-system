@@ -124,36 +124,36 @@ export default {
       let text7 = "";
       if (
         pgsqlTemplate.indexOf("$KEY_PERSIONS_JYMC$") >= 0 &&
-        selectCondition.KEY_PERSIONS_JYMC.Length > 0
+        selectCondition.KEY_PERSIONS_JYMC.length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYMC.replace(/，/g, ",").split(
           ","
         );
-        for (let i = 0; i < array2.Length; i++) {
+        for (let i = 0; i < array2.length; i++) {
           text = text + "'" + array2[i] + "',";
         }
         newValue2 = " AND JYMC IN(" + text.TrimEnd(",") + ")";
       }
       if (
         pgsqlTemplate.indexOf("$KEY_PERSIONS_DFMC$") >= 0 &&
-        selectCondition.KEY_PERSIONS_DFMC.Length > 0
+        selectCondition.KEY_PERSIONS_DFMC.length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_DFMC.replace(/，/g, ",").split(
           ","
         );
-        for (let i = 0; i < array2.Length; i++) {
+        for (let i = 0; i < array2.length; i++) {
           text2 = text2 + "'" + array2[i] + "',";
         }
         newValue3 = " AND JYDFMC IN(" + text2.TrimEnd(",") + ")";
       }
       if (
         pgsqlTemplate.indexOf("$KEY_PERSIONS_JYZKH$") >= 0 &&
-        selectCondition.KEY_PERSIONS_JYZKH.Length > 0
+        selectCondition.KEY_PERSIONS_JYZKH.length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYZKH.replace(/，/g, ",").split(
           ","
         );
-        for (let i = 0; i < array2.Length; i++) {
+        for (let i = 0; i < array2.length; i++) {
           text3 = text3 + "'" + array2[i] + "',";
         }
         newValue4 =
@@ -165,45 +165,45 @@ export default {
       }
       if (
         pgsqlTemplate.indexOf("$KEY_PERSIONS_JYDFZKH$") >= 0 &&
-        selectCondition.KEY_PERSIONS_JYDFZKH.Length > 0
+        selectCondition.KEY_PERSIONS_JYDFZKH.length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYDFZKH.replace(/，/g, ",").split(
           ","
         );
-        for (let i = 0; i < array2.Length; i++) {
+        for (let i = 0; i < array2.length; i++) {
           text4 = text4 + "'" + array2[i] + "',";
         }
         newValue5 = " AND JYDFZKH IN(" + text4.TrimEnd(",") + ")";
       }
       if (
         pgsqlTemplate.indexOf("$KEY_PERSIONS_JYZJHM$") >= 0 &&
-        selectCondition.KEY_PERSIONS_JYZJHM.Length > 0
+        selectCondition.KEY_PERSIONS_JYZJHM.length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYZJHM.replace(/，/g, ",").split(
           ","
         );
-        for (let i = 0; i < array2.Length; i++) {
+        for (let i = 0; i < array2.length; i++) {
           text5 = text5 + "'" + array2[i] + "',";
         }
         newValue6 = " AND JYZJHM IN(" + text5.TrimEnd(",") + ")";
       }
       if (
         pgsqlTemplate.indexOf("$KEY_PERSIONS_JYDFZJHM$") >= 0 &&
-        selectCondition.KEY_PERSIONS_JYDFZJHM.Length > 0
+        selectCondition.KEY_PERSIONS_JYDFZJHM.length > 0
       ) {
         array2 = selectCondition.KEY_PERSIONS_JYDFZJHM.replace(
           /，/g,
           ","
         ).split(",");
-        for (let i = 0; i < array2.Length; i++) {
+        for (let i = 0; i < array2.length; i++) {
           text6 = text6 + "'" + array2[i] + "',";
         }
         newValue7 = " AND JYDFZJHM IN(" + text6.TrimEnd(",") + ")";
       }
       if (pgsqlTemplate.indexOf("$KYZT_KEYS$") >= 0) {
-        if (selectCondition.KYZT.Length > 0) {
+        if (selectCondition.KYZT.length > 0) {
           array2 = selectCondition.KYZT.replace(/，/g, ",").split(",");
-          for (let i = 0; i < array2.Length; i++) {
+          for (let i = 0; i < array2.length; i++) {
             text7 = text7 + "'" + array2[i] + "',";
           }
           newValue8 = text7.TrimEnd(",");

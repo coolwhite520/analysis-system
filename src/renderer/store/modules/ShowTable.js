@@ -196,11 +196,12 @@ const mutations = {
   // 跟新table的数据
   UPDATE_TABLE_DATA(
     state,
-    { pageIndex, rows, headers, sum, allrows, exportSql }
+    { pageIndex, rows, headers, sum, allrows, exportSql, dataList }
   ) {
     for (let index = 0; index < state.tableDataList.length; index++) {
       let tableData = state.tableDataList[index];
       if (tableData.pageIndex === pageIndex) {
+        Vue.set(state.tableDataList[index], "dataList", dataList);
         Vue.set(state.tableDataList[index], "exportSql", exportSql);
         if (typeof rows !== "undefined")
           Vue.set(state.tableDataList[index], "rows", rows);
@@ -593,6 +594,7 @@ const actions = {
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
       log.info("errr........");
+      commit("SET_LOADINGSHOWDATA_STATE", false);
     }
   },
 
@@ -721,6 +723,7 @@ const actions = {
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
       log.info("errr...........");
+      commit("SET_LOADINGSHOWDATA_STATE", false);
     }
   },
   // 点击表格中的link跳转的页面查询, 每次点击link的时候需要传递当前页面的modelFilterStr;
@@ -879,6 +882,85 @@ const actions = {
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
       log.info("errr...........");
+      commit("SET_LOADINGSHOWDATA_STATE", false);
+    }
+  },
+  // 资金用途模型表数据
+  async showZjYtPieTable({ commit }, { pageIndex, ajid, tid }) {
+    console.log("showZjYtPieTable");
+    commit("SET_LOADINGSHOWDATA_STATE", true);
+    try {
+      let {
+        title,
+        showType,
+        describe,
+        mpids,
+      } = await models.QueryModelSqlTemplateByMid(tid);
+      let dataList = [];
+      let inData = { rows: [], pie: {} };
+      let outData = { rows: [], pie: {} };
+      let res = await models.GetDataTable("0");
+      if (res.rows.length > 0) {
+        let { legendData, rows, pieData } = await models.GetFundUseSqlTable(
+          res.rows,
+          "进",
+          ajid
+        );
+        inData.rows = rows;
+        inData.pie = { pieData, legendData, title: "资金来源" };
+      }
+      res = await models.GetDataTable("1");
+      if (res.rows.length > 0) {
+        let { legendData, rows, pieData } = await models.GetFundUseSqlTable(
+          res.rows,
+          "出",
+          ajid
+        );
+        outData.rows = rows;
+        outData.pie = { pieData, legendData, title: "资金去向" };
+      }
+      dataList.push(inData, outData);
+      console.log(dataList);
+      let headers = [];
+      if (pageIndex) {
+        // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
+        commit("UPDATE_TABLE_DATA", {
+          pageIndex,
+          headers,
+          dataList,
+        });
+      } else {
+        let obj = {
+          ajid,
+          tid,
+          title,
+          headers,
+          showHeaders: headers,
+          hideEmptyField: false,
+          componentName: "table-data-view",
+          dispatchName: "ShowTable/showZjYtPieTable",
+          tableType: "model",
+          describe,
+          showType,
+          rightTabs: [],
+          modelFilterChildList: [],
+          selectCondition: JSON.parse(JSON.stringify(Default.defaultSelection)),
+          dataList,
+        };
+        if (mpids && mpids.length > 0) {
+          obj.mpids = mpids;
+          obj.rightActiveName = "model-view";
+          obj.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;模型参数",
+            componentName: "model-view",
+          });
+        }
+        commit("ADD_TABLE_DATA_TO_LIST", obj);
+      }
+      commit("SET_LOADINGSHOWDATA_STATE", false);
+    } catch (e) {
+      log.info(e);
+      commit("SET_LOADINGSHOWDATA_STATE", false);
     }
   },
 };

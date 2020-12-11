@@ -24,7 +24,10 @@
       </el-row>
       <el-row>
         <div class="modelTitle">模型数据：</div>
-        <div class="modelDescribe">
+        <div v-if="currentTableData.mpids.includes('34')" class="modelDescribe">
+          根据筛选条件,取得资金用途分析视图
+        </div>
+        <div v-else class="modelDescribe">
           根据筛选条件,取得{{ resultRowCount }}条记录。
         </div>
       </el-row>
@@ -695,7 +698,39 @@
           <div
             v-show="currentTableData.mpids.includes('34')"
             class="selectionItem"
-          ></div>
+          >
+            <!-- 资金用途分析 -->
+            <div class="childTitle">
+              资金用途：<el-button type="text" size="mini">管理分类</el-button>
+            </div>
+            <div class="childTitle">
+              图形类别：
+              <el-select
+                placeholder="请选择"
+                size="mini"
+                style="width: 60%"
+                v-model="selectCondition.fundUsePicType"
+                @change="handleChangeFundUsePicType"
+              >
+                <el-option
+                  v-for="item in [
+                    { value: 'pie', label: '饼状图' },
+                    { value: 'sandkey', label: '流向图' },
+                  ]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <div class="childTitle">
+              图表标签：
+              <el-checkbox v-model="selectCondition.fundUseChecked" size="mini"
+                >显示标签</el-checkbox
+              >
+            </div> -->
+          </div>
           <div
             v-show="
               currentTableData.mpids.length > 0 &&
@@ -959,6 +994,12 @@ export default {
     this.listst_jycs = JSON.parse(JSON.stringify(this.list_condition));
   },
   methods: {
+    async handleChangeFundUsePicType(newType) {
+      await this.$store.commit("ShowTable/UPDATE_MODEL_SELECTION", {
+        pageIndex: this.currentTableData.pageIndex,
+        selectCondition: this.selectCondition,
+      });
+    },
     handleChangeThSelect(currentValue) {
       for (let item of this.list_thtype) {
         if (item.ThId === currentValue) {
@@ -1094,5 +1135,11 @@ export default {
   padding-bottom: 10px;
   font-size: 15px;
   border-bottom: 1px solid #e5e7ec;
+}
+
+/deep/.el-checkbox__label {
+  font-size: 10px;
+  padding-left: 5px;
+  color: #3c4e6b;
 }
 </style>

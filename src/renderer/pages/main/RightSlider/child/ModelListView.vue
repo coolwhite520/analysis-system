@@ -107,6 +107,10 @@ export default {
         this.$store.commit("DialogPopWnd/SET_SHOWTWOENDSDIALOGVISIBLE", true);
       } else if (tid == 901) {
         // 资金用途模型
+        await this.$store.dispatch("ShowTable/showZjYtPieTable", {
+          ajid: this.caseBase.ajid,
+          tid,
+        });
       } else {
         if (pgsqlTemplate === null) {
           this.$message.error({
