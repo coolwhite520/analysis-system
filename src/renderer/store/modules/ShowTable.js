@@ -908,6 +908,44 @@ const actions = {
         );
         inData.rows = rows;
         inData.pie = { pieData, legendData, title: "资金来源" };
+        inData.showHeaders = [
+          {
+            fieldename: "GLDSRS",
+            fieldcname: "关联对手人数",
+          },
+          {
+            fieldename: "GLDSZHS",
+            fieldcname: "关联对手账号数",
+          },
+          {
+            fieldename: "GLRS",
+            fieldcname: "关联人数",
+          },
+          {
+            fieldename: "GLZHS",
+            fieldcname: "关联账号数",
+          },
+          {
+            fieldename: "JDBZ",
+            fieldcname: "借贷标志",
+          },
+          {
+            fieldename: "JZBS",
+            fieldcname: "进账笔数",
+          },
+          {
+            fieldename: "JZJE",
+            fieldcname: "进账金额",
+          },
+          {
+            fieldename: "YTLB",
+            fieldcname: "用途类别",
+          },
+          {
+            fieldename: "ZJYT",
+            fieldcname: "资金用途",
+          },
+        ];
       }
       res = await models.GetDataTable("1");
       if (res.rows.length > 0) {
@@ -918,6 +956,44 @@ const actions = {
         );
         outData.rows = rows;
         outData.pie = { pieData, legendData, title: "资金去向" };
+        outData.showHeaders = [
+          {
+            fieldename: "CZBS",
+            fieldcname: "出账笔数",
+          },
+          {
+            fieldename: "CZJE",
+            fieldcname: "出账金额",
+          },
+          {
+            fieldename: "GLDSRS",
+            fieldcname: "关联对手人数",
+          },
+          {
+            fieldename: "GLDSZHS",
+            fieldcname: "关联对手账号数",
+          },
+          {
+            fieldename: "GLRS",
+            fieldcname: "关联人数",
+          },
+          {
+            fieldename: "GLZHS",
+            fieldcname: "关联账号数",
+          },
+          {
+            fieldename: "JDBZ",
+            fieldcname: "借贷标志",
+          },
+          {
+            fieldename: "YTLB",
+            fieldcname: "用途类别",
+          },
+          {
+            fieldename: "ZJYT",
+            fieldcname: "资金用途",
+          },
+        ];
       }
       dataList.push(inData, outData);
       console.log(dataList);
@@ -935,7 +1011,6 @@ const actions = {
           tid,
           title,
           headers,
-          showHeaders: headers,
           hideEmptyField: false,
           componentName: "table-data-view",
           dispatchName: "ShowTable/showZjYtPieTable",

@@ -700,9 +700,9 @@
             class="selectionItem"
           >
             <!-- 资金用途分析 -->
-            <div class="childTitle">
+            <!-- <div class="childTitle">
               资金用途：<el-button type="text" size="mini">管理分类</el-button>
-            </div>
+            </div> -->
             <div class="childTitle">
               图形类别：
               <el-select

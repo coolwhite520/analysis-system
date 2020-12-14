@@ -1012,7 +1012,7 @@ export default {
                 let lines = utf8Str.split("\n");
                 for (let line of lines) {
                   let rowObj = Papa.parse(line, {
-                    skipLines: "greedy",
+                    skipEmptyLines: "greedy",
                     delimiter: ",",
                   });
                   if (
@@ -1027,6 +1027,9 @@ export default {
                     );
                     if (row.toString() !== fileAllColsStr) {
                       retRows.push(row);
+                    } else {
+                      // 和表头相同的行内容，不添加哦
+                      log.info("sameHeader: ", row);
                     }
                   }
                 }

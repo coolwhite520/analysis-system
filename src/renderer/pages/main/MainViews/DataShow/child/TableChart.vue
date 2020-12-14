@@ -45,15 +45,25 @@
                   scope.row,
                   header.fieldename,
                   header.link_mid,
-                  scope.row[header.fieldename].value
+                  typeof scope.row[header.fieldename] === 'object'
+                    ? scope.row[header.fieldename].value
+                    : scope.row[header.fieldename]
                 )
               "
             >
-              <u>{{ scope.row[header.fieldename].value }}</u>
+              <u>{{
+                typeof scope.row[header.fieldename] === "object"
+                  ? scope.row[header.fieldename].value
+                  : scope.row[header.fieldename]
+              }}</u>
             </el-button>
           </div>
           <div v-else>
-            {{ scope.row[header.fieldename].value }}
+            {{
+              typeof scope.row[header.fieldename] === "object"
+                ? scope.row[header.fieldename].value
+                : scope.row[header.fieldename]
+            }}
           </div>
         </template>
       </el-table-column>
@@ -178,6 +188,12 @@ export default {
       }
     },
     async sortChange(column) {
+      if (this.tableData.tid === 901) {
+        this.$message({
+          message: "当前表格不支持列排序.",
+        });
+        return;
+      }
       let fieldName = column.prop;
       let sortingType = column.order;
       console.log(fieldName, sortingType);

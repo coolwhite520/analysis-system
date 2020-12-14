@@ -60,7 +60,7 @@
           <zjyt-pie-chart
             :pie="item.pie"
             :rows="item.rows"
-            :limitHeight="(contentViewHeight - 126) / 2"
+            :limitHeight="(contentViewHeight - 126) / 2 + 70"
           ></zjyt-pie-chart>
         </el-col>
       </el-row>
@@ -68,8 +68,27 @@
       <el-row v-else>
         <zjyt-sankey-chart
           :dataList="tableData.dataList"
-          :limitHeight="(contentViewHeight - 126) / 2"
+          :limitHeight="(contentViewHeight - 126) / 2 + 70"
         ></zjyt-sankey-chart>
+      </el-row>
+      <el-row>
+        <el-col
+          :gutter="20"
+          :span="12"
+          v-for="(item, index) of tableData.dataList"
+          :key="index"
+        >
+          <table-chart
+            :tableData="{
+              tid: tableData.tid,
+              pageIndex: tableData.pageIndex,
+              rows: item.rows,
+              showHeaders: item.showHeaders,
+              sum: item.rows.length,
+            }"
+            :limitHeight="(contentViewHeight - 80) / 2 - 47"
+          ></table-chart>
+        </el-col>
       </el-row>
     </div>
     <!-- 两个table -->
