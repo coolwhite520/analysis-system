@@ -15,7 +15,80 @@ export default {
         }, ms);
       });
     },
-    async exportCsvAndExcel(ajid, filePath, headers, exportSql, sumRowCount) {
+    async exportCsv(ajid, filePath, headers, exportSql, sumRowCount) {
+      if (!global.pool) {
+        global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
+      }
+      let client = await global.pool.connect();
+      try {
+        let extName = path.extname(filePath);
+        let fileName = path.basename(filePath);
+        fileName = fileName.replace(extName, "");
+        const excel = require("exceljs");
+        const fs = require("fs");
+        let writeableStream = fs.createWriteStream(filePath, {
+          encoding: "utf8",
+        });
+
+        let columns = headers.map((el) => el.fieldcname);
+        writeableStream.write(columns.join(",") + "\n");
+        await cases.SwitchCase(client, ajid);
+        // 采用异步的方式进行
+        const Query = require("pg").Query;
+        const query = new Query(exportSql);
+        const result = client.query(query);
+        let index = 0;
+        let currentPercentage = 0;
+
+        function convert(row) {
+          let rowArr = [];
+          for (let k in row) {
+            if (row[k] instanceof Date) {
+              row[k] = row[k].Format("yyyy-MM-dd hh:mm:ss");
+            }
+
+            if (row[k] && typeof row[k] === "string" && row[k].includes(","))
+              rowArr.push(`"${row[k]}"`);
+            else rowArr.push(row[k]);
+          }
+          let retRowStr = rowArr.join(",") + "\n";
+          return retRowStr;
+        }
+        query.on("row", (row) => {
+          let strRow = convert(row);
+          writeableStream.write(strRow);
+          // worksheet.addRow(row).commit();
+          index++;
+          let percentage = parseInt(parseFloat(index / sumRowCount) * 100);
+          if (currentPercentage !== percentage) {
+            currentPercentage = percentage;
+            console.log(percentage);
+            let result = {
+              success: true,
+              errormsg: "",
+              percentage: percentage,
+            };
+            this.$electron.ipcRenderer.send("export-one-file-proccess", result);
+          }
+        });
+        query.on("end", () => {
+          // worksheet.commit();
+          // workbook.commit();
+          writeableStream.end();
+          this.$electron.ipcRenderer.send("export-one-file-over", {});
+          console.log("query done");
+          client.release();
+        });
+        query.on("error", (err) => {
+          console.error(err.stack);
+          let result = { success: false, errormsg: err.message };
+          this.$electron.ipcRenderer.send("export-one-file-proccess", result);
+        });
+      } finally {
+        //
+      }
+    },
+    async exportExcel(ajid, filePath, headers, exportSql, sumRowCount) {
       if (!global.pool) {
         global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
       }
@@ -124,8 +197,16 @@ export default {
         switch (extName) {
           case ".xls":
           case ".xlsx":
+            await _this.exportExcel(
+              ajid,
+              filePath,
+              headers,
+              exportSql,
+              sumRowCount
+            );
+            break;
           case ".csv":
-            await _this.exportCsvAndExcel(
+            await _this.exportCsv(
               ajid,
               filePath,
               headers,

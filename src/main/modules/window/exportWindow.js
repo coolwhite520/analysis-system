@@ -10,7 +10,7 @@ const createMiniWindow = function(BrowserWindow) {
     height: 100,
     width: 100,
     minWidth: 0,
-    show: false, // process.env.NODE_ENV === "development" ? true : false,
+    show: process.env.NODE_ENV === "development" ? true : false,
     frame: true,
     fullscreenable: false,
     skipTaskbar: true,
