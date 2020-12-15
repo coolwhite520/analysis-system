@@ -19,6 +19,7 @@ import { ACHEME, LOAD_URL } from "./config";
 import log from "electron-log";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const uuid = require("uuid");
+// require("./innerSocket");
 // const renderProcessApi = path.join(__dirname, './inject.js')
 /**
  * Set `__static` path to static files in production

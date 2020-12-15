@@ -958,9 +958,9 @@ function Get353DetailCondition(PageItemDetail, ColumnName) {
       value: "市",
     });
   } else if (
-    !PageItemDetail.sfmc.EndsWith("自治区'") &&
-    !PageItemDetail.sfmc.EndsWith("省'") &&
-    !PageItemDetail.sfmc.EndsWith("市'")
+    !PageItemDetail.sfmc.endsWith("自治区'") &&
+    !PageItemDetail.sfmc.endsWith("省'") &&
+    !PageItemDetail.sfmc.endsWith("市'")
   ) {
     list.push({
       name: "JYFSD",
@@ -1643,68 +1643,107 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
       CA_PageItemDetail.dfhm = item["sjhm"].trim();
       break;
   }
-  let  AnalysePageGrid_OnLinkClick_res=AnalysePageGrid_OnLinkClick(
+  let AnalysePageGrid_OnLinkClick_res = AnalysePageGrid_OnLinkClick(
     CA_PageItemDetail,
     CA_PageItem,
     ColumnName
   );
   return SetFiltrateFieldType(AnalysePageGrid_OnLinkClick_res);
 }
-function SetFiltrateFieldType(linkres){
-  try{
-      if(linkres!=null && linkres!=undefined && linkres.msg!=undefined && linkres.msg!=null){
-          let tid=linkres.type;
-          if(tid!="4"&&tid !="18"){
-              return linkres;
-          }
-          let list1= linkres.msg.obj[0].children[0].children;
-          let list2=linkres.msg.obj[0].children.length==2?linkres.msg.obj[0].children[1].children:null;
-          if(tid=="4"){
-              for(let i=0,len=list1.length;i<len;i++){
-                  let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
-                  if(FiltrateFieldEN=="jysj"){
-                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
-                  }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
-                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DOUBLE;
-                  }
-              }
-              if(list2!=null){
-                  for(let i=0,len=list2.length;i<len;i++){
-                      let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
-                      if(FiltrateFieldEN=="jysj"){
-                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
-                      }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
-                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DOUBLE;
-                      }
-                  }
-              }
-          }else if(tid=="18"){
-             for(let i=0,len=list1.length;i<len;i++){
-                  let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
-                  if(FiltrateFieldEN=="thsj"||FiltrateFieldEN=="hjrq"||FiltrateFieldEN=="hjsj"){
-                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
-                  }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
-                      linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DECIMAL;
-                  }
-              }
-              if(list2!=null){
-                  for(let i=0,len=list2.length;i<len;i++){
-                      let FiltrateFieldEN=list1[i].FiltrateFieldEN.toLowerCase();
-                      if(FiltrateFieldEN=="thsj"||FiltrateFieldEN=="hjrq"||FiltrateFieldEN=="hjsj"){
-                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DATATIME_1;
-                      }else if(FiltrateFieldEN=="jyje" ||FiltrateFieldEN=="jyye" || FiltrateFieldEN=="dsjyye"){
-                        linkres.msg.obj[0].children[0].children[i].FiltrateFieldType=Default.DataType.DECIMAL;
-                      }
-                  }
-              }
-          }
+function SetFiltrateFieldType(linkres) {
+  try {
+    if (
+      linkres != null &&
+      linkres != undefined &&
+      linkres.msg != undefined &&
+      linkres.msg != null
+    ) {
+      let tid = linkres.type;
+      if (tid != "4" && tid != "18") {
+        return linkres;
       }
-  }catch(e){
-      console.log( "SetFiltrateFieldType err:",e.message);
+      let list1 = linkres.msg.obj[0].children[0].children;
+      let list2 =
+        linkres.msg.obj[0].children.length == 2
+          ? linkres.msg.obj[0].children[1].children
+          : null;
+      if (tid == "4") {
+        for (let i = 0, len = list1.length; i < len; i++) {
+          let FiltrateFieldEN = list1[i].FiltrateFieldEN.toLowerCase();
+          if (FiltrateFieldEN == "jysj") {
+            linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+              Default.DataType.DATATIME_1;
+          } else if (
+            FiltrateFieldEN == "jyje" ||
+            FiltrateFieldEN == "jyye" ||
+            FiltrateFieldEN == "dsjyye"
+          ) {
+            linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+              Default.DataType.DOUBLE;
+          }
+        }
+        if (list2 != null) {
+          for (let i = 0, len = list2.length; i < len; i++) {
+            let FiltrateFieldEN = list1[i].FiltrateFieldEN.toLowerCase();
+            if (FiltrateFieldEN == "jysj") {
+              linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+                Default.DataType.DATATIME_1;
+            } else if (
+              FiltrateFieldEN == "jyje" ||
+              FiltrateFieldEN == "jyye" ||
+              FiltrateFieldEN == "dsjyye"
+            ) {
+              linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+                Default.DataType.DOUBLE;
+            }
+          }
+        }
+      } else if (tid == "18") {
+        for (let i = 0, len = list1.length; i < len; i++) {
+          let FiltrateFieldEN = list1[i].FiltrateFieldEN.toLowerCase();
+          if (
+            FiltrateFieldEN == "thsj" ||
+            FiltrateFieldEN == "hjrq" ||
+            FiltrateFieldEN == "hjsj"
+          ) {
+            linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+              Default.DataType.DATATIME_1;
+          } else if (
+            FiltrateFieldEN == "jyje" ||
+            FiltrateFieldEN == "jyye" ||
+            FiltrateFieldEN == "dsjyye"
+          ) {
+            linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+              Default.DataType.DECIMAL;
+          }
+        }
+        if (list2 != null) {
+          for (let i = 0, len = list2.length; i < len; i++) {
+            let FiltrateFieldEN = list1[i].FiltrateFieldEN.toLowerCase();
+            if (
+              FiltrateFieldEN == "thsj" ||
+              FiltrateFieldEN == "hjrq" ||
+              FiltrateFieldEN == "hjsj"
+            ) {
+              linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+                Default.DataType.DATATIME_1;
+            } else if (
+              FiltrateFieldEN == "jyje" ||
+              FiltrateFieldEN == "jyye" ||
+              FiltrateFieldEN == "dsjyye"
+            ) {
+              linkres.msg.obj[0].children[0].children[i].FiltrateFieldType =
+                Default.DataType.DECIMAL;
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log("SetFiltrateFieldType err:", e.message);
   }
   return linkres;
 }
-
 
 export default {
   format: OnLinkClick,
