@@ -73,7 +73,7 @@
         <div style="font-size: 10px">解析部分IP仅更新地区信息为空的条目。</div>
         <el-progress
           style="margin-top: 10px"
-          v-if="percentage >= 0"
+          v-if="percentage > 0"
           :percentage="percentage"
           color="#85df70"
         ></el-progress>
