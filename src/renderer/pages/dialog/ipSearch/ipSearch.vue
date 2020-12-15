@@ -17,7 +17,7 @@
       </div>
     </div>
     <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="IP归属地查询" name="first"
+      <el-tab-pane label="IP归属地查询与解析" name="first"
         ><el-row
           style="margin-left: 20px; margin-bottom: 10px text-align: center"
           v-if="result"
