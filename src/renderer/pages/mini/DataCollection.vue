@@ -1254,7 +1254,6 @@ export default {
                   }
                 }
                 let valueStr = values.join("\t") + "\n";
-                // ////console.log(valueStr);
                 this.push(valueStr);
                 callback();
               })

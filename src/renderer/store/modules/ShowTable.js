@@ -192,7 +192,12 @@ const mutations = {
   SET_LOADINGSHOWDATA_STATE(state, isLoading) {
     state.loadingShowData = isLoading;
   },
-
+  SET_SAME_DATA_DIFF(state, { gpsqltemplate_select, ruleRows }) {
+    Vue.set(state.currentTableData, "sameDataDiff", {
+      gpsqltemplate_select,
+      ruleRows,
+    });
+  },
   // 跟新table的数据
   UPDATE_TABLE_DATA(
     state,
@@ -262,6 +267,11 @@ const mutations = {
           "modelFilterChildList",
           JSON.parse(JSON.stringify(modelFilterChildList))
         );
+        let modelFilterStr = convertSql.convertDataFilterToSqlStr(
+          parseInt(state.tableDataList[index].tid),
+          JSON.parse(JSON.stringify(modelFilterChildList))
+        );
+        Vue.set(state.tableDataList[index], "modelFilterStr", modelFilterStr);
         return;
       }
     }
@@ -391,6 +401,12 @@ const mutations = {
             componentName: "data-diff-view",
           });
           break;
+        case "same-data-diff-view":
+          state.currentTableData.rightTabs.push({
+            title: "&#xea30;&nbsp;&nbsp;&nbsp;同笔交易去重",
+            componentName: "same-data-diff-view",
+          });
+          break;
       }
       Vue.set(state.currentTableData, "rightActiveName", componentName);
       return;
@@ -469,7 +485,6 @@ const actions = {
       tid, // 表的id
       count, // 查询数量
       offset, // 查询的偏移
-      selectCondition,
       modelFilterStr,
       modelFilterChildList, // 数据筛选
     }
@@ -477,10 +492,6 @@ const actions = {
     commit("SET_LOADINGSHOWDATA_STATE", true);
     let ajid = rootState.CaseDetail.caseBase.ajid;
 
-    if (typeof selectCondition === "undefined") {
-      // 添加新表
-      selectCondition = JSON.parse(JSON.stringify(Default.defaultSelection));
-    }
     if (typeof modelFilterStr === "undefined") {
       modelFilterStr = "";
     }
@@ -506,7 +517,7 @@ const actions = {
       parseInt(tid),
       modelFilterChildList
     );
-    // 新添加的需要
+
     if (
       !pageIndex &&
       state.currentTableData &&
@@ -519,15 +530,13 @@ const actions = {
     } else {
       modelFilterStr = filterChildStr;
     }
-
     // 需要累加过滤条件
+    let pageItem = state.tableDataList.find(
+      (table) => table.pageIndex === pageIndex
+    );
     let data;
-    if (
-      typeof pageIndex !== "undefined" &&
-      state.currentTableData &&
-      state.currentTableData.hasOwnProperty("orderby")
-    ) {
-      let orderby = state.currentTableData.orderby;
+    if (pageItem && pageItem.hasOwnProperty("orderby")) {
+      let orderby = pageItem.orderby;
       data = await showTable.QueryBaseTableData(
         ajid,
         tid,
@@ -568,7 +577,7 @@ const actions = {
           showHeaders: headers,
           sum,
           rows,
-          selectCondition,
+          selectCondition: JSON.parse(JSON.stringify(Default.defaultSelection)),
           componentName: "table-data-view",
           dispatchName: "ShowTable/showBaseTable",
           tableType: "base",
@@ -634,12 +643,11 @@ const actions = {
       describe,
     } = await models.QueryModelSqlTemplateByMid(tid);
 
-    if (
-      typeof pageIndex !== "undefined" &&
-      state.currentTableData &&
-      state.currentTableData.hasOwnProperty("orderby")
-    ) {
-      orderby = state.currentTableData.orderby;
+    let pageItem = state.tableDataList.find(
+      (table) => table.pageIndex === pageIndex
+    );
+    if (pageItem && pageItem.hasOwnProperty("orderby")) {
+      orderby = pageItem.orderby;
     }
 
     if (typeof pgsqlTemplateDecode === "undefined") {
@@ -650,7 +658,6 @@ const actions = {
       parseInt(tid),
       modelFilterChildList
     );
-    console.log({ filterChildStr });
     let sql = modelSqlFormat.format(
       pgsqlTemplateDecode,
       orderby,

@@ -37,6 +37,7 @@ import SearchReplaceView from "./child/wash/SearchReplaceView";
 import SpecialCharView from "./child/wash/SpecialCharView";
 import IneffectDataView from "./child/wash/IneffectDataView";
 import DataDiffView from "./child/wash/DataDiffView";
+import SameDataDiffView from "./child/wash/SameDataDiff";
 export default {
   mounted() {},
   computed: {
@@ -61,6 +62,7 @@ export default {
     "special-char-view": SpecialCharView,
     "ineffect-data-view": IneffectDataView,
     "data-diff-view": DataDiffView,
+    "same-data-diff-view": SameDataDiffView,
   },
   methods: {
     handleTabRemove(componentName) {

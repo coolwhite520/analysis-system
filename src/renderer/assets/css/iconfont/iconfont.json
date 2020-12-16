@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "18171226",
+      "name": "复制,重复,重叠",
+      "font_class": "copy-rect",
+      "unicode": "ea30",
+      "unicode_decimal": 59952
+    },
+    {
       "icon_id": "383745",
       "name": "ip",
       "font_class": "ip",

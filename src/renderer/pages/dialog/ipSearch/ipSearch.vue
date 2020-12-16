@@ -102,6 +102,7 @@
 <script>
 import { mapState } from "vuex";
 import Base from "@/db/Base";
+import { table } from "console";
 const fs = require("fs");
 const path = require("path");
 let citys = "北京市，天津市，上海市，重庆市，香港特别行政区，澳门特别行政区".split(
@@ -117,6 +118,7 @@ export default {
   computed: {
     ...mapState("DialogPopWnd", ["showIpDialogVisible"]),
     ...mapState("CaseDetail", ["caseBase"]),
+    ...mapState("ShowTable", ["tableDataList"]),
   },
   data() {
     return {
@@ -136,6 +138,38 @@ export default {
     await this.fresh();
   },
   methods: {
+    async freshNowUI() {
+      // 更新采集批次等一批数据
+      await this.$store.dispatch(
+        "CaseDetail/queryEntityCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryBatchCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryAwaitTaskCount",
+        this.caseBase.ajid
+      );
+      await this.$store.dispatch(
+        "CaseDetail/queryCaseDataCenter",
+        this.caseBase.ajid
+      );
+      //
+      // 更新当前的展示列表中的数据;
+      for (let tableData of this.tableDataList) {
+        console.log(tableData);
+        // 根据tableName获取表的数据
+        if (tableData.componentName !== "no-data-view") {
+          this.$store.dispatch(tableData.dispatchName, {
+            ...tableData,
+            offset: 0,
+            count: 30,
+          });
+        }
+      }
+    },
     async fresh() {
       try {
         let sql = `select shard_id,ip from gas_bank_records where length(ip)>0 order by shard_id`;
@@ -170,7 +204,6 @@ export default {
             }
             let updateSql = `update gas_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
             await Base.QueryCustom(updateSql, this.caseBase.ajid);
-            console.log(index);
             index++;
             this.percentage = parseInt((index / this.countIP) * 100);
           }
@@ -181,6 +214,7 @@ export default {
       this.percentage = 0;
       this.loading = false;
       await this.fresh();
+      this.freshNowUI();
     },
     async handleClickAnalysis() {
       try {
@@ -199,7 +233,6 @@ export default {
             }
             let updateSql = `update gas_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
             await Base.QueryCustom(updateSql, this.caseBase.ajid);
-            console.log(index);
             index++;
             this.percentage = parseInt((index / this.countIPNoAnalysis) * 100);
           } else {
@@ -212,6 +245,7 @@ export default {
       this.percentage = 0;
       this.loading = false;
       await this.fresh();
+      this.freshNowUI();
     },
     isValidIP(ip) {
       var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;

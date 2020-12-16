@@ -169,9 +169,8 @@
       style="margin-top: 10px"
       v-if="isImportLoading && percentage > 0"
       type="line"
-      :text-inside="true"
       :percentage="percentage"
-      :stroke-width="20"
+      :color="progressColor"
     ></el-progress>
     <el-row style="margin-top: 20px; text-align: center">
       <el-button
@@ -227,6 +226,7 @@ export default {
   data() {
     return {
       percentage: 0,
+      progressColor: "#96d45a",
       loadingDelete: false,
       filterList: ["exceedLen", "notNum", "notDate"],
       clickedCheckBtn: false,
@@ -341,6 +341,13 @@ export default {
     },
   },
   methods: {
+    getRandomColor() {
+      var r = Math.round(Math.random() * 255),
+        g = Math.round(Math.random() * 255),
+        b = Math.round(Math.random() * 255);
+      var color = (r << 16) | (g << 8) | b;
+      return "#" + color.toString(16);
+    },
     // 导入消息的回调
     async onRecvImportMsg(e, args) {
       let { percentage, id, success, msg } = args;
@@ -354,6 +361,7 @@ export default {
         if (percentage >= 100) {
           percentage = 100;
         }
+        this.percentage = percentage;
         // 频繁的调用commit影响程序性能
         // this.$store.commit("DataCollection/SET_IMPORT_DATA_PROCESS", {
         //   id,
@@ -381,12 +389,15 @@ export default {
       //console.log("import data over: ", id);
       await this.$store.commit("DataCollection/DELETE_DATA_LIST_BY_ID", id);
       this.clearCurrentInportRow(id);
-      this.percentage = parseInt(
-        100 -
-          parseFloat(
-            (this.currentImportRows.length / this.currentImportCount) * 100
-          )
-      );
+      this.percentage = 0;
+      this.progressColor = this.getRandomColor();
+
+      // this.percentage = parseInt(
+      //   100 -
+      //     parseFloat(
+      //       (this.currentImportRows.length / this.currentImportCount) * 100
+      //     )
+      // );
       if (this.currentImportRows.length === 0) {
         this.$message({
           title: "成功",
@@ -509,7 +520,6 @@ export default {
             }
           }
           if (i === selectedRows.length) {
-            this.percentage = 0;
             this.isImportLoading = true;
             this.isCheckingLoading = true;
             this.execImportData(selectedRows);

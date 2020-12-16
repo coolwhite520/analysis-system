@@ -120,7 +120,7 @@
           <span class="title-content">无效数据</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="1" class="el-col">
         <el-button
           type="text"
           class="ctrl-button"
@@ -130,6 +130,18 @@
           <span class="iconfont selfIcont">&#xe624;</span>
           <br />
           <span class="title-content">数据去重</span>
+        </el-button>
+      </el-col>
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledWashingButtons"
+          @click="handleClickWashingButton('same-data-diff')"
+        >
+          <span class="iconfont selfIcont">&#xea30;</span>
+          <br />
+          <span class="title-content">同笔交易去重</span>
         </el-button>
       </el-col>
       <!-- <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
@@ -211,7 +223,7 @@
         <div>显示</div>
       </el-col>
       <el-col
-        :span="4"
+        :span="5"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>清洗</div>
@@ -254,6 +266,7 @@ import CollectionRecord from "@/pages/dialog/record/CollectionRecordDialog";
 import { mapState } from "vuex";
 import path, { extname } from "path";
 import DataCleanDb from "@/db/DataClean.js";
+import Base from "@/db/Base.js";
 import cases from "@/db/Cases.js";
 import aes from "@/utils/aes";
 
@@ -446,11 +459,38 @@ export default {
       let obj = rows.find((row) => row.parentid === -1);
       return JSON.parse(JSON.stringify(obj));
     },
-    makeTreeByTableHeaders(gpsqltemplate_select, gpsqltemplate_update) {
+    async makeTreeByTableHeaders(
+      tableename,
+      gpsqltemplate_select,
+      gpsqltemplate_update
+    ) {
+      let sql = `SELECT DISTINCT A
+	.attname AS FIELD,
+	col_description ( A.attrelid, A.attnum ) AS COMMENT,
+	format_type ( A.atttypid, A.atttypmod ) AS TYLEL,
+	A.attnotnull AS ISNULL,
+	'ISJM' AS ISJM 
+FROM
+	pg_class AS C,
+	pg_attribute AS A 
+WHERE
+	C.relname = '${tableename}' 
+	AND A.attrelid = C.oid 
+  AND A.attnum > 0`;
+      let ret = await Base.QueryCustom(sql, this.caseBase.ajid);
+      // 获取表结构
       let headers = this.currentTableData.headers;
+      headers = headers.filter((header) => {
+        return (
+          ret.rows.findIndex(
+            (row) => row.field.toLowerCase() === header.fieldename.toLowerCase()
+          ) !== -1
+        );
+      });
       let keys = [];
       let tree = headers.map((header) => {
-        keys.push(header.fieldename);
+        if (header.fieldename.toLowerCase() !== "batch")
+          keys.push(header.fieldename);
         return {
           describe: header.fieldcname,
           children: [],
@@ -460,6 +500,7 @@ export default {
           gpsqltemplate_update,
         };
       });
+
       return {
         keys,
         tree,
@@ -496,7 +537,8 @@ export default {
             {
               let { success, rows } = await DataCleanDb.queryRulesFromTable(
                 this.currentTableData.tableename,
-                "0"
+                "0",
+                this.currentTableData.tid
               );
               if (success && rows.length > 0) {
                 let keys = rows.map((row) => row.tid);
@@ -523,7 +565,8 @@ export default {
             {
               let { success, rows } = await DataCleanDb.queryRulesFromTable(
                 this.currentTableData.tableename,
-                "1"
+                "1",
+                this.currentTableData.tid
               );
               if (success && rows.length > 0) {
                 let keys = rows.map((row) => row.tid);
@@ -550,12 +593,14 @@ export default {
             {
               let { success, rows } = await DataCleanDb.queryRulesFromTable(
                 this.currentTableData.tableename,
-                "2"
+                "2",
+                this.currentTableData.tid
               );
               console.log(rows);
               if (success && rows.length > 0) {
                 let { gpsqltemplate_select, gpsqltemplate_update } = rows[0];
-                let { keys, tree } = this.makeTreeByTableHeaders(
+                let { keys, tree } = await this.makeTreeByTableHeaders(
+                  this.currentTableData.tableename,
                   gpsqltemplate_select,
                   gpsqltemplate_update
                 );
@@ -575,6 +620,32 @@ export default {
               };
             }
 
+            break;
+          case "same-data-diff":
+            {
+              let { success, rows } = await DataCleanDb.queryRulesFromTable(
+                this.currentTableData.tableename,
+                "4",
+                this.currentTableData.tid
+              );
+              console.log(rows);
+              if (success && rows.length > 0) {
+                let { gpsqltemplate_select } = rows[0];
+                this.$store.commit("ShowTable/SET_SAME_DATA_DIFF", {
+                  gpsqltemplate_select,
+                  ruleRows: rows,
+                });
+              } else {
+                this.$message({
+                  message: "没有匹配的数据规则项",
+                });
+                return;
+              }
+              componentObj = {
+                componentName: "same-data-diff-view",
+                action: "add",
+              };
+            }
             break;
         }
         this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", componentObj);

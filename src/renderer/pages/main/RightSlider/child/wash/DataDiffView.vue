@@ -8,6 +8,9 @@
         <el-col :span="22">
           <div>
             <span class="iconfont">&#xe624;&nbsp;&nbsp;&nbsp;数据去重</span>
+            <span v-if="errorCount > 0" style="font-size: 10px; color: red"
+              ><b>{{ errorCount }}</b></span
+            >
           </div>
         </el-col>
         <el-col :span="2">
@@ -188,6 +191,7 @@ export default {
               type: "success",
             });
             this.loading = false;
+            this.errorCount = 0;
           }
           this.loading = false;
         }
@@ -219,6 +223,8 @@ export default {
           .replace(/\$FILTER\$/g, filterArr)
           .replace(/\$AJID\$/g, this.caseBase.ajid);
         console.log(sql);
+        console.log(this.currentTableData);
+
         let { success, rows } = await baseDb.QueryCustom(
           sql,
           _this.caseBase.ajid

@@ -1,9 +1,5 @@
 <template>
   <div>
-    <error-row-view
-      v-if="showErrorRowRecordVisible"
-      v-on:refreshErrorCharTree="refreshErrorCharTree"
-    ></error-row-view>
     <div
       class="searchReplace"
       :style="{ height: contentViewHeight - 40 - 15 + 'px' }"
@@ -12,37 +8,44 @@
         <el-col :span="22">
           <div>
             <span class="iconfont">&#xe660;&nbsp;&nbsp;&nbsp;无效数据</span>
+            <span v-if="errorCount > 0" style="font-size: 10px; color: red"
+              ><b>{{ errorCount }}</b></span
+            >
           </div>
         </el-col>
         <el-col :span="2">
           <span @click="handleClickClose" class="close iconfont">&#xe634;</span>
         </el-col>
       </el-row>
-      <el-tree
+      <div
+        class="container"
         :style="{
           height: contentViewHeight - 40 - 15 - 80 + 'px',
           overflow: 'auto',
         }"
-        ref="tree"
-        @node-click="handleNodeClick"
-        @check-change="handleChangeCheckNode"
-        :data="myTreeList.renderTree"
-        :props="defaultProps"
-        :show-checkbox="true"
-        default-expand-all
-        :default-checked-keys="myTreeList.checkedKeys"
-        empty-text="当前表没有无效数据，不具备筛选清洗功能。"
-        node-key="tid"
       >
-        <span class="custom-tree-node" slot-scope="{ node, data }">
-          <span style="font-size: 10px">{{ node.label }}</span>
-          <span
-            v-if="data.errorCount > 0"
-            style="color: #e93d20; font-size: 10px"
-            ><b>&nbsp;&nbsp;{{ data.errorCount }}</b></span
-          >
-        </span>
-      </el-tree>
+        <div style="font-size: 12px; color: #737478">检测🌲：</div>
+        <el-tree
+          ref="tree"
+          @node-click="handleNodeClick"
+          @check-change="handleChangeCheckNode"
+          :data="myTreeList.renderTree"
+          :props="defaultProps"
+          :show-checkbox="true"
+          default-expand-all
+          :default-checked-keys="myTreeList.checkedKeys"
+          empty-text="当前表没有无效数据，不具备筛选清洗功能。"
+          node-key="tid"
+        >
+          <span class="custom-tree-node" slot-scope="{ node }">
+            <span style="font-size: 10px">{{ node.label }}</span>
+          </span>
+        </el-tree>
+        <div style="margin: 20px; font-size: 10px; color: #737478">
+          当前检测条件为：{{ checkParamStr }}
+        </div>
+      </div>
+
       <div style="border-top: 1px solid #dddfe5">
         <el-row style="text-align: center; margin-top: 10px">
           <el-button
@@ -81,6 +84,9 @@ export default {
   components: {
     "error-row-view": errorDataTableView,
   },
+  mounted() {
+    this.isMounted = true;
+  },
   data() {
     return {
       loading: false,
@@ -88,6 +94,7 @@ export default {
       renderErrorData: {},
       disabled: false,
       keys: [],
+      isMounted: false,
       renderTree: [],
       defaultProps: {
         children: "children",
@@ -105,20 +112,22 @@ export default {
     myTreeList() {
       return JSON.parse(JSON.stringify(this.currentTableData.ineffectData));
     },
+    checkParamStr() {
+      if (this.isMounted) {
+        let allCheckedNodes = this.$refs.tree.getCheckedNodes();
+        console.log(allCheckedNodes);
+        let labels = allCheckedNodes.map((node) => `(${node.describe})`);
+        return labels.join(" 并且 ");
+      }
+    },
   },
   methods: {
-    async refreshErrorCharTree() {
-      await this.freshTreeErrorCount();
-    },
     async handleClickCheck() {
       this.loading = true;
       try {
-        let arr = await this.freshTreeErrorCount();
-        console.log(arr);
-        let sumErrCount = this.$lodash.sum(arr);
-        this.errorCount = sumErrCount;
+        this.errorCount = await this.freshTreeErrorCount();
         this.$message({
-          message: `存在${sumErrCount}条无效数据`,
+          message: `存在${this.errorCount}条无效数据`,
           type: "success",
         });
       } catch (e) {
@@ -166,22 +175,18 @@ export default {
         let allCheckedNodes = this.$refs.tree.getCheckedNodes();
         if (allCheckedNodes.length === 0) return;
 
-        let arrayPromise = [];
-        let _this = this;
+        let paramStr = "";
         for (let nodeData of allCheckedNodes) {
           if (nodeData.children.length === 0 && nodeData.gpsqltemplate_update) {
             let decode = aes.decrypt(nodeData.gpsqltemplate_update);
-            let sql = `DELETE FROM ${this.currentTableData.tableename} WHERE ajid=${this.caseBase.ajid}  ${decode} `;
-            arrayPromise.push(
-              (async function () {
-                await baseDb.QueryCustom(sql, _this.caseBase.ajid);
-              })()
-            );
+            paramStr += " " + decode;
           }
         }
-        await Promise.all(arrayPromise);
+        let sql = `DELETE FROM ${this.currentTableData.tableename} WHERE ajid=${this.caseBase.ajid}  ${paramStr} `;
+
+        await baseDb.QueryCustom(sql, this.caseBase.ajid);
         // 再次检测一下
-        let arrCount = await this.freshTreeErrorCount();
+        this.errorCount = await this.freshTreeErrorCount();
         //
         await this.freshNowUI();
         this.$message({
@@ -189,7 +194,7 @@ export default {
           message: `数据处理完毕`,
           type: "success",
         });
-        this.loading = true;
+        this.loading = false;
       } catch (e) {
         this.$message.error({
           message: `数据处理失败`,
@@ -201,34 +206,21 @@ export default {
     async freshTreeErrorCount() {
       let allCheckedNodes = this.$refs.tree.getCheckedNodes();
       if (allCheckedNodes.length === 0) return;
-      let arrayPromise = [];
-      let _this = this;
+      let paramStr = "";
       for (let nodeData of allCheckedNodes) {
         if (nodeData.gpsqltemplate_select) {
           let decode = aes.decrypt(nodeData.gpsqltemplate_select);
           console.log(decode);
-          let sql = `select count(*) from ${this.currentTableData.tableename} where ajid=${this.caseBase.ajid} ${decode}`;
-          arrayPromise.push(
-            (async function () {
-              let { success, rows } = await baseDb.QueryCustom(
-                sql,
-                _this.caseBase.ajid
-              );
-              if (success) {
-                nodeData.errorCount = rows[0].count;
-                return parseInt(nodeData.errorCount);
-              }
-              return 0;
-            })()
-          );
+          paramStr += " " + decode;
         }
       }
-      let arrCount = await Promise.all(arrayPromise);
-      this.$store.commit(
-        "ShowTable/SET_INEFFECTDATA_TREE_DATA",
-        this.myTreeList
-      );
-      return arrCount;
+      let sql = `select count(*)::int count from ${this.currentTableData.tableename} where ajid=${this.caseBase.ajid} ${paramStr}`;
+      console.log(sql);
+      let { success, rows } = await baseDb.QueryCustom(sql, this.caseBase.ajid);
+      if (success) {
+        return rows[0].count;
+      }
+      return 0;
     },
     async handleNodeClick(nodeData, node) {
       if (nodeData.errorCount > 0) {
