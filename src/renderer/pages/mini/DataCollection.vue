@@ -52,8 +52,6 @@ export default {
           {
             if (extField.toLowerCase() === "thjlid") {
               value = UUID.v1();
-            } else if (extField.toLowerCase() === "ddfzsxm") {
-              value = fileName;
             }
           }
           break;
@@ -603,7 +601,7 @@ export default {
 
           let { ajid, ajmc } = caseBase;
           let filepath = path.dirname(data.filePathName);
-          let fileExt = path.extname(fileName).slice(1);
+          let fileExt = path.extname(fileName);
 
           // 统计选中的列名称
           let fields = [];
@@ -670,10 +668,11 @@ export default {
           }
 
           switch (fileExt) {
-            case "txt":
-            case "csv":
+            case ".txt":
+            case ".csv":
               {
                 await this.parseCsvFile(
+                  fileExt,
                   tablecname,
                   createFields,
                   inFlag,
@@ -697,9 +696,10 @@ export default {
                 );
               }
               break;
-            case "xls":
-            case "xlsx": {
+            case ".xls":
+            case ".xlsx": {
               await this.parseExcelFile(
+                fileExt,
                 tablecname,
                 createFields, // temp表全列
                 inFlag,
@@ -739,6 +739,7 @@ export default {
     // 解析excel文件并通过异步bulk insert 流的方式进行数据导入
 
     async parseExcelFile(
+      fileExt,
       tablecname,
       createFields, // temp表全列
       inFlag,
@@ -877,7 +878,8 @@ export default {
                 tempRow,
                 tablecname,
                 inFlag,
-                outFlag
+                outFlag,
+                path.basename(fileName, fileExt)
               );
               let values = [];
               let keys = Object.keys(newRowData);
@@ -933,6 +935,7 @@ export default {
     },
     // 解析csv文件全部内容
     async parseCsvFile(
+      fileExt,
       tablecname,
       createFields, // temp表全列
       inFlag,
@@ -1076,7 +1079,8 @@ export default {
                     tempRow,
                     tablecname,
                     inFlag,
-                    outFlag
+                    outFlag,
+                    path.basename(fileName, fileExt)
                   );
                   let values = [];
                   let keys = Object.keys(newRowData);

@@ -156,6 +156,7 @@ export default {
       // 创建聚合函数
       await base.CreateAggregateFunction();
       await base.CreateFileMatchedTable();
+      await base.insertDefaultToPhoneCallBase();
       await this.$store.dispatch("PublicList/getAJLBList");
       await this.$store.dispatch("PublicList/getZCJDMClist");
       await this.$store.dispatch("PublicList/getProvincelist");

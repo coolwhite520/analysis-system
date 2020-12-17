@@ -235,10 +235,18 @@ function TestingHandle(
   dataRow,
   tablename = "",
   /*impotrt=ImportFileClass.DiSanFang,*/ inFlag = "进",
-  outFlag = "出"
+  outFlag = "出",
+  fileName = ""
 ) {
   try {
     if (tablename.startsWith("gas_phone_call_info")) {
+      // 给调单方姓名赋值
+      if (Columns.includes("ddfzsxm")) {
+        if (!dataRow.hasOwnProperty("ddfzsxm")) {
+          // 用文件名填充
+          dataRow["ddfzsxm"] = fileName;
+        }
+      }
       if (Columns.includes("thsj")) {
         // dataRow["thsj"]=dataRow["thsj"].replace(/\//g,'-');
         if (dataRow.hasOwnProperty("hjrq") && dataRow.hasOwnProperty("hjsj")) {

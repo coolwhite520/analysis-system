@@ -1297,7 +1297,7 @@ function AnalysePageGrid_OnLinkClick(
         return;
     }*/
   cA_PageItemDetail.CurrentExeSql = CurrTabItem.Sql_Detail; //模型模板sql
-  let list;
+  let list = [];
   if (CurrTabItem.M_TYPE == 203) {
     let list_ = Get203DetailCondition(
       cA_PageItemDetail,

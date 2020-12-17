@@ -106,6 +106,9 @@ export default {
     condition_child = ""
   ) {
     try {
+      if (pgsqlOrderby === null) {
+        pgsqlOrderby = "";
+      }
       let array2 = [];
       let newValue = condtion.replace(/jyje/g, "JYJE");
       let newValue2 = "";

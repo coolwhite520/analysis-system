@@ -642,7 +642,7 @@ const actions = {
       showType,
       describe,
     } = await models.QueryModelSqlTemplateByMid(tid);
-
+    console.log(title, pgsqltemplate, orderby, mpids, showType, describe);
     let pageItem = state.tableDataList.find(
       (table) => table.pageIndex === pageIndex
     );
@@ -766,6 +766,7 @@ const actions = {
         selectCondition,
         fieldename.toUpperCase()
       );
+
       let filterChildStr = convertSql.convertDataFilterToSqlStr(
         parseInt(tid),
         state.currentTableData.modelFilterChildList

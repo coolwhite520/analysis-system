@@ -223,7 +223,7 @@ export default {
       linkMid,
       value
     ) {
-      console.log(showrightbtn_type);
+      console.log(showrightbtn_type, { linkMid });
       if (showrightbtn_type === "link") {
         let newRow = {};
         for (let k in row) {

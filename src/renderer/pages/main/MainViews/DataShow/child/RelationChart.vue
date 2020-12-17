@@ -1586,7 +1586,11 @@ export default {
         let data = this.$lodash.cloneDeepWith(this.tableData.relationGraphData);
         this.graph.data(data);
       } else {
-        this.graph.data(this.makeData()); // 加载数据
+        let data = this.makeData();
+        if (data === null || typeof data === "undefined") {
+          return;
+        }
+        this.graph.data(); // 加载数据
       }
       this.graph.render(); // 渲染
 
