@@ -111,7 +111,7 @@ export default {
       if (ret.rows[0].count === 0) {
         let sql = `INSERT INTO "st_data_template_field" ("id", "mbdm", "tableename", "fieldcname", "fieldename", "fieldtype", "fieldlength") VALUES (122800, '220001', 'GAS_PHONE_CALL_INFO', '调单方真实姓名', 'DDFZSXM', 1, 100);
         INSERT INTO "st_data_template_field" ("id", "mbdm", "tableename", "fieldcname", "fieldename", "fieldtype", "fieldlength") VALUES (122801, '220001', 'GAS_PHONE_CALL_INFO', '对方真实姓名', 'DFZSXM', 1, 100);
-        `;
+         `;
         await client.query(sql);
       }
     } catch (e) {
