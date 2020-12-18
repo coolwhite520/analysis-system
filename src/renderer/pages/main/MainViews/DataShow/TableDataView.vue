@@ -3,10 +3,11 @@
     <!-- 输出表类型 1表格， 2视图，3上表下图,4上表下柱状图,5上饼图下表 -->
     <!-- <table-chart :tableData="tableData" :limitHeight="contentViewHeight-110"></table-chart> -->
     <div v-if="tableData.showType === 1">
-      <table-chart
+      <!-- <table-chart
         :tableData="tableData"
         :limitHeight="contentViewHeight - 80"
-      ></table-chart>
+      ></table-chart> -->
+      <test-go-view></test-go-view>
     </div>
     <div v-else-if="tableData.showType === 2">
       <template v-if="tableData.tableType === 'model'">
@@ -104,6 +105,7 @@ import RelationChartVisible from "./child/RelationChartVisible";
 import linkRelationChart from "./child/ZjctRelationChart";
 import ZjytPieChart from "./child/ZjytPieChart";
 import ZjytSankeyChart from "./child/ZjytSankeyChart";
+import TestGoView from "./child/TestGojs";
 export default {
   mounted() {
     console.log(this.tableData);
@@ -123,6 +125,7 @@ export default {
     "relation-chart-visible": RelationChartVisible,
     "zjyt-pie-chart": ZjytPieChart,
     "zjyt-sankey-chart": ZjytSankeyChart,
+    "test-go-view": TestGoView,
   },
   props: ["tableData"],
 };

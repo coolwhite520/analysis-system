@@ -6238,6 +6238,11 @@ glogg@^1.0.0:
   dependencies:
     sparkles "^1.0.0"
 
+gojs@^2.1.32:
+  version "2.1.32"
+  resolved "https://registry.yarnpkg.com/gojs/-/gojs-2.1.32.tgz#6225e5833f7f6f84b92d978aa0df61e5a1b6d5f0"
+  integrity sha512-tqoexM4pxJWtwiDLEc+ywU3IRC3omSOuBkSS/r4ax+q4qMXP4/BDBsufiJKuUyCASIJLkFgc0ajkGy/SCxt7gQ==
+
 google-libphonenumber@^3.2.8:
   version "3.2.14"
   resolved "https://registry.yarnpkg.com/google-libphonenumber/-/google-libphonenumber-3.2.14.tgz#f206fa466511427c83aa6b893dd8d949eb8e30ae"
