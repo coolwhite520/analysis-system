@@ -157,7 +157,13 @@ export default {
       if (this.searchCardNo.length >= 16 && this.searchCardNo.length <= 19) {
         try {
           this.loading = true;
-          let ret = await this.$axios.get(`/bank/?cardid=${this.searchCardNo}`);
+          let requestParamString;
+          if (process.env.NODE_ENV !== "production") {
+            requestParamString = `/bank/?cardid=${this.searchCardNo}`;
+          } else {
+            requestParamString = `http://www.guabu.com/bank/?cardid=${this.searchCardNo}`;
+          }
+          let ret = await this.$axios.get(requestParamString);
           const $ = cheerio.load(ret.data);
           let cardLocation = $(
             "#mainleft > table > tbody > tr:nth-child(3) > td:nth-child(2)"
