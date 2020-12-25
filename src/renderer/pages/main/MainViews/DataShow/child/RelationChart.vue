@@ -1590,7 +1590,7 @@ export default {
         if (data === null || typeof data === "undefined") {
           return;
         }
-        this.graph.data(); // 加载数据
+        this.graph.data(data); // 加载数据
       }
       this.graph.render(); // 渲染
 

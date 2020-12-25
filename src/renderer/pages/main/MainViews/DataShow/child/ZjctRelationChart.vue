@@ -991,6 +991,7 @@ export default {
     // 最早交易日期(zzjyrq)，
     // 最晚交易日期(zwjyrq)
     makeData() {
+      console.log("makeData....");
       this.currentSelectedNodes = [];
       let nodes = this.tableData.originGraphData.nodes.map((node) => {
         let {
@@ -1045,6 +1046,7 @@ export default {
       this.entityCount = nodes.length;
       this.linkCount = edges.length;
       this.detailCount = this.entityCount + this.linkCount;
+      console.log({ nodes, edges });
       return { nodes, edges };
     },
     handleChangeSpreadNodeValue(newVal) {
@@ -1608,6 +1610,7 @@ export default {
       });
     },
     async loadGraphDefault() {
+      console.log("loadGraphDefault...");
       let _this = this;
       this.tempgraphicMoneySectionStrMd5 = md5(
         JSON.stringify(this.tableData.graphicMoneySectionList)
@@ -1718,6 +1721,7 @@ export default {
         let data = this.$lodash.cloneDeepWith(this.tableData.relationGraphData);
         this.graph.data(data);
       } else {
+        console.log("hahahah...");
         this.graph.data(this.makeData()); // 加载数据
       }
       this.graph.render(); // 渲染

@@ -15,9 +15,20 @@
           <span class="title-content">IP查询</span>
         </el-button>
       </el-col>
+      <el-col :span="1" class="el-col">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          @click="handleClickParseBankCards"
+        >
+          <span class="iconfont selfIcont">&#xe619;</span>
+          <br />
+          <span class="title-content">银行卡归属地解析</span>
+        </el-button>
+      </el-col>
     </el-row>
     <el-row style="font-size: 8px; color: gray; text-align: center">
-      <el-col :span="2">
+      <el-col :span="3">
         <div>工具</div>
       </el-col>
     </el-row>
@@ -26,12 +37,16 @@
       :iniImportDir="importDir"
     ></file-convert>
     <ip-search v-if="showIpDialogVisible"></ip-search>
+    <parse-bank-card-view
+      v-if="showParseBankCardVisible"
+    ></parse-bank-card-view>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import FileConvert from "@/pages/dialog/fileConvert/fileConvert.vue";
 import IpSearch from "@/pages/dialog/ipSearch/ipSearch";
+import ParseBankCardView from "@/pages/dialog/parseBankCard/parseBankCardView.vue";
 export default {
   data() {
     return {
@@ -39,11 +54,16 @@ export default {
     };
   },
   computed: {
-    ...mapState("DialogPopWnd", ["showConvertDialog", "showIpDialogVisible"]),
+    ...mapState("DialogPopWnd", [
+      "showConvertDialog",
+      "showIpDialogVisible",
+      "showParseBankCardVisible",
+    ]),
   },
   components: {
     "file-convert": FileConvert,
     "ip-search": IpSearch,
+    ParseBankCardView,
   },
   methods: {
     handleClickIP() {
@@ -51,6 +71,9 @@ export default {
     },
     handleClickConvert() {
       this.$store.commit("DialogPopWnd/SET_SHOWCONVERTDIALOG", true);
+    },
+    handleClickParseBankCards() {
+      this.$store.commit("DialogPopWnd/SET_SHOWPARSEBANKCARDVISIBLE", true);
     },
   },
 };

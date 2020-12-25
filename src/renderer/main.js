@@ -21,8 +21,8 @@ Vue.use(VueLazyComponent);
 import ProgressBar from "vuejs-progress-bar";
 Vue.use(ProgressBar);
 
-import go from "gojs";
-Vue.prototype.$go = go;
+// import go from "gojs";
+// Vue.prototype.$go = go;
 
 const lodash = require("lodash");
 
@@ -34,7 +34,10 @@ qqwry.speed(); //启用急速模式;
 Vue.prototype.$qqwry = qqwry;
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
-Vue.http = Vue.prototype.$http = axios;
+
+Vue.prototype.$axios = axios;
+axios.defaults.baseURL = "/api";
+
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 

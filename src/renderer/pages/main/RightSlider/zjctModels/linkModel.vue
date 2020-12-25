@@ -289,6 +289,7 @@ export default {
             ajid
           );
           if (data && data.nodes && data.nodes.length > 2) {
+            console.log(data);
             let pageObj = {
               tid: 401,
               title: this.title,

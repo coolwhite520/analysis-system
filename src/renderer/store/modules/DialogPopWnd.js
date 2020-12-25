@@ -26,6 +26,7 @@ const state = {
   showUpdateVisible: false,
   showConvertDialog: false,
   showIpDialogVisible: false,
+  showParseBankCardVisible: false,
 };
 
 const mutations = {
@@ -108,6 +109,9 @@ const mutations = {
   },
   SET_SHOWIPDIALOGVISIBLE(state, showIpDialogVisible) {
     state.showIpDialogVisible = showIpDialogVisible;
+  },
+  SET_SHOWPARSEBANKCARDVISIBLE(state, showParseBankCardVisible) {
+    state.showParseBankCardVisible = showParseBankCardVisible;
   },
 };
 

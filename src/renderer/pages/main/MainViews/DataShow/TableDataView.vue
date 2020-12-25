@@ -3,14 +3,14 @@
     <!-- 输出表类型 1表格， 2视图，3上表下图,4上表下柱状图,5上饼图下表 -->
     <!-- <table-chart :tableData="tableData" :limitHeight="contentViewHeight-110"></table-chart> -->
     <div v-if="tableData.showType === 1">
-      <!-- <table-chart
+      <table-chart
         :tableData="tableData"
         :limitHeight="contentViewHeight - 80"
-      ></table-chart> -->
-      <test-go-view></test-go-view>
+      ></table-chart>
+      <!-- <test-go-view v-if="tableData.showType === 1"></test-go-view> -->
     </div>
     <div v-else-if="tableData.showType === 2">
-      <template v-if="tableData.tableType === 'model'">
+      <template v-if="tableData.tableType === 'graph'">
         <link-relation-chart
           :tableData="tableData"
           :limitHeight="contentViewHeight - 87"

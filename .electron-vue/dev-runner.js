@@ -73,6 +73,21 @@ function startRenderer() {
     const server = new WebpackDevServer(compiler, {
       contentBase: path.join(__dirname, "../"),
       quiet: true,
+      proxy: {
+        "/api": {
+          // 请求的目标服务器地址
+          target: "http://www.guabu.com",
+          // 设置允许跨域
+          changeOrigin: true,
+          // 重写路径
+          pathRewrite: {
+            "^/api": "",
+          },
+          headers: {
+            referer: "",
+          },
+        },
+      },
       before(app, ctx) {
         app.use(hotMiddleware);
         ctx.middleware.waitUntilValid(() => {
