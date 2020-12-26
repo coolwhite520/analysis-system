@@ -151,7 +151,7 @@ export default {
     async handleClickSerachOne() {
       if (this.searchCardNo.trim().length === 0) {
         this.$message.error({
-          message: "输入的卡号为空，必须为16-19位.",
+          message: "输入的卡号为空，必须为16-19位。",
         });
         return;
       }
