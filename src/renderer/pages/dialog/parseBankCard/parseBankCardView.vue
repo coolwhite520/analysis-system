@@ -114,6 +114,7 @@
 </template>
 
 <script>
+import { remote } from "electron";
 import { mapState } from "vuex";
 const cheerio = require("cheerio");
 import Papa from "papaparse";
@@ -157,13 +158,11 @@ export default {
       if (this.searchCardNo.length >= 16 && this.searchCardNo.length <= 19) {
         try {
           this.loading = true;
-          let requestParamString;
-          if (process.env.NODE_ENV !== "production") {
-            requestParamString = `/bank/?cardid=${this.searchCardNo}`;
-          } else {
-            requestParamString = `http://www.guabu.com/bank/?cardid=${this.searchCardNo}`;
-          }
-          let ret = await this.$axios.get(requestParamString);
+          let requestParamString =
+            process.env.NODE_ENV === "development"
+              ? `/bank/?cardid=${this.searchCardNo}`
+              : `http://www.guabu.com/bank/?cardid=${this.searchCardNo}`;
+          let ret = await await this.$axios.get(requestParamString);
           const $ = cheerio.load(ret.data);
           let cardLocation = $(
             "#mainleft > table > tbody > tr:nth-child(3) > td:nth-child(2)"
@@ -185,6 +184,19 @@ export default {
           message: "输入的卡号长度错误，必须为16-19位.",
         });
       }
+    },
+    async getHttpResource(requstStr) {
+      return new Promise((resolve, reject) => {
+        this.$jsonp(requstStr)
+          .then((json) => {
+            console.log(json);
+            resolve(json);
+          })
+          .catch((err) => {
+            console.log(err);
+            reject(err);
+          });
+      });
     },
     async handleClickParseNow() {
       this.loading = true;
@@ -295,9 +307,11 @@ export default {
                         allCardNoList.push(cardNo);
                         promiseArr.push(
                           (async function () {
-                            let ret = await _this.$axios.get(
-                              `/bank/?cardid=${cardNo}`
-                            );
+                            let requestParam =
+                              process.env.NODE_ENV === "development"
+                                ? `/bank/?cardid=${cardNo}`
+                                : `http://www.guabu.com/bank/?cardid=${cardNo}`;
+                            let ret = await _this.$axios.get(requestParam);
                             const $ = cheerio.load(ret.data);
                             let cardNumber = $(
                               "#mainleft > table > tbody > tr:nth-child(2) > td:nth-child(2)"
@@ -323,7 +337,6 @@ export default {
                     }
                   }
                   await Promise.all(promiseArr);
-                  console.log(retRows);
                   if (retRows.length === 0) {
                     callback();
                     return;

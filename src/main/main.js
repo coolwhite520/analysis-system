@@ -8,6 +8,7 @@ import {
   globalShortcut,
   ipcMain,
 } from "electron";
+app.commandLine.appendSwitch("disable-web-security");
 const isOnline = require("is-online");
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
