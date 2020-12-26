@@ -138,7 +138,7 @@ export default {
       parsedFilePathName: "",
       outputFilePathName: "",
       loading: false,
-      loadingText: "银行卡信息解析中...",
+      loadingText: "银行卡信息解析中, 请稍后...",
       percentage: 0,
       activeName: "first",
       searchCardNo: "",
