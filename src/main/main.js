@@ -7,6 +7,7 @@ import {
   MenuItem,
   globalShortcut,
   ipcMain,
+  session,
 } from "electron";
 app.commandLine.appendSwitch("disable-web-security");
 const isOnline = require("is-online");
@@ -20,6 +21,8 @@ import { ACHEME, LOAD_URL } from "./config";
 import log from "electron-log";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const uuid = require("uuid");
+const { URL } = require("url");
+
 // require("./innerSocket");
 // const renderProcessApi = path.join(__dirname, './inject.js')
 /**
@@ -135,6 +138,21 @@ function createWindow() {
   /**
    * Initial window options
    */
+  const xxx_filter = {
+    urls: ["http://www.guabu.com/*"],
+  };
+  const userAgent =
+    "Mozilla/5.0 (X11; Linux x86_64)" +
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36";
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    xxx_filter,
+    (details, callback) => {
+      const myURL = new URL(details.url);
+      details.requestHeaders["Referer"] = myURL.origin;
+      details.requestHeaders["User-Agent"] = userAgent;
+      callback({ requestHeaders: details.requestHeaders });
+    }
+  );
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
 
   app.setName(appName);

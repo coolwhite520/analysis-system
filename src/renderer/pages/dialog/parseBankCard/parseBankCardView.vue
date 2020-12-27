@@ -148,6 +148,9 @@ export default {
     };
   },
   methods: {
+    async isAvalibleCardNo(strCardNo) {
+      return /^([1-9]{1})(\d{14}|\d{18})$/.test(strCardNo);
+    },
     async handleClickSerachOne() {
       if (this.searchCardNo.trim().length === 0) {
         this.$message.error({
@@ -155,7 +158,11 @@ export default {
         });
         return;
       }
-      if (this.searchCardNo.length >= 16 && this.searchCardNo.length <= 19) {
+      if (
+        this.searchCardNo.length >= 16 &&
+        this.searchCardNo.length <= 19 &&
+        this.isAvalibleCardNo(this.searchCardNo)
+      ) {
         try {
           this.loading = true;
           let requestParamString =
@@ -181,7 +188,7 @@ export default {
         }
       } else {
         this.$message.error({
-          message: "输入的卡号长度错误，必须为16-19位.",
+          message: "输入的卡号不符合规定。",
         });
       }
     },
@@ -302,7 +309,8 @@ export default {
                       if (
                         cardNo.length >= 16 &&
                         cardNo.length <= 19 &&
-                        !allCardNoList.includes(cardNo)
+                        !allCardNoList.includes(cardNo) &&
+                        _this.isAvalibleCardNo(cardNo)
                       ) {
                         allCardNoList.push(cardNo);
                         promiseArr.push(
