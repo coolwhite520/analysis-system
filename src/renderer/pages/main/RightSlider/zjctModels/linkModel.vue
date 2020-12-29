@@ -196,6 +196,8 @@ export default {
     });
     this.$electron.ipcRenderer.on("calculate-link-end", (e, data) => {
       if (data && data.nodes && data.nodes.length > 2) {
+        this.loadingButn = false;
+        clearInterval(this.loop);
         let pageObj = {
           tid: 401,
           title: this.title,
@@ -214,9 +216,9 @@ export default {
         this.$message({
           message: "当前查询无结果，请修改参数",
         });
+        this.loadingButn = false;
+        clearInterval(this.loop);
       }
-      this.loadingButn = false;
-      clearInterval(this.loop);
     });
   },
   destroyed() {
