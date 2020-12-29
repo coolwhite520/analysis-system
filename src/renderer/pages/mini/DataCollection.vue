@@ -853,6 +853,7 @@ export default {
                     .toString()
                     .replace(/\"/g, "")
                     .replace(/\'/g, "")
+                    .replace(/\\/g, "\\\\")
                     .replace(/^\s+|\s+$/g, "");
                 }
                 matchedFieldIndex++;
@@ -1026,6 +1027,7 @@ export default {
                       item
                         .replace(/\"/g, "")
                         .replace(/\'/g, "")
+                        .replace(/\\/g, "\\\\")
                         .replace(/^\s+|\s+$/g, "")
                     );
                     if (row.toString() !== fileAllColsStr) {
@@ -1248,6 +1250,9 @@ export default {
                   let obj = targetTableStruct.rows.find(
                     (el) => el.fieldename.toLowerCase() === k
                   );
+                  if (row[k] === null) {
+                    console.log(row, k);
+                  }
                   if (obj.fieldtype === 1 || obj.fieldtype === 6) {
                     values.push(`${row[k].trim()}`);
                   } else if (obj.fieldtype === 4) {

@@ -17,12 +17,14 @@ export default {
       client.release();
     }
   },
+
   // 根据模版代码获取对应的列名称
   QueryColsNameByMbdm: async function(mbdm) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
       let sql = `SELECT ID, MBDM, TABLEENAME, FIELDCNAME, FIELDENAME, FIELDTYPE, fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
+      
       const res = await client.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } finally {

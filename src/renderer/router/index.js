@@ -26,6 +26,13 @@ export default new Router({
         require(["@/pages/mini/ExportView"], resolve);
       },
     },
+    {
+      path: "/zjct",
+      name: "zjct",
+      component: function(resolve) {
+        require(["@/pages/mini/ZjctWorkerView"], resolve);
+      },
+    },
     // {
     //   path: "/dbconfig",
     //   name: "dbconfig",

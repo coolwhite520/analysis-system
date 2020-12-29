@@ -1,5 +1,7 @@
 import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 import createDataImportWindow from "./window/dataCollectionWindow";
+import createZjctWorkerWindow from "./window/zjctWorkerWindow";
+
 import { Pool } from "pg";
 const log = require("electron-log");
 export default function() {
@@ -71,6 +73,14 @@ export default function() {
     global.mainWindow.webContents.send("export-one-file-over", args);
   });
 
+  // 给cjctView窗口发送消息
+  ipcMain.on("calculate-link-begin", (e, args) => {
+    global.zjctWorkerWnd.webContents.send("calculate-link-begin", args);
+  });
+  ipcMain.on("calculate-link-end", (e, args) => {
+    global.mainWindow.webContents.send("calculate-link-end", args);
+  });
+
   // 数据库初始化操作窗口
   ipcMain.on("hide-db-init", () => {
     global.dbInitWindow.hide();
@@ -97,6 +107,24 @@ export default function() {
     if (global.dataCollectionWindow) {
       global.dataCollectionWindow.close();
       global.dataCollectionWindow = null;
+    }
+  });
+  // 打开zjct分析进程
+  ipcMain.on("calculate-link-open", () => {
+    if (global.zjctWorkerWnd) {
+      global.zjctWorkerWnd.close();
+      global.zjctWorkerWnd = null;
+    }
+    global.zjctWorkerWnd = createZjctWorkerWindow(BrowserWindow);
+    if (process.env.NODE_ENV === "development") global.zjctWorkerWnd.show();
+  });
+  ipcMain.on("calculate-link-ready", () => {
+    global.mainWindow.webContents.send("calculate-link-ready");
+  });
+  ipcMain.on("calculate-link-close", () => {
+    if (global.zjctWorkerWnd) {
+      global.zjctWorkerWnd.close();
+      global.zjctWorkerWnd = null;
     }
   });
 

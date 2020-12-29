@@ -15,6 +15,7 @@ import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import initIpcEvent from "./modules/ipcEvents";
 import createExportWindow from "./modules/window/exportWindow";
+import createZjctWorkerWindow from "./modules/window/zjctWorkerWindow";
 import fs from "fs";
 import path from "path";
 import { ACHEME, LOAD_URL } from "./config";

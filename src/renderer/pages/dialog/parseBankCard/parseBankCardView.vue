@@ -253,6 +253,8 @@ export default {
           console.log(fileAllCols);
           let lastOneBuffer = Buffer.from([]); // \n 后面的部分buffer
           let writeFileStream = fs.createWriteStream(outputFilePath);
+          // EF BB BF
+          writeFileStream.write(Buffer.from([0xef, 0xbb, 0xbf]));
           writeFileStream.write(fileAllCols.join(",") + "\n");
           let readFileStream = fs.createReadStream(filePathName, {
             highWaterMark: everySize,
@@ -358,6 +360,7 @@ export default {
               through2.obj(function (rows, enc, callback) {
                 let insertValues = [];
                 for (let row of rows) {
+                  row = row.map((item) => `${item}\t`);
                   let insertStr = row.join(", ") + "\n";
                   insertValues.push(insertStr);
                 }

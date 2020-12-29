@@ -89,7 +89,7 @@
         <el-input-number
           size="mini"
           v-model="form.minJe"
-          :min="5000"
+          :min="100"
         ></el-input-number>
       </el-form-item>
       <el-form-item label="交易时间范围：">
@@ -133,13 +133,16 @@
           type="primary"
           style="width: 60%"
           :loading="loadingButn"
-          >开始查找</el-button
+          >{{ btnSearchTip }}</el-button
         >
       </el-row>
     </el-form>
   </el-dialog>
 </template>
 <script>
+import path from "path";
+import { Pool, Client, Query } from "pg";
+import cases from "@/db/Cases.js";
 import { mapState } from "vuex";
 import dataShowTable from "@/db/DataShowTable.js";
 import linkPathModel from "@/utils/sql/LinkPathViewModel";
@@ -186,9 +189,46 @@ export default {
       return str;
     },
   },
-  mounted() {},
+  mounted() {
+    this.$electron.ipcRenderer.send("calculate-link-open");
+    this.$electron.ipcRenderer.on("calculate-link-ready", (e, data) => {
+      this.isLinkProcessReady = true;
+    });
+    this.$electron.ipcRenderer.on("calculate-link-end", (e, data) => {
+      if (data && data.nodes && data.nodes.length > 2) {
+        let pageObj = {
+          tid: 401,
+          title: this.title,
+          componentName: "table-data-view",
+          dispatchName: "ShowTable/showModelTable",
+          tableType: "graph",
+          modelGraphType: "link",
+          showType: 2,
+          originGraphData: data,
+          rightTabs: [],
+          modelFilterChildList: [],
+        };
+        this.handleClose();
+        this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", pageObj);
+      } else {
+        this.$message({
+          message: "当前查询无结果，请修改参数",
+        });
+      }
+      this.loadingButn = false;
+      clearInterval(this.loop);
+    });
+  },
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners("calculate-link-end");
+    this.$electron.ipcRenderer.removeAllListeners("calculate-link-ready");
+  },
   data() {
     return {
+      isLinkProcessReady: false,
+      loop: null,
+      tiemSpan: 0,
+      btnSearchTip: "开始查找",
       loadingButn: false,
       form: {
         radioFangxiang: "sy",
@@ -210,11 +250,27 @@ export default {
     };
   },
   methods: {
+    async sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("done");
+        }, ms);
+      });
+    },
+    async waitForProcessReady() {
+      while (true) {
+        if (this.isLinkProcessReady) {
+          break;
+        }
+        await this.sleep(200);
+      }
+    },
     handleChangeRadio(value) {
       console.log(value);
       this.form.radioWeidu = value;
     },
     handleClose() {
+      this.$electron.ipcRenderer.send("calculate-link-close");
       this.$store.commit(
         "DialogPopWnd/SET_SHOWCIRCLEMODELDIALOGVISIBLE",
         false
@@ -247,75 +303,36 @@ export default {
     handleClickSearch(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          // alert("submit!");
           this.loadingButn = true;
           let ajid = this.caseBase.ajid;
-          console.log({ ajid });
-          console.log(
-            2,
-            parseInt(this.form.radioLeixing),
-            parseInt(this.form.radioWeidu),
-            this.form.checkGroup,
-            this.form.radioFangxiang,
-            this.form.cengShuEnd,
-            this.form.cengShuBegin,
-            this.form.beginPoint,
-            this.form.endPoint,
-            this.form.dateBegin,
-            this.form.dateEnd,
-            this.form.minJe,
-            this.form.minBs,
-            this.form.timeSpan,
-            this.form.biLiBegin,
-            this.form.biLiEnd,
-            "",
-            ajid
-          );
-          let data = await linkPathModel.getCapitalPenetration(
-            2,
-            parseInt(this.form.radioLeixing),
-            parseInt(this.form.radioWeidu),
-            this.form.checkGroup,
-            this.form.radioFangxiang,
-            this.form.cengShuEnd,
-            this.form.cengShuBegin,
-            this.form.beginPoint,
-            this.form.endPoint,
-            this.form.dateBegin,
-            this.form.dateEnd,
-            this.form.minJe,
-            this.form.minBs,
-            this.form.timeSpan,
-            this.form.biLiBegin,
-            this.form.biLiEnd,
-            "",
-            ajid
-          );
-          if (data && data.nodes && data.nodes.length > 2) {
-            let pageObj = {
-              tid: 401,
-              title: this.title,
-              componentName: "table-data-view",
-              dispatchName: "ShowTable/showModelTable",
-              tableType: "graph",
-              modelGraphType: "link",
-              showType: 2,
-              originGraphData: data,
-              rightTabs: [],
-              modelFilterChildList: [],
-            };
-            this.handleClose();
-            this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", pageObj);
-          } else {
-            this.$message({
-              message: "当前查询无结果，请修改参数",
-            });
-          }
-          this.loadingButn = false;
-        } else {
-          console.log("error submit!!");
-          this.loadingButn = false;
-          return false;
+          let data = {
+            modelType: 2,
+            searchType: parseInt(this.form.radioLeixing),
+            weiDuType: parseInt(this.form.radioWeidu),
+            isGroup: this.form.checkGroup,
+            directrion: this.form.radioFangxiang,
+            searchMaxCeng: this.form.cengShuEnd,
+            searchMinCeng: this.form.cengShuBegin,
+            beginPoint: this.form.beginPoint,
+            endPoint: this.form.endPoint,
+            beginDate: this.form.dateBegin,
+            endDate: this.form.dateEnd,
+            minJyje: this.form.minJe,
+            minBs: this.form.minBs,
+            timeSpan: this.form.timeSpan,
+            minJcb: this.form.biLiBegin,
+            maxJcb: this.form.biLiEnd,
+            condition: "",
+            ajid: ajid,
+          };
+          this.tiemSpan = 0;
+          this.loop = setInterval(() => {
+            this.tiemSpan++;
+            this.btnSearchTip = `开始查找(${this.tiemSpan})s`;
+          }, 1000);
+
+          await this.waitForProcessReady();
+          this.$electron.ipcRenderer.send("calculate-link-begin", data);
         }
       });
     },

@@ -31,6 +31,7 @@ export default {
         });
 
         let columns = headers.map((el) => el.fieldcname);
+        writeableStream.write(Buffer.from([0xef, 0xbb, 0xbf]));
         writeableStream.write(columns.join(",") + "\n");
         await cases.SwitchCase(client, ajid);
         // 采用异步的方式进行
@@ -49,7 +50,7 @@ export default {
 
             if (row[k] && typeof row[k] === "string" && row[k].includes(","))
               rowArr.push(`"${row[k]}"`);
-            else rowArr.push(row[k]);
+            else rowArr.push(row[k] ? `${row[k]}\t` : "");
           }
           let retRowStr = rowArr.join(",") + "\n";
           return retRowStr;

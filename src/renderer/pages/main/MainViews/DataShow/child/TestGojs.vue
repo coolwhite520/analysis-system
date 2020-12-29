@@ -237,6 +237,7 @@ export default {
       function mouseEnter(e, obj) {
         var shape = obj.findObject("SHAPE");
         shape.fill = _this.mouseEnterFillColor;
+        
         let links = obj.findLinksConnected();
         links.each((link) => {
           link.stroke = "rgba(0,90,156,0.3)";
