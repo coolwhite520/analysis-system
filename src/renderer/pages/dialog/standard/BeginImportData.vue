@@ -285,6 +285,7 @@
                 type="primary"
                 size="small"
                 style="width: 100%"
+                :loading="btnLoading"
                 >导入到临时数据表</el-button
               >
             </div></el-col
@@ -383,6 +384,7 @@ export default {
   },
   data() {
     return {
+      btnLoading: false,
       oldVersionXlsFileList: [],
       radioImportType: "openFile",
       checkOver: false,
@@ -527,6 +529,7 @@ export default {
       if (this.multipleSelection.length > 0) {
         this.errorRowNumArr = [];
         this.checkOver = false;
+        this.btnLoading = true;
         for (let data of this.multipleSelection) {
           await this.sleep(5);
           await this.checkFileRowError(data);
@@ -569,11 +572,13 @@ export default {
           newExampleList
         );
         this.$electron.ipcRenderer.send("read-all-file", newExampleList);
+        this.btnLoading = false;
       } else {
         this.$message.error({
           title: "错误",
           message: `当前没有选择任何需要导入的数据, 请勾选后继续进行！`,
         });
+        this.btnLoading = false;
       }
     },
     //
@@ -628,7 +633,7 @@ export default {
     },
     // multipleSelection 代表当前选中的行数据
     handleSelectionChange(multipleSelection) {
-      this.multipleSelection = multipleSelection;
+      this.multipleSelection = this.$lodash.cloneDeep(multipleSelection);
     },
     readFileList(dir, filesList = []) {
       const stat = fs.statSync(dir);
