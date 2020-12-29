@@ -116,11 +116,23 @@
       </el-form-item>
       <el-form-item label="上下层金额比例：" v-show="form.radioWeidu === '0'">
         <el-col :span="11">
-          <el-input size="mini" v-model.number="form.biLiBegin"></el-input>
+          <el-input
+            size="mini"
+            v-model="form.biLiBegin"
+            onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,1})?).*$/g, '$1')"
+          >
+            ></el-input
+          >
         </el-col>
         <el-col class="line" :span="2" style="text-align: center">-</el-col>
         <el-col :span="11">
-          <el-input size="mini" v-model.number="form.biLiEnd"></el-input>
+          <el-input
+            size="mini"
+            v-model="form.biLiEnd"
+            onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,1})?).*$/g, '$1')"
+          >
+            ></el-input
+          >
         </el-col>
       </el-form-item>
       <el-row style="margin-top: 20px; text-align: center">

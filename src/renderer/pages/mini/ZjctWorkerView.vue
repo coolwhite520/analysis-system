@@ -9,6 +9,7 @@ import cases from "@/db/Cases.js";
 export default {
   methods: {
     async onCalLinkData(event, data) {
+      console.log(data);
       let {
         modelType,
         searchType,
