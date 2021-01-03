@@ -286,17 +286,18 @@ export default {
           "HomePageSwitch/SET_VIEW_NAME",
           "show-exist-case-view"
         );
+        this.$store.dispatch("Cases/getExistCaseAsync");
         this.$store.commit("EditCase/SET_SAVE_STATE", "failed");
         this.$message({
           title: "成功",
-          message: `编辑案件[${this.caseBase.ajmc}]并保存成功!`,
+          message: `编辑案件，编号：[${this.caseBase.ajbh}]并保存成功!`,
           type: "success",
         });
       } else if (newState === "failed") {
         this.loading = false;
         this.$message.error({
           title: "错误",
-          message: `编辑案件[${this.caseBase.ajmc}]失败!`,
+          message: `编辑案件[${this.caseBase.ajbh}]失败!`,
         });
       }
     },

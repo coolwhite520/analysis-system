@@ -1,5 +1,7 @@
 import cases from "./Cases";
 import Default from "@/utils/sql/Default";
+import { finished } from "pg-query-stream";
+import { cli } from "webpack";
 const log = require("@/utils/log");
 
 const list_0 = [
@@ -182,6 +184,225 @@ export default {
       client.release();
     }
   },
+  async DelteItem(pageItem) {
+    const client = await global.pool.connect();
+    try {
+      let tid = pageItem.Index;
+      let sql = `UPDATE icap_base.layout_purpose set state=3 where tid=${tid}`;
+      if (pageItem.ITEM_OBJ.state === "2") {
+        sql = `delete from icap_base.layout_purpose where tid=${tid}`;
+      }
+      await client.query(sql);
+      return { success: true, msg: "节点删除成功。" };
+    } catch (e) {
+      console.log(e);
+      return { success: false, msg: "节点删除失败：" + e.message };
+    } finally {
+      client.release();
+    }
+  },
+  //click
+  async SelectChildTree(LABEL_ID) {
+    const client = await global.pool.connect();
+    try {
+      let sql = `SELECT * from icap_base.layout_purpose_child where purposeid=${LABEL_ID};`;
+      let dataTable = await client.query(sql);
+      if (dataTable != null && dataTable.rows.length > 0) {
+        let recordConditionList = JSON.parse(
+          dataTable.rows[0]["filtercontent"]
+        );
+        return recordConditionList;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.log("OnClick_Menu:", e);
+      return null;
+    } finally {
+      client.release();
+    }
+  },
+  // 重置资金用途表
+  async ResetDefaultYtTable() {
+    const client = await global.pool.connect();
+    try {
+      let sql = `update icap_base.layout_purpose set state=0 where state=3; 
+      delete from icap_base.layout_purpose where state!=0;
+      update icap_base.layout_purpose set ischecked=1`;
+      await client.query(sql);
+      return { success: true };
+    } catch (e) {
+      return { success: false, msg: e.message };
+    } finally {
+      client.release();
+    }
+  },
+  async SelectItemOrNotSelectItem(cA_PageItem) {
+    const client = await global.pool.connect();
+    try {
+      for (let current of cA_PageItem.Items) {
+        let strSql = "";
+        if (cA_PageItem.IsPreview) {
+          current.IsPreview = true;
+          strSql =
+            "update icap_base.layout_purpose set ischecked=1 where tid=" +
+            current.Index +
+            ";";
+        } else {
+          current.IsPreview = false;
+          strSql =
+            "update icap_base.layout_purpose set ischecked=0 where tid=" +
+            current.Index +
+            ";";
+        }
+        await client.query(strSql);
+        for (let current2 of current.Items) {
+          let strSql2 = "";
+          if (current.IsPreview) {
+            current2.IsPreview = true;
+            strSql2 =
+              "update icap_base.layout_purpose set ischecked=1 where tid=" +
+              current2.Index +
+              ";";
+          } else {
+            current2.IsPreview = false;
+            strSql2 =
+              "update icap_base.layout_purpose set ischecked=0 where tid=" +
+              current2.Index +
+              ";";
+          }
+
+          await client.query(strSql2);
+        }
+      }
+      let strSql3 = "";
+      if (cA_PageItem.IsPreview) {
+        strSql3 =
+          "update icap_base.layout_purpose set ischecked=1 where tid=" +
+          cA_PageItem.Index +
+          ";";
+      } else {
+        strSql3 =
+          "update icap_base.layout_purpose set ischecked=0 where tid=" +
+          cA_PageItem.Index +
+          ";";
+      }
+
+      await client.query(strSql3);
+      return { success: true, msg: "节点操作成功" };
+    } catch (e) {
+      console.log("CheckCommand", e);
+      return { success: false, msg: "节点操作失败：" + e.message };
+    } finally {
+      client.release();
+    }
+  },
+  //保存添加子节点   参数：选中的节点，添加或更新的节点名称，添加或更新
+  async InsertItem(pageItem, mc, IsInsert) {
+    const client = await global.pool.connect();
+    try {
+      let dr = pageItem.ITEM_OBJ;
+      let parentid = dr["tid"];
+      if (IsInsert == false) {
+        parentid = dr["parentid"]; //修改
+      }
+      let sql =
+        `select p.*,0.0 je,0.0 rate,0 jyzjhm,0 cxzh,0 count from icap_base.layout_purpose p where p.state in (0,2) and p.sort in (1,2) and p.type = ` +
+        dr["type"];
+      let data = await client.query(sql);
+      let PurposeList = data.rows;
+      if (this.checkname(PurposeList, mc, parentid)) {
+        if (IsInsert) {
+          let text = this.checksort(PurposeList, dr);
+          if (text == "") {
+            console.log("超出最大限制");
+            return { success: false, msg: "超出最大限制" };
+          }
+          let num = dr["parentid"] == "-1" ? "1" : "2"; //sort层级
+          let sql_insert =
+            `insert into icap_base.layout_purpose (parentid,title,color,state,type,sort,ischecked)values(` +
+            parentid +
+            `,'` +
+            mc +
+            `','` +
+            text +
+            `',2,` +
+            dr["type"] +
+            `,` +
+            num +
+            `,1);`;
+          //console.log(sql_insert);
+          await client.query(sql_insert);
+          return { success: true, msg: "数据插入成功！" };
+        } else {
+          let sql_updata =
+            `update icap_base.layout_purpose set title ='` +
+            mc +
+            `' where tid=` +
+            dr["tid"] +
+            `;`;
+          //console.log(sql_updata);
+          await client.query(sql_updata);
+          return { success: true, msg: "数据更新成功！" };
+        }
+      } else {
+        return { success: false, msg: "名称已存在，请输入其它名称" };
+      }
+    } catch (e) {
+      console.log("保存失败！", e);
+      return { success: false, msg: e.message };
+    } finally {
+      client.release();
+    }
+  },
+  //检测是否重名
+  checkname(list, mc, parentid) {
+    for (let item of list) {
+      if (item["title"] == mc && item["parentid"] == parentid) {
+        console.log("名称已存在，请输入其它名称");
+        return false;
+      }
+    }
+    return true;
+  },
+  //检测节点数量
+  checksort(list, row) {
+    let res = [];
+    let text = "";
+    if (row["sort"] == "0") {
+      for (let item of list) {
+        if (
+          item["sort"] == "1" &&
+          (item["state"] == "0" || item["state"] == "2") &&
+          item["type"] == row["type"]
+        ) {
+          res.push(item);
+        }
+      }
+      if (res.length >= 10) {
+        console.log("保存失败，节点数量已超过10条！");
+        return "";
+      }
+      text = list_0[res.length];
+    } else if (row["sort"] == "1") {
+      for (let item of list) {
+        if (
+          item["sort"] == "2" &&
+          (item["state"] == "0" || item["state"] == "2") &&
+          item["type"] == row["type"]
+        ) {
+          res.push(item);
+        }
+      }
+      if (res.length >= 50) {
+        console.log("保存失败，节点数量已超过50条！");
+        return "";
+      }
+      text = list_1[res.length];
+    }
+    return text;
+  },
+
   GetSort: function(list_1, value) {
     let res = [];
     if (list_1 == undefined || list_1 == null || list_1.length == 0) {

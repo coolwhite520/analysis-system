@@ -385,6 +385,8 @@ export default {
       ASJFSDDXZQHDM=$10,ASJFSDDXZQMC=$11,JYAQ=$12,ZHAQ=$13,CJR=$14,SFSC=$15,SFBDWKJ=$16,SJLX=$17 where AJID=${ajid};`;
       await client.query(sql, params);
       return true;
+    } catch (e) {
+      return false;
     } finally {
       client.release();
     }

@@ -700,9 +700,14 @@
             class="selectionItem"
           >
             <!-- 资金用途分析 -->
-            <!-- <div class="childTitle">
-              资金用途：<el-button type="text" size="mini">管理分类</el-button>
-            </div> -->
+            <div class="childTitle">
+              资金用途：<el-button
+                type="text"
+                size="mini"
+                @click="handleClickShowCatogryManager"
+                >管理分类</el-button
+              >
+            </div>
             <div class="childTitle">
               图形类别：
               <el-select
@@ -764,6 +769,7 @@
     </el-row>-->
     <money-dalog v-if="showMoneySectionDialog"></money-dalog>
     <weidu-dialog v-if="showWeiSettingVisible"></weidu-dialog>
+    <zjyt-dialog v-if="showZjytVisible"></zjyt-dialog>
   </div>
 </template>
 
@@ -772,10 +778,12 @@ import aes from "@/utils/aes";
 import { mapState, mapGetters } from "vuex";
 import MoneyDialog from "@/pages/dialog/moneySectionSetting/moneySectionDialog.vue";
 import WeiDuDialog from "@/pages/dialog/zjTouShiModel/weiduSetting.vue";
+import ZjytDialog from "@/pages/dialog/zjytModel/zjytModel.vue";
 export default {
   components: {
     "money-dalog": MoneyDialog,
     "weidu-dialog": WeiDuDialog,
+    "zjyt-dialog": ZjytDialog,
   },
   data() {
     return {
@@ -925,6 +933,7 @@ export default {
     ...mapState("DialogPopWnd", [
       "showMoneySectionDialog",
       "showWeiSettingVisible",
+      "showZjytVisible",
     ]),
     MoneyIntervalDes() {
       let text = "";
@@ -994,6 +1003,9 @@ export default {
     this.listst_jycs = JSON.parse(JSON.stringify(this.list_condition));
   },
   methods: {
+    handleClickShowCatogryManager() {
+      this.$store.commit("DialogPopWnd/SET_SHOWZJYTVISIBLE", true);
+    },
     async handleChangeFundUsePicType(newType) {
       await this.$store.commit("ShowTable/UPDATE_MODEL_SELECTION", {
         pageIndex: this.currentTableData.pageIndex,

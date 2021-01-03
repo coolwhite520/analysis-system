@@ -91,8 +91,9 @@ const actions = {
       sfbdwkj,
       sjlx
     );
-    if (res) commit("SET_SAVE_STATE", "success");
-    else commit("SET_SAVE_STATE", "failed");
+    if (res) {
+      commit("SET_SAVE_STATE", "success");
+    } else commit("SET_SAVE_STATE", "failed");
   },
 };
 

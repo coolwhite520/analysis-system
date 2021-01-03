@@ -35,6 +35,11 @@ export default {
   box-sizing: border-box;
   -webkit-user-select: none;
 }
+/* 去掉tree控件中的横向滚动条 */
+.el-tree > .el-tree-node {
+  display: inline-block;
+  min-width: 100%;
+}
 
 #app {
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);

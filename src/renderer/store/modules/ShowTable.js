@@ -953,7 +953,7 @@ const actions = {
             fieldename: "ZJYT",
             fieldcname: "资金用途",
           },
-        ];
+        ].reverse();
       }
       res = await models.GetDataTable("1");
       if (res.rows.length > 0) {
@@ -1001,7 +1001,7 @@ const actions = {
             fieldename: "ZJYT",
             fieldcname: "资金用途",
           },
-        ];
+        ].reverse();
       }
       dataList.push(inData, outData);
       console.log(dataList);

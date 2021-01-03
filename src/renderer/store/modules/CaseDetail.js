@@ -28,7 +28,7 @@ const state = {
 };
 const mutations = {
   SET_CASE_DETAIL(state, caseBase) {
-    state.caseBase = caseBase;
+    Vue.set(state, "caseBase", caseBase);
   },
   SET_DELETE_STATE(state, delState) {
     state.deleteState = delState;

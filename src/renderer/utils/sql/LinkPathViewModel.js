@@ -628,7 +628,7 @@ function SumDataProvider() {
         ids = dataRow["jids"];
         let dataRow3 = this.base.SetRowData(
           dataRow,
-          false,
+          true,
           valueOrDefault2,
           parseInt(dataRow["jzbs"]),
           ids
