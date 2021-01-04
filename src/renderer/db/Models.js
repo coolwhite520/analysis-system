@@ -1,7 +1,5 @@
 import cases from "./Cases";
 import Default from "@/utils/sql/Default";
-import { finished } from "pg-query-stream";
-import { cli } from "webpack";
 const log = require("@/utils/log");
 
 const list_0 = [
@@ -719,5 +717,23 @@ export default {
       observableCollection.push(chartModel3);
     }
     return observableCollection;
+  },
+  SaveNewChildItemToTable: async function(purposeid, filtercontent) {
+    const client = await global.pool.connect();
+    try {
+      let sql = ` select count(*)::int count from icap_base.layout_purpose_child where purposeid=${purposeid}`;
+      let res = await client.query(sql);
+      if (res.rows[0].count > 0) {
+        sql = `update icap_base.layout_purpose_child  set filtercontent='${filtercontent}' where purposeid=${purposeid}; `;
+      } else {
+        sql = `insert into icap_base.layout_purpose_child (purposeid,filtercontent) VALUES(${purposeid}, '${filtercontent}');`;
+      }
+      await client.query(sql);
+      return { success: true };
+    } catch (e) {
+      return { success: false, msg: e.message };
+    } finally {
+      client.release();
+    }
   },
 };

@@ -16,13 +16,13 @@
           <span class="title-close" @click="handleClose"></span>
         </div>
       </div>
-      <div style="height: 400px">
+      <div>
         <el-row>
           <el-col :span="8">
             <el-input
               v-model="filterText"
               size="mini"
-              placeholder="输入可过滤"
+              placeholder="输入关键字可快速查询"
             ></el-input>
             <div class="block">
               <el-tree
@@ -106,8 +106,170 @@
               >
             </div>
           </el-col>
-          <el-col :span="16"></el-col>
+          <el-col :span="16">
+            <el-tree
+              class="el-tree"
+              :data="filterList"
+              node-key="id"
+              default-expand-all
+              :expand-on-click-node="false"
+              :draggable="false"
+              :props="defaultProps2"
+            >
+              <div class="custom-tree-node" slot-scope="{ node, data }">
+                <!-- 判断节点类型 如果是leaf节-->
+                <el-row v-if="data.DataFiltratorType === 1">
+                  <el-select
+                    v-model="data.ColumnName"
+                    size="mini"
+                    placeholder="请选择"
+                    style="width: 25%"
+                  >
+                    <el-option
+                      v-for="item of ColumnNameList"
+                      :key="item.ColumnNameEN"
+                      :label="item.ColumnNameCN"
+                      :value="item.ColumnNameEN"
+                    ></el-option>
+                  </el-select>
+
+                  <el-select
+                    v-model="data.Logical"
+                    size="mini"
+                    placeholder="请选择"
+                    style="width: 25%"
+                  >
+                    <el-option
+                      v-for="item of LogicList"
+                      :key="item.FiltrateLogicEN"
+                      :label="item.FiltrateLogicCN"
+                      :value="item.FiltrateLogicEN"
+                    ></el-option>
+                  </el-select>
+
+                  <span>
+                    <el-input
+                      v-model="data.StrValue"
+                      placeholder="请输入内容"
+                      style="width: 25%"
+                      size="mini"
+                    ></el-input>
+                  </span>
+
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="点击以删除一个筛选项目"
+                    placement="top"
+                  >
+                    <el-button
+                      type="text"
+                      @click="() => leafRemove(data, node)"
+                      class="iconfont mybtnAddOrRemove"
+                      >&#xe616;</el-button
+                    >
+                  </el-tooltip>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="点击以新增一个筛选项目"
+                    placement="top"
+                  >
+                    <el-button
+                      type="text"
+                      @click="() => leafAppend(data, node)"
+                      class="iconfont mybtnAddOrRemove"
+                      >&#xe61f;</el-button
+                    >
+                  </el-tooltip>
+                </el-row>
+                <!-- 判断节点类型 如果是非leaf节-->
+                <el-row v-else>
+                  <div v-if="data.id === -1">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="
+                        data.DataFiltratorModelList[0].LineCode === '且'
+                          ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
+                          : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                      "
+                      placement="top"
+                    >
+                      <el-button
+                        type="text"
+                        size="mini"
+                        @click="() => hanleClickRootAndOr(data, node)"
+                        >{{
+                          data.DataFiltratorModelList[0].LineCode
+                        }}</el-button
+                      >
+                    </el-tooltip>
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="点击以新增一个筛选项目"
+                      placement="top"
+                    >
+                      <el-button
+                        type="text"
+                        @click="() => rootAppend(data, node)"
+                        class="iconfont mybtnAddOrRemove"
+                        >&#xe61f;</el-button
+                      >
+                    </el-tooltip>
+                  </div>
+                  <div v-else>
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="
+                        data.DataFiltratorModelList[0].LineCode === '且'
+                          ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
+                          : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                      "
+                      placement="top"
+                    >
+                      <el-button
+                        type="text"
+                        size="mini"
+                        @click="() => hanleClickRootAndOr(data, node)"
+                        >{{
+                          data.DataFiltratorModelList[0].LineCode
+                        }}</el-button
+                      >
+                    </el-tooltip>
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="点击以删除所有子节点"
+                      placement="top"
+                    >
+                      <el-button
+                        type="text"
+                        @click="() => fatherRemove(data, node)"
+                        class="iconfont mybtnAddOrRemove"
+                        >&#xe616;</el-button
+                      >
+                    </el-tooltip>
+                  </div>
+                </el-row>
+              </div>
+            </el-tree>
+          </el-col>
         </el-row>
+        <div style="text-align: center">
+          <el-button
+            type="primary"
+            size="mini"
+            style="width: 25%"
+            @click="handleClickSave"
+            >保存</el-button
+          >
+          <el-button size="mini" style="width: 25%" @click="handleClose"
+            >取消</el-button
+          >
+        </div>
       </div>
     </el-dialog>
 
@@ -171,7 +333,9 @@
 
 <script>
 import { mapState } from "vuex";
+import Default from "@/utils/sql/Default.js";
 import Models from "@/db/Models.js";
+
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showZjytVisible"]),
@@ -193,6 +357,7 @@ export default {
   },
   data() {
     return {
+      filterList: [],
       currentNode: null,
       currentNodeName: "",
       newName: "",
@@ -204,8 +369,78 @@ export default {
         children: "Items",
         label: "LABEL_NAME",
       },
+      defaultProps2: {
+        children: "DataFiltratorModelList",
+      },
       title: "资金用途管理分类",
       defaultCheckedKeys: [],
+      LogicList: [
+        {
+          FiltrateLogicCN: "等于",
+          LogicID: Default.FiltrateLogicID.EqualTo,
+          FiltrateLogicEN: "EqualTo",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "不等于",
+          LogicID: Default.FiltrateLogicID.NotEqualTo,
+          FiltrateLogicEN: "NotEqualTo",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "开始于",
+          LogicID: Default.FiltrateLogicID.StartWith,
+          FiltrateLogicEN: "StartWith",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "不开始于",
+          LogicID: Default.FiltrateLogicID.NotStartWith,
+          FiltrateLogicEN: "NotStartWith",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "结束于",
+          LogicID: Default.FiltrateLogicID.EndWith,
+          FiltrateLogicEN: "EndWith",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "不结束于",
+          LogicID: Default.FiltrateLogicID.NotEndWith,
+          FiltrateLogicEN: "NotEndWith",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "包含",
+          LogicID: Default.FiltrateLogicID.Contains,
+          FiltrateLogicEN: "Contains",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "不包含",
+          LogicID: Default.FiltrateLogicID.NotContains,
+          FiltrateLogicEN: "NotContains",
+          HasStr: true,
+        },
+        {
+          FiltrateLogicCN: "为空",
+          LogicID: Default.FiltrateLogicID.IsEmpty,
+          FiltrateLogicEN: "IsEmpty",
+          HasStr: false,
+        },
+        {
+          FiltrateLogicCN: "不为空",
+          LogicID: Default.FiltrateLogicID.NotEmpty,
+          FiltrateLogicEN: "NotEmpty",
+          HasStr: false,
+        },
+      ],
+      ColumnNameList: [
+        { ColumnNameCN: "摘要说明", ColumnNameEN: "zysm" },
+        { ColumnNameCN: "对手户名", ColumnNameEN: "jydfmc" },
+        { ColumnNameCN: "备注", ColumnNameEN: "beiz" },
+      ],
     };
   },
   watch: {
@@ -217,10 +452,133 @@ export default {
     await this.freshTree();
   },
   methods: {
+    async handleClickSave() {
+      try {
+        if (this.filterList.length === 0) {
+          this.$message({
+            message: "请选择相应的节点进行保存设置。",
+          });
+          return;
+        }
+        console.log(JSON.stringify(this.filterList[0].DataFiltratorModelList));
+        await Models.SaveNewChildItemToTable(
+          this.currentNode.Index,
+          JSON.stringify(this.filterList[0].DataFiltratorModelList)
+        );
+        this.$message({
+          type: "success",
+          message: "保存成功",
+        });
+        this.handleClose();
+      } catch (e) {
+        this.$message.error({
+          message: e.message,
+        });
+      }
+    },
+    // 叶子节点移除数据
+    leafRemove(data, node) {
+      // 父亲节点没有child的时候，移除父亲节点
+      let parent = node.parent;
+      this.$refs.tree.remove(node);
+      if (parent.data.id === -1) {
+        // root节点
+        if (parent.data.DataFiltratorModelList.length === 0) {
+          parent.data.DataFiltratorModelList.push({
+            ColumnName: "zysm",
+            Logical: "Contains",
+            StrValue: "",
+            LineCode: "且",
+            DataFiltratorType: 1,
+          });
+        }
+      } else {
+        if (parent.data.DataFiltratorModelList.length === 0) {
+          this.$refs.tree.remove(parent);
+        }
+      }
+    },
+    // 叶子节点添加数据
+    leafAppend(data, node) {
+      const parent = node.parent;
+      const children = parent.data.children || parent.data;
+      console.log(children);
+      children.DataFiltratorModelList.push({
+        LineCode: data.LineCode,
+        ColumnName: "zysm",
+        Logical: "Contains",
+        StrValue: "",
+        DataFiltratorType: 1,
+      });
+    },
+    //root添加
+    rootAppend(data, node) {
+      data.DataFiltratorModelList.push({
+        LineCode: "且",
+        DataFiltratorModelList: [
+          {
+            ColumnName: "zysm",
+            Logical: "Contains",
+            StrValue: "",
+            LineCode: "且",
+            DataFiltratorType: 1,
+          },
+        ],
+        DataFiltratorType: 2,
+      });
+    },
+    // 父亲节点移除数据
+    fatherRemove(data, node) {
+      this.$refs.tree.remove(node);
+    },
+    hanleClickRootAndOr(data, node) {
+      let newValue = "";
+      if (data.DataFiltratorModelList[0].LineCode === "且") {
+        newValue = "或";
+      } else {
+        newValue = "且";
+      }
+      data.DataFiltratorModelList.forEach((item) => {
+        item.LineCode = newValue;
+      });
+      console.log(this.filterList);
+    },
     async handleNodeClick(data, node, value) {
-      console.log(data);
+      console.log("handleNodeClick", node);
+      if (!node.isLeaf) {
+        this.filterList = [];
+        return;
+      }
+      this.currentNode = data;
       let ret = await Models.SelectChildTree(data.LABEL_ID);
       console.log(ret);
+      if (ret === null) {
+        this.filterList = [
+          {
+            LineCode: "且",
+            DataFiltratorModelList: [
+              {
+                ColumnName: "zysm",
+                Logical: "Contains",
+                StrValue: "",
+                LineCode: "且",
+                DataFiltratorType: 1,
+              },
+            ],
+            DataFiltratorType: 2,
+            id: -1,
+          },
+        ];
+      } else {
+        this.filterList = [
+          {
+            DataFiltratorModelList: ret,
+            DataFiltratorType: 2,
+            id: -1,
+            LineCode: ret[0].LineCode,
+          },
+        ];
+      }
     },
     async handleClickResetTable() {
       let result = await Models.ResetDefaultYtTable();
@@ -270,6 +628,7 @@ export default {
           message: result.msg,
         });
       }
+      this.filterList = [];
       await this.freshTree();
     },
     async handleCheckChange(data, obj) {
