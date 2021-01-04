@@ -107,8 +107,16 @@ export default {
         this.$store.commit("DialogPopWnd/SET_SHOWTWOENDSDIALOGVISIBLE", true);
       } else if (tid == 901) {
         // 资金用途模型
+        let { modelFilterChildList } = this.currentTableData;
+        let filterChildStr = convertSql.convertDataFilterToSqlStr(
+          tid,
+          this.currentTableData.modelFilterChildList
+        );
+        console.log(modelFilterChildList, filterChildStr);
         await this.$store.dispatch("ShowTable/showZjYtPieTable", {
           ajid: this.caseBase.ajid,
+          modelFilterStr: filterChildStr,
+          modelFilterChildList,
           tid,
         });
       } else {

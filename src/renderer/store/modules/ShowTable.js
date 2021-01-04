@@ -6,6 +6,8 @@ import Default from "@/utils/sql/Default.js";
 import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
+import Base from "@/db/Base.js";
+import { stat } from "original-fs";
 
 const uuid = require("uuid");
 const log = require("@/utils/log");
@@ -733,52 +735,147 @@ const actions = {
       commit("SET_LOADINGSHOWDATA_STATE", false);
     }
   },
+  // 展示资金用途点击link后跳转的表格
+  async showZjytLinkTable(
+    { commit, state, rootState },
+    {
+      pageIndex, // 根据这个参数判定是否是新加入还是点击了下一页
+      title,
+      sql,
+      sqlCount,
+      count, // 查询数量
+      offset, // 查询的偏移
+      headers,
+      modelFilterStr,
+      modelFilterChildList, // 数据筛选
+    }
+  ) {
+    let ajid = state.currentTableData.ajid;
+    let sqlRows = sql + `LIMIT ${count} OFFSET ${offset}`;
+    let result = await Base.QueryCustom(sqlRows, ajid);
+    headers = headers.filter((header) =>
+      result.fields.includes(header.fieldename.toLowerCase())
+    );
+    let showFields = headers.map((item) => item.fieldename.toLowerCase());
+    let retRows = [];
+    for (let row of result.rows) {
+      let newRow = {};
+      for (let k in row) {
+        if (showFields.includes(k)) {
+          let value = row[k];
+          let cell = { value, error: false };
+          newRow[k] = cell;
+        }
+      }
+      retRows.push(newRow);
+    }
+    let resultCount = await Base.QueryCustom(sqlCount, ajid);
+    console.log(retRows, resultCount);
+
+    if (pageIndex) {
+      commit("UPDATE_TABLE_DATA", {
+        pageIndex,
+        headers,
+        rows: retRows,
+        sum: parseInt(resultCount.rows[0].count),
+        exportSql: sql,
+      });
+    } else {
+      let obj = {
+        ajid,
+        title,
+        headers,
+        showHeaders: headers,
+        sum: parseInt(resultCount.rows[0].count),
+        rows: retRows,
+        selectCondition: JSON.parse(JSON.stringify(Default.defaultSelection)),
+        componentName: "table-data-view",
+        dispatchName: "ShowTable/showZjytLinkTable",
+        tableType: "base",
+        hideEmptyField: false,
+        modelFilterStr: "",
+        modelFilterChildList: [],
+        rightTabs: [],
+        showType: 1,
+        sql,
+        sqlCount,
+        exportSql: sql,
+      };
+      commit("ADD_TABLE_DATA_TO_LIST", obj);
+    }
+  },
   // 点击表格中的link跳转的页面查询, 每次点击link的时候需要传递当前页面的modelFilterStr;
   async showLinkTable(
     { commit, state, dispatch },
-    { tid, row, linkMid, fieldename }
+    { tid, row, linkMid, fieldename, selectedCNColumnName }
   ) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
-    let selectCondition = state.currentTableData.selectCondition;
-    if (linkMid === 4 || linkMid === 18) {
-      // 相当于在基本表的sql基础添加了过滤条件
-      let res = linkSqlFormat.format(
-        { M_TYPE: parseInt(tid), Sql_Detail: "" },
+    // 资金用途模型的link
+    if (tid === 901) {
+      let ajid = state.currentTableData.ajid;
+      let ret = await models.OnClickLink(
+        parseInt(row.tid),
         row,
-        selectCondition,
-        fieldename.toUpperCase()
+        fieldename,
+        ajid,
+        state.currentTableData.modelFilterStr,
+        "",
+        selectedCNColumnName
       );
-      await dispatch("showBaseTable", {
-        tid: linkMid,
+      const { headers, sql, sqlCount, title } = ret;
+      await dispatch("showZjytLinkTable", {
         count: 30,
         offset: 0,
-        modelFilterChildList: res.msg.obj,
+        sql,
+        sqlCount,
+        headers,
+        title,
       });
     } else {
-      //相当于执行模型
-      //1.先根据linkmid 获取模版
-      let { pgsqltemplate } = await models.QueryModelSqlTemplateByMid(linkMid);
-      let pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
-      //2.格式化替换后生成link的模版
-      let { msg, type } = linkSqlFormat.format(
-        { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
-        row,
-        selectCondition,
-        fieldename.toUpperCase()
-      );
+      // 非资金用途link
+      let selectCondition = state.currentTableData.selectCondition;
+      if (linkMid === 4 || linkMid === 18) {
+        // 相当于在基本表的sql基础添加了过滤条件
+        let res = linkSqlFormat.format(
+          { M_TYPE: parseInt(tid), Sql_Detail: "" },
+          row,
+          selectCondition,
+          fieldename.toUpperCase()
+        );
+        await dispatch("showBaseTable", {
+          tid: linkMid,
+          count: 30,
+          offset: 0,
+          modelFilterChildList: res.msg.obj,
+        });
+      } else {
+        //相当于执行模型
+        //1.先根据linkmid 获取模版
+        let { pgsqltemplate } = await models.QueryModelSqlTemplateByMid(
+          linkMid
+        );
+        let pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+        //2.格式化替换后生成link的模版
+        let { msg, type } = linkSqlFormat.format(
+          { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
+          row,
+          selectCondition,
+          fieldename.toUpperCase()
+        );
 
-      let filterChildStr = convertSql.convertDataFilterToSqlStr(
-        parseInt(tid),
-        state.currentTableData.modelFilterChildList
-      );
-      await dispatch("showModelTable", {
-        tid: parseInt(type),
-        pgsqlTemplateDecode: msg.str,
-        modelFilterStr: filterChildStr,
-        modelFilterChildList: [],
-        count: 30,
-        offset: 0,
-      });
+        let filterChildStr = convertSql.convertDataFilterToSqlStr(
+          parseInt(tid),
+          state.currentTableData.modelFilterChildList
+        );
+        await dispatch("showModelTable", {
+          tid: parseInt(type),
+          pgsqlTemplateDecode: msg.str,
+          modelFilterStr: filterChildStr,
+          modelFilterChildList: [],
+          count: 30,
+          offset: 0,
+        });
+      }
     }
 
     commit("SET_LOADINGSHOWDATA_STATE", false);
@@ -894,8 +991,17 @@ const actions = {
     }
   },
   // 资金用途模型表数据
-  async showZjYtPieTable({ commit }, { pageIndex, ajid, tid }) {
-    console.log("showZjYtPieTable");
+  async showZjYtPieTable(
+    { commit },
+    { pageIndex, ajid, tid, modelFilterStr, modelFilterChildList }
+  ) {
+    console.log("showZjYtPieTable", {
+      pageIndex,
+      ajid,
+      tid,
+      modelFilterStr,
+      modelFilterChildList,
+    });
     commit("SET_LOADINGSHOWDATA_STATE", true);
     try {
       let {
@@ -912,7 +1018,8 @@ const actions = {
         let { legendData, rows, pieData } = await models.GetFundUseSqlTable(
           res.rows,
           "进",
-          ajid
+          ajid,
+          modelFilterStr
         );
         inData.rows = rows;
         inData.pie = { pieData, legendData, title: "资金来源" };
@@ -920,18 +1027,22 @@ const actions = {
           {
             fieldename: "GLDSRS",
             fieldcname: "关联对手人数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "GLDSZHS",
             fieldcname: "关联对手账号数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "GLRS",
             fieldcname: "关联人数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "GLZHS",
             fieldcname: "关联账号数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "JDBZ",
@@ -940,6 +1051,7 @@ const actions = {
           {
             fieldename: "JZBS",
             fieldcname: "进账笔数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "JZJE",
@@ -960,7 +1072,8 @@ const actions = {
         let { legendData, rows, pieData } = await models.GetFundUseSqlTable(
           res.rows,
           "出",
-          ajid
+          ajid,
+          modelFilterStr
         );
         outData.rows = rows;
         outData.pie = { pieData, legendData, title: "资金去向" };
@@ -968,6 +1081,7 @@ const actions = {
           {
             fieldename: "CZBS",
             fieldcname: "出账笔数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "CZJE",
@@ -976,18 +1090,22 @@ const actions = {
           {
             fieldename: "GLDSRS",
             fieldcname: "关联对手人数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "GLDSZHS",
             fieldcname: "关联对手账号数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "GLRS",
             fieldcname: "关联人数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "GLZHS",
             fieldcname: "关联账号数",
+            showrightbtn_type: "link",
           },
           {
             fieldename: "JDBZ",
@@ -1005,7 +1123,11 @@ const actions = {
       }
       dataList.push(inData, outData);
       console.log(dataList);
-      let headers = [];
+      let headers = []; // 外层的headers为资金明细的headers
+      let ret = await showTable.QueryTableShowCFields(4);
+      console.log(ret);
+      headers = ret.rows;
+
       if (pageIndex) {
         // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
         commit("UPDATE_TABLE_DATA", {
@@ -1026,7 +1148,8 @@ const actions = {
           describe,
           showType,
           rightTabs: [],
-          modelFilterChildList: [],
+          modelFilterChildList,
+          modelFilterStr,
           selectCondition: JSON.parse(JSON.stringify(Default.defaultSelection)),
           dataList,
         };

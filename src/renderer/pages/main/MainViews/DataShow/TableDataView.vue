@@ -51,9 +51,11 @@
     </div>
     <div v-else-if="tableData.showType === 5">
       <!-- 两个饼图 -->
-      <el-row v-if="tableData.selectCondition.fundUsePicType === 'pie'">
+      <el-row
+        :gutter="10"
+        v-if="tableData.selectCondition.fundUsePicType === 'pie'"
+      >
         <el-col
-          :gutter="20"
           :span="12"
           v-for="(item, index) of tableData.dataList"
           :key="index"
@@ -72,9 +74,8 @@
           :limitHeight="(contentViewHeight - 126) / 2 + 70"
         ></zjyt-sankey-chart>
       </el-row>
-      <el-row>
+      <el-row :gutter="10">
         <el-col
-          :gutter="20"
           :span="12"
           v-for="(item, index) of tableData.dataList"
           :key="index"
@@ -82,6 +83,7 @@
           <table-chart
             :tableData="{
               tid: tableData.tid,
+              modelFilterStr: tableData.modelFilterStr,
               pageIndex: tableData.pageIndex,
               rows: item.rows,
               showHeaders: item.showHeaders,
@@ -92,7 +94,6 @@
         </el-col>
       </el-row>
     </div>
-    <!-- 两个table -->
   </div>
 </template>
 
@@ -106,6 +107,7 @@ import linkRelationChart from "./child/ZjctRelationChart";
 import ZjytPieChart from "./child/ZjytPieChart";
 import ZjytSankeyChart from "./child/ZjytSankeyChart";
 import TestGoView from "./child/TestGojs";
+
 export default {
   mounted() {
     console.log(this.tableData);

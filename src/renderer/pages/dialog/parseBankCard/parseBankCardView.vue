@@ -141,7 +141,7 @@ export default {
       loadingText: "银行卡信息解析中， 请稍后...",
       percentage: 0,
       activeName: "first",
-      searchCardNo: "",
+      searchCardNo: "6217003110032909994",
       bankName: "",
       bankLocation: "",
       stopSearchThread: false,

@@ -98,11 +98,11 @@
               </el-tree>
               <el-button
                 size="mini"
-                type="success"
+                type="primary"
                 style="width: 100%; font-size: 12px"
                 class="iconfont"
                 @click="handleClickResetTable"
-                >&#xe652;还原到初始数据</el-button
+                >&#xe652;&nbsp;&nbsp;&nbsp;&nbsp;还原到初始数据</el-button
               >
             </div>
           </el-col>
@@ -159,7 +159,7 @@
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    content="点击以删除一个筛选项目"
+                    content="点击删除一个筛选项目"
                     placement="top"
                   >
                     <el-button
@@ -172,7 +172,7 @@
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    content="点击以新增一个筛选项目"
+                    content="点击新增一个筛选项目"
                     placement="top"
                   >
                     <el-button
@@ -191,13 +191,13 @@
                       effect="dark"
                       :content="
                         data.DataFiltratorModelList[0].LineCode === '且'
-                          ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
-                          : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                          ? '当前显示文字为[且]，表示下列所有子项的关系为[并且]的关系'
+                          : '当前显示文字为[或]，表示下列所有子项的关系为[或者]的关系'
                       "
                       placement="top"
                     >
                       <el-button
-                        type="text"
+                        circle
                         size="mini"
                         @click="() => hanleClickRootAndOr(data, node)"
                         >{{
@@ -208,7 +208,7 @@
                     <el-tooltip
                       class="item"
                       effect="dark"
-                      content="点击以新增一个筛选项目"
+                      content="点击新增一个筛选项目"
                       placement="top"
                     >
                       <el-button
@@ -225,13 +225,13 @@
                       effect="dark"
                       :content="
                         data.DataFiltratorModelList[0].LineCode === '且'
-                          ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
-                          : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                          ? '当前显示文字为[且]，表示下列所有子项的关系为[并且]的关系'
+                          : '当前显示文字为[或]，表示下列所有子项的关系为[或者]的关系'
                       "
                       placement="top"
                     >
                       <el-button
-                        type="text"
+                        circle
                         size="mini"
                         @click="() => hanleClickRootAndOr(data, node)"
                         >{{
@@ -242,7 +242,7 @@
                     <el-tooltip
                       class="item"
                       effect="dark"
-                      content="点击以删除所有子节点"
+                      content="点击删除所有子节点"
                       placement="top"
                     >
                       <el-button
@@ -584,6 +584,7 @@ export default {
       let result = await Models.ResetDefaultYtTable();
       if (result.success) {
         await this.freshTree();
+        this.filterList = [];
       }
     },
     async handleClickSure() {

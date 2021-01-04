@@ -45,13 +45,15 @@
                   scope.row,
                   header.fieldename,
                   header.link_mid,
-                  typeof scope.row[header.fieldename] === 'object'
+                  scope.row[header.fieldename] &&
+                    typeof scope.row[header.fieldename] === 'object'
                     ? scope.row[header.fieldename].value
                     : scope.row[header.fieldename]
                 )
               "
             >
               <u>{{
+                scope.row[header.fieldename] &&
                 typeof scope.row[header.fieldename] === "object"
                   ? scope.row[header.fieldename].value
                   : scope.row[header.fieldename]
@@ -60,6 +62,7 @@
           </div>
           <div v-else>
             {{
+              scope.row[header.fieldename] &&
               typeof scope.row[header.fieldename] === "object"
                 ? scope.row[header.fieldename].value
                 : scope.row[header.fieldename]
@@ -120,7 +123,7 @@
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import awaitTask from "@/db/AwaitTask";
-
+import Models from "@/db/Models.js";
 export default {
   watch: {
     // 列的显示与否需要更新table
@@ -142,7 +145,7 @@ export default {
       });
     }
   },
-
+  components: {},
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
@@ -177,7 +180,7 @@ export default {
       this.currentPage = 1;
     },
     async handleRightClickRow(row, column, event) {
-      let value = row[column.property].value;
+      let value = row[column.property].value || row[column.property];
       console.log(row);
       if (value) {
         clipboard.writeText(value + "");
@@ -223,19 +226,31 @@ export default {
       linkMid,
       value
     ) {
-      console.log(showrightbtn_type, { linkMid });
+      console.log(this.tableData);
       if (showrightbtn_type === "link") {
         let newRow = {};
         for (let k in row) {
-          newRow[k] = row[k].value;
+          newRow[k] = row[k].value || row[k];
         }
         console.log(newRow);
+        // 资金用途
+        let tid = this.tableData.tid;
+        let selectedCNColumnName = "";
+        if (tid === 901) {
+          for (let item of this.tableData.showHeaders) {
+            if (item.fieldename.toUpperCase() === fieldename.toUpperCase()) {
+              selectedCNColumnName = item.fieldcname;
+              break;
+            }
+          }
+        }
         this.$store.dispatch("ShowTable/showLinkTable", {
-          tid: this.tableData.tid,
+          tid,
           linkMid,
           selectCondition: this.tableData.selectCondition,
           row: newRow,
           fieldename: fieldename.toUpperCase(), // 注意列名需要传递大写
+          selectedCNColumnName,
         });
       } else if (showrightbtn_type === "button") {
         console.log(row);

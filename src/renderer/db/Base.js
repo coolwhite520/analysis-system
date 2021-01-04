@@ -27,10 +27,15 @@ export default {
         await cases.SwitchDefaultCase(client);
       }
       const res = await client.query(sql);
-      return { success: true, rows: res.rows };
+      console.log("queryCustom:", res);
+      return {
+        success: true,
+        rows: res.rows,
+        fields: res.fields.map((field) => field.name),
+      };
     } catch (e) {
       console.log({ sql, e });
-      return { success: false, rows: [] };
+      return { success: false, rows: [], fields: [] };
     } finally {
       client.release();
     }

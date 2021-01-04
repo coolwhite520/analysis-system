@@ -1,7 +1,7 @@
 import cases from "./Cases";
 import Default from "@/utils/sql/Default";
 const log = require("@/utils/log");
-
+import showTable from "./DataShowTable";
 const list_0 = [
   "#d6a799",
   "#74bcc5",
@@ -434,9 +434,9 @@ export default {
     return "";
   },
   //返回列表以及饼状图结果集
-  async GetFundUseSqlTable(list, jdbz_, ajid) {
+  async GetFundUseSqlTable(list, jdbz_, ajid, filterChildStr) {
     let data = await this.GetNavMenuData();
-    let dt = await this.AnalysisSql(list, jdbz_, ajid);
+    let dt = await this.AnalysisSql(list, jdbz_, ajid, filterChildStr);
     let res = [];
     let picitem = [];
     for (let i = 0, len = dt.rows.length; i < len; i++) {
@@ -713,7 +713,7 @@ export default {
       chartModel3.rate = 100.0;
       chartModel3.color = "#d6a799";
       chartModel3.title = "其他";
-      chartModel2.je = "100";
+      chartModel3.je = "100";
       observableCollection.push(chartModel3);
     }
     return observableCollection;
@@ -734,6 +734,464 @@ export default {
       return { success: false, msg: e.message };
     } finally {
       client.release();
+    }
+  },
+  //点击进出帐笔数链接
+  OnClick_bs: function(
+    itemtid,
+    item,
+    list_0,
+    int_2,
+    string_7,
+    MODEL_FILTER,
+    ajid,
+    ConditionSql
+  ) {
+    let result = "";
+    let string_6 = item.JDBZ;
+    try {
+      let text = "";
+      if (int_2 == 0) {
+        text =
+          text +
+          "select * from (select s.*,'" +
+          item.ZJYT +
+          "' zjyt,'" +
+          string_6 +
+          "' JDBZ,'" +
+          item.YTLB +
+          "' YTLB from (select CASE";
+      } else {
+        text += "SELECT Count(*) COUNT from (\r\n\t\t\t\t\t\t\t\tselect CASE";
+      }
+      let enumerator = this.GetSort(list_0, "2");
+      for (let i = 0, len = enumerator.length; i < len; i++) {
+        let list =
+          enumerator[i].filtercontent == null
+            ? null
+            : eval("(" + enumerator[i].filtercontent + ")");
+        if (list != null && list != undefined) {
+          text += " WHEN ";
+          for (let k = 0, lenk = list.length; k < lenk; k++) {
+            let current = list[k];
+            if (
+              current.DataFiltratorModelList == undefined ||
+              current.DataFiltratorModelList == null
+            ) {
+              if (current.Logical == "EqualTo") {
+                text =
+                  text +
+                  " " +
+                  current.ColumnName +
+                  "='" +
+                  current.StrValue +
+                  "' ";
+              } else if (current.Logical == "Contains") {
+                text =
+                  text +
+                  " POSITION('" +
+                  current.StrValue +
+                  "' in " +
+                  current.ColumnName +
+                  " ) > 0 ";
+              }
+              if (current.LineCode == "且") {
+                text += " AND ";
+              } else {
+                text += " OR ";
+              }
+            } else {
+              text += " ( ";
+              for (
+                let j = 0, lenj = current.DataFiltratorModelList.length;
+                j < lenj;
+                j++
+              ) {
+                let current2 = current.DataFiltratorModelList[j];
+                if (current2.Logical == "EqualTo") {
+                  text =
+                    text +
+                    " " +
+                    current2.ColumnName +
+                    "='" +
+                    current2.StrValue +
+                    "' ";
+                } else if (current2.Logical == "Contains") {
+                  text =
+                    text +
+                    " POSITION('" +
+                    current2.StrValue +
+                    "' in " +
+                    current2.ColumnName +
+                    " ) > 0 ";
+                }
+                if (current2.LineCode == "且") {
+                  text += " AND ";
+                } else {
+                  text += " OR ";
+                }
+              }
+              if (text.slice(-4) == "AND ") {
+                text = text.slice(0, -4);
+              }
+              if (text.slice(-3) == "OR ") {
+                text = text.slice(0, -3);
+              }
+              text += " ) ";
+              if (current.LineCode == "且") {
+                text += " AND ";
+              } else {
+                text += " OR ";
+              }
+            }
+          }
+          if (text.slice(-4) == "AND ") {
+            text = text.slice(0, -4);
+          }
+          if (text.slice(-3) == "OR ") {
+            text = text.slice(0, -3);
+          }
+          let list2 = this.GetChildList("3", enumerator[i].tid, list_0);
+          if (list2.length > 0) {
+            text += " OR ( ";
+            for (let current3 of list2) {
+              text = text + " zysm='" + current3.title + "' ";
+              text += " OR ";
+            }
+            if (text.slice(-3) == "OR ") {
+              text = text.slice(0, -3);
+            }
+            text += " ) ";
+          }
+          text = text + " THEN " + enumerator[i].tid + " ";
+        } else {
+          let list3 = this.GetChildList("3", enumerator[i].tid, list_0);
+          if (list3.length > 0) {
+            text += " WHEN ";
+            for (let current4 of list3) {
+              text = text + " zysm='" + current4.title + "' ";
+              text += " OR ";
+            }
+            if (text.slice(-3) == "OR ") {
+              text = text.slice(0, -3);
+            }
+            text = text + " THEN " + enumerator[i].tid + " ";
+          }
+        }
+      }
+      if (text.slice(-4) == "CASE") {
+        text += " when 0=0 then 0 ";
+      }
+      text =
+        text +
+        " else " +
+        (string_6 == "进" ? "256" : "257") +
+        " END TID,shard_id,count(" +
+        string_7 +
+        ") count from " +
+        Default.GetBankDetailTableSql("gas_bank_records").replace(
+          /\$AJID\$/g,
+          ajid
+        ) +
+        " where ajid = " +
+        ajid +
+        "  and jdbz ='" +
+        string_6 +
+        "' " +
+        MODEL_FILTER +
+        " GROUP BY TID,shard_id ) t left join gas_bank_records s on s.shard_id = t.shard_id where ajid = " +
+        ajid +
+        " and jdbz = '" +
+        string_6 +
+        "' and t.TID = " +
+        itemtid +
+        " and t.TID != 0 " +
+        (int_2 == 0 ? ") t where 1=1 " : " ") +
+        ConditionSql;
+      result = text;
+    } catch (e) {
+      console.log("OnClick_bs err:", e.message);
+    }
+    return result;
+  },
+
+  //点击关联XXXX链接
+  OnClick_gl: function(
+    itemtid,
+    item,
+    list_0,
+    int_2,
+    string_7,
+    MODEL_FILTER,
+    ajid,
+    ConditionSql
+  ) {
+    let result = "";
+    let string_6 = item.JDBZ;
+    try {
+      let text = "";
+      if (int_2 == 0) {
+        text =
+          text +
+          "select * from (select " +
+          string_7 +
+          ",count(count) count,'" +
+          item.ZJYT +
+          "' zjyt,'" +
+          string_6 +
+          "' JDBZ,'" +
+          item.YTLB +
+          "' YTLB from (select CASE";
+      } else {
+        text =
+          text +
+          "SELECT Count(*) COUNT from (select " +
+          string_7 +
+          ",count(count) count,'" +
+          item.ZJYT +
+          "' zjyt,'" +
+          string_6 +
+          "' JDBZ,'" +
+          item.YTLB +
+          "' YTLB from (select CASE";
+      }
+      let enumerator = this.GetSort(list_0, "2");
+      for (let i = 0, len = enumerator.length; i < len; i++) {
+        let list =
+          enumerator[i].filtercontent == null
+            ? null
+            : eval("(" + enumerator[i].filtercontent + ")");
+        if (list != null && list != undefined) {
+          text += " WHEN ";
+          for (let k = 0, lenk = list.length; k < lenk; k++) {
+            let current = list[k];
+            if (
+              current.DataFiltratorModelList == undefined ||
+              current.DataFiltratorModelList == null
+            ) {
+              if (current.Logical == "EqualTo") {
+                text =
+                  text +
+                  " " +
+                  current.ColumnName +
+                  "='" +
+                  current.StrValue +
+                  "' ";
+              } else if (current.Logical == "Contains") {
+                text =
+                  text +
+                  " POSITION('" +
+                  current.StrValue +
+                  "' in " +
+                  current.ColumnName +
+                  " ) > 0 ";
+              }
+              if (current.LineCode == "且") {
+                text += " AND ";
+              } else {
+                text += " OR ";
+              }
+            } else {
+              text += " ( ";
+              for (
+                let j = 0, lenj = current.DataFiltratorModelList.length;
+                j < lenj;
+                j++
+              ) {
+                let current2 = current.DataFiltratorModelList[j];
+                if (current2.Logical == "EqualTo") {
+                  text =
+                    text +
+                    " " +
+                    current2.ColumnName +
+                    "='" +
+                    current2.StrValue +
+                    "' ";
+                } else if (current2.Logical == "Contains") {
+                  text =
+                    text +
+                    " POSITION('" +
+                    current2.StrValue +
+                    "' in " +
+                    current2.ColumnName +
+                    " ) > 0 ";
+                }
+                if (current2.LineCode == "且") {
+                  text += " AND ";
+                } else {
+                  text += " OR ";
+                }
+              }
+              if (text.slice(-4) == "AND ") {
+                text = text.slice(0, -4);
+              }
+              if (text.slice(-3) == "OR ") {
+                text = text.slice(0, -3);
+              }
+              text += " ) ";
+              if (current.LineCode == "且") {
+                text += " AND ";
+              } else {
+                text += " OR ";
+              }
+            }
+          }
+          if (text.slice(-4) == "AND ") {
+            text = text.slice(0, -4);
+          }
+          if (text.slice(-3) == "OR ") {
+            text = text.slice(0, -3);
+          }
+          //passpasspasspasspasspass
+          let list2 = this.GetChildList("3", enumerator[i].tid, list_0);
+          if (list2.length > 0) {
+            text += " OR ( ";
+            for (let current3 of list2) {
+              text = text + " zysm='" + current3.title + "' ";
+              text += " OR ";
+            }
+            if (text.slice(-3) == "OR ") {
+              text = text.slice(0, -3);
+            }
+            text += " ) ";
+          }
+          text = text + " THEN " + enumerator[i].tid + " ";
+        } else {
+          let list3 = this.GetChildList("3", enumerator[i].tid, list_0);
+          if (list3.length > 0) {
+            text += " WHEN ";
+            for (let current4 of list3) {
+              text = text + " zysm='" + current4.title + "' ";
+              text += " OR ";
+            }
+            if (text.slice(-3) == "OR ") {
+              text = text.slice(0, -3);
+            }
+            text = text + " THEN " + enumerator[i].tid + " ";
+          }
+        }
+      }
+      if (text.slice(-4) == "CASE") {
+        text += " when 0=0 then 0 ";
+      }
+
+      text =
+        text +
+        " else " +
+        (string_6 == "进" ? "256" : "257") +
+        " END TID,shard_id,count((" +
+        string_7 +
+        ")) count from " +
+        Default.GetBankDetailTableSql("gas_bank_records").replace(
+          /\$AJID\$/g,
+          ajid
+        ) +
+        " where ajid = " +
+        ajid +
+        "  and jdbz ='" +
+        string_6 +
+        "' " +
+        MODEL_FILTER +
+        " GROUP BY TID,shard_id ) t left join gas_bank_records s on s.shard_id = t.shard_id where ajid = " +
+        ajid +
+        " and jdbz = '" +
+        string_6 +
+        "' and t.TID = " +
+        itemtid +
+        " and t.TID != 0   " +
+        (int_2 == 0 ? "group by " + string_7 : "group by " + string_7 + ") s") +
+        " " +
+        (int_2 == 0 ? ") t where 1=1  " : " where 1=1  ") +
+        ConditionSql;
+      result = text;
+    } catch (e) {
+      console.log("OnClick_gl err:", e.message);
+    }
+    return result;
+  },
+  // 点击资金用途链接
+  OnClickLink: async function(
+    tid,
+    item,
+    SelectedColumnName,
+    ajid,
+    MODEL_FILTER,
+    ConditionSql,
+    SelectedCNColumnName
+  ) {
+    let selectstr = "";
+    if (SelectedColumnName == "GLZHS") {
+      selectstr = " cxzh,jymc ";
+    } else if (SelectedColumnName == "GLRS") {
+      selectstr = " jyzjhm,jymc ";
+    } else if (SelectedColumnName == "GLDSZHS") {
+      selectstr = " jydfzkh,jydfmc ";
+    } else if (SelectedColumnName == "GLDSRS") {
+      selectstr = " jydfzjhm,jydfmc ";
+    } else {
+      selectstr = "jyzjhm";
+    }
+    let boolJDBZ = item.JDBZ == "进" ? "0" : "1";
+    let dt = await this.GetDataTable(boolJDBZ, ajid);
+    let dataList = dt.rows;
+    if (selectstr == "jyzjhm") {
+      let ret = await showTable.QueryTableShowCFields(4);
+      let headers = ret.rows;
+      let sql = this.OnClick_bs(
+        tid,
+        item,
+        dataList,
+        0,
+        selectstr,
+        MODEL_FILTER,
+        ajid,
+        ConditionSql
+      );
+      let sqlCount = this.OnClick_bs(
+        tid,
+        item,
+        dataList,
+        1,
+        selectstr,
+        MODEL_FILTER,
+        ajid,
+        ConditionSql
+      );
+      return {
+        headers,
+        sql,
+        sqlCount,
+        title: `资金用途-${item.ZJYT}-${SelectedCNColumnName}`,
+      };
+    } else {
+      let ret = await showTable.QueryTableShowCFields(4);
+      let headers = ret.rows;
+      let sql = this.OnClick_gl(
+        tid,
+        item,
+        dataList,
+        0,
+        selectstr,
+        MODEL_FILTER,
+        ajid,
+        ConditionSql
+      );
+      let sqlCount = this.OnClick_gl(
+        tid,
+        item,
+        dataList,
+        1,
+        selectstr,
+        MODEL_FILTER,
+        ajid,
+        ConditionSql
+      );
+      return {
+        headers,
+        sql,
+        sqlCount,
+        title: `资金用途-${item.ZJYT}-${SelectedCNColumnName}`,
+      };
     }
   },
 };

@@ -52,15 +52,19 @@
         <component :is="item.componentName" :tableData="item"></component>
       </el-tab-pane>
     </el-tabs>
+
+    <zjyt-link-dialog v-if="showZjytLinkVisible"></zjyt-link-dialog>
   </div>
 </template>
 <script>
+import ZjytLinkTable from "@/pages/dialog/zjytLinkTableDialog/zjytLinkTableDialog.vue";
 import NoDataView from "./DataShow/NoDataView";
 import TableDataView from "./DataShow/TableDataView";
 import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
+    ...mapState("DialogPopWnd", ["showZjytLinkVisible"]),
     ...mapState("ShowTable", [
       "currentTableData",
       "tableDataList",
@@ -79,6 +83,7 @@ export default {
   components: {
     "no-data-view": NoDataView,
     "table-data-view": TableDataView,
+    "zjyt-link-dialog": ZjytLinkTable,
   },
   watch: {
     contextMenuVisible(value) {

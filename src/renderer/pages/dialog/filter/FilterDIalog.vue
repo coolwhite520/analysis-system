@@ -38,6 +38,7 @@
               "
             >
               <el-select
+                style="width: 25%"
                 v-model="data.FiltrateFieldEN"
                 size="mini"
                 placeholder="请选择"
@@ -56,6 +57,7 @@
               </el-select>
 
               <el-select
+                style="width: 25%"
                 v-if="
                   data.FiltrateFieldType === DefaultData.DataType.DECIMAL ||
                   data.FiltrateFieldType === DefaultData.DataType.DOUBLE
@@ -72,6 +74,7 @@
                 ></el-option>
               </el-select>
               <el-select
+                style="width: 25%"
                 v-else-if="
                   data.FiltrateFieldType === DefaultData.DataType.DATATIME_1 ||
                   data.FiltrateFieldType === DefaultData.DataType.DATATIME_2 ||
@@ -89,6 +92,7 @@
                 ></el-option>
               </el-select>
               <el-select
+                style="width: 25%"
                 v-else
                 v-model="data.condtion"
                 size="mini"
@@ -112,7 +116,7 @@
                   type="datetime"
                   placeholder=""
                   v-model="data.FiltrateValue"
-                  style="width: 40%"
+                  style="width: 25%"
                   size="mini"
                 ></el-date-picker>
               </span>
@@ -127,7 +131,7 @@
                   type="date"
                   placeholder=""
                   v-model="data.FiltrateValue"
-                  style="width: 40%"
+                  style="width: 25%"
                   size="mini"
                 ></el-date-picker>
               </span>
@@ -137,6 +141,7 @@
                 "
               >
                 <el-time-picker
+                  style="width: 25%"
                   v-model="data.FiltrateValue"
                   placeholder="任意时间点"
                 >
@@ -146,7 +151,7 @@
                 <el-input
                   v-model="data.FiltrateValue"
                   placeholder="请输入内容"
-                  style="width: 40%"
+                  style="width: 35%"
                   size="mini"
                 ></el-input>
               </span>
@@ -154,7 +159,7 @@
               <el-tooltip
                 class="item"
                 effect="dark"
-                content="点击以删除一个筛选项目"
+                content="点击删除一个筛选项目"
                 placement="top"
               >
                 <el-button
@@ -167,7 +172,7 @@
               <el-tooltip
                 class="item"
                 effect="dark"
-                content="点击以新增一个筛选项目"
+                content="点击新增一个筛选项目"
                 placement="top"
               >
                 <el-button
@@ -186,13 +191,13 @@
                   effect="dark"
                   :content="
                     data.DisplayRelation === 'AND'
-                      ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
-                      : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                      ? '当前显示文字为[且]，表示下列所有子项的关系为[并且]的关系'
+                      : '当前显示文字为[或]，表示下列所有子项的关系为[或者]的关系'
                   "
                   placement="top"
                 >
                   <el-button
-                    type="text"
+                    circle
                     size="mini"
                     @click="() => hanleClickRootAndOr(data, node)"
                     >{{
@@ -203,7 +208,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="点击以新增一个筛选项目"
+                  content="点击新增一个筛选项目"
                   placement="top"
                 >
                   <el-button
@@ -220,13 +225,13 @@
                   effect="dark"
                   :content="
                     data.DisplayRelation === 'AND'
-                      ? '当前显示文字为{且}，表示下列所有子项的关系为并且的关系'
-                      : '当前显示文字为{或}，表示下列所有子项的关系为或者的关系'
+                      ? '当前显示文字为[且]，表示下列所有子项的关系为[并且]的关系'
+                      : '当前显示文字为[或]，表示下列所有子项的关系为[或者]的关系'
                   "
                   placement="top"
                 >
                   <el-button
-                    type="text"
+                    circle
                     size="mini"
                     @click="() => hanleClickRootAndOr(data, node)"
                     >{{
@@ -237,7 +242,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="点击以删除所有子节点"
+                  content="点击删除所有子节点"
                   placement="top"
                 >
                   <el-button
@@ -272,8 +277,11 @@ import Default from "@/utils/sql/Default";
 export default {
   mounted() {
     this.DefaultData = JSON.parse(JSON.stringify(Default));
+    if (this.currentTableData.tid === 901) {
+      // 资金用途页面的筛选
+      console.log(this.currentTableData);
+    }
     let headerFirst = this.currentTableData.headers[0];
-    console.log(headerFirst);
     if (this.currentTableData.modelFilterChildList.length === 0) {
       this.filterList.push({
         id: UUID.v1(),
