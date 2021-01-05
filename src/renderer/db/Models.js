@@ -462,7 +462,7 @@ export default {
         item.GLDSRS = dt.rows[i].jydfzjhm;
         res.push(item);
         item2.title = dt.rows[i].title;
-        item2.rate = parseFloat(dt.rows[i].rate).toFixed(1);
+        item2.rate = parseFloat(dt.rows[i].rate).toFixed(3);
         item2.color = dt.rows[i].color;
         picitem.push(item2);
       }

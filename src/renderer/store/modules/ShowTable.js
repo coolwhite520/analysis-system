@@ -748,10 +748,14 @@ const actions = {
       headers,
       modelFilterStr,
       modelFilterChildList, // 数据筛选
+      orderby,
     }
   ) {
+    console.log(modelFilterStr, modelFilterChildList);
     let ajid = state.currentTableData.ajid;
-    let sqlRows = sql + `LIMIT ${count} OFFSET ${offset}`;
+    let sqlRows =
+      sql + modelFilterStr + orderby + ` LIMIT ${count} OFFSET ${offset}`;
+    console.log(sqlRows);
     let result = await Base.QueryCustom(sqlRows, ajid);
     headers = headers.filter((header) =>
       result.fields.includes(header.fieldename.toLowerCase())
@@ -769,7 +773,7 @@ const actions = {
       }
       retRows.push(newRow);
     }
-    let resultCount = await Base.QueryCustom(sqlCount, ajid);
+    let resultCount = await Base.QueryCustom(sqlCount + modelFilterStr, ajid);
     console.log(retRows, resultCount);
 
     if (pageIndex) {
@@ -779,6 +783,7 @@ const actions = {
         rows: retRows,
         sum: parseInt(resultCount.rows[0].count),
         exportSql: sql,
+        orderby,
       });
     } else {
       let obj = {
@@ -800,6 +805,7 @@ const actions = {
         sql,
         sqlCount,
         exportSql: sql,
+        orderby,
       };
       commit("ADD_TABLE_DATA_TO_LIST", obj);
     }
@@ -830,6 +836,9 @@ const actions = {
         sqlCount,
         headers,
         title,
+        modelFilterStr: "",
+        modelFilterChildList: [],
+        orderby: "",
       });
     } else {
       // 非资金用途link

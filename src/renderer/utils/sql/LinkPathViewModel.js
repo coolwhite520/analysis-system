@@ -870,10 +870,10 @@ function Class5() {
     return list;
   };
   this.NajXrfOjp8 = function(linkModel_0, linkModel_1, bool_0 = false) {
-    if (
-      this.linkParameters_0.DataItemType == DataItemType.Detail &&
-      this.linkParameters_0.IntervalTime > 0
-    ) {
+    if (this.linkParameters_0.DataItemType != DataItemType.Detail) {
+      return true;
+    }
+    if (this.linkParameters_0.IntervalTime > 0) {
       let timeSpan = this.linkParameters_0.IsDownDirection
         ? dateDiff(linkModel_1.TradeTime, linkModel_0.TradeTime)
         : dateDiff(linkModel_0.TradeTime, linkModel_1.TradeTime);
@@ -1347,7 +1347,7 @@ function Class6(string_0, dictionary_1, linkParameters_1) {
     for (let i = 0; i < arg_1C_0.length; i++) {
       let current = arg_1C_0[i];
       let text = LinkModel_CreateKey(
-        this.base.linkParameters_0.Mindepth,
+        this.base.linkParameters_0,
         nodeModel_1.getUniqueKey(),
         current.ToKeyValue,
         current.Time,
