@@ -782,7 +782,7 @@ const actions = {
         headers,
         rows: retRows,
         sum: parseInt(resultCount.rows[0].count),
-        exportSql: sql,
+        exportSql: sql + modelFilterStr + orderby,
         orderby,
       });
     } else {
@@ -804,7 +804,7 @@ const actions = {
         showType: 1,
         sql,
         sqlCount,
-        exportSql: sql,
+        exportSql: sql + modelFilterStr + orderby,
         orderby,
       };
       commit("ADD_TABLE_DATA_TO_LIST", obj);
