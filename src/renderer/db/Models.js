@@ -415,6 +415,7 @@ export default {
   },
   GetChildList: function(sort, tid, list_1) {
     let res = [];
+    return res;
     if (list_1 == undefined || list_1 == null || list_1.length == 0) {
       return res;
     }
@@ -482,7 +483,7 @@ export default {
         text += " CASE";
         for (let i = 0; i < list.length; i++) {
           let m = list[i];
-          let list2 = eval("(" + m.filtercontent + ")");
+          let list2 = JSON.parse(m.filtercontent);
           if (list2 != null && list2 != undefined) {
             text += " WHEN ";
             for (let current of list2) {
@@ -608,8 +609,9 @@ export default {
         ` GROUP BY TID) t on p.tid=t.tid where p.sort not in (0,1) and p.type=` +
         (string_2 == "进" ? "0" : "1") +
         ` and p.sort!=0) t on p.tid=t.tid`;
-      //console.log(text)
+      console.log(text);
       await cases.SwitchCase(client, caseId);
+
       let res = await client.query(text);
       return res;
     } finally {
@@ -769,7 +771,7 @@ export default {
         let list =
           enumerator[i].filtercontent == null
             ? null
-            : eval("(" + enumerator[i].filtercontent + ")");
+            : JSON.parse(enumerator[i].filtercontent);
         if (list != null && list != undefined) {
           text += " WHEN ";
           for (let k = 0, lenk = list.length; k < lenk; k++) {
@@ -960,7 +962,7 @@ export default {
         let list =
           enumerator[i].filtercontent == null
             ? null
-            : eval("(" + enumerator[i].filtercontent + ")");
+            : JSON.parse(enumerator[i].filtercontent);
         if (list != null && list != undefined) {
           text += " WHEN ";
           for (let k = 0, lenk = list.length; k < lenk; k++) {
