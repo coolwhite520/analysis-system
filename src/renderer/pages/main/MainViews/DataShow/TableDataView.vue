@@ -7,7 +7,10 @@
         :tableData="tableData"
         :limitHeight="contentViewHeight - 80"
       ></table-chart>
-      <!-- <test-go-view v-if="tableData.showType === 1"></test-go-view> -->
+      <!-- <test-go-view
+        v-if="tableData.showType === 1"
+        :limitHeight="contentViewHeight - 80"
+      ></test-go-view> -->
     </div>
     <div v-else-if="tableData.showType === 2">
       <template v-if="tableData.tableType === 'graph'">
@@ -30,14 +33,22 @@
         :limitHeight="(contentViewHeight - 126) / 2"
       ></table-chart>
       <!-- <div>这里是个关系图</div> -->
-      <relation-chart
+      <!-- <relation-chart
         :tableData="tableData"
         :limitHeight="
           tableData.fullScrrenFlag
             ? contentViewHeight - 87
             : (contentViewHeight - 126) / 2
         "
-      ></relation-chart>
+      ></relation-chart> -->
+      <test-go-view
+        :tableData="tableData"
+        :limitHeight="
+          tableData.fullScrrenFlag
+            ? contentViewHeight - 87
+            : (contentViewHeight - 126) / 2
+        "
+      ></test-go-view>
     </div>
     <div v-else-if="tableData.showType === 4">
       <table-chart

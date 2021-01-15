@@ -15,6 +15,7 @@
         </el-col>
       </el-row>
       <el-table
+        :ref="tableId"
         size="mini"
         :data="currentTableData.entityList"
         style="width: 100%"
@@ -49,9 +50,11 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 const { clipboard } = require("electron");
+const uuid = require("uuid");
 export default {
+  mounted() {},
   data() {
-    return { currentFocusRow: null };
+    return { currentFocusRow: null, tableId: "table-" + uuid.v1() };
   },
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),

@@ -43,7 +43,7 @@
             >
               <span>
                 <img
-                  :src="data.itemData.icon.img"
+                  :src="data.itemData.img"
                   width="16"
                   height="16"
                   style="vertical-align: middle"
@@ -116,8 +116,8 @@ export default {
   },
   methods: {
     makeTips(data) {
-      const { label } = data.itemData;
-      return label;
+      const { text } = data.itemData;
+      return text;
     },
     handleClickUnCombo() {},
     handleClickClose() {
@@ -131,7 +131,7 @@ export default {
       if (data.type === "node") {
         this.$bus.$emit("clickEntityRow", {
           graphid: this.currentTableData.graphid,
-          nodeid: data.itemData.id,
+          nodeid: data.itemData.key,
         });
       }
     },
