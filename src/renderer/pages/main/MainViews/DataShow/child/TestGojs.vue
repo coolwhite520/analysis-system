@@ -3,7 +3,7 @@
     <el-row
       style="background-color: #fff; padding: 5px; border: 1px solid #dddfe5"
     >
-      <el-col :span="16">
+      <el-col :span="16" v-if="tableData.tableType !== 'emptyGraph'">
         <el-button-group>
           <el-button
             size="mini"
@@ -21,7 +21,7 @@
           >
         </el-button-group>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="2" v-if="tableData.tableType !== 'emptyGraph'">
         <el-tooltip
           class="item"
           effect="dark"
@@ -37,7 +37,7 @@
           </el-switch>
         </el-tooltip>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="2" v-if="tableData.tableType !== 'emptyGraph'">
         <el-tooltip
           class="item"
           effect="dark"
@@ -52,7 +52,7 @@
           </el-switch>
         </el-tooltip>
       </el-col>
-      <el-col :span="1">
+      <el-col :span="1" v-if="tableData.tableType !== 'emptyGraph'">
         <el-tooltip
           class="item"
           effect="dark"
@@ -68,17 +68,25 @@
           ></el-button>
         </el-tooltip>
       </el-col>
+      <template v-if="tableData.tableType === 'emptyGraph'">
+        <el-col :span="21"> &nbsp; </el-col>
+      </template>
       <el-col :span="3">
         <el-input
           size="mini"
           v-model="inputValue"
-          placeholder="输入关键字进行快捷定位"
+          placeholder="关键字查询"
         ></el-input>
       </el-col>
     </el-row>
 
     <!-- <div :id="miniMapID" style="width:100px;"></div> -->
-    <div>
+    <div
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+    >
       <div
         :id="graphid"
         :style="{ height: limitHeight - 26 + 'px', width: '100%' }"
@@ -301,6 +309,7 @@ export default {
   created() {},
   data() {
     return {
+      loading: false,
       selectRelatedNodesId: "li" + uuid.v1(),
       unGroupId: "li" + uuid.v1(),
       makeGroupId: "li" + uuid.v1(),
@@ -344,10 +353,7 @@ export default {
       let list = new go.List();
       const nodes = this.myDiagram.nodes;
       nodes.each((node) => {
-        if (
-          node.data.name.indexOf(newValue) !== -1 ||
-          node.data.kh.indexOf(newValue) !== -1
-        ) {
+        if (node.data.text.indexOf(newValue) !== -1) {
           list.add(node);
         }
       });
@@ -367,6 +373,8 @@ export default {
           this.accordingSpreadNodeSwitchRefreshNodes();
           this.allNodesToFront();
           this.updateEntityList();
+          let layout = this.tableData.graphType;
+          this.switchLayout({ graphid: this.graphid, layout });
         }
       },
       immediate: false,
@@ -457,7 +465,12 @@ export default {
         });
       } else {
         allNodes.each((node) => {
-          if (node.findLinksConnected().count === 0) {
+          if (node instanceof go.Group) {
+            node.visible = true;
+          } else if (
+            node instanceof go.Node &&
+            node.findLinksConnected().count === 0
+          ) {
             node.visible = false;
           } else node.visible = true;
         });
@@ -596,137 +609,25 @@ export default {
       this.$store.commit("ShowTable/UPDATE_FULLSCRRENFLAG");
     },
     GridLayout() {
-      //if (option == undefined)
-      //    option = {
-      //        //layerSpacing: 150,
-      //        //angle: 90,
-      //        comparer: go.GridLayout.smartComparer
-      //    };
-
+      // 以关联数量进行降序排列
       this.myDiagram.layout = $(go.GridLayout, {
-        comparer: go.GridLayout.smartComparer,
+        wrappingColumn: 15,
+        sorting: go.GridLayout.Descending,
+        comparer: function (pa, pb) {
+          var da = pa.findLinksConnected();
+          var db = pb.findLinksConnected();
+          if (da.count < db.count) return -1;
+          if (da.count > db.count) return 1;
+          return 0;
+        },
       });
-
-      this.myDiagram.startTransaction("change Layout");
-      var lay = this.myDiagram.layout;
-
-      var wrappingColumn = 10; // document.getElementById("wrappingColumn").value;
-      lay.wrappingColumn = parseFloat(wrappingColumn, 10);
-
-      var wrappingWidth = "NaN"; // document.getElementById("wrappingWidth").value;
-      lay.wrappingWidth = parseFloat(wrappingWidth, 10);
-
-      var cellSize = "NaN NaN"; // document.getElementById("cellSize").value;
-      lay.cellSize = go.Size.parse(cellSize);
-
-      var spacing = "50 50"; // document.getElementById("spacing").value;
-      lay.spacing = go.Size.parse(spacing);
-
-      var alignment = "Position"; // getRadioValue("alignment");
-      if (alignment === "Position") {
-        lay.alignment = go.GridLayout.Position;
-      } else {
-        lay.alignment = go.GridLayout.Location;
-      }
-
-      var arrangement = "LeftToRight"; // getRadioValue("arrangement");
-      if (arrangement === "LeftToRight") {
-        lay.arrangement = go.GridLayout.LeftToRight;
-      } else {
-        lay.arrangement = go.GridLayout.RightToLeft;
-      }
-
-      var sorting = "Forward"; // document.getElementById("sorting").value;
-      switch (sorting) {
-        default:
-        case "Forward":
-          lay.sorting = go.GridLayout.Forward;
-          break;
-        case "Reverse":
-          lay.sorting = go.GridLayout.Reverse;
-          break;
-        case "Ascending":
-          lay.sorting = go.GridLayout.Ascending;
-          break;
-        case "Descending":
-          lay.sorting = go.GridLayout.Descending;
-          break;
-      }
-
-      this.myDiagram.commitTransaction("change Layout");
-      this.myDiagram.layout = $(go.Layout);
     },
     CircularLayout() {
       this.myDiagram.layout = $(go.CircularLayout);
-
-      this.myDiagram.startTransaction("change Layout");
-      var lay = this.myDiagram.layout;
-
-      var radius = "NaN"; // document.getElementById("radius").value;
-      if (radius !== "NaN") radius = parseFloat(radius, 10);
-      else radius = NaN;
-      lay.radius = radius;
-
-      var aspectRatio = 1; // document.getElementById("aspectRatio").value;
-      aspectRatio = parseFloat(aspectRatio, 10);
-      lay.aspectRatio = aspectRatio;
-
-      var startAngle = 0; // document.getElementById("startAngle").value;
-      startAngle = parseFloat(startAngle, 10);
-      lay.startAngle = startAngle;
-
-      var sweepAngle = 360; // ocument.getElementById("sweepAngle").value;
-      sweepAngle = parseFloat(sweepAngle, 10);
-      lay.sweepAngle = sweepAngle;
-
-      var spacing = 20; // document.getElementById("spacing").value;
-      spacing = parseFloat(spacing, 10);
-      lay.spacing = spacing;
-
-      var arrangement = "ConstantDistance"; // document.getElementById("arrangement").value;
-      if (arrangement === "ConstantDistance")
-        lay.arrangement = go.CircularLayout.ConstantDistance;
-      else if (arrangement === "ConstantAngle")
-        lay.arrangement = go.CircularLayout.ConstantAngle;
-      else if (arrangement === "ConstantSpacing")
-        lay.arrangement = go.CircularLayout.ConstantSpacing;
-      else if (arrangement === "Packed")
-        lay.arrangement = go.CircularLayout.Packed;
-
-      var diamFormula = "Pythagorean"; // getRadioValue("diamFormula");
-      if (diamFormula === "Pythagorean")
-        lay.nodeDiameterFormula = go.CircularLayout.Pythagorean;
-      else if (diamFormula === "Circular")
-        lay.nodeDiameterFormula = go.CircularLayout.Circular;
-
-      var direction = "Clockwise"; // document.getElementById("direction").value;
-      if (direction === "Clockwise")
-        lay.direction = go.CircularLayout.Clockwise;
-      else if (direction === "Counterclockwise")
-        lay.direction = go.CircularLayout.Counterclockwise;
-      else if (direction === "BidirectionalLeft")
-        lay.direction = go.CircularLayout.BidirectionalLeft;
-      else if (direction === "BidirectionalRight")
-        lay.direction = go.CircularLayout.BidirectionalRight;
-
-      var sorting = "Forwards"; // document.getElementById("sorting").value;
-      if (sorting === "Forwards") lay.sorting = go.CircularLayout.Forwards;
-      else if (sorting === "Reverse") lay.sorting = go.CircularLayout.Reverse;
-      else if (sorting === "Ascending")
-        lay.sorting = go.CircularLayout.Ascending;
-      else if (sorting === "Descending")
-        lay.sorting = go.CircularLayout.Descending;
-      else if (sorting === "Optimized")
-        lay.sorting = go.CircularLayout.Optimized;
-
-      this.myDiagram.commitTransaction("change Layout");
-
-      this.myDiagram.layout = $(go.Layout);
     },
     switchAllowScroll() {
       this.myDiagram.allowHorizontalScroll = this.enableDragCavans;
       this.myDiagram.allowVerticalScroll = this.enableDragCavans;
-      this.myDiagram.allowDrop = this.enableDragCavans;
     },
     initDiagram() {
       let _this = this;
@@ -787,7 +688,6 @@ export default {
           var it = selection.iterator;
           while (it.next()) {
             if (it.value instanceof go.Node) {
-              console.log(it.value.data);
               if (
                 it.value.data.hasOwnProperty("group") &&
                 it.value.data.group
@@ -958,8 +858,58 @@ export default {
       this.detailCount = this.entityCount + this.linkCount;
       this.$store.commit("ShowTable/UPDATE_ENTITY_LIST", entityList);
     },
+    // 随机布局
+    randomLayout() {
+      let viewportBounds = this.myDiagram.viewportBounds;
+      let allNodes = this.myDiagram.nodes;
+      this.myDiagram.startTransaction("reset position");
+      allNodes.each((node) => {
+        let point = new go.Point(
+          Math.random() * viewportBounds.width,
+          Math.random() * viewportBounds.height
+        );
+        this.myDiagram.model.setDataProperty(
+          node.data,
+          "loc",
+          go.Point.stringify(point)
+        );
+      });
+      this.myDiagram.commitTransaction("reset position");
+      this.myDiagram.layout = $(go.Layout);
+      // this.myDiagram.layout.doLayout(this.myDiagram.nodes);
+    },
+    // 聚类布局
     ForceDirectedLayout() {
+      let allNodes = this.myDiagram.nodes;
+      this.myDiagram.startTransaction("reset position");
+      allNodes.each((node) => {
+        this.myDiagram.model.setDataProperty(node.data, "loc", "0 0");
+      });
+      this.myDiagram.commitTransaction("reset position");
       this.myDiagram.layout = $(go.ForceDirectedLayout);
+    },
+    // 组织结构布局
+    func1() {
+      this.myDiagram.layout = $(
+        go.TreeLayout, // use a TreeLayout to position all of the nodes
+        {
+          isOngoing: false, // don't relayout when expanding/collapsing panels
+          treeStyle: go.TreeLayout.StyleLastParents,
+          // properties for most of the tree:
+          angle: 90,
+          layerSpacing: 80,
+          // properties for the "last parents":
+          alternateAngle: 0,
+          alternateAlignment: go.TreeLayout.AlignmentStart,
+          alternateNodeIndent: 15,
+          alternateNodeIndentPastParent: 1,
+          alternateNodeSpacing: 15,
+          alternateLayerSpacing: 40,
+          alternateLayerSpacingParentOverlap: 1,
+          alternatePortSpot: new go.Spot(0.001, 1, 20, 0),
+          alternateChildPortSpot: go.Spot.Left,
+        }
+      );
     },
     layoutTree(option) {
       if (option == undefined)
@@ -1165,7 +1115,7 @@ export default {
         ),
         $(
           go.TextBlock,
-          { margin: 8, name: "TEXT" },
+          { margin: 8, name: "TEXT", editable: true },
           new go.Binding("text", "text", function (val) {
             return val.trim();
           }),
@@ -1173,7 +1123,6 @@ export default {
         ),
         {
           click: function (e, obj) {
-            console.log(obj);
             let entity = _this.calculateEntityInfo(obj);
             _this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
             _this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
@@ -1228,9 +1177,21 @@ export default {
     },
     initLinkTemplate() {
       let _this = this;
+      let linkType = null;
+      if (this.tableData.tableType === "dataVisible") {
+        linkType = ParallelRouteLink;
+      } else if (this.tableData.tableType === "zjctGraph") {
+        linkType = go.Link; // the whole link panel
+      } else {
+        linkType = ParallelRouteLink;
+      }
       this.myDiagram.linkTemplate = $(
-        ParallelRouteLink,
+        linkType,
         {
+          curve:
+            _this.tableData.tableType === "zjctGraph"
+              ? go.Link.Bezier
+              : go.Link.Normal,
           toShortLength: 8,
           selectionAdorned: false,
         },
@@ -1510,7 +1471,78 @@ export default {
         }
       }
     },
+
     makeData() {
+      // 数据可视化
+      if (this.tableData.tableType === "dataVisible") {
+        return this.makeDataVisible();
+      } else if (this.tableData.tableType === "zjctGraph") {
+        // 资金透视模型图
+        return this.makeDataZjCt();
+      } else {
+        // 其他发现模型
+        return this.makeDataNormal();
+      }
+    },
+    makeDataZjCt() {
+      let nodes = this.tableData.originGraphData.nodes.map((node) => {
+        let {
+          CardNo,
+          FieldName,
+          IdentityNo,
+          IsRoot,
+          UniqueKey,
+          Username,
+        } = node;
+        return {
+          key: UniqueKey,
+          kh: CardNo,
+          name: Username,
+          text: CardNo + "\n" + Username,
+        };
+      });
+      let links = [];
+      this.tableData.originGraphData.links.forEach((link) => {
+        let {
+          source,
+          target,
+          tradeMoney,
+          tradeTime,
+          tradeCount,
+          dataType,
+        } = link;
+        let lineColor = this.calculateLineColorByJinE(tradeMoney);
+        if (lineColor !== "") {
+          links.push({
+            dataType,
+            from: source,
+            to: target,
+            je: tradeMoney,
+            bs: parseInt(tradeCount),
+            rq: tradeTime,
+            text:
+              dataType === 0
+                ? `${tradeMoney}元（${tradeTime}）`
+                : `${tradeMoney}元（${tradeCount}笔）`,
+
+            stroke: lineColor,
+          });
+        }
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = "/static/images/icons/银行卡.png";
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
+      });
+      return { nodes, links };
+    },
+
+    makeDataNormal() {
       switch (this.tableData.tid) {
         case 202:
           return this.makeData202();
@@ -1520,6 +1552,9 @@ export default {
           break;
         case 213:
           return this.makeData213();
+          break;
+        default:
+          return { nodes: [], links: [] };
           break;
       }
     },
@@ -1547,22 +1582,12 @@ export default {
           name: jymc,
           text: jymc,
           tid: this.tableData.tid, //tableid
-          loc: "0 0",
-          img: "/static/images/icons/银行卡.png",
-          bkColor: this.defaultNodeFillColor,
-          strokeColor: this.defaultNodeStrokeColor,
-          nodeTextColor: this.defaultNodeTextColor,
         };
         let data2 = {
           key: jydfmc,
           name: jydfmc,
           text: jydfmc,
           tid: this.tableData.tid,
-          loc: "0 0",
-          img: "/static/images/icons/银行卡.png",
-          bkColor: this.defaultNodeFillColor,
-          strokeColor: this.defaultNodeStrokeColor,
-          nodeTextColor: this.defaultNodeTextColor,
         };
         let bFindData1 = false;
         let bFindData2 = false;
@@ -1593,7 +1618,6 @@ export default {
             bs: czbs,
             text: `${czje}元（${czbs}笔）`,
             stroke: lineColor,
-            strokeWidth: this.defaultLineStrokeWidth,
           };
           if (lineColor !== "") templinks.push(link1);
         }
@@ -1607,13 +1631,22 @@ export default {
             bs: jzbs,
             text: `${jzje}元（${jzbs}笔）`,
             stroke: lineColor,
-            strokeWidth: this.defaultLineStrokeWidth,
           };
           if (lineColor !== "") templinks.push(link2);
         }
         if (templinks.length > 0) {
           links.push(...templinks);
         }
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = "/static/images/icons/银行卡.png";
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
       });
       return { nodes, links };
     },
@@ -1635,11 +1668,6 @@ export default {
           name: jymc,
           text: jymc,
           tid: this.tableData.tid, //tableid
-          loc: "0 0",
-          img: "/static/images/icons/银行卡.png",
-          bkColor: this.defaultNodeFillColor,
-          strokeColor: this.defaultNodeStrokeColor,
-          nodeTextColor: this.defaultNodeTextColor,
         };
         let data2 = {
           key: jydfmc,
@@ -1647,11 +1675,6 @@ export default {
           name: jydfmc,
           text: jydfmc,
           tid: this.tableData.tid,
-          loc: "0 0",
-          img: "/static/images/icons/银行卡.png",
-          bkColor: this.defaultNodeFillColor,
-          strokeColor: this.defaultNodeStrokeColor,
-          nodeTextColor: this.defaultNodeTextColor,
         };
         let bFindData1 = false;
         let bFindData2 = false;
@@ -1682,7 +1705,6 @@ export default {
             bs: czbs,
             text: `${czje}元（${czbs}笔）`,
             stroke: lineColor,
-            strokeWidth: this.defaultLineStrokeWidth,
           };
           if (lineColor !== "") templinks.push(link1);
         }
@@ -1696,13 +1718,22 @@ export default {
             bs: jzbs,
             text: `${jzje}元（${jzbs}笔）`,
             stroke: lineColor,
-            strokeWidth: this.defaultLineStrokeWidth,
           };
           if (lineColor !== "") templinks.push(link2);
         }
         if (templinks.length > 0) {
           links.push(...templinks);
         }
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = "/static/images/icons/银行卡.png";
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
       });
       return { nodes, links };
     },
@@ -1726,11 +1757,6 @@ export default {
           kh: cxkh,
           name: jymc,
           text: cxkh + "\n" + jymc,
-          loc: "0 0",
-          img: "/static/images/icons/银行卡.png",
-          bkColor: this.defaultNodeFillColor,
-          strokeColor: this.defaultNodeStrokeColor,
-          nodeTextColor: this.defaultNodeTextColor,
         };
         let data2 = {
           tid: this.tableData.tid,
@@ -1738,11 +1764,6 @@ export default {
           kh: jydfzkh,
           name: jydfmc,
           text: jydfzkh + "\n" + jydfmc,
-          loc: "0 0",
-          img: "/static/images/icons/银行卡.png",
-          bkColor: this.defaultNodeFillColor,
-          strokeColor: this.defaultNodeStrokeColor,
-          nodeTextColor: this.defaultNodeTextColor,
         };
         let bFindData1 = false;
         let bFindData2 = false;
@@ -1773,7 +1794,6 @@ export default {
             bs: czbs,
             text: `${czje}元（${czbs}笔）`,
             stroke: lineColor,
-            strokeWidth: this.defaultLineStrokeWidth,
           };
           if (lineColor !== "") templinks.push(link1);
         }
@@ -1787,11 +1807,20 @@ export default {
             bs: jzbs,
             text: `${jzje}元（${jzbs}笔）`,
             stroke: lineColor,
-            strokeWidth: this.defaultLineStrokeWidth,
           };
           if (lineColor !== "") templinks.push(link2);
         }
         links.push(...templinks);
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = "/static/images/icons/银行卡.png";
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
       });
       return { nodes, links };
     },
@@ -1909,7 +1938,11 @@ export default {
             list.add(this.currentRightNode);
             let nodes = this.currentRightNode.findNodesConnected();
             nodes.each((n) => list.add(n));
-            diagram.selectCollection(list);
+            // diagram.selectCollection(list);
+            list.each((node) => {
+              node.isSelected = true;
+            });
+            diagram.focus();
             return;
           }
           break;
@@ -1919,7 +1952,7 @@ export default {
     },
     allNodesToFront() {
       this.myDiagram.nodes.each((node) => {
-        node.layerName = "Foreground";
+        if (!node instanceof go.Group) node.layerName = "Foreground";
       });
     },
     onUpdateNodesState({ graphid, nodeid, state }) {
@@ -1936,7 +1969,6 @@ export default {
     },
     calculateEntityInfo(node) {
       let nodeModel = node.data;
-      console.log(nodeModel);
       let edges = node.findLinksConnected();
       let jyEdgeCount = 0;
       let czjeTotal = 0;
@@ -2120,13 +2152,40 @@ export default {
         relationGraphData,
       });
     },
+    dagreLayout() {
+      this.myDiagram.layout = $(go.LayeredDigraphLayout, {
+        direction: 90,
+        layerSpacing: 60,
+      });
+    },
     switchLayout(data) {
       let { graphid, layout } = data;
       if (graphid !== this.graphid) return;
-      this.CircularLayout();
+      switch (layout) {
+        case "random": // 随机
+          this.randomLayout();
+          break;
+        case "dagre": //层次
+          this.dagreLayout();
+          break;
+        case "circular": // 圆形
+          this.CircularLayout();
+          break;
+        case "grid": // 网格
+          this.GridLayout();
+          break;
+        case "fruchterman":
+          this.ForceDirectedLayout();
+          break;
+        case "force":
+          // 组织结构布局
+          this.func1();
+          break;
+      }
       this.updateEntityList();
       this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
       this.myDiagram.commandHandler.zoomToFit();
+      this.$store.commit("ShowTable/SWITCH_GRAPH_LAYOUT_TYPE", layout);
     },
     init() {
       this.tempgraphicMoneySectionStrMd5 = md5(
@@ -2135,7 +2194,6 @@ export default {
       this.initDiagram();
       this.initOverView();
       this.initNodeTemplate();
-      this.initGroupTemplate();
       if (this.tableData.hasOwnProperty("relationGraphData")) {
         this.myDiagram.model = go.Model.fromJson(
           this.tableData.relationGraphData
@@ -2143,18 +2201,350 @@ export default {
       } else {
         let { nodes, links } = this.makeData();
         this.myDiagram.model = new go.GraphLinksModel(nodes, links);
+        this.ForceDirectedLayout();
       }
       this.initLinkTemplate();
-      // this.CircularLayout();
-      // this.GridLayout();
-      // this.layoutTree();
-      this.ForceDirectedLayout();
+      this.initGroupTemplate();
       this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
       this.accordingSpreadNodeSwitchRefreshNodes();
       this.updateEntityList();
       this.switchAllowScroll();
       this.allNodesToFront();
       this.myDiagram.commandHandler.zoomToFit();
+    },
+
+    makeDataVisible() {
+      switch (this.tableData.tid) {
+        case 202:
+          return this.makeDataVisible202();
+          break;
+        case 203:
+          return this.makeDataVisible203();
+          break;
+        case 204:
+          return this.makeDataVisible204();
+          break;
+        default:
+          return { nodes: [], links: [] };
+      }
+    },
+    makeDataVisible204() {
+      let nodes = [];
+      let links = [];
+      this.tableData.allrows.forEach((row) => {
+        let jymc = row["jymc"];
+        let jydfmc = row["jydfmc"];
+        let jyzjhm = row["jyzjhm"];
+        let jydfzjhm = row["jydfzjhm"];
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+        let jyzje = parseInt(row["jyzje"]);
+        let jyzbs = parseInt(row["jyzbs"]);
+        let jczce = parseFloat(row["jczce"]);
+        let data1 = {
+          key: jymc + "\n" + jyzjhm,
+          name: jymc,
+          text: jymc + "\n" + jyzjhm,
+          tid: this.tableData.tid, //tableid
+        };
+        let data2 = {
+          key: jydfmc + "\n" + jydfzjhm,
+          name: jydfmc,
+          text: jydfmc + "\n" + jydfzjhm,
+          tid: this.tableData.tid,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.key === data1.key) {
+            bFindData1 = true;
+            break;
+          }
+        }
+        if (!bFindData1) nodes.push(data1);
+        for (let item of nodes) {
+          if (item.key === data2.key) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+
+        // 画线
+        let tempEdges = [];
+        if (this.tableData.selectShowTypeValue === "1") {
+          if (czje > 0) {
+            let lineColor = this.calculateLineColorByJinE(czje);
+            let link1 = {
+              tid: this.tableData.tid,
+              from: jymc + "\n" + jyzjhm,
+              to: jydfmc + "\n" + jydfzjhm,
+              je: czje,
+              bs: czbs,
+              text: `${czje}元（${czbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link1);
+          }
+          if (jzje > 0) {
+            let lineColor = this.calculateLineColorByJinE(jzje);
+            let link2 = {
+              tid: this.tableData.tid,
+              from: jydfmc + "\n" + jydfzjhm,
+              to: jymc + "\n" + jyzjhm,
+              je: jzje,
+              bs: jzbs,
+              text: `${jzje}元（${jzbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link2);
+          }
+        } else {
+          if (jczce !== 0) {
+            let lineColor = this.calculateLineColorByJinE(jczce);
+            let link2 = {
+              tid: this.tableData.tid,
+              from: jydfmc + "\n" + jydfzjhm,
+              to: jymc + "\n" + jyzjhm,
+              je: jczce,
+              bs: jyzbs,
+              text: `净${jczce}元（${jyzbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link2);
+          }
+        }
+
+        if (tempEdges.length > 0) {
+          links.push(...tempEdges);
+        }
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = this.tableData.imgSrc;
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
+      });
+      return { nodes, links };
+    },
+    makeDataVisible203() {
+      let nodes = [];
+      let links = [];
+      this.tableData.allrows.forEach((row) => {
+        let jymc = row["jymc"];
+        let jydfmc = row["jydfmc"];
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+        let jyzje = parseInt(row["jyzje"]);
+        let jyzbs = parseInt(row["jyzbs"]);
+        let jczce = parseFloat(row["jczce"]); // 进出帐差额
+        let data1 = {
+          key: jymc,
+          kh: jymc,
+          name: jymc,
+          text: jymc,
+          tid: this.tableData.tid, //tableid
+        };
+        let data2 = {
+          key: jydfmc,
+          kh: jydfmc,
+          name: jydfmc,
+          text: jydfmc,
+          tid: this.tableData.tid,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.key === data1.key) {
+            bFindData1 = true;
+            break;
+          }
+        }
+        if (!bFindData1) nodes.push(data1);
+        for (let item of nodes) {
+          if (item.key === data2.key) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+
+        // 画线
+        let tempEdges = [];
+        if (this.tableData.selectShowTypeValue === "1") {
+          if (czje > 0) {
+            let lineColor = this.calculateLineColorByJinE(czje);
+            let link1 = {
+              tid: this.tableData.tid,
+              from: jymc,
+              to: jydfmc,
+              je: czje,
+              bs: czbs,
+              text: `${czje}元（${czbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link1);
+          }
+          if (jzje > 0) {
+            let lineColor = this.calculateLineColorByJinE(jzje);
+            let link2 = {
+              tid: this.tableData.tid,
+              from: jydfmc,
+              to: jymc,
+              je: jzje,
+              bs: jzbs,
+              text: `${jzje}元（${jzbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link2);
+          }
+        } else {
+          if (jczce !== 0) {
+            let lineColor = this.calculateLineColorByJinE(jczce);
+            let link2 = {
+              tid: this.tableData.tid,
+              from: jydfmc,
+              to: jymc,
+              je: jczce,
+              bs: jyzbs,
+              label: `净${jczce}元（${jyzbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link2);
+          }
+        }
+
+        if (tempEdges.length > 0) {
+          links.push(...tempEdges);
+        }
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = this.tableData.imgSrc;
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
+      });
+      return { nodes, links };
+    },
+    makeDataVisible202() {
+      let nodes = [];
+      let links = [];
+      // 汇总
+      this.tableData.allrows.forEach((row) => {
+        let cxkh = row["cxkh"];
+        let jymc = row["jymc"];
+        let jydfzkh = row["jydfzkh"];
+        let jydfmc = row["jydfmc"];
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+        let jyzje = parseInt(row["jyzje"]);
+        let jyzbs = parseInt(row["jyzbs"]);
+        let jczce = parseFloat(row["jczce"]); // 进出帐差额
+        let data1 = {
+          tid: this.tableData.tid,
+          key: cxkh + "\n" + jymc,
+          kh: cxkh,
+          name: jymc,
+          text: cxkh + "\n" + jymc,
+        };
+        let data2 = {
+          tid: this.tableData.tid,
+          key: jydfzkh + "\n" + jydfmc,
+          kh: jydfzkh,
+          name: jydfmc,
+          text: jydfzkh + "\n" + jydfmc,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.key === data1.key) {
+            bFindData1 = true;
+            break;
+          }
+        }
+        if (!bFindData1) nodes.push(data1);
+
+        for (let item of nodes) {
+          if (item.key === data2.key) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+
+        // 画线
+        // 汇总
+        let tempEdges = [];
+
+        if (this.tableData.selectShowTypeValue === "1") {
+          if (czje > 0) {
+            let lineColor = this.calculateLineColorByJinE(czje);
+            let link1 = {
+              tid: this.tableData.tid,
+              from: cxkh + "\n" + jymc,
+              to: jydfzkh + "\n" + jydfmc,
+              je: czje,
+              bs: czbs,
+              text: `${czje}元（${czbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link1);
+          }
+          if (jzje > 0) {
+            let lineColor = this.calculateLineColorByJinE(jzje);
+            let link2 = {
+              tid: this.tableData.tid,
+              from: jydfzkh + "\n" + jydfmc,
+              to: cxkh + "\n" + jymc,
+              je: jzje,
+              bs: jzbs,
+              text: `${jzje}元（${jzbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link2);
+          }
+        } else {
+          if (jczce !== 0) {
+            let lineColor = this.calculateLineColorByJinE(jczce);
+            let link1 = {
+              tid: this.tableData.tid,
+              from: cxkh + "\n" + jymc,
+              to: jydfzkh + "\n" + jydfmc,
+              je: jczce,
+              bs: jyzbs,
+              text: `净${jczce}元（${jyzbs}笔）`,
+              stroke: lineColor,
+            };
+            if (lineColor !== "") tempEdges.push(link1);
+          }
+        }
+        links.push(...tempEdges);
+      });
+      nodes.forEach((node) => {
+        node.loc = "0 0";
+        node.img = this.tableData.imgSrc;
+        node.bkColor = this.defaultNodeFillColor;
+        node.strokeColor = this.defaultNodeStrokeColor;
+        node.nodeTextColor = this.defaultNodeTextColor;
+      });
+      links.forEach((link) => {
+        link.strokeWidth = this.defaultLineStrokeWidth;
+      });
+      return { nodes, links };
     },
   },
   mounted() {
@@ -2178,6 +2568,9 @@ export default {
     this.$bus.$on("saveGraphData", this.saveGraphData);
     // 布局切换监听
     this.$bus.$on("swichNormalLayout", this.switchLayout);
+    this.myDiagram.addDiagramListener("ClipboardChanged", function (e) {
+      console.log(e);
+    });
   },
 };
 </script>

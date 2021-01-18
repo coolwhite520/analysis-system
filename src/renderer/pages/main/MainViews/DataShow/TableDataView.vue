@@ -7,24 +7,13 @@
         :tableData="tableData"
         :limitHeight="contentViewHeight - 80"
       ></table-chart>
-      <!-- <test-go-view
-        v-if="tableData.showType === 1"
-        :limitHeight="contentViewHeight - 80"
-      ></test-go-view> -->
     </div>
     <div v-else-if="tableData.showType === 2">
-      <template v-if="tableData.tableType === 'graph'">
-        <link-relation-chart
-          :tableData="tableData"
-          :limitHeight="contentViewHeight - 87"
-        ></link-relation-chart>
-      </template>
-      <template v-else>
-        <relation-chart-visible
-          :tableData="tableData"
-          :limitHeight="contentViewHeight - 87"
-        ></relation-chart-visible>
-      </template>
+      <test-go-view
+        :tableData="tableData"
+        :limitHeight="contentViewHeight - 87"
+      >
+      </test-go-view>
     </div>
     <div v-else-if="tableData.showType === 3">
       <table-chart
@@ -32,15 +21,6 @@
         :tableData="tableData"
         :limitHeight="(contentViewHeight - 126) / 2"
       ></table-chart>
-      <!-- <div>这里是个关系图</div> -->
-      <!-- <relation-chart
-        :tableData="tableData"
-        :limitHeight="
-          tableData.fullScrrenFlag
-            ? contentViewHeight - 87
-            : (contentViewHeight - 126) / 2
-        "
-      ></relation-chart> -->
       <test-go-view
         :tableData="tableData"
         :limitHeight="
@@ -112,9 +92,9 @@
 import { mapState } from "vuex";
 import TableChart from "./child/TableChart";
 import GraphicBarChart from "./child/GraphicBarChart";
-import RelationChart from "./child/RelationChart";
-import RelationChartVisible from "./child/RelationChartVisible";
-import linkRelationChart from "./child/ZjctRelationChart";
+// import RelationChart from "./child/RelationChart";
+// import RelationChartVisible from "./child/RelationChartVisible";
+// import linkRelationChart from "./child/ZjctRelationChart";
 import ZjytPieChart from "./child/ZjytPieChart";
 import ZjytSankeyChart from "./child/ZjytSankeyChart";
 import TestGoView from "./child/TestGojs";
@@ -133,9 +113,9 @@ export default {
   components: {
     "graphic-bar-chart": GraphicBarChart,
     "table-chart": TableChart,
-    "relation-chart": RelationChart,
-    "link-relation-chart": linkRelationChart,
-    "relation-chart-visible": RelationChartVisible,
+    // "relation-chart": RelationChart,
+    // "link-relation-chart": linkRelationChart,
+    // "relation-chart-visible": RelationChartVisible,
     "zjyt-pie-chart": ZjytPieChart,
     "zjyt-sankey-chart": ZjytSankeyChart,
     "test-go-view": TestGoView,

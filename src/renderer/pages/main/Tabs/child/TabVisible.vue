@@ -1,9 +1,9 @@
 <template>
   <div class="TabVisible">
     <el-row style="text-align: center">
-      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-button
               size="mini"
               type="text"
@@ -14,18 +14,20 @@
               >&#xe6cd;&nbsp;随机布局</el-button
             >
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-button
               size="mini"
               type="text"
               style="padding: 4px; font-size: 12px"
               class="iconfont"
-              @click="handleClickSwitchLayout('dagre')"
+              @click="handleClickSwitchLayout('grid')"
               :disabled="disabledButtons"
-              >&#xe737;&nbsp;层次布局</el-button
+              >&#xe667;&nbsp;网格布局</el-button
             >
           </el-col>
-          <el-col :span="6">
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-button
               size="mini"
               type="text"
@@ -36,8 +38,56 @@
               >&#xe609;&nbsp;圆形布局</el-button
             >
           </el-col>
+          <el-col :span="12">
+            <el-button
+              v-if="false"
+              size="mini"
+              type="text"
+              style="padding: 4px; font-size: 12px"
+              class="iconfont"
+              @click="handleClickSwitchLayout('concentric')"
+              :disabled="disabledButtons"
+              >&#xe605;&nbsp;同心圆布局</el-button
+            >
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              v-if="false"
+              size="mini"
+              type="text"
+              style="padding: 4px; font-size: 12px"
+              class="iconfont"
+              @click="handleClickSwitchLayout('dagre')"
+              :disabled="disabledButtons"
+              >&#xe737;&nbsp;层次布局</el-button
+            >
+          </el-col>
 
-          <el-col :span="6">
+          <el-col :span="12">
+            <el-button
+              v-if="false"
+              size="mini"
+              type="text"
+              style="padding: 4px; font-size: 12px"
+              class="iconfont"
+              @click="handleClickSwitchLayout('radial')"
+              :disabled="disabledButtons"
+              >&#xe7bb;&nbsp;辐射状布局</el-button
+            >
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              v-if="false"
+              size="mini"
+              type="text"
+              style="padding: 4px; font-size: 12px"
+              class="iconfont"
+              @click="handleClickSwitchLayout('force')"
+              :disabled="disabledButtons"
+              >&#xe63f;&nbsp;结构布局</el-button
+            >
+          </el-col>
+          <el-col :span="12">
             <el-button
               size="mini"
               type="text"
@@ -49,56 +99,10 @@
             >
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding: 4px; font-size: 12px"
-              class="iconfont"
-              @click="handleClickSwitchLayout('concentric')"
-              :disabled="disabledButtons"
-              >&#xe605;&nbsp;同心圆布局</el-button
-            >
-          </el-col>
-          <el-col :span="6">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding: 4px; font-size: 12px"
-              class="iconfont"
-              @click="handleClickSwitchLayout('grid')"
-              :disabled="disabledButtons"
-              >&#xe667;&nbsp;网格布局</el-button
-            >
-          </el-col>
-          <el-col :span="6">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding: 4px; font-size: 12px"
-              class="iconfont"
-              @click="handleClickSwitchLayout('radial')"
-              :disabled="disabledButtons"
-              >&#xe7bb;&nbsp;辐射状布局</el-button
-            >
-          </el-col>
-          <el-col :span="6">
-            <el-button
-              size="mini"
-              type="text"
-              style="padding: 4px; font-size: 12px"
-              class="iconfont"
-              @click="handleClickSwitchLayout('force')"
-              :disabled="disabledButtons"
-              >&#xe63f;&nbsp;力导向布局</el-button
-            >
-          </el-col>
-        </el-row>
       </el-col>
-      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
@@ -109,7 +113,18 @@
               >&#xe601;&nbsp;实体列表</el-button
             >
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              @click="handleClickShowEntityListView"
+              :disabled="disabledButtons"
+              >&#xe601;&nbsp;实体列表</el-button
+            >
+          </el-col>
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
@@ -132,15 +147,37 @@
           </el-col> -->
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
               class="iconfont"
               style="padding: 4px; font-size: 12px"
-              :disabled="true || disabledButtons"
+              :disabled="disabledButtons"
               @click="handleClickNewView"
               >&#xe6a3;&nbsp;新建视图</el-button
+            >
+          </el-col>
+          <el-col :span="8">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              :disabled="disabledButtons"
+              @click="handleClickNewView"
+              >&#xe6a3;&nbsp;新建节点</el-button
+            >
+          </el-col>
+          <el-col :span="8">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 12px"
+              :disabled="disabledButtons"
+              @click="handleClickNewView"
+              >&#xe6a3;&nbsp;新建链接</el-button
             >
           </el-col>
         </el-row>
@@ -154,11 +191,11 @@
         padding-bottom: 4px;
       "
     >
-      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
         <div>布局</div>
       </el-col>
       <el-col
-        :span="3"
+        :span="5"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>操作</div>
@@ -180,6 +217,17 @@ export default {
   methods: {
     handleClickNewView() {
       // 新建一个空白视图
+      let obj = {
+        title: "空白视图",
+        componentName: "table-data-view",
+        dispatchName: "ShowTable/showDataVisibleTable",
+        tableType: "emptyGraph",
+        showType: 2, // 数据可视化不显示table数据
+        rightTabs: [],
+        allrows: [],
+        rows: [],
+      };
+      this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", obj);
     },
     handleClickShowEntityListView() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
@@ -198,62 +246,30 @@ export default {
       let isNormalLayout = false;
       switch (layoutName) {
         case "random": // 随机
-          layout = {
-            type: "random", // 指定为力导向布局
-            preventOverlap: true, // 防止节点重叠
-          };
+          layout = "random"; // 指定为力导向布局
           break;
         case "dagre": //层次
-          layout = {
-            type: "dagre",
-            preventOverlap: true,
-          };
+          layout = "dagre";
           break;
         case "circular": // 圆形
-          layout = {
-            preventOverlap: true,
-            ordering: "degree",
-            type: "circular",
-            nodeSpacing: 50,
-          };
+          layout = "circular";
           break;
         case "grid": // 网格
-          layout = {
-            type: "grid",
-            preventOverlap: true,
-            begin: [20, 20],
-          };
+          layout = "grid";
+
           break;
         case "radial": // 辐射
-          layout = {
-            type: "radial",
-            unitRadius: 50,
-            preventOverlap: true,
-            nodeSpacing: 50,
-            strictRadial: true,
-            maxPreventOverlapIteration: 100,
-          };
+          layout = "radial";
+
           break;
         case "concentric": // 同心圆
-          layout = {
-            type: "concentric",
-            maxLevelDiff: 0.5,
-            sortBy: "degree",
-            preventOverlap: true,
-          };
+          layout = "concentric";
           break;
         case "fruchterman":
-          layout = {
-            type: "fruchterman",
-            gravity: 1,
-            speed: 5,
-            clustering: true,
-          };
+          layout = "fruchterman";
           break;
         case "force":
-          layout = {
-            type: "force",
-          };
+          layout = "force";
           break;
       }
       if (this.currentTableData.hasOwnProperty("graphid")) {

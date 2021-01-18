@@ -299,10 +299,7 @@ export default {
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
     isNotNoDataPage() {
-      return (
-        this.currentTableData &&
-        this.currentTableData.componentName !== "no-data-view"
-      );
+      return this.currentTableData && this.currentTableData.showType !== 2;
     },
     disabledWashingButtons() {
       return !(

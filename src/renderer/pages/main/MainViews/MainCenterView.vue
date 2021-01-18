@@ -34,6 +34,13 @@
       >
         关闭其他
       </li>
+      <li
+        class="menu__item"
+        @click="rename()"
+        v-if="!isDisabledCloseOtherBtnFlag"
+      >
+        重命名标题
+      </li>
     </ul>
     <el-tabs
       class="el-tabs"
@@ -54,6 +61,46 @@
     </el-tabs>
 
     <zjyt-link-dialog v-if="showZjytLinkVisible"></zjyt-link-dialog>
+    <div v-if="showRename">
+      <el-dialog
+        v-dialogDrag
+        :close-on-click-modal="false"
+        class="standard-data-dialog"
+        :append-to-body="true"
+        :visible="showRename"
+        width="25%"
+        @close="handleClose"
+        :modal="true"
+      >
+        <div slot="title" class="dialog-title">
+          <i class="iconfont" style="color: white; font-size: 30px">&#xe607;</i>
+          <span class="title-text" style="color: white">{{
+            "标题重命名"
+          }}</span>
+          <div class="button-right">
+            <span class="title-close" @click="handleClose"></span>
+          </div>
+        </div>
+        <el-input
+          ref="inputName"
+          size="mini"
+          v-model="inputNewTitle"
+          placeholder="请输入新的名称"
+        ></el-input>
+        <el-row style="margin-top: 20px; text-align: center">
+          <el-button @click="handleClose" size="mini" style="width: 30%"
+            >取消</el-button
+          >
+          <el-button
+            @click="handleClickSureName"
+            size="mini"
+            style="width: 30%"
+            type="primary"
+            >确定</el-button
+          >
+        </el-row>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -104,6 +151,8 @@ export default {
   },
   data() {
     return {
+      inputNewTitle: "",
+      showRename: false,
       left: 0,
       top: 0,
       isDisabledCloseLeftBtnFlag: false,
@@ -115,6 +164,9 @@ export default {
     };
   },
   methods: {
+    handleClose() {
+      this.showRename = false;
+    },
     async openContextMenu(e) {
       e.preventDefault();
       if (e.srcElement.id) {
@@ -228,6 +280,20 @@ export default {
       }
       this.contextMenuVisible = false;
       this.closeContextMenu();
+    },
+    rename() {
+      this.inputNewTitle = this.currentTableData.title;
+      this.showRename = true;
+      this.$nextTick((x) => {
+        this.$refs.inputName.focus();
+      });
+    },
+    handleClickSureName() {
+      let newTitle = this.inputNewTitle.trim();
+      if (newTitle.length > 0) {
+        this.$store.commit("ShowTable/MODIFY_TAB_TITLE", newTitle);
+      }
+      this.showRename = false;
     },
   },
 };

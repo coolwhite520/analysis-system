@@ -73,7 +73,9 @@ const mutations = {
     );
     Vue.set(state.currentTableData, "rightActiveName", "entity-view");
   },
-
+  MODIFY_TAB_TITLE(state, newTitle) {
+    Vue.set(state.currentTableData, "title", newTitle);
+  },
   // 向数组添加新的表数据
   ADD_TABLE_DATA_TO_LIST(state, tableData) {
     let newPageUuidStr = uuid.v1();

@@ -211,7 +211,7 @@ export default {
           title: this.title,
           componentName: "table-data-view",
           dispatchName: "ShowTable/showModelTable",
-          tableType: "graph",
+          tableType: "zjctGraph",
           modelGraphType: "link",
           showType: 2,
           originGraphData: data,
