@@ -297,6 +297,16 @@
 </template>
 
 <script>
+/*
+在文件中搜索
+7eba17a4ca3b1a8346
+会看到类似这段代码
+a.ax = d[u.Da("7eba17a4ca3b1a8346")][u.Da("78a118b7")](d, u.wl, 4, 4);
+//替换成
+a.ax = function(){return true;}
+npm引入的话，在node_modules中搜索
+go.js和go-debug.js分别按上面步骤替换代码即可
+*/
 import go from "gojs";
 import insertCss from "insert-css";
 import { mapState } from "vuex";
