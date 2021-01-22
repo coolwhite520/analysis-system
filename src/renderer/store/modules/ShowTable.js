@@ -919,7 +919,7 @@ const actions = {
           tid: parseInt(type),
           pgsqlTemplateDecode: msg.str,
           modelFilterStr: filterChildStr,
-          modelFilterChildList: [],
+          modelFilterChildList: msg.obj ? msg.obj : [],
           count: 30,
           offset: 0,
         });
