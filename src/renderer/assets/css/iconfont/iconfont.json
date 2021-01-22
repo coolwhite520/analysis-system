@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "12686559",
+      "name": "交换",
+      "font_class": "icon_jiaohuan",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "1117",
+      "name": "剪切",
+      "font_class": "jianqie",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "588699",
+      "name": "撤销",
+      "font_class": "chexiao",
+      "unicode": "e6e9",
+      "unicode_decimal": 59113
+    },
+    {
+      "icon_id": "588709",
+      "name": "反撤销",
+      "font_class": "fanchexiao",
+      "unicode": "e6ed",
+      "unicode_decimal": 59117
+    },
+    {
+      "icon_id": "588739",
+      "name": "粘贴",
+      "font_class": "niantie",
+      "unicode": "e701",
+      "unicode_decimal": 59137
+    },
+    {
+      "icon_id": "7192357",
+      "name": "复制",
+      "font_class": "fuzhi",
+      "unicode": "e720",
+      "unicode_decimal": 59168
+    },
+    {
+      "icon_id": "13453221",
+      "name": "路径",
+      "font_class": "lujing",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "2205449",
+      "name": "实体关系",
+      "font_class": "entity",
+      "unicode": "e752",
+      "unicode_decimal": 59218
+    },
+    {
+      "icon_id": "6246293",
+      "name": "节点",
+      "font_class": "jiedian",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
       "icon_id": "6550626",
       "name": "重命名",
       "font_class": "zhongmingming",

@@ -73,7 +73,7 @@
         :modal="true"
       >
         <div slot="title" class="dialog-title">
-          <i class="iconfont" style="color: white; font-size: 30px">&#xe607;</i>
+          <i class="iconfont" style="color: white; font-size: 30px">&#xe645;</i>
           <span class="title-text" style="color: white">{{
             "标题重命名"
           }}</span>

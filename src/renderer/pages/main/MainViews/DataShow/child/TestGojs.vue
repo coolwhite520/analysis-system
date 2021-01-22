@@ -221,6 +221,78 @@
       </el-col>
     </el-row>
     <graphic-setting v-if="graphicSettingVisible"></graphic-setting>
+
+    <!-- 连接两个节点 -->
+    <div v-if="showLinkNodeDialog">
+      <el-dialog
+        v-dialogDrag
+        :close-on-click-modal="false"
+        class="standard-data-dialog"
+        :append-to-body="true"
+        :visible="showLinkNodeDialog"
+        width="25%"
+        @close="handleClose"
+        :modal="true"
+      >
+        <div slot="title" class="dialog-title">
+          <i class="iconfont" style="color: white; font-size: 30px">&#xe752;</i>
+          <span class="title-text" style="color: white">创建连接</span>
+          <div class="button-right">
+            <span class="title-close" @click="handleClose"></span>
+          </div>
+        </div>
+        <div style="text-align: left">
+          <div>
+            源节点：<span style="color: green">{{ sourceNodeData.text }}</span>
+          </div>
+          <div style="text-align: center">
+            <el-button type="text" @click="handleClickSwitch"
+              ><span class="iconfont" style="font-size: 40px"
+                >&#xe648;</span
+              ></el-button
+            >
+          </div>
+          <div>
+            目标节点：<span style="color: #f29c38">{{ desNodeData.text }}</span>
+          </div>
+        </div>
+        <div>
+          请输入交易金额：&nbsp;&nbsp;&nbsp;<el-input-number
+            :precision="2"
+            :step="0.1"
+            style="margin-top: 10px; width: 50%"
+            ref="inputName"
+            size="mini"
+            v-model="inputNewLinkJe"
+            placeholder="请输入交易金额"
+          ></el-input-number>
+        </div>
+        <div>
+          请输入交易笔数：&nbsp;&nbsp;
+          <el-input-number
+            style="margin-top: 10px; width: 50%"
+            ref="inputName"
+            size="mini"
+            v-model="inputNewLinkBs"
+            placeholder="请输入交易笔数"
+          ></el-input-number>
+        </div>
+
+        <el-row style="margin-top: 20px; text-align: center">
+          <el-button @click="handleClose" size="mini" style="width: 30%"
+            >取消</el-button
+          >
+
+          <el-button
+            @click="handleClickSureLink"
+            size="mini"
+            style="width: 30%"
+            type="primary"
+            >确定</el-button
+          >
+        </el-row>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -229,6 +301,7 @@ import go from "gojs";
 import insertCss from "insert-css";
 import { mapState } from "vuex";
 import { Decimal } from "decimal.js";
+import Tools from "./findDisTools/tools";
 import GraphicSetting from "@/pages/dialog/graphicsetting/graphicSettingDialog";
 const uuid = require("uuid");
 const md5 = require("md5-node");
@@ -309,6 +382,11 @@ export default {
   created() {},
   data() {
     return {
+      inputNewLinkJe: 0,
+      inputNewLinkBs: 0,
+      sourceNodeData: null,
+      desNodeData: null,
+      showLinkNodeDialog: false,
       loading: false,
       selectRelatedNodesId: "li" + uuid.v1(),
       unGroupId: "li" + uuid.v1(),
@@ -342,6 +420,7 @@ export default {
       currentRightNode: null,
       tempgraphicMoneySectionStrMd5: "",
       tempAllRowsStrMd5: "",
+      defaultImg: "/static/images/icons/银行卡.png",
     };
   },
   watch: {
@@ -374,7 +453,7 @@ export default {
           this.allNodesToFront();
           this.updateEntityList();
           let layout = this.tableData.graphType;
-          this.switchLayout({ graphid: this.graphid, layout });
+          this.onSwitchLayout({ graphid: this.graphid, layout });
         }
       },
       immediate: false,
@@ -452,6 +531,23 @@ export default {
     "graphic-setting": GraphicSetting,
   },
   methods: {
+    handleClickSwitch() {
+      let temp = this.sourceNodeData;
+      this.sourceNodeData = this.$lodash.cloneDeep(this.desNodeData);
+      this.desNodeData = this.$lodash.cloneDeep(temp);
+    },
+    handleClose() {
+      this.showLinkNodeDialog = false;
+    },
+    handleClickSureLink() {
+      this.addLinkData(
+        this.sourceNodeData.key,
+        this.desNodeData.key,
+        this.inputNewLinkJe,
+        this.inputNewLinkBs
+      );
+      this.showLinkNodeDialog = false;
+    },
     async handleClickMoneySpan(value) {
       this.$store.commit("ShowTable/MODIFY_MONDY_SECTION_CHECKED", value);
       // 重新渲染页面
@@ -469,12 +565,13 @@ export default {
             node.visible = true;
           } else if (
             node instanceof go.Node &&
-            node.findLinksConnected().count === 0
+            node.linksConnected.count === 0
           ) {
             node.visible = false;
           } else node.visible = true;
         });
       }
+      console.log("accordingSpreadNodeSwitchRefreshNodes");
     },
     // 根据线宽设置
     accordingXianKuanRefreshEdges(xianKuanSetting) {
@@ -624,6 +721,7 @@ export default {
     },
     CircularLayout() {
       this.myDiagram.layout = $(go.CircularLayout);
+      console.log("CircularLayout");
     },
     switchAllowScroll() {
       this.myDiagram.allowHorizontalScroll = this.enableDragCavans;
@@ -833,7 +931,7 @@ export default {
       let entityList = [];
       nodes.each((node) => {
         let model = node.data;
-        let edges = node.findLinksConnected();
+        let edges = node.linksConnected;
         if (this.bSpreadNodeSwitch) {
           entityList.push({
             ...model,
@@ -857,6 +955,7 @@ export default {
       this.linkCount = this.myDiagram.links.count;
       this.detailCount = this.entityCount + this.linkCount;
       this.$store.commit("ShowTable/UPDATE_ENTITY_LIST", entityList);
+      console.log("updateEntityList");
     },
     // 随机布局
     randomLayout() {
@@ -1078,6 +1177,7 @@ export default {
         go.Node,
         "Vertical",
         {
+          locationSpot: go.Spot.Center,
           contextMenu: this.myContextMenu,
           selectionAdorned: false,
           mouseEnter: mouseEnter,
@@ -1123,6 +1223,7 @@ export default {
         ),
         {
           click: function (e, obj) {
+            console.log(obj);
             let entity = _this.calculateEntityInfo(obj);
             _this.$store.commit("ShowTable/UPDATE_ENTITY", entity);
             _this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
@@ -1165,7 +1266,7 @@ export default {
                 text: node.data.text,
               });
               diagram.commitTransaction("make new group");
-              let group = diagram.findPartForKey(groupKey);
+              let group = diagram.findNodeForKey(groupKey);
               group.addMembers(selection);
               var desSet = new go.Set();
               desSet.add(node);
@@ -1188,6 +1289,8 @@ export default {
       this.myDiagram.linkTemplate = $(
         linkType,
         {
+          shadowOffset: new go.Point(3, 3),
+          shadowBlur: 20,
           curve:
             _this.tableData.tableType === "zjctGraph"
               ? go.Link.Bezier
@@ -1211,7 +1314,11 @@ export default {
         ),
         $(
           go.Shape,
-          { isPanelMain: true, strokeWidth: _this.defaultLineStrokeWidth },
+          {
+            isPanelMain: true,
+            strokeWidth: _this.defaultLineStrokeWidth,
+            name: "SHAPE1",
+          },
           new go.Binding("strokeWidth", "strokeWidth", function (val) {
             return val * _this.defaultLineStrokeWidth;
           }),
@@ -1219,7 +1326,7 @@ export default {
         ),
         $(
           go.Shape,
-          { toArrow: "Standard" },
+          { toArrow: "Standard", name: "SHAPE2" },
           new go.Binding("stroke", "stroke"),
           new go.Binding("fill", "stroke"),
           new go.Binding("scale", "strokeWidth", function (val) {
@@ -1238,14 +1345,41 @@ export default {
           }),
           $(
             go.TextBlock,
-            { margin: 3 },
+            { margin: 3, name: "TEXT", editable: true },
             new go.Binding("text", "text"),
             new go.Binding("stroke", "stroke")
           )
         ),
         {
-          mouseEnter: function (e, link) {},
-          mouseLeave: function (e, link) {},
+          click: function (e, obj) {
+            console.log(obj);
+            let linkEntity = _this.calculateLinkInfo(obj);
+            console.log(linkEntity);
+            _this.$store.commit("ShowTable/UPDATE_LINK_ENTITY", linkEntity);
+            _this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+              componentName: "link-view",
+              action: "add",
+            });
+          },
+          mouseEnter: function (e, link) {
+            // link.isShadowed = true;
+          },
+          mouseLeave: function (e, link) {
+            // link.isShadowed = false;
+          },
+          selectionChanged: function (obj) {
+            let textObj = obj.findObject("TEXT");
+            if (obj.isSelected) {
+              textObj._bkColor = textObj.background;
+              textObj._stroke = textObj.stroke;
+            }
+            textObj.background = obj.isSelected
+              ? _this.selectedStrokeColor
+              : textObj._bkColor;
+            textObj.stroke = obj.isSelected
+              ? _this.selectedTextColor
+              : textObj._stroke;
+          },
         }
       );
     },
@@ -1814,7 +1948,7 @@ export default {
       });
       nodes.forEach((node) => {
         node.loc = "0 0";
-        node.img = "/static/images/icons/银行卡.png";
+        node.img = this.defaultImg;
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -1846,7 +1980,7 @@ export default {
 
       comboChildren.each((part) => {
         if (part instanceof go.Node && !(part instanceof go.Group)) {
-          let node = this.myDiagram.findPartForKey(part.key);
+          let node = this.myDiagram.findNodeForKey(part.key);
           allNodes.push(node);
           let edges = node.findLinksConnected();
           edges.each((edge) => allEdges.push(edge));
@@ -1857,7 +1991,7 @@ export default {
             type: "node",
           });
         } else if (part instanceof go.Group) {
-          let combo = this.myDiagram.findPartForKey(part.key);
+          let combo = this.myDiagram.findNodeForKey(part.key);
           this.travelCombo(obj.children, combo, allNodes, allEdges);
         }
       });
@@ -1890,7 +2024,7 @@ export default {
               text: selection.first().data.text,
             });
             diagram.commitTransaction("make new group");
-            let group = diagram.findPartForKey(groupKey);
+            let group = diagram.findNodeForKey(groupKey);
             group.addMembers(selection);
           }
 
@@ -1920,7 +2054,7 @@ export default {
           break;
         case "addToGroup":
           {
-            let group = diagram.findPartForKey(item.key);
+            let group = diagram.findNodeForKey(item.key);
             selection.each((part) => {
               if (part.data.key !== item.key) {
                 let tempSet = new go.Set();
@@ -1952,12 +2086,16 @@ export default {
     },
     allNodesToFront() {
       this.myDiagram.nodes.each((node) => {
-        if (!node instanceof go.Group) node.layerName = "Foreground";
+        if (node instanceof go.Group || node instanceof go.Link) {
+        } else {
+          node.layerName = "Foreground";
+        }
       });
+      console.log("allNodesToFront");
     },
     onUpdateNodesState({ graphid, nodeid, state }) {
       if (graphid === this.graphid) {
-        let part = this.myDiagram.findPartForKey(nodeid);
+        let part = this.myDiagram.findNodeForKey(nodeid);
         if (state === "clear") {
           this.myDiagram.clearSelection();
         } else {
@@ -1965,6 +2103,52 @@ export default {
           set.add(part);
           this.myDiagram.selectCollection(set);
         }
+      }
+    },
+    calculateLinkInfo(link) {
+      let linkModel = link.data;
+      let fromNode = this.myDiagram.findNodeForKey(link.data.from);
+      let toNode = this.myDiagram.findNodeForKey(link.data.to);
+      let linkData = [
+        {
+          title: "源节点",
+          ename: "from",
+          describe: fromNode.data.text,
+        },
+        {
+          ename: "to",
+          title: "目标节点",
+          describe: toNode.data.text,
+        },
+        {
+          ename: "je",
+          title: "金额(元)",
+          describe: linkModel.je,
+        },
+      ];
+      if (linkModel.hasOwnProperty("dataType") && linkModel.dataType === 0) {
+        linkData.push({
+          ename: "rq",
+          title: "日期",
+          describe: linkModel.rq,
+        });
+        let obj = {
+          linkid: link.key,
+          linkData,
+          dataType: linkModel.dataType,
+        };
+        return obj;
+      } else {
+        linkData.push({
+          ename: "bs",
+          title: "笔数",
+          describe: linkModel.bs,
+        });
+        let obj = {
+          linkid: link.key,
+          linkData,
+        };
+        return obj;
       }
     },
     calculateEntityInfo(node) {
@@ -2057,7 +2241,7 @@ export default {
       console.log(data);
       let { graphid, nodeid } = data;
       if (graphid !== this.graphid) return;
-      let node = this.myDiagram.findPartForKey(nodeid);
+      let node = this.myDiagram.findNodeForKey(nodeid);
       console.log(node);
       let entity = this.calculateEntityInfo(node);
       console.log({ entity });
@@ -2071,7 +2255,7 @@ export default {
       console.log({ data });
       let { graphid, nodeid, nodeStyle } = data;
       if (graphid !== this.graphid) return;
-      let node = this.myDiagram.findPartForKey(nodeid);
+      let node = this.myDiagram.findNodeForKey(nodeid);
       let nodeModel = node.data;
       switch (nodeStyle.title) {
         case "节点图标":
@@ -2141,7 +2325,7 @@ export default {
       // a.click();
       // window.URL.revokeObjectURL(img.src);
     },
-    saveGraphData(data) {
+    onSaveGraphData(data) {
       let { graphid } = data;
       if (graphid !== this.graphid) return;
       // 包含nodes，edges，combos
@@ -2152,13 +2336,62 @@ export default {
         relationGraphData,
       });
     },
+    onFindShortLink(data) {
+      let { graphid } = data;
+      if (graphid !== this.graphid) return;
+      let selection = this.myDiagram.selection;
+      let nodeCount = 0;
+      let firstObj = null;
+      let lastObj = null;
+      let it = selection.iterator;
+      while (it.next()) {
+        if (it.value instanceof go.Node) {
+          nodeCount++;
+          if (!firstObj) firstObj = it.value;
+          lastObj = it.value;
+        }
+      }
+      if (nodeCount === 2) {
+        let path = Tools.findShortestPath(firstObj, lastObj, false);
+        if (path.count <= 1) {
+          this.$message({
+            message: "选取的两个节点没有连接路径。",
+          });
+          return;
+        }
+        this.highlightPath(path);
+        this.$message({
+          type: "success",
+          message: "最短路径获取成功，并以标记。",
+        });
+      } else {
+        this.$message({
+          message: "选择的节点不合法，仅当选择两点方可计算路径。",
+        });
+      }
+    },
+    // Highlight a particular path, a List of Nodes.
+    highlightPath(path) {
+      this.myDiagram.clearHighlighteds();
+      for (var i = 0; i < path.count - 1; i++) {
+        var f = path.get(i);
+        let fromNode = this.myDiagram.findNodeForKey(f.data.key);
+        fromNode.isSelected = true;
+        var t = path.get(i + 1);
+        let toNode = this.myDiagram.findNodeForKey(t.data.key);
+        toNode.isSelected = true;
+        f.findLinksTo(t).each(function (l) {
+          l.isSelected = true;
+        });
+      }
+    },
     dagreLayout() {
       this.myDiagram.layout = $(go.LayeredDigraphLayout, {
         direction: 90,
         layerSpacing: 60,
       });
     },
-    switchLayout(data) {
+    onSwitchLayout(data) {
       let { graphid, layout } = data;
       if (graphid !== this.graphid) return;
       switch (layout) {
@@ -2200,17 +2433,27 @@ export default {
         );
       } else {
         let { nodes, links } = this.makeData();
-        this.myDiagram.model = new go.GraphLinksModel(nodes, links);
-        this.ForceDirectedLayout();
+        console.log({ nodes, links });
+        let gm = new go.GraphLinksModel(nodes, links);
+        gm.linkKeyProperty = "panda";
+        // gm.linkKeyProperty = function (a, b) {
+        //   return uuid.v1();
+        // };
+        // gm.makeUniqueLinkKeyFunction = function (a, b) {
+        //   return uuid.v1();
+        // };
+        this.myDiagram.model = gm;
+        this.onSwitchLayout({ graphid: this.graphid, layout: "grid" });
+        // this.ForceDirectedLayout();
       }
       this.initLinkTemplate();
       this.initGroupTemplate();
-      this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
       this.accordingSpreadNodeSwitchRefreshNodes();
       this.updateEntityList();
       this.switchAllowScroll();
-      this.allNodesToFront();
       this.myDiagram.commandHandler.zoomToFit();
+      this.allNodesToFront();
+      console.log("init completed...");
     },
 
     makeDataVisible() {
@@ -2546,6 +2789,147 @@ export default {
       });
       return { nodes, links };
     },
+    normalOperation(data) {
+      let { graphid, opt } = data;
+      if (graphid !== this.graphid) return;
+      let diagram = this.myDiagram;
+      diagram.focus();
+      switch (opt) {
+        case "cut":
+          diagram.commandHandler.cutSelection();
+          break;
+        case "copy":
+          diagram.commandHandler.copySelection();
+          break;
+        case "paste":
+          diagram.commandHandler.pasteSelection(
+            diagram.toolManager.contextMenuTool.mouseDownPoint
+          );
+          break;
+        case "delete":
+          diagram.commandHandler.deleteSelection();
+          break;
+        case "undo":
+          diagram.commandHandler.undo();
+          break;
+        case "redo":
+          diagram.commandHandler.redo();
+          break;
+      }
+      diagram.currentTool.stopTool();
+    },
+    addNodeData(key, text) {
+      var node = {};
+      node["key"] = key;
+      node["text"] = text;
+      node.loc = "0 0";
+      node.img = this.defaultImg;
+      node.bkColor = this.defaultNodeFillColor;
+      node.strokeColor = this.defaultNodeStrokeColor;
+      node.nodeTextColor = this.defaultNodeTextColor;
+      this.myDiagram.model.addNodeData(node);
+    },
+    addLinkData(from, to, je, bs) {
+      var link = {};
+      link["from"] = from;
+      link["to"] = to;
+      link["stroke"] = this.calculateLineColorByJinE(je);
+      link.strokeWidth = this.defaultLineStrokeWidth;
+      link["je"] = je;
+      link["bs"] = bs;
+      link["text"] = `${je}元（${bs}笔）`;
+      this.myDiagram.model.addLinkData(link);
+    },
+    onLinkInfoSetting(data) {
+      let { graphid, linkEntity } = data;
+      if (graphid !== this.graphid) return;
+      let link = this.myDiagram.findLinkForKey(linkEntity.linkid);
+      link.isSelected = false;
+      let je = parseFloat(
+        linkEntity.linkData.find((el) => el.ename === "je").describe
+      );
+      this.myDiagram.startTransaction("Modify link");
+      this.myDiagram.model.setDataProperty(link.data, "je", je);
+      this.myDiagram.model.setDataProperty(
+        link.data,
+        "stroke",
+        this.calculateLineColorByJinE(je)
+      );
+      if (linkEntity.hasOwnProperty("dataType") && linkEntity.dataType === 0) {
+        let rq = linkEntity.linkData.find((el) => el.ename === "rq").describe;
+        this.myDiagram.model.setDataProperty(link.data, "rq", rq);
+        this.myDiagram.model.setDataProperty(
+          link.data,
+          "text",
+          `${je}元（${rq}）`
+        );
+      } else {
+        let bs = parseInt(
+          linkEntity.linkData.find((el) => el.ename === "bs").describe
+        );
+        this.myDiagram.model.setDataProperty(link.data, "bs", bs);
+        this.myDiagram.model.setDataProperty(
+          link.data,
+          "text",
+          `${je}元（${bs}笔）`
+        );
+      }
+
+      this.myDiagram.commitTransaction("Modify link");
+      link.isSelected = true;
+      this.$message({
+        type: "success",
+        message: "修改成功",
+      });
+    },
+    onNewBuildObject(data) {
+      let { graphid, type } = data;
+      if (graphid !== this.graphid) return;
+      switch (type) {
+        case "graph":
+          {
+            // 新建一个空白视图
+            let obj = {
+              title: "空白视图",
+              componentName: "table-data-view",
+              dispatchName: "ShowTable/showDataVisibleTable",
+              tableType: "emptyGraph",
+              showType: 2, // 数据可视化不显示table数据
+              rightTabs: [],
+              allrows: [],
+              rows: [],
+            };
+            this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", obj);
+          }
+          break;
+        case "entity":
+          this.addNodeData(uuid.v1(), "新建节点");
+          break;
+        case "link":
+          let selection = this.myDiagram.selection;
+          let nodeCount = 0;
+          let firstObj = null;
+          let lastObj = null;
+          let it = selection.iterator;
+          while (it.next()) {
+            if (it.value instanceof go.Node) {
+              nodeCount++;
+              if (!firstObj) firstObj = it.value;
+              lastObj = it.value;
+            }
+          }
+          if (nodeCount === 2) {
+            this.sourceNodeData = firstObj.data;
+            this.desNodeData = lastObj.data;
+            this.showLinkNodeDialog = true;
+          } else {
+            this.$message({
+              message: "请选择两个节点进行操作。",
+            });
+          }
+          break;
+      }
+    },
   },
   mounted() {
     this.init();
@@ -2561,13 +2945,21 @@ export default {
     this.$bus.$on("updateNodeState", this.onUpdateNodesState);
     // 监听右侧菜单中点击table中的每个实体消息
     this.$bus.$on("clickEntityRow", this.onClickNode);
+    // 设置链接信息
+    this.$bus.$on("linkInfoSetting", this.onLinkInfoSetting);
     this.$bus.$on("nodeStyleSetting", this.onNodeStyleSetting);
     // 图表导出到图片
     this.$bus.$on("exportPicture", this.OnSavePicture);
     //保存当前图表数据
-    this.$bus.$on("saveGraphData", this.saveGraphData);
+    this.$bus.$on("saveGraphData", this.onSaveGraphData);
+    this.$bus.$on("findShortLink", this.onFindShortLink);
+    // 基本操作
+    this.$bus.$on("normalOperation", this.normalOperation);
+    // 新建操作
+    this.$bus.$on("newBuildObject", this.onNewBuildObject);
+
     // 布局切换监听
-    this.$bus.$on("swichNormalLayout", this.switchLayout);
+    this.$bus.$on("swichNormalLayout", this.onSwitchLayout);
     this.myDiagram.addDiagramListener("ClipboardChanged", function (e) {
       console.log(e);
     });

@@ -6313,10 +6313,10 @@ glogg@^1.0.0:
   dependencies:
     sparkles "^1.0.0"
 
-gojs@^2.1.32:
-  version "2.1.32"
-  resolved "https://registry.yarnpkg.com/gojs/-/gojs-2.1.32.tgz#6225e5833f7f6f84b92d978aa0df61e5a1b6d5f0"
-  integrity sha512-tqoexM4pxJWtwiDLEc+ywU3IRC3omSOuBkSS/r4ax+q4qMXP4/BDBsufiJKuUyCASIJLkFgc0ajkGy/SCxt7gQ==
+gojs@^2.1.34:
+  version "2.1.34"
+  resolved "https://registry.yarnpkg.com/gojs/-/gojs-2.1.34.tgz#25dbed7e099c58d8377e866ab8fe9293f7aeed1e"
+  integrity sha512-3v0Q6oBNJZMJ9OQKfk5cFNKfM7XW13nQUN11TC0+oRi0dHJ8tvqT114VlURBMegnSDI9yAEp6edpj5VcgwEPPg==
 
 google-libphonenumber@^3.2.8:
   version "3.2.14"

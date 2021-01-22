@@ -100,61 +100,23 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
+      <el-col
+        :span="5"
+        style="
+          border-right: 1px solid #e5e7ec;
+          padding-top: 15px;
+          padding-bottom: 10px;
+        "
+      >
         <el-row>
           <el-col :span="8">
             <el-button
               size="mini"
               type="text"
               class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              @click="handleClickShowEntityListView"
+              style="padding: 4px; font-size: 13px"
               :disabled="disabledButtons"
-              >&#xe601;&nbsp;实体列表</el-button
-            >
-          </el-col>
-          <el-col :span="8">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              @click="handleClickShowEntityListView"
-              :disabled="disabledButtons"
-              >&#xe601;&nbsp;实体列表</el-button
-            >
-          </el-col>
-          <el-col :span="8">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              @click="handleClickExportPicture"
-              :disabled="disabledButtons"
-              >&#xe637;&nbsp;导出到图片</el-button
-            >
-          </el-col>
-          <!-- <el-col :span="12">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              @click="handleClickMoveGraph"
-              >&#xe603;&nbsp;移动</el-button
-            >
-          </el-col> -->
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-button
-              size="mini"
-              type="text"
-              class="iconfont"
-              style="padding: 4px; font-size: 12px"
-              :disabled="disabledButtons"
-              @click="handleClickNewView"
+              @click="handleClickNew('graph')"
               >&#xe6a3;&nbsp;新建视图</el-button
             >
           </el-col>
@@ -163,10 +125,10 @@
               size="mini"
               type="text"
               class="iconfont"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               :disabled="disabledButtons"
-              @click="handleClickNewView"
-              >&#xe6a3;&nbsp;新建节点</el-button
+              @click="handleClickNew('entity')"
+              >&#xe64a;&nbsp;新建实体</el-button
             >
           </el-col>
           <el-col :span="8">
@@ -174,10 +136,175 @@
               size="mini"
               type="text"
               class="iconfont"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               :disabled="disabledButtons"
-              @click="handleClickNewView"
-              >&#xe6a3;&nbsp;新建链接</el-button
+              @click="handleClickNew('link')"
+              >&#xe752;&nbsp;新建链接</el-button
+            >
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
+        <el-row>
+          <el-col :span="8">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Ctrl-X & Shift-Del"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                size="mini"
+                type="text"
+                class="iconfont"
+                style="padding: 4px; font-size: 12px"
+                @click="handleClickNoramOperation('cut')"
+                :disabled="disabledButtons"
+                >&#xe647;&nbsp;剪切</el-button
+              >
+            </el-tooltip>
+          </el-col>
+          <el-col :span="8">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Ctrl-C & Ctrl-Insert"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                size="mini"
+                type="text"
+                class="iconfont"
+                style="padding: 4px; font-size: 12px"
+                :disabled="disabledButtons"
+                @click="handleClickNoramOperation('copy')"
+                >&#xe720;&nbsp;复制</el-button
+              >
+            </el-tooltip>
+          </el-col>
+          <el-col :span="8">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Ctrl-V & Shift-Insert"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                size="mini"
+                type="text"
+                class="iconfont"
+                style="padding: 4px; font-size: 12px"
+                :disabled="disabledButtons"
+                @click="handleClickNoramOperation('paste')"
+                >&#xe701;&nbsp;粘贴</el-button
+              >
+            </el-tooltip>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Del & Backspace"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                size="mini"
+                type="text"
+                class="iconfont"
+                style="padding: 4px; font-size: 12px"
+                :disabled="disabledButtons"
+                @click="handleClickNoramOperation('delete')"
+                >&#xe644;&nbsp;删除</el-button
+              >
+            </el-tooltip>
+          </el-col>
+          <el-col :span="8">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Ctrl-Z & Alt-Backspace"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                size="mini"
+                type="text"
+                class="iconfont"
+                style="padding: 4px; font-size: 12px"
+                @click="handleClickNoramOperation('undo')"
+                :disabled="disabledButtons"
+                >&#xe6e9;&nbsp;后退</el-button
+              >
+            </el-tooltip>
+          </el-col>
+          <el-col :span="8">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Ctrl-Y & Alt-Shift-Backspace"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                size="mini"
+                type="text"
+                class="iconfont"
+                style="padding: 4px; font-size: 12px"
+                @click="handleClickNoramOperation('redo')"
+                :disabled="disabledButtons"
+                >&#xe6ed;&nbsp;前进</el-button
+              >
+            </el-tooltip>
+          </el-col>
+        </el-row>
+      </el-col>
+
+      <el-col
+        :span="5"
+        style="
+          border-right: 1px solid #e5e7ec;
+          padding-top: 15px;
+          padding-bottom: 10px;
+        "
+      >
+        <el-row>
+          <el-col :span="8">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 13px"
+              @click="handleClickShowEntityListView"
+              :disabled="disabledButtons"
+              >&#xe601;&nbsp;实体列表</el-button
+            >
+          </el-col>
+          <el-col :span="8">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 13px"
+              @click="handleClickFindShortLink"
+              :disabled="disabledButtons"
+              >&#xe646;&nbsp;最短路径</el-button
+            >
+          </el-col>
+          <el-col :span="8">
+            <el-button
+              size="mini"
+              type="text"
+              class="iconfont"
+              style="padding: 4px; font-size: 13px"
+              @click="handleClickExportPicture"
+              :disabled="disabledButtons"
+              >&#xe637;&nbsp;导出到图片</el-button
             >
           </el-col>
         </el-row>
@@ -198,7 +325,20 @@
         :span="5"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
+        <div>新建</div>
+      </el-col>
+      <el-col
+        :span="5"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
         <div>操作</div>
+      </el-col>
+
+      <el-col
+        :span="5"
+        style="text-align: center; border-right: 1px solid #e5e7ec"
+      >
+        <div>查看与导出</div>
       </el-col>
     </el-row>
   </div>
@@ -215,20 +355,24 @@ export default {
     },
   },
   methods: {
-    handleClickNewView() {
-      // 新建一个空白视图
-      let obj = {
-        title: "空白视图",
-        componentName: "table-data-view",
-        dispatchName: "ShowTable/showDataVisibleTable",
-        tableType: "emptyGraph",
-        showType: 2, // 数据可视化不显示table数据
-        rightTabs: [],
-        allrows: [],
-        rows: [],
-      };
-      this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", obj);
+    handleClickNoramOperation(opt) {
+      this.$bus.$emit("normalOperation", {
+        graphid: this.currentTableData.graphid,
+        opt,
+      });
     },
+    handleClickFindShortLink() {
+      this.$bus.$emit("findShortLink", {
+        graphid: this.currentTableData.graphid,
+      });
+    },
+    handleClickNew(type) {
+      this.$bus.$emit("newBuildObject", {
+        graphid: this.currentTableData.graphid,
+        type,
+      });
+    },
+
     handleClickShowEntityListView() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "entity-list-view",

@@ -21,9 +21,6 @@ Vue.use(VueLazyComponent);
 import ProgressBar from "vuejs-progress-bar";
 Vue.use(ProgressBar);
 
-// import go from "gojs";
-// Vue.prototype.$go = go;
-
 const lodash = require("lodash");
 
 Vue.prototype.$lodash = lodash;

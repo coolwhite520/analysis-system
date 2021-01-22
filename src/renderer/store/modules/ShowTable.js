@@ -73,6 +73,14 @@ const mutations = {
     );
     Vue.set(state.currentTableData, "rightActiveName", "entity-view");
   },
+  UPDATE_LINK_ENTITY(state, linkEntity) {
+    Vue.set(
+      state.currentTableData,
+      "linkEntity",
+      JSON.parse(JSON.stringify(linkEntity))
+    );
+    Vue.set(state.currentTableData, "rightActiveName", "link-view");
+  },
   MODIFY_TAB_TITLE(state, newTitle) {
     Vue.set(state.currentTableData, "title", newTitle);
   },
@@ -117,6 +125,7 @@ const mutations = {
     state.tableDataList.push(tableData);
     state.activeIndex = tableData.pageIndex;
     state.currentTableData = tableData;
+    console.log("ADD_TABLE_DATA_TO_LIST .... end");
   },
 
   SWITCH_GRAPH_LAYOUT_TYPE(state, graphType) {
@@ -271,11 +280,13 @@ const mutations = {
           "modelFilterChildList",
           JSON.parse(JSON.stringify(modelFilterChildList))
         );
-        let modelFilterStr = convertSql.convertDataFilterToSqlStr(
-          parseInt(state.tableDataList[index].tid),
-          JSON.parse(JSON.stringify(modelFilterChildList))
-        );
-        Vue.set(state.tableDataList[index], "modelFilterStr", modelFilterStr);
+        if ("model" != state.tableDataList[index].tableType) {
+          let modelFilterStr = convertSql.convertDataFilterToSqlStr(
+            parseInt(state.tableDataList[index].tid),
+            JSON.parse(JSON.stringify(modelFilterChildList))
+          );
+          Vue.set(state.tableDataList[index], "modelFilterStr", modelFilterStr);
+        }
         return;
       }
     }
@@ -379,6 +390,12 @@ const mutations = {
           state.currentTableData.rightTabs.push({
             title: "&#xe61c;&nbsp;&nbsp;&nbsp;实体信息",
             componentName: "entity-view",
+          });
+          break;
+        case "link-view":
+          state.currentTableData.rightTabs.push({
+            title: "&#xe61c;&nbsp;&nbsp;&nbsp;链接信息",
+            componentName: "link-view",
           });
           break;
         case "search-replace-view":
@@ -491,6 +508,7 @@ const actions = {
       offset, // 查询的偏移
       modelFilterStr,
       modelFilterChildList, // 数据筛选
+      isAddFilter = false,
     }
   ) {
     commit("SET_LOADINGSHOWDATA_STATE", true);
@@ -525,6 +543,7 @@ const actions = {
     if (
       !pageIndex &&
       state.currentTableData &&
+      isAddFilter &&
       state.currentTableData.componentName !== "no-data-view"
     ) {
       modelFilterStr =
@@ -858,26 +877,44 @@ const actions = {
           count: 30,
           offset: 0,
           modelFilterChildList: res.msg.obj,
+          isAddFilter: true,
         });
-      } else {
-        //相当于执行模型
-        //1.先根据linkmid 获取模版
+      } else if (linkMid === 309) {
+        //人员界面
         let { pgsqltemplate } = await models.QueryModelSqlTemplateByMid(
           linkMid
         );
         let pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
-        //2.格式化替换后生成link的模版
         let { msg, type } = linkSqlFormat.format(
           { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
           row,
           selectCondition,
           fieldename.toUpperCase()
         );
-
         let filterChildStr = convertSql.convertDataFilterToSqlStr(
           parseInt(tid),
           state.currentTableData.modelFilterChildList
         );
+        await dispatch("showModelTable", {
+          tid: parseInt(type),
+          pgsqlTemplateDecode: msg.str,
+          modelFilterStr: filterChildStr,
+          modelFilterChildList: [],
+          count: 30,
+          offset: 0,
+        });
+      } else {
+        let { pgsqltemplate } = await models.QueryModelSqlTemplateByMid(
+          linkMid
+        );
+        let pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+        let { msg, type } = linkSqlFormat.format(
+          { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
+          row,
+          selectCondition,
+          fieldename.toUpperCase()
+        );
+        let filterChildStr = state.currentTableData.modelFilterStr;
         await dispatch("showModelTable", {
           tid: parseInt(type),
           pgsqlTemplateDecode: msg.str,

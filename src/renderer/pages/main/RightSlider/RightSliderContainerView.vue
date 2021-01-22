@@ -32,6 +32,7 @@ import ModelView from "./child/ModelView";
 import ModelListView from "./child/ModelListView";
 import EntityListView from "./child/EntityListView";
 import EntityView from "./child/EntityView";
+import LinkView from "./child/LinkView";
 import ComboEntityListView from "./child/ComboEntityListView";
 import SearchReplaceView from "./child/wash/SearchReplaceView";
 import SpecialCharView from "./child/wash/SpecialCharView";
@@ -57,6 +58,7 @@ export default {
     "model-view": ModelView,
     "entity-list-view": EntityListView,
     "entity-view": EntityView,
+    "link-view": LinkView,
     "combo-entity-list-view": ComboEntityListView,
     "search-replace-view": SearchReplaceView,
     "special-char-view": SpecialCharView,

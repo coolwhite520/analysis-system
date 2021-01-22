@@ -6,216 +6,220 @@ function BackFiltrateCondtion(
   FiltrateFieldEN,
   DataType_ = Default.DataType.STR
 ) {
-  let text = "";
-  let flag = false;
-  let array = [];
-
-  if (!Default.IsNullOrEmpty(vale)) {
-    let array2 = vale.replace(/：/g, ":").split(":");
-    for (let i = 0; i < array2.length; i++) {
-      if (array2[i] != "") {
-        array.push(array2[i]);
-      } else {
-        flag = true;
-      }
+  try{
+    let text = "";
+    let flag = false;
+    let array = [];
+  
+    //if (!Default.IsNullOrEmpty(vale)) {
+    //  let array2 = vale.replace(/：/g, ":").split(":");
+    //  for (let i = 0; i < array2.length; i++) {
+    //    if (array2[i] != "") {
+    //      array.push(array2[i]);
+    //    } else {
+    //      flag = true;
+    //    }
+    //  }
+    //}
+    if (!Default.IsNullOrEmpty(vale)) {
+        array.push(vale);
+    }else if(vale==""){
+      flag = true;
     }
-  }
-
-  if (
-    condtion == Default.FiltrateLogicID.GreaterOrEqual &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let i = 0; i < array.length; i++) {
-      text = text + " " + FiltrateFieldEN + " >= '" + array[i] + "' ";
-      if (i < array.length - 1) {
-        j;
-        text += " OR ";
-      }
-    }
-  } else if (
-    condtion == Default.FiltrateLogicID.GreaterThan &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let j = 0; j < array.length; j++) {
-      text = text + " " + FiltrateFieldEN + " > '" + array[j] + "' ";
-      if (j < array.length - 1) {
-        text += " OR ";
-      }
-    }
-  } else if (
-    condtion == Default.FiltrateLogicID.LessThan &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let k = 0; k < array.length; k++) {
-      text = text + " " + FiltrateFieldEN + " < '" + array[k] + "' ";
-      if (k < array.length - 1) {
-        text += " OR ";
-      }
-    }
-  } else if (condtion == Default.FiltrateLogicID.NotEmpty) {
-    if (DataType_ == Default.DataType.STR) {
-      text =
-        " " +
-        FiltrateFieldEN +
-        " IS NOT NULL AND (LENGTH( COALESCE(" +
-        FiltrateFieldEN +
-        ", '0'))>0)";
-    } else {
-      text = " " + FiltrateFieldEN + " is not null ";
-    }
-  } else if (condtion == Default.FiltrateLogicID.EqualTo) {
-    let text2 = "";
-    if (array != null && array.length != 0) {
-      for (let l = 0; l < array.length; l++) {
-        text2 = text2 + "'" + array[l] + "'";
-        if (l < array.length - 1) {
-          text2 += ",";
+    if (
+      condtion == Default.FiltrateLogicID.GreaterOrEqual &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let i = 0; i < array.length; i++) {
+        text = text + " " + FiltrateFieldEN + " >= '" + array[i] + "' ";
+        if (i < array.length - 1) {
+          j;
+          text += " OR ";
         }
       }
-      text = FiltrateFieldEN + " IN(" + text2 + ") ";
-    }
-    if (flag) {
-      text += Default.IsNullOrEmpty(text)
-        ? FiltrateFieldEN + " IS NULL "
-        : "OR " + FiltrateFieldEN + " IS NULL ";
-    }
-    if (flag && DataType_ == Default.DataType.STR) {
-      text = text + "OR (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))<=0)";
-    }
-  } else if (
-    condtion == Default.FiltrateLogicID.StartWith &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let m = 0; m < array.length; m++) {
-      text = text + " " + FiltrateFieldEN + " like '" + array[m] + "%' ";
-      if (m < array.length - 1) {
-        text += " OR ";
+    } else if (
+      condtion == Default.FiltrateLogicID.GreaterThan &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let j = 0; j < array.length; j++) {
+        text = text + " " + FiltrateFieldEN + " > '" + array[j] + "' ";
+        if (j < array.length - 1) {
+          text += " OR ";
+        }
       }
-    }
-    n;
-  } else if (
-    condtion == Default.FiltrateLogicID.EndWith &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let n = 0; n < array.length; n++) {
-      text = text + " " + FiltrateFieldEN + " like '%" + array[n] + "' ";
-      if (n < array.length - 1) {
-        text += " OR ";
+    } else if (
+      condtion == Default.FiltrateLogicID.LessThan &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let k = 0; k < array.length; k++) {
+        text = text + " " + FiltrateFieldEN + " < '" + array[k] + "' ";
+        if (k < array.length - 1) {
+          text += " OR ";
+        }
       }
-    }
-  } else if (
-    condtion == Default.FiltrateLogicID.NotEndWith &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let num2 = 0; num2 < array.length; num2++) {
-      text = text + " " + FiltrateFieldEN + " not like '%" + array[num2] + "' ";
-      if (num2 < array.length - 1) {
-        text += " OR ";
+    } else if (condtion == Default.FiltrateLogicID.NotEmpty) {
+      if (DataType_ == Default.DataType.STR) {
+        text =
+          " " +
+          FiltrateFieldEN +
+          " IS NOT NULL AND (LENGTH( COALESCE(" +
+          FiltrateFieldEN +
+          ", '0'))>0)";
+      } else {
+        text = " " + FiltrateFieldEN + " is not null ";
       }
-    }
-    text = text + " OR " + FiltrateFieldEN + " IS NULL ";
-  } else if (
-    condtion == Default.FiltrateLogicID.Contains &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let num3 = 0; num3 < array.length; num3++) {
-      text = text + " " + FiltrateFieldEN + " like '%" + array[num3] + "%' ";
-      if (num3 < array.length - 1) {
-        text += " OR ";
+    } else if (condtion == Default.FiltrateLogicID.EqualTo) {
+      let text2 = "";
+      if (array != null && array.length != 0) {
+        for (let l = 0; l < array.length; l++) {
+          text2 = text2 + "'" + array[l] + "'";
+          if (l < array.length - 1) {
+            text2 += ",";
+          }
+        }
+        text = FiltrateFieldEN + " IN(" + text2 + ") ";
       }
-    }
-  } else if (condtion == Default.FiltrateLogicID.IsEmpty) {
-    if (DataType_ == Default.DataType.STR) {
-      text =
-        " " +
-        FiltrateFieldEN +
-        " IS NULL OR (LENGTH( COALESCE(" +
-        FiltrateFieldEN +
-        ", '0'))<=0)";
-    } else {
-      text = " " + FiltrateFieldEN + " IS NULL ";
-    }
-  } else if (condtion == Default.FiltrateLogicID.NotEqualTo) {
-    let text3 = "";
-    if (array != null && array.length != 0) {
-      for (let num4 = 0; num4 < array.length; num4++) {
-        text3 = text3 + "'" + array[num4] + "'";
-        if (num4 < array.length - 1) {
-          text3 += ",";
+      if (flag) {
+        text += Default.IsNullOrEmpty(text)
+          ? FiltrateFieldEN + " IS NULL "
+          : "OR " + FiltrateFieldEN + " IS NULL ";
+        if(DataType_ == Default.DataType.STR){
+          text = text + "OR (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))<=0)";
+        }
+      }
+    } else if (
+      condtion == Default.FiltrateLogicID.StartWith &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let m = 0; m < array.length; m++) {
+        text = text + " " + FiltrateFieldEN + " like '" + array[m] + "%' ";
+        if (m < array.length - 1) {
+          text += " OR ";
+        }
+      }
+    } else if (
+      condtion == Default.FiltrateLogicID.EndWith &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let n = 0; n < array.length; n++) {
+        text = text + " " + FiltrateFieldEN + " like '%" + array[n] + "' ";
+        if (n < array.length - 1) {
+          text += " OR ";
+        }
+      }
+    } else if (
+      condtion == Default.FiltrateLogicID.NotEndWith &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let num2 = 0; num2 < array.length; num2++) {
+        text = text + " " + FiltrateFieldEN + " not like '%" + array[num2] + "' ";
+        if (num2 < array.length - 1) {
+          text += " OR ";
+        }
+      }
+      text = text + " OR " + FiltrateFieldEN + " IS NULL ";
+    } else if (
+      condtion == Default.FiltrateLogicID.Contains &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let num3 = 0; num3 < array.length; num3++) {
+        text = text + " " + FiltrateFieldEN + " like '%" + array[num3] + "%' ";
+        if (num3 < array.length - 1) {
+          text += " OR ";
+        }
+      }
+    } else if (condtion == Default.FiltrateLogicID.IsEmpty) {
+      if (DataType_ == Default.DataType.STR) {
+        text =
+          " " +
+          FiltrateFieldEN +
+          " IS NULL OR (LENGTH( COALESCE(" +
+          FiltrateFieldEN +
+          ", '0'))<=0)";
+      } else {
+        text = " " + FiltrateFieldEN + " IS NULL ";
+      }
+    } else if (condtion == Default.FiltrateLogicID.NotEqualTo) {
+      let text3 = "";
+
+      if (array != null && array.length != 0) {
+        for (let num4 = 0; num4 < array.length; num4++) {
+          text3 = text3 + "'" + array[num4] + "'";
+          if (num4 < array.length - 1) {
+            text3 += ",";
+          }
+        }
+        if (flag) {
+          text = FiltrateFieldEN + " NOT IN(" + text3 + ")";
+        } else {
+          text =
+            FiltrateFieldEN +
+            " NOT IN(" +
+            text3 +
+            ") OR " +
+            FiltrateFieldEN +
+            " IS NULL ";
         }
       }
       if (flag) {
-        text = FiltrateFieldEN + " NOT IN(" + text3 + ")";
-      } else {
+        if(text!=""){
+          text = text + " AND " + FiltrateFieldEN + " IS NOT NULL ";
+        }else{
+          text = " " + FiltrateFieldEN + " IS NOT NULL ";
+        }
+        if(DataType_ == Default.DataType.STR){
+          text = text + " AND (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))>0)";
+        }
+      }
+    } else if (
+      condtion == Default.FiltrateLogicID.LessOrEqual &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let num5 = 0; num5 < array.length; num5++) {
+        text = text + " " + FiltrateFieldEN + " <= '" + array[num5] + "' ";
+        if (num5 < array.length - 1) {
+          text += " OR ";
+        }
+      }
+    } else if (
+      condtion == Default.FiltrateLogicID.NotStartWith &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let num6 = 0; num6 < array.length; num6++) {
+        text = text + " " + FiltrateFieldEN + " not like '" + array[num6] + "%' ";
+        if (num6 < array.length - 1) {
+          text += " OR ";
+        }
+      }
+      text = text + " OR " + FiltrateFieldEN + " IS NULL ";
+    } else if (
+      condtion == Default.FiltrateLogicID.NotContains &&
+      array != null &&
+      array.length != 0
+    ) {
+      for (let num7 = 0; num7 < array.length; num7++) {
         text =
-          FiltrateFieldEN +
-          " NOT IN(" +
-          text3 +
-          ") OR " +
-          FiltrateFieldEN +
-          " IS NULL ";
+          text + " " + FiltrateFieldEN + " not like '%" + array[num7] + "%' ";
+        if (num7 < array.length - 1) {
+          text += " OR ";
+        }
       }
+      text = text + " OR " + FiltrateFieldEN + " IS NULL ";
     }
-    if (flag) {
-      text = text + " AND " + FiltrateFieldEN + " IS NOT NULL ";
+    if (!(text == "")) {
+      return text;
     }
-    if (flag && DataType_ == Default.DataType.STR) {
-      text = text + " AND (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))>0)";
-    }
+  }catch(e){
 
-    text =
-      FiltrateFieldEN +
-      " NOT IN(" +
-      text3 +
-      ") OR " +
-      FiltrateFieldEN +
-      " IS NULL ";
-  } else if (
-    condtion == Default.FiltrateLogicID.LessOrEqual &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let num5 = 0; num5 < array.length; num5++) {
-      text = text + " " + FiltrateFieldEN + " <= '" + array[num5] + "' ";
-      if (num5 < array.length - 1) {
-        text += " OR ";
-      }
-    }
-  } else if (
-    condtion == Default.FiltrateLogicID.NotStartWith &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let num6 = 0; num6 < array.length; num6++) {
-      text = text + " " + FiltrateFieldEN + " not like '" + array[num6] + "%' ";
-      if (num6 < array.length - 1) {
-        text += " OR ";
-      }
-    }
-    text = text + " OR " + FiltrateFieldEN + " IS NULL ";
-  } else if (
-    condtion == Default.FiltrateLogicID.NotContains &&
-    array != null &&
-    array.length != 0
-  ) {
-    for (let num7 = 0; num7 < array.length; num7++) {
-      text =
-        text + " " + FiltrateFieldEN + " not like '%" + array[num7] + "%' ";
-      if (num7 < array.length - 1) {
-        text += " OR ";
-      }
-    }
-    text = text + " OR " + FiltrateFieldEN + " IS NULL ";
-  }
-  if (!(text == "")) {
-    return text;
   }
   return "1=1";
 }

@@ -446,9 +446,9 @@ export default {
         DisplayRelation: "AND",
         ConditionNodeType: this.DefaultData.NodeType.NodeType_Condition,
         FiltrateValue: "",
-        FiltrateFieldType: 2,
+        FiltrateFieldType: this.convertDataTypeStrToNum(headerFirst.data_type),
         FiltrateFieldEN: headerFirst.fieldename.toUpperCase(), //字段名
-        condtion: 2,
+        condtion: 0,
       });
     },
   },

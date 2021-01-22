@@ -202,10 +202,26 @@ export default {
     this.$electron.ipcRenderer.on("calculate-link-ready", (e, data) => {
       this.isLinkProcessReady = true;
     });
-    this.$electron.ipcRenderer.on("calculate-link-end", (e, data) => {
+    this.$electron.ipcRenderer.on("calculate-link-end", async (e, data) => {
       if (data && data.nodes && data.nodes.length > 2) {
-        this.loadingButn = false;
-        clearInterval(this.loop);
+        if (data.nodes.length >= 500) {
+          let result = await this.$electron.remote.dialog.showMessageBox(null, {
+            type: "warning",
+            title: "关闭",
+            message: `计算得到了${data.nodes.length}个节点、${data.links.length}条连接，总的数据量较大（不利于视觉效果、影响程序性能）建议重新筛选条件以获取最佳展示效果。`,
+            buttons: ["仍然展示", "取消展示"],
+            defaultId: 0,
+          });
+          if (result.response === 0) {
+            console.log(data);
+          } else {
+            this.tiemSpan = 0;
+            this.btnSearchTip = `开始查找`;
+            this.loadingButn = false;
+            clearInterval(this.loop);
+            return;
+          }
+        }
         let pageObj = {
           tid: 401,
           title: this.title,
@@ -218,8 +234,11 @@ export default {
           rightTabs: [],
           modelFilterChildList: [],
         };
-        this.handleClose();
         this.$store.commit("ShowTable/ADD_TABLE_DATA_TO_LIST", pageObj);
+        console.log(data);
+        this.loadingButn = false;
+        clearInterval(this.loop);
+        this.handleClose();
       } else {
         this.$message({
           message: "当前查询无结果，请修改参数",
