@@ -534,9 +534,9 @@ const defaultSelection = {
   XSGS: 10,
   GLDDZHS: 1,
   HLJE: 20000,
-  JCB_MAX: 1.0,
-  JCB_MIN: 1.0,
-  JC_SJJG: 48,
+  JCB_MAX: 1.1,
+  JCB_MIN: 0.9,
+  JC_SJJG: 24,
   KEY_PERSIONS_DFMC: "",
   KEY_PERSIONS_JYMC: "",
   SJD: "YYYY-MM",
@@ -569,15 +569,15 @@ const defaultSelection = {
   FILTER: "",
   RYGLFS: "",
   ZXKPSJ: 3,
-  SelectThTypeIndex: 0, //团伙
+  SelectThTypeIndex: 2, //团伙
   SelectThType: {
-    Index: 1,
-    ThId: "JYMCGROUP",
-    ThName: "按主体名称划分",
-    DsThId: "JYDFMCGROUP",
-    ThMemberCntId: "JYMCGROUPMEMBERCOUNT",
-    DsThMemberCntId: "JYDFMCGROUPMEMBERCOUNT",
-  }, //this.thType[0],
+    Index: 3,
+    ThId: "CXKHGROUP",
+    ThName: "按账卡号划分",
+    DsThId: "JYDFZKHGROUP",
+    ThMemberCntId: "CXKHGROUPMEMBERCOUNT",
+    DsThMemberCntId: "JYDFZKHGROUPMEMBERCOUNT",
+  },
   KYZT: "",
   JCZCSB_MIN: 0.1,
   JCZCSB_MAX: 10.0,
@@ -617,6 +617,9 @@ const defaultSelection = {
 
   fundUsePicType: "pie",
   fundUseChecked: true,
+  QZ: 10,
+  ZXGDZBS: 5,
+  ZXJZZBS: 50,
 };
 // 线宽设置
 let xianKuanSetting = {

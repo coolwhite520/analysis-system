@@ -105,6 +105,7 @@ export default {
     condtion = "",
     condition_child = ""
   ) {
+    console.log(selectCondition )
     try {
       if (pgsqlOrderby === null) {
         pgsqlOrderby = "";
@@ -295,7 +296,9 @@ export default {
         .replace(
           /\$SUMFILEDTONULL\$/g,
           selectCondition.FiledsEmptyToNullCondition
-        );
+        ).replace(/\$QZ\$/g, selectCondition.QZ)
+        .replace(/\$ZXGDZBS\$/g, selectCondition.ZXGDZBS)
+        .replace(/\$ZXJZZBS\$/g, selectCondition.ZXJZZBS);
       //团伙选择判断
       if (selectCondition.SelectThType != null) {
         text8 = text8

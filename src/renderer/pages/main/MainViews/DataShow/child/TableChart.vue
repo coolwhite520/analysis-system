@@ -76,7 +76,6 @@
       style="
         background-color: #f5f7fa;
         padding: 5px;
-        border-bottom: 1px solid #dddfe5;
         border-left: 1px solid #dddfe5;
         border-right: 1px solid #dddfe5;
       "
@@ -230,7 +229,7 @@ export default {
       if (showrightbtn_type === "link") {
         let newRow = {};
         for (let k in row) {
-          newRow[k] = row[k].value || row[k];
+          newRow[k] = typeof row[k] === "object" ? row[k].value : row[k];
         }
         console.log(newRow);
         // 资金用途

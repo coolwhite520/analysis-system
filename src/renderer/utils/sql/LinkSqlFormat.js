@@ -459,9 +459,9 @@ function GetListCondition(list, timeindex = [], timetype = []) {
         list[i].value = "0";
       }
     }
-    console.log("GetIndex", timeindex);
+    //console.log("GetIndex", timeindex);
     let index = GetIndex(timeindex, i);
-    console.log(index);
+    //console.log(index);
     if (index != -1) {
       text =
         text +
@@ -1286,7 +1286,118 @@ function Get824CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
     "'" + _CA_PageItemDetail.ddfhm + "'"
   ).replace(/\$DFHM\$/g, "'" + _CA_PageItemDetail.dfhm + "'");
 }
-
+function Get333CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
+  let field = CurrTabItem.M_TYPE == 90014 ? "IP" : "MAC";
+  if (ColumnName == "GLDDZHS") {
+    return _CA_PageItemDetail.CurrentExeSql.replace(/\$FIELD\$/g, field)
+      .replace(/\$VAL\$/g, "'" + _CA_PageItemDetail.ipmac + "'")
+      .replace(/\$CXKH\$/g, "cxkh");
+  } else if (ColumnName == "GLCZDSZHS") {
+    return _CA_PageItemDetail.CurrentExeSql.replace(/\$FIELD\$/g, field)
+      .replace(/\$VAL\$/g, "'" + _CA_PageItemDetail.ipmac + "'")
+      .replace(/\$CXKH\$/g, "jydfzkh");
+  } else if (ColumnName == "GLDDRS") {
+    return _CA_PageItemDetail.CurrentExeSql.replace(/\$FIELD\$/g, field)
+      .replace(/\$VAL\$/g, "'" + _CA_PageItemDetail.ipmac + "'")
+      .replace(/\$CXKH\$/g, "jymc");
+  }
+  return "";
+}
+function Get333DetailCondition(cA_PageItemDetail, ColumnName) {
+  let list = [];
+  let field = cA_PageItemDetail.hasOwnProperty("ip") ? "ip" : "mac";
+  let val = cA_PageItemDetail[field];
+  if (val == "") {
+    list.push({
+      name: field.toUpperCase(),
+      type: Default.FiltrateLogicID.IsEmpty,
+      value: "",
+    });
+  } else {
+    list.push({
+      name: field.toUpperCase(),
+      type: Default.FiltrateLogicID.EqualTo,
+      value: val,
+    });
+  }
+  list.push({
+    name: "JDBZ",
+    type: Default.FiltrateLogicID.EqualTo,
+    value: "出",
+  });
+  if (cA_PageItemDetail.hasOwnProperty("cxkh333")) {
+    cA_PageItemDetail.cxkh333 == ""
+      ? list.push({
+          name: "CXKH",
+          type: Default.FiltrateLogicID.IsEmpty,
+          value: "",
+        })
+      : list.push({
+          name: "CXKH",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.cxkh333,
+        });
+  } else if (cA_PageItemDetail.hasOwnProperty("jydfzkh333")) {
+    cA_PageItemDetail.jydfzkh333 == ""
+      ? list.push({
+          name: "JYDFZKH",
+          type: Default.FiltrateLogicID.IsEmpty,
+          value: "",
+        })
+      : list.push({
+          name: "JYDFZKH",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.jydfzkh333,
+        });
+  } else {
+    cA_PageItemDetail.jymc333 == ""
+      ? list.push({
+          name: "JYMC",
+          type: Default.FiltrateLogicID.IsEmpty,
+          value: "",
+        })
+      : list.push({
+          name: "JYMC",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.jymc333,
+        });
+  }
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
+}
+//新增
+function Get218CA_PageItem(_CA_PageItemDetail, currTabItem) {
+  return _CA_PageItemDetail.CurrentExeSql.replace(
+    /\$GDZH\$/g,
+    "'" + _CA_PageItemDetail.gdzh + "'"
+  )
+    .replace(/\$GDMC\$/g, "'" + _CA_PageItemDetail.gdmc + "'")
+    .replace(/\$ZXJYJE\$/g, _CA_PageItemDetail.parm.JYZE_MINValue)
+    .replace(/\$JYSJQJ\$/g, _CA_PageItemDetail.parm.JC_SJJG)
+    .replace(/\$CJBZXZ\$/g, _CA_PageItemDetail.parm.JCB_MIN)
+    .replace(/\$CJBZDZ\$/g, _CA_PageItemDetail.parm.JCB_MAX);
+}
+//新增
+function Get219CA_PageItem(_CA_PageItemDetail, currTabItem) {
+  return _CA_PageItemDetail.CurrentExeSql.replace(
+    /\$GDTH\$/g,
+    "'" + _CA_PageItemDetail.gdth + "'"
+  )
+    .replace(/\$ZXJYJE\$/g, _CA_PageItemDetail.parm.JYZE_MINValue)
+    .replace(/\$JYSJQJ\$/g, _CA_PageItemDetail.parm.JC_SJJG)
+    .replace(/\$GROUPNAME\$/g, _CA_PageItemDetail.parm.SelectThType.ThId)
+    .replace(/\$DSGROUPNAME\$/g, _CA_PageItemDetail.parm.SelectThType.DsThId)
+    .replace(
+      /\$GROUPMEMBERCOUNT\$/g,
+      _CA_PageItemDetail.parm.SelectThType.ThMemberCntId
+    )
+    .replace(
+      /\$DSGROUPMEMBERCOUNT\$/g,
+      _CA_PageItemDetail.parm.SelectThType.DsThMemberCntId
+    );
+}
 function AnalysePageGrid_OnLinkClick(
   cA_PageItemDetail,
   CurrTabItem,
@@ -1298,242 +1409,456 @@ function AnalysePageGrid_OnLinkClick(
     }*/
   cA_PageItemDetail.CurrentExeSql = CurrTabItem.Sql_Detail; //模型模板sql
   let list = [];
-  if (CurrTabItem.M_TYPE == 203) {
-    let list_ = Get203DetailCondition(
-      cA_PageItemDetail,
-      ColumnName /*,CurrTabItem.MD_TYPE*/
-    );
-    //method_8(cA_PageItemDetail, null, list_)
-    return { type: "4", msg: list_ };
-  }
-  if (CurrTabItem.M_TYPE != 802 && CurrTabItem.M_TYPE != 805) {
-    if (CurrTabItem.M_TYPE != 806) {
-      if (CurrTabItem.M_TYPE == 803) {
-        if (ColumnName == "THZCS") {
-          list.push({
-            name: "DDFHM",
-            type: Default.FiltrateLogicID.EqualTo,
-            value: cA_PageItemDetail.ddfhm,
-          });
-          //method_9(cA_PageItemDetail, list, null)
-          let sql = " AND " + GetListCondition(list);
-          //return  {type:"18",msg:sql}
+  switch (CurrTabItem.M_TYPE) {
+    case 203:
+      return {
+        type: "4",
+        msg: Get203DetailCondition(
+          cA_PageItemDetail,
+          ColumnName /*,CurrTabItem.MD_TYPE*/
+        ),
+      };
+    case 803:
+      if (ColumnName == "THZCS") {
+        list.push({
+          name: "DDFHM",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.ddfhm,
+        });
+        return {
+          type: "18",
+          msg: {
+            str: " AND " + GetListCondition(list),
+            obj: GetDataFilterFromList(list),
+          },
+        };
+      } else if (ColumnName == "GLDFDHHMS") {
+        return {
+          type: "805",
+          msg: {
+            str: Get805CA_PageItem(cA_PageItemDetail, CurrTabItem),
+            obj: null,
+          },
+        };
+      }
+      break;
+    case 804:
+      if (ColumnName == "THZCS") {
+        list.push({
+          name: "DFHM",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.dfhm,
+        });
+        return {
+          type: "18",
+          msg: {
+            str: " AND " + GetListCondition(list),
+            obj: GetDataFilterFromList(list),
+          },
+        };
+      }
+      if (ColumnName == "GLDDFDHHMS") {
+        return {
+          type: "806",
+          msg: {
+            str: Get806CA_PageItem(cA_PageItemDetail, CurrTabItem),
+            obj: null,
+          },
+        };
+      }
+      break;
+    case 811:
+      return {
+        type: "813",
+        msg: {
+          str: Get813CA_PageItem(cA_PageItemDetail, CurrTabItem),
+          obj: null,
+        },
+      };
+    case 812:
+      return {
+        type: "814",
+        msg: {
+          str: Get814CA_PageItem(cA_PageItemDetail, CurrTabItem),
+          obj: null,
+        },
+      };
+    case 822:
+      return {
+        type: "824",
+        msg: {
+          str: Get824CA_PageItem(cA_PageItemDetail, CurrTabItem),
+          obj: null,
+        },
+      };
+    case 200:
+      return {
+        type: "4",
+        msg: Get200DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 202:
+      return {
+        type: "4",
+        msg: Get202DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 354:
+      return {
+        type: "4",
+        msg: Get354DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 357:
+      return {
+        type: "4",
+        msg: Get357DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 351:
+      return {
+        type: "4",
+        msg: Get351DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 353:
+      return {
+        type: "4",
+        msg: Get353DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 305:
+      return {
+        type: "4",
+        msg: Get305DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 352:
+      return {
+        type: "4",
+        msg: Get352DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 358:
+      return {
+        type: "4",
+        msg: Get358DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 211:
+      return {
+        type: "4",
+        msg: Get211DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 213:
+      let list_3 = Get213DetailCondition(cA_PageItemDetail, ColumnName);
+      return { type: "4", msg: list_3 };
+    case 421:
+      return {
+        type: "4",
+        msg: Get421DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 1:
+    case 2:
+      if (ColumnName == "JYBS") {
+        return { type: "4", msg: GetPersonDetailCondition(cA_PageItemDetail) };
+      } else if (ColumnName == "GLZHS") {
+        return {
+          type: "309",
+          msg: { str: Get309CA_PageItem(cA_PageItemDetail), obj: null },
+        };
+      }
+      break;
+    case 303:
+    case 304:
+      if (
+        ColumnName == "GLDDRS" ||
+        ColumnName == "JGLDDRS" ||
+        ColumnName == "CGLDDRS"
+      ) {
+        return {
+          type: "310",
+          msg: {
+            str: Get310CA_PageItem(cA_PageItemDetail, CurrTabItem, ColumnName),
+            obj: null,
+          },
+        };
+      }
+      if (
+        ColumnName == "GLDDZHS" ||
+        ColumnName == "JGLDDZHS" ||
+        ColumnName == "CGLDDZHS"
+      ) {
+        return {
+          type: "311",
+          msg: {
+            str: Get311CA_PageItem(cA_PageItemDetail, CurrTabItem, ColumnName),
+            obj: null,
+          },
+        };
+      }
+      if (ColumnName == "JZBS" || ColumnName == "CZBS") {
+        if (CurrTabItem.M_TYPE == 303) {
           return {
-            type: "18",
-            msg: { str: sql, obj: GetDataFilterFromList(list) },
+            type: "4",
+            msg: Get303DetailCondition(cA_PageItemDetail, ColumnName),
           };
-        }
-        if (ColumnName == "GLDFDHHMS") {
-          let sql = Get805CA_PageItem(cA_PageItemDetail, CurrTabItem);
-          //OpenAnalyseTab(sql)
-          //return  {type:"805",msg:sql}
-          return { type: "805", msg: { str: sql, obj: null } };
-        }
-      } else if (CurrTabItem.M_TYPE == 804) {
-        if (ColumnName == "THZCS") {
-          list.push({
-            name: "DFHM",
-            type: Default.FiltrateLogicID.EqualTo,
-            value: cA_PageItemDetail.dfhm,
-          });
-          //method_9(cA_PageItemDetail, list, null)
-          let sql = " AND " + GetListCondition(list);
-          //return {type:"18",msg:sql}
+        } else if (CurrTabItem.M_TYPE == 304) {
           return {
-            type: "18",
-            msg: { str: sql, obj: GetDataFilterFromList(list) },
+            type: "4",
+            msg: Get304DetailCondition(cA_PageItemDetail, ColumnName),
           };
-        }
-        if (ColumnName == "GLDDFDHHMS") {
-          let sql = Get806CA_PageItem(cA_PageItemDetail, CurrTabItem);
-          //OpenAnalyseTab(sql)
-          //return  {type:"806",msg:sql}
-          return { type: "806", msg: { str: sql, obj: null } };
-        }
-      } else {
-        if (CurrTabItem.M_TYPE == 811) {
-          let sql = Get813CA_PageItem(cA_PageItemDetail, CurrTabItem);
-          //OpenAnalyseTab(sql)
-          //return  {type:"813",msg:sql}
-          return { type: "813", msg: { str: sql, obj: null } };
-        }
-        if (CurrTabItem.M_TYPE == 812) {
-          let sql = Get814CA_PageItem(cA_PageItemDetail, CurrTabItem);
-          //OpenAnalyseTab(sql)
-          //return  {type:"814",msg:sql}
-          return { type: "814", msg: { str: sql, obj: null } };
-        }
-        if (CurrTabItem.M_TYPE == 822) {
-          let sql = Get824CA_PageItem(cA_PageItemDetail, CurrTabItem);
-          //OpenAnalyseTab(sql)
-          //return  {type:"824",msg:sql}
-          return { type: "824", msg: { str: sql, obj: null } };
-        }
-        if (CurrTabItem.M_TYPE != 301) {
-          if (CurrTabItem.M_TYPE != 302) {
-            if (CurrTabItem.M_TYPE != 303) {
-              if (CurrTabItem.M_TYPE != 304) {
-                if (CurrTabItem.M_TYPE == 200) {
-                  list = Get200DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 202) {
-                  let list_2 = Get202DetailCondition(
-                    cA_PageItemDetail,
-                    ColumnName
-                  );
-                  //method_8(cA_PageItemDetail, null, list_2);
-                  return { type: "4", msg: list_2 };
-                }
-                if (CurrTabItem.M_TYPE == 354) {
-                  list = Get354DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 357) {
-                  list = Get357DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  console.log("Get357DetailCondition", list);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 351) {
-                  list = Get351DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 353) {
-                  list = Get353DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 305) {
-                  list = Get305DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 352) {
-                  list = Get352DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 358) {
-                  list = Get358DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 211) {
-                  list = Get211DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                if (CurrTabItem.M_TYPE == 213) {
-                  let list_3 = Get213DetailCondition(
-                    cA_PageItemDetail,
-                    ColumnName
-                  );
-                  //method_8(cA_PageItemDetail, null, list_3);
-                  return { type: "4", msg: list_3 };
-                }
-                if (CurrTabItem.M_TYPE == 421) {
-                  list = Get421DetailCondition(cA_PageItemDetail, ColumnName);
-                  //method_8(cA_PageItemDetail, list, null);
-                  return { type: "4", msg: list };
-                }
-                //人员界面，此处非模型
-                if (CurrTabItem.M_TYPE == 1 || CurrTabItem.M_TYPE == 2) {
-                  if (ColumnName == "JYBS") {
-                    let msgobj = GetPersonDetailCondition(cA_PageItemDetail);
-                    return { type: "4", msg: msgobj };
-                  } else if (ColumnName == "GLZHS") {
-                    let sql_tmp = Get309CA_PageItem(cA_PageItemDetail);
-                    return { type: "309", msg: { str: sql_tmp, obj: null } };
-                  }
-                }
-                return null;
-              }
-            }
-            if (
-              ColumnName == "GLDDRS" ||
-              ColumnName == "JGLDDRS" ||
-              ColumnName == "CGLDDRS"
-            ) {
-              let sql = Get310CA_PageItem(
-                cA_PageItemDetail,
-                CurrTabItem,
-                ColumnName
-              );
-              //OpenAnalyseTab(sql)
-              return { type: "310", msg: { str: sql, obj: null } };
-            }
-            if (
-              ColumnName == "GLDDZHS" ||
-              ColumnName == "JGLDDZHS" ||
-              ColumnName == "CGLDDZHS"
-            ) {
-              let sql = Get311CA_PageItem(
-                cA_PageItemDetail,
-                CurrTabItem,
-                ColumnName
-              );
-              //OpenAnalyseTab(sql)
-              return { type: "311", msg: { str: sql, obj: null } };
-            }
-            if (ColumnName == "JZBS" || ColumnName == "CZBS") {
-              if (CurrTabItem.M_TYPE == 303) {
-                list = Get303DetailCondition(cA_PageItemDetail, ColumnName);
-              } else if (CurrTabItem.M_TYPE == 304) {
-                list = Get304DetailCondition(cA_PageItemDetail, ColumnName);
-              }
-              //method_8(cA_PageItemDetail, list, null);
-              //return {type:"4",msg:list}
-              return { type: "4", msg: list };
-            }
-            return null;
-          }
-        }
-        if (
-          ColumnName == "GLDSRS" ||
-          ColumnName == "JGLDSRS" ||
-          ColumnName == "CGLDSRS"
-        ) {
-          let sql = Get307CA_PageItem(
-            cA_PageItemDetail,
-            CurrTabItem,
-            ColumnName
-          );
-          //OpenAnalyseTab(sql)
-          return { type: "307", msg: { str: sql, obj: null } };
-        }
-        if (
-          ColumnName == "GLDSZHS" ||
-          ColumnName == "JGLDSZHS" ||
-          ColumnName == "CGLDSZHS"
-        ) {
-          let sql = Get308CA_PageItem(
-            cA_PageItemDetail,
-            CurrTabItem,
-            ColumnName
-          );
-          //OpenAnalyseTab(sql)
-          return { type: "308", msg: { str: sql, obj: null } };
-        }
-        if (ColumnName == "JZBS" || ColumnName == "CZBS") {
-          if (CurrTabItem.M_TYPE == 301) {
-            list = Get301DetailCondition(cA_PageItemDetail, ColumnName);
-          } else if (CurrTabItem.M_TYPE == 302) {
-            list = Get302DetailCondition(cA_PageItemDetail, ColumnName);
-          }
-          //method_8(cA_PageItemDetail, list, null);
-          return { type: "4", msg: list };
         }
       }
-      return null;
-    }
+      break;
+    case 301:
+    case 302:
+      if (
+        ColumnName == "GLDSRS" ||
+        ColumnName == "JGLDSRS" ||
+        ColumnName == "CGLDSRS"
+      ) {
+        return {
+          type: "307",
+          msg: {
+            str: Get307CA_PageItem(cA_PageItemDetail, CurrTabItem, ColumnName),
+            obj: null,
+          },
+        };
+      } else if (
+        ColumnName == "GLDSZHS" ||
+        ColumnName == "JGLDSZHS" ||
+        ColumnName == "CGLDSZHS"
+      ) {
+        return {
+          type: "308",
+          msg: {
+            str: Get308CA_PageItem(cA_PageItemDetail, CurrTabItem, ColumnName),
+            obj: null,
+          },
+        };
+      } else if (ColumnName == "JZBS" || ColumnName == "CZBS") {
+        if (CurrTabItem.M_TYPE == 301) {
+          return {
+            type: "4",
+            msg: Get301DetailCondition(cA_PageItemDetail, ColumnName),
+          };
+        } else if (CurrTabItem.M_TYPE == 302) {
+          return {
+            type: "4",
+            msg: Get302DetailCondition(cA_PageItemDetail, ColumnName),
+          };
+        }
+      }
+      break;
+    case 802:
+    case 805:
+    case 806:
+      return { type: "18", msg: Get802PhoneDetailCondition(cA_PageItemDetail) };
+    case 90014: //IP关联账户数统计
+      cA_PageItemDetail.ipmac != ""
+        ? list.push({
+            name: "IP",
+            type: Default.FiltrateLogicID.EqualTo,
+            value: cA_PageItemDetail.ipmac,
+          })
+        : list.push({
+            name: "IP",
+            type: Default.FiltrateLogicID.IsEmpty,
+            value: cA_PageItemDetail.ipmac,
+          });
+      if (ColumnName == "IPCXCS") {
+        list.push({
+          name: "JDBZ",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: "出",
+        });
+        return {
+          type: "4",
+          msg: {
+            str: " AND " + GetListCondition(list),
+            obj: GetDataFilterFromList(list),
+          },
+        };
+      } else {
+        return {
+          type: "333",
+          msg: {
+            str: Get333CA_PageItem(cA_PageItemDetail, CurrTabItem, ColumnName),
+            obj: null,
+          },
+        };
+      }
+    case 90020: //MAC关联账户数统计
+      cA_PageItemDetail.ipmac != ""
+        ? list.push({
+            name: "MAC",
+            type: Default.FiltrateLogicID.EqualTo,
+            value: cA_PageItemDetail.ipmac,
+          })
+        : list.push({
+            name: "MAC",
+            type: Default.FiltrateLogicID.IsEmpty,
+            value: cA_PageItemDetail.ipmac,
+          });
+      if (ColumnName == "MACCXCS") {
+        list.push({
+          name: "JDBZ",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: "出",
+        });
+        return {
+          type: "4",
+          msg: {
+            str: " AND " + GetListCondition(list),
+            obj: GetDataFilterFromList(list),
+          },
+        };
+      } else {
+        return {
+          type: "333",
+          msg: {
+            str: Get333CA_PageItem(cA_PageItemDetail, CurrTabItem, ColumnName),
+            obj: null,
+          },
+        };
+      }
+    case 90015:
+    case 90016:
+    case 90018:
+      cA_PageItemDetail.ip != ""
+        ? list.push({
+            name: "IP",
+            type: Default.FiltrateLogicID.EqualTo,
+            value: cA_PageItemDetail.ip,
+          })
+        : list.push({
+            name: "IP",
+            type: Default.FiltrateLogicID.IsEmpty,
+            value: "",
+          });
+    case 90021:
+    case 90022:
+    case 90024:
+      if (cA_PageItemDetail.hasOwnProperty("mac")) {
+        cA_PageItemDetail.mac != ""
+          ? list.push({
+              name: "MAC",
+              type: Default.FiltrateLogicID.EqualTo,
+              value: cA_PageItemDetail.mac,
+            })
+          : list.push({
+              name: "MAC",
+              type: Default.FiltrateLogicID.IsEmpty,
+              value: "",
+            });
+      }
+      list.push({
+        name: "JDBZ",
+        type: Default.FiltrateLogicID.EqualTo,
+        value: "出",
+      });
+      cA_PageItemDetail.cxkh != ""
+        ? list.push({
+            name: "CXKH",
+            type: Default.FiltrateLogicID.EqualTo,
+            value: cA_PageItemDetail.cxkh,
+          })
+        : list.push({
+            name: "CXKH",
+            type: Default.FiltrateLogicID.IsEmpty,
+            value: "",
+          });
+      cA_PageItemDetail.jymc != ""
+        ? list.push({
+            name: "JYMC",
+            type: Default.FiltrateLogicID.EqualTo,
+            value: cA_PageItemDetail.jymc,
+          })
+        : list.push({
+            name: "JYMC",
+            type: Default.FiltrateLogicID.IsEmpty,
+            value: "",
+          });
+      return {
+        type: "4",
+        msg: {
+          str: " AND " + GetListCondition(list),
+          obj: GetDataFilterFromList(list),
+        },
+      };
+    case 90017:
+    case 90023:
+      if (ColumnName == "SJCS") {
+        list.push({
+          name: "JDBZ",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: "出",
+        });
+        cA_PageItemDetail.cxkh != ""
+          ? list.push({
+              name: "CXKH",
+              type: Default.FiltrateLogicID.EqualTo,
+              value: cA_PageItemDetail.cxkh,
+            })
+          : list.push({
+              name: "CXKH",
+              type: Default.FiltrateLogicID.IsEmpty,
+              value: "",
+            });
+        cA_PageItemDetail.jymc != ""
+          ? list.push({
+              name: "JYMC",
+              type: Default.FiltrateLogicID.EqualTo,
+              value: cA_PageItemDetail.jymc,
+            })
+          : list.push({
+              name: "JYMC",
+              type: Default.FiltrateLogicID.IsEmpty,
+              value: "",
+            });
+        return {
+          type: "4",
+          msg: {
+            str: " AND " + GetListCondition(list),
+            obj: GetDataFilterFromList(list),
+          },
+        };
+      } else {
+        //list.push({name:"JDBZ",type:Default.FiltrateLogicID.EqualTo,value:"出"});
+        list.push({
+          name: "CXKH",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.cxkh,
+        });
+        list.push({
+          name: "JYMC",
+          type: Default.FiltrateLogicID.EqualTo,
+          value: cA_PageItemDetail.jymc,
+        });
+        if (ColumnName == "GLIPS") {
+          return {
+            type: "90018",
+            msg: {
+              str: cA_PageItemDetail.CurrentExeSql,
+              obj: GetDataFilterFromList(list),
+            },
+          };
+        }
+        return {
+          type: "90024",
+          msg: {
+            str: cA_PageItemDetail.CurrentExeSql,
+            obj: GetDataFilterFromList(list),
+          },
+        };
+      }
+    case 333:
+      return {
+        type: "4",
+        msg: Get333DetailCondition(cA_PageItemDetail, ColumnName),
+      };
+    case 201:
+      let sql_218 = Get218CA_PageItem(cA_PageItemDetail, CurrTabItem);
+      return { type: "218", msg: { str: sql_218, obj: null } };
+    case 212:
+      let sql_219 = Get219CA_PageItem(cA_PageItemDetail, CurrTabItem);
+      return { type: "219", msg: { str: sql_219, obj: null } };
+    default:
+      break;
   }
-  list = Get802PhoneDetailCondition(cA_PageItemDetail);
-  //method_9(cA_PageItemDetail, list, null);
-  return { type: "18", msg: list };
+  return null;
 }
 function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
   let CA_PageItemDetail = {
@@ -1641,6 +1966,76 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
     case 822:
       CA_PageItemDetail.ddfhm = item["sjhm"].trim();
       CA_PageItemDetail.dfhm = item["sjhm"].trim();
+      break;
+    case 90014: //IP关联账户数统计
+      CA_PageItemDetail.ipmac = Default.IsNullOrEmpty(item["ip"])
+        ? ""
+        : item["ip"].trim();
+      break;
+    case 90020: //MAC关联账户数统计
+      CA_PageItemDetail.ipmac = Default.IsNullOrEmpty(item["mac"])
+        ? ""
+        : item["mac"].trim();
+      break;
+    case 90015: //IP关联账户详情分析
+    case 90016:
+    case 90018:
+      CA_PageItemDetail.ip = Default.IsNullOrEmpty(item["ip"])
+        ? ""
+        : item["ip"].trim();
+    case 90021: //MAC关联账户详情分析
+    case 90022:
+    case 90024:
+      if (item.hasOwnProperty("mac")) {
+        CA_PageItemDetail.mac = Default.IsNullOrEmpty(item["mac"])
+          ? ""
+          : item["mac"].trim();
+      }
+      CA_PageItemDetail.cxkh = Default.IsNullOrEmpty(item["cxkh"])
+        ? ""
+        : item["cxkh"].trim();
+      CA_PageItemDetail.jymc = Default.IsNullOrEmpty(item["jymc"])
+        ? ""
+        : item["jymc"].trim();
+      break;
+    case 90017:
+    case 90023:
+      CA_PageItemDetail.cxkh = Default.IsNullOrEmpty(item["cxkh"])
+        ? ""
+        : item["cxkh"].trim();
+      CA_PageItemDetail.jymc = Default.IsNullOrEmpty(item["jymc"])
+        ? ""
+        : item["jymc"].trim();
+      break;
+    case 333: //MAC/IP关联账号
+      if (item.hasOwnProperty("ip")) {
+        CA_PageItemDetail.ip = Default.IsNullOrEmpty(item["ip"])
+          ? ""
+          : item["ip"].trim();
+      } else {
+        CA_PageItemDetail.mac = Default.IsNullOrEmpty(item["mac"])
+          ? ""
+          : item["mac"].trim();
+      }
+      if (item.hasOwnProperty("cxkh")) {
+        CA_PageItemDetail.cxkh333 = item["cxkh"].trim();
+      } else if (item.hasOwnProperty("jydfzkh")) {
+        CA_PageItemDetail.jydfzkh333 = item["jydfzkh"].trim();
+      } else if (item.hasOwnProperty("jymc")) {
+        CA_PageItemDetail.jymc333 = item["jymc"].trim();
+      } else {
+        CA_PageItemDetail.jydfmc333 = item["jydfmc"].trim();
+      }
+      break;
+    case 201: //新增
+      console.log(item);
+      CA_PageItemDetail.gdzh = item["gdzh"].trim();
+      CA_PageItemDetail.gdmc = item["gdhm"].trim(); //过渡户名
+      CA_PageItemDetail.parm = parm;
+      break;
+    case 212: //新增
+      CA_PageItemDetail.gdth = item["gdth"].trim();
+      CA_PageItemDetail.parm = parm;
       break;
   }
   let AnalysePageGrid_OnLinkClick_res = AnalysePageGrid_OnLinkClick(

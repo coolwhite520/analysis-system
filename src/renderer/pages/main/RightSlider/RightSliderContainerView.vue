@@ -5,7 +5,7 @@
       tab-position="bottom"
       type="border-card"
       closable
-      :style="{ height: contentViewHeight + 'px' }"
+      :style="{ height: contentViewHeight + 5 + 'px' }"
       @tab-remove="handleTabRemove"
       v-model="ActiveName"
     >

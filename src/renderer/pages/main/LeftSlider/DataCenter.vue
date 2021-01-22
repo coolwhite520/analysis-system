@@ -155,7 +155,7 @@ export default {
   border-bottom: 1px solid #e5e7ec;
 }
 .footbar {
-  height: 40px;
+  height: 43px;
   z-index: 100;
   background-color: #f5f7fa;
   border-bottom: 1px solid #e5e7ec;

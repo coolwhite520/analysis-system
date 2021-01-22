@@ -17,7 +17,7 @@
     <div style="height: 20px"></div>
     <div
       class="state-bar"
-      :style="{ top: stateBarTop - 20 + 'px', zIndex: 99 }"
+      :style="{ top: stateBarTop - 20 + 'px', zIndex: 9999 }"
     >
       <el-row v-if="exportProcessVisible">
         <el-progress
@@ -114,7 +114,7 @@ export default {
     });
     // 设置主区域的height
     let height = this.$electron.remote.getGlobal("height");
-    let MainViewHeight = height - 120; // titelbar footbar
+    let MainViewHeight = height - 122; // titelbar footbar
     let ContentViewHeight = MainViewHeight - 100; // 减去 tabbars的高度
     this.$store.commit(
       "AppPageSwitch/SET_CONTENT_VIEW_HEIGHT",
