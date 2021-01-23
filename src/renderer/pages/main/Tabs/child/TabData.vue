@@ -30,7 +30,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="!isNotNoDataPage"
+          :disabled="disabledWashingButtons"
           @click="handleClickFilter"
         >
           <span class="iconfont selfIcont">&#xe815;</span>
@@ -43,12 +43,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickClearFilter"
-          :disabled="
-            !(
-              isNotNoDataPage &&
-              currentTableData.modelFilterChildList.length > 0
-            )
-          "
+          :disabled="disabledWashingButtons"
         >
           <span class="iconfont selfIcont">&#xe606;</span>
           <br />
@@ -61,7 +56,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickShowField"
-          :disabled="!isNotNoDataPage"
+          :disabled="disabledWashingButtons"
         >
           <span class="iconfont selfIcont">&#xe600;</span>
           <br />
@@ -73,7 +68,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickHideEmptyField"
-          :disabled="!isNotNoDataPage"
+          :disabled="disabledWashingButtons"
         >
           <span class="iconfont selfIcont">&#xe677;</span>
           <br />
