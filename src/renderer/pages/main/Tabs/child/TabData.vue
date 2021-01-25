@@ -30,8 +30,8 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="disabledWashingButtons"
           @click="handleClickFilter"
+          :disabled="disabledShowColsButtons"
         >
           <span class="iconfont selfIcont">&#xe815;</span>
           <br />
@@ -43,7 +43,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickClearFilter"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledShowColsButtons"
         >
           <span class="iconfont selfIcont">&#xe606;</span>
           <br />
@@ -56,7 +56,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickShowField"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledShowColsButtons"
         >
           <span class="iconfont selfIcont">&#xe600;</span>
           <br />
@@ -68,7 +68,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickHideEmptyField"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledShowColsButtons"
         >
           <span class="iconfont selfIcont">&#xe677;</span>
           <br />
@@ -83,7 +83,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledSelectAndReplaceButton"
           @click="handleClickWashingButton('search-replace')"
         >
           <span class="iconfont selfIcont">&#xe89a;</span>
@@ -95,7 +95,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledSpecialCharButton"
           @click="handleClickWashingButton('special-char')"
         >
           <span class="iconfont selfIcont">&#xe66c;</span>
@@ -107,7 +107,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledInffectCharButton"
           @click="handleClickWashingButton('ineffect-data')"
         >
           <span class="iconfont selfIcont">&#xe660;</span>
@@ -119,7 +119,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledDataDiffButton"
           @click="handleClickWashingButton('data-diff')"
         >
           <span class="iconfont selfIcont">&#xe624;</span>
@@ -131,7 +131,7 @@
         <el-button
           type="text"
           class="ctrl-button"
-          :disabled="disabledWashingButtons"
+          :disabled="disabledSameDataDiffButton"
           @click="handleClickWashingButton('same-data-diff')"
         >
           <span class="iconfont selfIcont">&#xea30;</span>
@@ -264,6 +264,8 @@ import DataCleanDb from "@/db/DataClean.js";
 import Base from "@/db/Base.js";
 import cases from "@/db/Cases.js";
 import aes from "@/utils/aes";
+import DataShowTable from "@/db/DataShowTable";
+import Default from "@/utils/sql/Default";
 
 export default {
   data() {
@@ -293,13 +295,52 @@ export default {
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
-    isNotNoDataPage() {
-      return this.currentTableData && this.currentTableData.showType !== 2;
+    disabledShowColsButtons() {
+      // 只要包含table表格的数据都是有效的，反之无效
+      let enable =
+        this.currentTableData &&
+        (this.currentTableData.showType === 1 ||
+          this.currentTableData.showType === 3 ||
+          this.currentTableData.showType === 4);
+      return !enable;
     },
-    disabledWashingButtons() {
+    disabledSelectAndReplaceButton() {
+      // 查找替换 只在 base表有效
       return !(
         this.currentTableData && this.currentTableData.tableType === "base"
       );
+    },
+    disabledSpecialCharButton() {
+      // 特殊字符 只在资金明细和通话记录表有效
+      return !(this,
+      this.currentTableData &&
+        (this.currentTableData.tid === 4 || this.currentTableData.tid === 18));
+    },
+    disabledInffectCharButton() {
+      // 无效字符 只在 base表有效
+      return !(
+        this.currentTableData && this.currentTableData.tableType === "base"
+      );
+    },
+    disabledDataDiffButton() {
+      //
+      // 数据去重 只在 base表有效
+      return !(
+        this.currentTableData && this.currentTableData.tableType === "base"
+      );
+    },
+    disabledSameDataDiffButton() {
+      //
+      //  同交易diff 只在 资金明细有效 tid=4
+      return !(this.currentTableData && this.currentTableData.tid === 4);
+    },
+    disabledWashingButtons() {
+      let enable =
+        this.currentTableData &&
+        (this.currentTableData.showType === 1 ||
+          this.currentTableData.showType === 3 ||
+          this.currentTableData.showType === 4);
+      return !enable;
     },
     isModelLibVisible() {
       return (
@@ -514,6 +555,28 @@ WHERE
       }
       return loop(rootid);
     },
+    // 类型转换
+    convertDataTypeStrToNum(data_type) {
+      let FiltrateFieldType = 0;
+      if (data_type === null) {
+        FiltrateFieldType = Default.DataType.STR;
+      } else if (
+        data_type.indexOf("int") !== -1 ||
+        data_type.indexOf("money") !== -1
+      ) {
+        FiltrateFieldType = Default.DataType.DECIMAL;
+      } else if (data_type.indexOf("float") !== -1) {
+        FiltrateFieldType = Default.DataType.DOUBLE;
+      } //判断日期
+      else if (data_type.indexOf("datetime") !== -1) {
+        FiltrateFieldType = Default.DataType.DATATIME_1;
+      } else if (data_type.indexOf("date") !== -1) {
+        FiltrateFieldType = Default.DataType.DATATIME_2;
+      } else if (data_type.indexOf("time") !== -1) {
+        FiltrateFieldType = Default.DataType.DATATIME_3;
+      }
+      return FiltrateFieldType;
+    },
     async handleClickWashingButton(opt) {
       console.log(opt);
       try {
@@ -542,7 +605,7 @@ WHERE
                 });
               } else {
                 this.$message({
-                  message: "没有匹配的数据项",
+                  message: "没有匹配的数据规则项",
                 });
                 return;
               }
@@ -555,24 +618,93 @@ WHERE
             break;
           case "ineffect-data":
             {
-              let { success, rows } = await DataCleanDb.queryRulesFromTable(
-                this.currentTableData.tableename,
-                "1",
-                this.currentTableData.tid
-              );
-              if (success && rows.length > 0) {
+              // let { success, rows } = await DataCleanDb.queryRulesFromTable(
+              //   this.currentTableData.tableename,
+              //   "1",
+              //   this.currentTableData.tid
+              // );
+              // if (success && rows.length > 0) {
+              //   let keys = rows.map((row) => row.tid);
+              //   let rootNode = this.findRoot(rows);
+              //   let renderTree = this.makeTreeByList(rows, rootNode.tid);
+              //   console.log(renderTree);
+              //   this.$store.commit("ShowTable/SET_INEFFECTDATA_TREE_DATA", {
+              //     checkedKeys: JSON.parse(JSON.stringify(keys)),
+              //     renderTree,
+              //   });
+              // } else
+              {
+                let filterHeaders = [];
+                let headers = this.currentTableData.headers;
+                if (this.currentTableData.tableType === "base") {
+                  let ret = await DataShowTable.GetRealTableFields(
+                    this.currentTableData.ajid,
+                    this.currentTableData.tableename
+                  );
+                  let realFiels = ret.rows.map((row) =>
+                    row.field.toLowerCase()
+                  );
+                  filterHeaders = headers.filter((header) =>
+                    realFiels.includes(header.fieldename.toLowerCase())
+                  );
+                } else {
+                  filterHeaders = headers;
+                }
+                function makeSqlEncode(FiltrateFieldEN, FiltrateFieldType) {
+                  let CurrentExeSql_ = "";
+                  if (
+                    FiltrateFieldType != Default.DataType.DECIMAL &&
+                    FiltrateFieldType != Default.DataType.DOUBLE
+                  ) {
+                    CurrentExeSql_ =
+                      " AND (LENGTH( COALESCE(" +
+                      FiltrateFieldEN +
+                      ", '0'))=0 OR " +
+                      FiltrateFieldEN +
+                      " IS NULL)";
+                  } else {
+                    CurrentExeSql_ = "  AND (" + FiltrateFieldEN + " IS NULL)";
+                  }
+                  return aes.encrypt(CurrentExeSql_);
+                }
+                let index = 0;
+                console.log(filterHeaders);
+                let rows = filterHeaders.map((header) => {
+                  index++;
+                  let sql = makeSqlEncode(
+                    header.fieldename,
+                    this.convertDataTypeStrToNum(header.data_type)
+                  );
+                  return {
+                    children: [],
+                    describe: `${header.fieldcname}为空`,
+                    rule_name: `${header.fieldcname}为空`,
+                    gpsqltemplate_select: sql,
+                    gpsqltemplate_update: sql,
+                    tid: index,
+                    parentid: 0,
+                  };
+                });
+                rows.push({
+                  children: [],
+                  describe: `为空`,
+                  tid: 0,
+                  parentid: -1,
+                });
                 let keys = rows.map((row) => row.tid);
                 let rootNode = this.findRoot(rows);
                 let renderTree = this.makeTreeByList(rows, rootNode.tid);
+                console.log(renderTree);
                 this.$store.commit("ShowTable/SET_INEFFECTDATA_TREE_DATA", {
                   checkedKeys: JSON.parse(JSON.stringify(keys)),
-                  renderTree,
+                  renderTree: [
+                    {
+                      describe: "检测🌲",
+                      children: renderTree,
+                      tid: -1,
+                    },
+                  ],
                 });
-              } else {
-                this.$message({
-                  message: "没有匹配的数据规则项",
-                });
-                return;
               }
               componentObj = {
                 componentName: "ineffect-data-view",

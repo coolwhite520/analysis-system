@@ -1697,10 +1697,58 @@ export default {
         case 213:
           return this.makeData213();
           break;
+        case 218:
+          return this.makeData218();
+          break;
         default:
           return { nodes: [], links: [] };
           break;
       }
+    },
+    makeData218() {
+      let nodes = [];
+      let links = [];
+      this.tableData.allrows.forEach((row) => {
+        let jymc = row["jymc"];
+        let jydfmc = row["jydfmc"];
+        let czje = parseFloat(row["czje"]);
+        let czbs = parseInt(row["czbs"]);
+        let jzje = parseFloat(row["jzje"]);
+        let jzbs = parseInt(row["jzbs"]);
+        let jyzje = parseInt(row["jyzje"]);
+        let jyzbs = parseInt(row["jyzbs"]);
+        let data1 = {
+          key: jymc,
+          kh: jymc,
+          name: jymc,
+          text: jymc,
+          tid: this.tableData.tid, //tableid
+        };
+        let data2 = {
+          key: jydfmc,
+          kh: jydfmc,
+          name: jydfmc,
+          text: jydfmc,
+          tid: this.tableData.tid,
+        };
+        let bFindData1 = false;
+        let bFindData2 = false;
+        for (let item of nodes) {
+          if (item.key === data1.key) {
+            bFindData1 = true;
+            break;
+          }
+        }
+        if (!bFindData1) nodes.push(data1);
+        for (let item of nodes) {
+          if (item.key === data2.key) {
+            bFindData2 = true;
+            break;
+          }
+        }
+        if (!bFindData2) nodes.push(data2);
+      });
+      return { nodes, links };
     },
     makeData213() {
       // 重点交易对手团伙发现：参数 金额，笔数。参数可设置团伙分类 以 主体名称（JYMCGROUP），证件号码（JYZJHMGROUP），卡号（CXKHGROUP） 划分

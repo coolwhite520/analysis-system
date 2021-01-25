@@ -64,7 +64,42 @@ const dataCenterTableTemplate = {
     $FILTER$
     $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
-    countSql: `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='01' OR ZZLX='z1') AND ajid = $AJID$ $FILTER$`,
+    countSql: `SELECT
+    count(*)::int count
+  FROM
+    (
+      ( SELECT * FROM gas_person WHERE ( ckztlb = '01' OR ZZLX = 'z1' ) AND ajid = $AJID$ )
+      P LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+        ) C 
+      ) G ON P.zzhm = G.zjhm 
+      AND P.khmc = G.mc
+      LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        COUNT ( DISTINCT kh ) AS glzhs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+        ) F 
+      GROUP BY
+        zjhm,
+        mc 
+      ) H ON P.zzhm = H.zjhm 
+      AND P.khmc = H.mc 
+    ) 
+  WHERE
+    1 = 1 
+    $FILTER$`,
   },
   // 单位信息
   person2Template: {
@@ -106,7 +141,42 @@ const dataCenterTableTemplate = {
     $FILTER$
     $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
-    countSql: `SELECT count(*)::int count FROM  gas_person  WHERE (ckztlb='02' OR ZZLX='dz1') AND ajid = $AJID$ $FILTER$`,
+    countSql: `SELECT
+    count(*)::int count
+  FROM
+    (
+      ( SELECT * FROM gas_person WHERE ( ckztlb = '02' OR ZZLX = 'dz1' ) AND ajid = $AJID$ )
+      P LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+        ) C 
+      ) G ON P.zzhm = G.zjhm 
+      AND P.khmc = G.mc
+      LEFT JOIN (
+      SELECT
+        zjhm,
+        mc,
+        COUNT ( DISTINCT kh ) AS glzhs 
+      FROM
+        (
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+        ) F 
+      GROUP BY
+        zjhm,
+        mc 
+      ) H ON P.zzhm = H.zjhm 
+      AND P.khmc = H.mc 
+    ) 
+  WHERE
+    1 = 1 
+    $FILTER$`,
   },
   // 账户信息模版
   accountTemplate: {
@@ -223,6 +293,30 @@ export default {
       ORDER BY thesort ASC;`;
       let result = await client.query(sql);
       return { success: true, rows: result.rows };
+    } finally {
+      client.release();
+    }
+  },
+  // 获取真是表的数据列名称
+  GetRealTableFields: async function(ajid, tableename) {
+    const client = await global.pool.connect();
+    try {
+      await cases.SwitchCase(client, ajid);
+      let sql = `SELECT DISTINCT A
+    .attname AS FIELD,
+    col_description ( A.attrelid, A.attnum ) AS COMMENT,
+    format_type ( A.atttypid, A.atttypmod ) AS TYLEL,
+    A.attnotnull AS ISNULL,
+    'ISJM' AS ISJM 
+  FROM
+    pg_class AS C,
+    pg_attribute AS A 
+  WHERE
+    C.relname = '${tableename}' 
+    AND A.attrelid = C.oid 
+    AND A.attnum > 0`;
+      let ret = await client.query(sql);
+      return { success: true, rows: ret.rows };
     } finally {
       client.release();
     }
@@ -397,7 +491,9 @@ export default {
       }
 
       // 查询结果集的总量
+      console.log(countSql);
       let resultCount = await client.query(countSql);
+      console.log(resultCount);
       let sum = 0;
       if (resultCount.rows.length > 0) {
         sum = resultCount.rows[0].count;

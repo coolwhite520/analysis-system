@@ -1,8 +1,14 @@
 <template>
   <div>
-    <!-- 输出表类型 1表格， 2视图，3上表下图,4上表下柱状图,5上饼图下表 -->
+    <!-- 输出表类型 0 数据导入 ,1表格， 2视图，3上表下图,4上表下柱状图,5上饼图下表 -->
     <!-- <table-chart :tableData="tableData" :limitHeight="contentViewHeight-110"></table-chart> -->
-    <div v-if="tableData.showType === 1">
+    <div v-if="tableData.showType === 0">
+      <table-chart
+        :tableData="tableData"
+        :limitHeight="contentViewHeight - 80"
+      ></table-chart>
+    </div>
+    <div v-else-if="tableData.showType === 1">
       <table-chart
         :tableData="tableData"
         :limitHeight="contentViewHeight - 80"

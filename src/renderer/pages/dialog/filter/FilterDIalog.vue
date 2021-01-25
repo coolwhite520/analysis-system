@@ -49,7 +49,7 @@
                 "
               >
                 <el-option
-                  v-for="item of currentTableData.headers"
+                  v-for="item of filterHeaders"
                   :key="item.fieldename.toUpperCase()"
                   :label="item.fieldcname"
                   :value="item.fieldename.toUpperCase()"
@@ -274,7 +274,24 @@
 import { mapState } from "vuex";
 const UUID = require("uuid");
 import Default from "@/utils/sql/Default";
+import DataShowTable from "@/db/DataShowTable";
 export default {
+  async beforeMount() {
+    // 数据的筛选仅针对表格存在的真实列，不考虑计算列
+    let headers = this.currentTableData.headers;
+    if (this.currentTableData.tableType === "base") {
+      let ret = await DataShowTable.GetRealTableFields(
+        this.currentTableData.ajid,
+        this.currentTableData.tableename
+      );
+      let realFiels = ret.rows.map((row) => row.field.toLowerCase());
+      this.filterHeaders = headers.filter((header) =>
+        realFiels.includes(header.fieldename.toLowerCase())
+      );
+    } else {
+      this.filterHeaders = headers;
+    }
+  },
   mounted() {
     this.DefaultData = JSON.parse(JSON.stringify(Default));
     if (this.currentTableData.tid === 901) {
@@ -314,6 +331,7 @@ export default {
   },
   data() {
     return {
+      filterHeaders: [],
       rootNodeId: UUID.v1(),
       DefaultData: null,
       filterList: [],
@@ -391,7 +409,6 @@ export default {
     },
     // 类型转换
     convertDataTypeStrToNum(data_type) {
-      console.log(data_type);
       let FiltrateFieldType = 0;
       if (data_type === null) {
         FiltrateFieldType = this.DefaultData.DataType.STR;

@@ -24,7 +24,7 @@
           overflow: 'auto',
         }"
       >
-        <div style="font-size: 12px; color: #737478">检测🌲：</div>
+        <!-- <div style="font-size: 12px; color: #737478">检测🌲：</div> -->
         <el-tree
           ref="tree"
           @node-click="handleNodeClick"
@@ -115,7 +115,8 @@ export default {
     checkParamStr() {
       if (this.isMounted) {
         let allCheckedNodes = this.$refs.tree.getCheckedNodes();
-        console.log(allCheckedNodes);
+        // console.log(allCheckedNodes);
+        allCheckedNodes = allCheckedNodes.filter((item) => item.tid !== -1);
         let labels = allCheckedNodes.map((node) => `(${node.describe})`);
         return labels.join(" 并且 ");
       }
@@ -182,8 +183,8 @@ export default {
             paramStr += " " + decode;
           }
         }
-        let sql = `DELETE FROM ${this.currentTableData.tableename} WHERE ajid=${this.caseBase.ajid}  ${paramStr} `;
-
+        let sql = `DELETE FROM ${this.currentTableData.tableename} WHERE ajid=${this.caseBase.ajid} ${this.currentTableData.modelFilterStr} ${paramStr} `;
+        console.log(sql);
         await baseDb.QueryCustom(sql, this.caseBase.ajid);
         // 再次检测一下
         this.errorCount = await this.freshTreeErrorCount();
@@ -214,7 +215,8 @@ export default {
           paramStr += " " + decode;
         }
       }
-      let sql = `select count(*)::int count from ${this.currentTableData.tableename} where ajid=${this.caseBase.ajid} ${paramStr}`;
+      let sql = `select count(*)::int count from ${this.currentTableData.tableename} 
+      where ajid=${this.caseBase.ajid} ${this.currentTableData.modelFilterStr} ${paramStr}`;
       console.log(sql);
       let { success, rows } = await baseDb.QueryCustom(sql, this.caseBase.ajid);
       if (success) {
@@ -225,8 +227,8 @@ export default {
     async handleNodeClick(nodeData, node) {
       if (nodeData.errorCount > 0) {
         let decode = aes.decrypt(nodeData.gpsqltemplate_select);
-        let sql = `select * from ${this.currentTableData.tableename} where ajid=${this.caseBase.ajid} ${decode}`;
-        let updateSql = `DELETE FROM ${this.currentTableData.tableename} WHERE ajid=${this.caseBase.ajid}  ${decode} `;
+        let sql = `select * from ${this.currentTableData.tableename} where ajid=${this.caseBase.ajid} ${this.currentTableData.modelFilterStr} ${decode}`;
+        let updateSql = `DELETE FROM ${this.currentTableData.tableename} WHERE ajid=${this.caseBase.ajid} ${this.currentTableData.modelFilterStr} ${decode} `;
 
         let resHeaders = await dataShowDb.QueryTableShowCFields(
           this.currentTableData.tid

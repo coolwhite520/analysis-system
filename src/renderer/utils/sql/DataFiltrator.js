@@ -6,11 +6,11 @@ function BackFiltrateCondtion(
   FiltrateFieldEN,
   DataType_ = Default.DataType.STR
 ) {
-  try{
+  try {
     let text = "";
     let flag = false;
     let array = [];
-  
+
     //if (!Default.IsNullOrEmpty(vale)) {
     //  let array2 = vale.replace(/：/g, ":").split(":");
     //  for (let i = 0; i < array2.length; i++) {
@@ -22,8 +22,8 @@ function BackFiltrateCondtion(
     //  }
     //}
     if (!Default.IsNullOrEmpty(vale)) {
-        array.push(vale);
-    }else if(vale==""){
+      array.push(vale);
+    } else if (vale == "") {
       flag = true;
     }
     if (
@@ -86,8 +86,9 @@ function BackFiltrateCondtion(
         text += Default.IsNullOrEmpty(text)
           ? FiltrateFieldEN + " IS NULL "
           : "OR " + FiltrateFieldEN + " IS NULL ";
-        if(DataType_ == Default.DataType.STR){
-          text = text + "OR (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))<=0)";
+        if (DataType_ == Default.DataType.STR) {
+          text =
+            text + "OR (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))<=0)";
         }
       }
     } else if (
@@ -118,7 +119,8 @@ function BackFiltrateCondtion(
       array.length != 0
     ) {
       for (let num2 = 0; num2 < array.length; num2++) {
-        text = text + " " + FiltrateFieldEN + " not like '%" + array[num2] + "' ";
+        text =
+          text + " " + FiltrateFieldEN + " not like '%" + array[num2] + "' ";
         if (num2 < array.length - 1) {
           text += " OR ";
         }
@@ -169,13 +171,14 @@ function BackFiltrateCondtion(
         }
       }
       if (flag) {
-        if(text!=""){
+        if (text != "") {
           text = text + " AND " + FiltrateFieldEN + " IS NOT NULL ";
-        }else{
+        } else {
           text = " " + FiltrateFieldEN + " IS NOT NULL ";
         }
-        if(DataType_ == Default.DataType.STR){
-          text = text + " AND (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))>0)";
+        if (DataType_ == Default.DataType.STR) {
+          text =
+            text + " AND (LENGTH( COALESCE(" + FiltrateFieldEN + ", '0'))>0)";
         }
       }
     } else if (
@@ -195,7 +198,8 @@ function BackFiltrateCondtion(
       array.length != 0
     ) {
       for (let num6 = 0; num6 < array.length; num6++) {
-        text = text + " " + FiltrateFieldEN + " not like '" + array[num6] + "%' ";
+        text =
+          text + " " + FiltrateFieldEN + " not like '" + array[num6] + "%' ";
         if (num6 < array.length - 1) {
           text += " OR ";
         }
@@ -218,9 +222,7 @@ function BackFiltrateCondtion(
     if (!(text == "")) {
       return text;
     }
-  }catch(e){
-
-  }
+  } catch (e) {}
   return "1=1";
 }
 function GetDataFiltrateStr(
@@ -665,4 +667,5 @@ function findTBData(SecondInterval, list) {
 
 export default {
   convertDataFilterToSqlStr: j_GetDataFiltrateStr,
+  GetChildDataRule: GetChildDataRule,
 };

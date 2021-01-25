@@ -492,7 +492,7 @@ const actions = {
       componentName: "no-data-view",
       data: [],
       dispatchName: "ShowTable/showNoDataPage",
-      showType: 1,
+      showType: 0,
       rightTabs: [],
     });
 
@@ -582,6 +582,7 @@ const actions = {
 
     if (data.success) {
       let { headers, rows, sum, exportSql } = data;
+
       if (pageIndex) {
         // 更新数据
         commit("UPDATE_TABLE_DATA", {
@@ -704,7 +705,11 @@ const actions = {
       if (![202, 203, 213].includes(tid)) {
         allrows = [];
       }
-      // tid:421 资金透视
+
+      // 下钻图表
+      if ([218, 219].includes(tid)) {
+        showType = 1;
+      }
 
       // 判断是否add，还是update
       if (pageIndex) {
