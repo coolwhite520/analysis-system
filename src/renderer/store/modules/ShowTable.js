@@ -7,7 +7,6 @@ import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 import Base from "@/db/Base.js";
-import { stat } from "original-fs";
 
 const uuid = require("uuid");
 const log = require("@/utils/log");
@@ -22,6 +21,17 @@ const state = {
 };
 
 const mutations = {
+  SWITCH_ISSHOWRIGHTSLIDER(state) {
+    let newState = !state.currentTableData.isShowRightSlider;
+    console.log("isShowRightSlider:", newState);
+    Vue.delete(state.currentTableData, "isShowRightSlider");
+    Vue.set(state.currentTableData, "isShowRightSlider", newState);
+  },
+  SHOWRIGHTSLIDER(state) {
+    let newState = true;
+    Vue.delete(state.currentTableData, "isShowRightSlider");
+    Vue.set(state.currentTableData, "isShowRightSlider", newState);
+  },
   // 恢复默认金额颜色
   SET_NEW_MONEY_SPAN_COLOR(state, graphicMoneySectionList) {
     Vue.set(
@@ -125,6 +135,7 @@ const mutations = {
     state.tableDataList.push(tableData);
     state.activeIndex = tableData.pageIndex;
     state.currentTableData = tableData;
+    state.currentTableData.isShowRightSlider = true;
     console.log("ADD_TABLE_DATA_TO_LIST .... end");
   },
 

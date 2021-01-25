@@ -9,7 +9,19 @@
       :style="{ height: contentViewHeight - 40 - 15 + 'px' }"
     >
       <el-row class="title">
-        <el-col :span="22">
+        <el-col :span="2" style="text-align: center">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击收缩右边栏"
+            placement="top"
+          >
+            <span @click="handleClickShowRightSlider" class="close iconfont">{{
+              currentTableData.isShowRightSlider ? "&#xe626;" : "&#xe668;"
+            }}</span></el-tooltip
+          >
+        </el-col>
+        <el-col :span="20">
           <div>
             <span class="iconfont">&#xe66c;&nbsp;&nbsp;&nbsp;特殊字符</span>
           </div>
@@ -106,6 +118,9 @@ export default {
     },
   },
   methods: {
+    handleClickShowRightSlider() {
+      this.$store.commit("ShowTable/SWITCH_ISSHOWRIGHTSLIDER");
+    },
     async refreshErrorCharTree() {
       await this.freshTreeErrorCount();
     },

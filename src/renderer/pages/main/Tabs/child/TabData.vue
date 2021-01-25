@@ -139,17 +139,7 @@
           <span class="title-content">同笔交易去重</span>
         </el-button>
       </el-col>
-      <!-- <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
-        <el-button
-          type="text"
-          class="ctrl-button"
-          :disabled="disabledWashingButtons"
-        >
-          <span class="iconfont selfIcont">&#xe602;</span>
-          <br />
-          <span class="title-content">数据补全</span>
-        </el-button>
-      </el-col> -->
+
       <el-col :span="1">
         <el-button
           type="text"
@@ -179,9 +169,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickDataVisibleView"
-          :disabled="
-            !(currentTableData && currentTableData.title === '资金交易明细')
-          "
+          :disabled="!(currentTableData && currentTableData.tid === 4)"
         >
           <span class="iconfont selfIcont">&#xe607;</span>
           <br />
@@ -193,12 +181,7 @@
           type="text"
           class="ctrl-button"
           @click="handleClickExportData"
-          :disabled="
-            !(
-              currentTableData &&
-              currentTableData.componentName !== 'no-data-view'
-            )
-          "
+          :disabled="disabledExportDataBtn"
         >
           <span class="iconfont selfIcont">&#xe637;</span>
           <br />
@@ -334,7 +317,7 @@ export default {
       //  同交易diff 只在 资金明细有效 tid=4
       return !(this.currentTableData && this.currentTableData.tid === 4);
     },
-    disabledWashingButtons() {
+    disabledExportDataBtn() {
       let enable =
         this.currentTableData &&
         (this.currentTableData.showType === 1 ||
@@ -366,12 +349,14 @@ export default {
         componentName: "model-list-view",
         action: "add",
       });
+      this.$store.commit("ShowTable/SHOWRIGHTSLIDER");
     },
     async handleClickShowModel() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
         componentName: "model-view",
         action: "add",
       });
+      this.$store.commit("ShowTable/SHOWRIGHTSLIDER");
     },
     async handleClickDataCollection() {
       this.loading = true;
@@ -773,6 +758,7 @@ WHERE
             break;
         }
         this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", componentObj);
+        this.$store.commit("ShowTable/SHOWRIGHTSLIDER");
       } catch (e) {
         this.$message.error({
           message: e.message,

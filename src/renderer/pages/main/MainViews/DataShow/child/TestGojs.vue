@@ -1709,14 +1709,19 @@ export default {
       let nodes = [];
       let links = [];
       this.tableData.allrows.forEach((row) => {
-        let jymc = row["jymc"];
-        let jydfmc = row["jydfmc"];
-        let czje = parseFloat(row["czje"]);
-        let czbs = parseInt(row["czbs"]);
-        let jzje = parseFloat(row["jzje"]);
-        let jzbs = parseInt(row["jzbs"]);
-        let jyzje = parseInt(row["jyzje"]);
-        let jyzbs = parseInt(row["jyzbs"]);
+        let acxkh = row["acxkh"];
+        let ajyje = parseFloat(row["ajyje"]);
+        let ajymc = row["ajymc"];
+        let ajysj = row["ajysj"];
+
+        let bcxkh = row["bcxkh"];
+        let bjyje = parseFloat(row["bjyje"]);
+        let bjymc = row["bjymc"];
+        let bjysj = row["bjysj"];
+
+        let ccxkh = row["ccxkh"];
+        let cjymc = row["cjymc"];
+
         let data1 = {
           key: jymc,
           kh: jymc,
@@ -2452,6 +2457,7 @@ export default {
     onSwitchLayout(data) {
       let { graphid, layout } = data;
       if (graphid !== this.graphid) return;
+      this.myDiagram.layout.isOngoing = true;
       switch (layout) {
         case "random": // 随机
           this.randomLayout();
@@ -3020,6 +3026,10 @@ export default {
     this.$bus.$on("swichNormalLayout", this.onSwitchLayout);
     this.myDiagram.addDiagramListener("ClipboardChanged", function (e) {
       console.log(e);
+    });
+    this.myDiagram.addDiagramListener("LayoutCompleted", (e) => {
+      console.log(e, "over....");
+      this.myDiagram.layout.isOngoing = false;
     });
   },
 };
