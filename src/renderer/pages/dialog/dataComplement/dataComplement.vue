@@ -205,7 +205,7 @@ export default {
       this.dataShowRows = this.dataRows.slice(0, this.pageSize);
       this.num = await this.dataSupplementInstance.GetAllEmptyRowCount();
       this.count = await this.dataSupplementInstance.GetCanSuppleentRowCount(
-        this.dataSupplementInstance.bool_4
+        !this.switchValue
       );
       this.loading = false;
     } catch (e) {
@@ -236,7 +236,6 @@ export default {
       try {
         this.loading = true;
         this.loadingText = "查询数据较多，正在拼命计算中...";
-
         this.num = await this.dataSupplementInstance.GetAllEmptyRowCount();
         this.count = await this.dataSupplementInstance.GetCanSuppleentRowCount(
           !val
