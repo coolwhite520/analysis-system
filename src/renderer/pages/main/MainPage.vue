@@ -115,7 +115,7 @@ export default {
 
 .CollapseRightBar:hover {
   color: gray;
-  cursor: pointer;
+  /* cursor: pointer; */
   background-color: #0a6e55;
 }
 </style>

@@ -29,6 +29,7 @@ const state = {
   showParseBankCardVisible: false,
   showZjytVisible: false,
   showZjytLinkVisible: false,
+  showDataComplementVisible: false,
 };
 
 const mutations = {
@@ -120,6 +121,9 @@ const mutations = {
   },
   SET_SHOWZJYTLINKVISIBLE(state, showZjytLinkVisible) {
     state.showZjytLinkVisible = showZjytLinkVisible;
+  },
+  SET_SHOWDATACOMPLEMENTVISIBLE(state, showDataComplementVisible) {
+    state.showDataComplementVisible = showDataComplementVisible;
   },
 };
 

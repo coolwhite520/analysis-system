@@ -127,7 +127,7 @@
           <span class="title-content">数据去重</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="1" class="el-col">
         <el-button
           type="text"
           class="ctrl-button"
@@ -139,7 +139,18 @@
           <span class="title-content">同笔交易去重</span>
         </el-button>
       </el-col>
-
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledDataComplementButton"
+          @click="handleClickWashingButton('data-complement')"
+        >
+          <span class="iconfont selfIcont">&#xe645;</span>
+          <br />
+          <span class="title-content">数据补全</span>
+        </el-button>
+      </el-col>
       <el-col :span="1">
         <el-button
           type="text"
@@ -201,7 +212,7 @@
         <div>显示</div>
       </el-col>
       <el-col
-        :span="5"
+        :span="6"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>清洗</div>
@@ -233,6 +244,7 @@
       <show-visible-dialog></show-visible-dialog>
     </div>
     <collection-record v-if="showCollectionRecordVisible"></collection-record>
+    <data-complement v-if="showDataComplementVisible"></data-complement>
   </div>
 </template>
 <script >
@@ -241,14 +253,15 @@ import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import ShowDataVisibleView from "@/pages/dialog/visible/visibleDialog";
 import CollectionRecord from "@/pages/dialog/record/CollectionRecordDialog";
+import dataComplementVue from "@/pages/dialog/dataComplement/dataComplement.vue";
 import { mapState } from "vuex";
-import path, { extname } from "path";
 import DataCleanDb from "@/db/DataClean.js";
 import Base from "@/db/Base.js";
 import cases from "@/db/Cases.js";
 import aes from "@/utils/aes";
 import DataShowTable from "@/db/DataShowTable";
 import Default from "@/utils/sql/Default";
+import DataCollection from "../../../mini/DataCollection.vue";
 
 export default {
   data() {
@@ -266,6 +279,7 @@ export default {
     "show-fields-dialog": ShowFieldsDialog,
     "show-visible-dialog": ShowDataVisibleView,
     "collection-record": CollectionRecord,
+    "data-complement": dataComplementVue,
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -275,6 +289,7 @@ export default {
       "showFieldsVisible",
       "showDataVisibilityDialogVisible",
       "showCollectionRecordVisible",
+      "showDataComplementVisible",
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
@@ -298,6 +313,9 @@ export default {
       return !(this,
       this.currentTableData &&
         (this.currentTableData.tid === 4 || this.currentTableData.tid === 18));
+    },
+    disabledDataComplementButton() {
+      return !(this.currentTableData && this.currentTableData.tid === 4);
     },
     disabledInffectCharButton() {
       // 无效字符 只在 base表有效
@@ -754,6 +772,15 @@ WHERE
                 componentName: "same-data-diff-view",
                 action: "add",
               };
+            }
+            break;
+          case "data-complement":
+            {
+              this.$store.commit(
+                "DialogPopWnd/SET_SHOWDATACOMPLEMENTVISIBLE",
+                true
+              );
+              return;
             }
             break;
         }

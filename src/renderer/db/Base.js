@@ -30,8 +30,8 @@ export default {
       console.log("queryCustom:", res);
       return {
         success: true,
-        rows: res.rows,
-        fields: res.fields.map((field) => field.name),
+        rows: res.rows ? res.rows : [],
+        fields: res.fields ? res.fields.map((field) => field.name) : [],
       };
     } catch (e) {
       console.log({ sql, e });
