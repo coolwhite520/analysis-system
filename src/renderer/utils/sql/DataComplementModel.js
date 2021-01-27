@@ -643,7 +643,7 @@ function DataSupplementWinModel(ajid) {
     }
     let sumLoop = this.AccountModelscan.length;
     let indexLoop = 0;
-    this.AccountModelscan.forEach(async (current) => {
+    for (let current of this.AccountModelscan) {
       let stringBuilder = "";
       if (!current.get_IsHandUpdate()) {
         return true;
@@ -741,7 +741,7 @@ function DataSupplementWinModel(ajid) {
       let percentage = parseInt((indexLoop / sumLoop) * 100);
       callbackProcess(percentage);
       indexLoop++;
-    });
+    }
     // console.log(stringBuilderArr);
     // return;
     // console.log(stringBuilder);
