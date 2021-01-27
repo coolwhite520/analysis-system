@@ -467,7 +467,7 @@ export default {
           ).fieldcname;
           this.$message.error({
             title: "错误",
-            message: `序号：${data.rowIndex}：[${data.fileName}]的[${data.sheetName}]存在重复字段[${sameFieldName}], 请修改后继续！`,
+            message: `序号：${data.rowIndex}：[${data.fileName}]的[${data.sheetName}]存在重复字段[${sameFieldName}], 请修改后继续。`,
           });
           this.errorRowNumArr.push(data.rowIndex);
           return;
