@@ -591,7 +591,6 @@ export default {
             mbmc,
             publicFields,
             externFields,
-            matchedFields,
             caseBase,
             fileName,
             sheetName,
@@ -606,17 +605,17 @@ export default {
 
           // 统计选中的列名称
           let fields = [];
-          let matchedFields2 = [];
+          let matchedFields = [];
           let matchedFieldsAll = [];
           let matchedFileCols = [];
           for (let item of data.dataList) {
             if (item.matchedFieldName !== "") {
-              matchedFields2.push(item.matchedFieldName);
+              matchedFields.push(item.matchedFieldName);
               matchedFileCols.push(item.fileColName);
             }
             matchedFieldsAll.push(item.matchedFieldName);
           }
-          console.log({ matchedFields, matchedFields2 });
+
           dataImport.InsertOrUpdateMatchedRecord(
             matchedMbdm,
             fileAllCols,
@@ -1214,13 +1213,13 @@ export default {
 
           // 创建queryStream
           let sqlSelect = `select ${needInsertFields} from ${tempTableName}`;
-          console.log(sqlSelect);
+          // console.log(sqlSelect);
           const query = new QueryStream(sqlSelect);
           const stream = client.query(query);
 
           // 创建copyFrom流
           let copyFromStr = `COPY ${targetTableName}(${needInsertFields}) FROM STDIN`;
-          console.log(copyFromStr);
+          // console.log(copyFromStr);
           let streamFrom = await client2.query(copyFrom(copyFromStr));
           streamFrom.on("error", (err) => {
             console.log("errorRowStr:", currentRowStr);

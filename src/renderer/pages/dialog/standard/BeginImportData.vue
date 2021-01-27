@@ -54,16 +54,16 @@
         <b>数据文件表</b>
       </span>
       <el-table
-        ref="multipleTable"
+        :ref="multipleTableId"
         :data="exampleDataList"
         height="200"
         border
         style="width: 100%"
         size="mini"
-        @selection-change="handleSelectionChange"
         highlight-current-row
         @current-change="handleCurrentChange"
         :row-class-name="rowClassName"
+        @select="handleSelectRow"
       >
         >
         <el-table-column type="selection"></el-table-column>
@@ -355,7 +355,10 @@ export default {
         } else {
           _this.$store.commit("DataCollection/ADD_CSV_DATA_TO_LIST", data);
           if (data.matchedMbdm.length > 0) {
-            _this.$refs.multipleTable.toggleRowSelection(data, true);
+            _this.$refs[`${this.multipleTableId}`].toggleRowSelection(
+              data,
+              true
+            );
           }
         }
       }
@@ -384,6 +387,7 @@ export default {
   },
   data() {
     return {
+      multipleTableId: uuid.v1(),
       btnLoading: false,
       oldVersionXlsFileList: [],
       radioImportType: "openFile",
@@ -394,7 +398,6 @@ export default {
       value: "",
       currentRow: null, // 其实是一个指针，指向了exampleDataList中的某条数据
       parseFileCount: 0,
-      multipleSelection: [],
       errorRowNumArr: [], // 记录不符合规矩的文件行号
       oldVersionTempPath: "",
     };
@@ -422,10 +425,12 @@ export default {
       row.rowIndex = rowIndex + 1;
     },
     async handleClickCancelErrorRow() {
-      for (let row of this.$refs.multipleTable.selection) {
+      for (let row of this.$refs[`${this.multipleTableId}`].selection) {
         if (this.errorRowNumArr.includes(row.rowIndex)) {
-          //console.log(row.rowIndex);
-          await this.$refs.multipleTable.toggleRowSelection(row, false);
+          await this.$refs[`${this.multipleTableId}`].toggleRowSelection(
+            row,
+            false
+          );
         }
       }
       this.$message({
@@ -440,12 +445,14 @@ export default {
         }, ms);
       });
     },
-
+    handleSelectRow(selection, row) {
+      this.$refs[`${this.multipleTableId}`].setCurrentRow(row);
+    },
     async checkFileRowError(data) {
       if (data.matchedMbdm === "") {
         this.$message.error({
           title: "错误",
-          message: `[${data.fileName}]的[${data.sheetName}]没有匹配的目标表, 请修改后继续！错误行号：${data.rowIndex}`,
+          message: `[${data.fileName}]的[${data.sheetName}]没有匹配的目标表, 请修改后继续！序号：${data.rowIndex}`,
         });
         this.errorRowNumArr.push(data.rowIndex);
         return;
@@ -453,9 +460,14 @@ export default {
       let allFieldList = [];
       for (let item of data.dataList) {
         if (item.sameMatchedRow) {
+          let sameFieldName = data.templateToFieldObjList.find(
+            (obj) =>
+              obj.fieldename.toLowerCase() ===
+              item.matchedFieldName.toLowerCase()
+          ).fieldcname;
           this.$message.error({
             title: "错误",
-            message: `[${data.fileName}]的[${data.sheetName}]存在重复字段, 请修改后继续！错误行号：${data.rowIndex}`,
+            message: `序号：${data.rowIndex}：[${data.fileName}]的[${data.sheetName}]存在重复字段[${sameFieldName}], 请修改后继续！`,
           });
           this.errorRowNumArr.push(data.rowIndex);
           return;
@@ -474,7 +486,7 @@ export default {
             if (filterTemp.length === 0) {
               this.$message.error({
                 title: "错误",
-                message: `[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项，错误行号：${data.rowIndex}`,
+                message: `序号：${data.rowIndex}：[${data.fileName}]的[${data.sheetName}]中账号和卡号至少需要匹配一项。`,
               });
               this.errorRowNumArr.push(data.rowIndex);
               return;
@@ -526,22 +538,24 @@ export default {
       this.$store.commit("DialogPopWnd/SET_SHOWCONVERTDIALOG", true);
     },
     async handleClickSubmit() {
-      if (this.multipleSelection.length > 0) {
+      let selection = this.$refs[`${this.multipleTableId}`].selection;
+      if (selection.length > 0) {
         this.errorRowNumArr = [];
         this.checkOver = false;
         this.btnLoading = true;
-        for (let data of this.multipleSelection) {
+        for (let dataRow of selection) {
           await this.sleep(5);
-          await this.checkFileRowError(data);
+          await this.checkFileRowError(dataRow);
         }
         this.checkOver = true;
         if (this.errorRowNumArr.length > 0) {
+          this.btnLoading = false;
           return;
         }
         this.$store.commit("DialogPopWnd/SET_STANDARDVIEW", "process-import");
         // 数据加工和处理，给每个sheet生成headers、matchedFields
         let newExampleList = [];
-        for (let sheetData of this.multipleSelection) {
+        for (let sheetData of selection) {
           let headers = []; // 表头，选中的字段列表,
           // 把行号添加进来，进行展示便于操作数据
           headers.push({
@@ -605,7 +619,9 @@ export default {
         index,
         matchedMbdm: selValue,
       });
-      this.$refs.multipleTable.setCurrentRow(this.exampleDataList[index]);
+      this.$refs[`${this.multipleTableId}`].setCurrentRow(
+        this.exampleDataList[index]
+      );
     },
     // 选择模版对应的列名称下拉框
     handleChangeMatchColName(selValue, index) {
@@ -630,10 +646,6 @@ export default {
     // table表点击事件
     handleCurrentChange(currentRow) {
       this.currentRow = currentRow;
-    },
-    // multipleSelection 代表当前选中的行数据
-    handleSelectionChange(multipleSelection) {
-      this.multipleSelection = this.$lodash.cloneDeep(multipleSelection);
     },
     readFileList(dir, filesList = []) {
       const stat = fs.statSync(dir);
