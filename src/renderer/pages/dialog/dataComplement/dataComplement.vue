@@ -194,18 +194,21 @@ import { mapState } from "vuex";
 import DataSupplementWinModel from "@/utils/sql/DataComplementModel.js";
 export default {
   computed: {
+    ...mapState("CaseDetail", ["caseBase"]),
     ...mapState("DialogPopWnd", ["showDataComplementVisible"]),
     ...mapState("ShowTable", ["tableDataList"]),
   },
   async mounted() {
     try {
       this.loading = true;
-      this.dataSupplementInstance = new DataSupplementWinModel(1);
+      this.dataSupplementInstance = new DataSupplementWinModel(
+        this.caseBase.ajid
+      );
       this.dataRows = await this.dataSupplementInstance.GetMasterData();
       this.dataShowRows = this.dataRows.slice(0, this.pageSize);
       this.num = await this.dataSupplementInstance.GetAllEmptyRowCount();
       this.count = await this.dataSupplementInstance.GetCanSuppleentRowCount(
-        !this.switchValue
+        true
       );
       this.loading = false;
     } catch (e) {

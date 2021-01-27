@@ -591,6 +591,7 @@ export default {
             mbmc,
             publicFields,
             externFields,
+            matchedFields,
             caseBase,
             fileName,
             sheetName,
@@ -605,17 +606,17 @@ export default {
 
           // 统计选中的列名称
           let fields = [];
-          let matchedFields = [];
+          let matchedFields2 = [];
           let matchedFieldsAll = [];
           let matchedFileCols = [];
           for (let item of data.dataList) {
             if (item.matchedFieldName !== "") {
-              matchedFields.push(item.matchedFieldName);
+              matchedFields2.push(item.matchedFieldName);
               matchedFileCols.push(item.fileColName);
             }
             matchedFieldsAll.push(item.matchedFieldName);
           }
-          // //console.log(fileAllCols, matchedFieldsAll);
+          console.log({ matchedFields, matchedFields2 });
           dataImport.InsertOrUpdateMatchedRecord(
             matchedMbdm,
             fileAllCols,
@@ -971,12 +972,10 @@ export default {
           ////console.log(sqlStr, matchedFileCols, { skipLines });
           await cases.SwitchCase(client, ajid);
           let streamFrom = await client.query(copyFrom(sqlStr));
-          let matchedColNumList = [];
           let stats = fs.statSync(filePathName);
           let rownum = 0;
           let readSize = 0;
           let fileSize = stats.size;
-          let bFirstRow = true;
           let indexList = []; // 获取匹配索引
           fileAllCols.forEach((v, i) => {
             if (matchedFileCols.includes(v)) {
@@ -1031,6 +1030,10 @@ export default {
                         .replace(/^\s+|\s+$/g, "")
                     );
                     if (row.toString() !== fileAllColsStr) {
+                      // 过滤indexList
+                      row = row.filter((cell, index) =>
+                        indexList.includes(index)
+                      );
                       retRows.push(row);
                     } else {
                       // 和表头相同的行内容，不添加哦
@@ -1186,6 +1189,7 @@ export default {
       let client2 = await global.pool.connect();
       let lastPercentage = 0;
       let index = 0;
+      let currentRowStr = "";
       try {
         return await new Promise(async (resolve, rejcect) => {
           await cases.SwitchCase(client, ajid);
@@ -1210,14 +1214,16 @@ export default {
 
           // 创建queryStream
           let sqlSelect = `select ${needInsertFields} from ${tempTableName}`;
+          console.log(sqlSelect);
           const query = new QueryStream(sqlSelect);
           const stream = client.query(query);
 
           // 创建copyFrom流
           let copyFromStr = `COPY ${targetTableName}(${needInsertFields}) FROM STDIN`;
-          ////console.log(copyFromStr);
+          console.log(copyFromStr);
           let streamFrom = await client2.query(copyFrom(copyFromStr));
           streamFrom.on("error", (err) => {
+            console.log("errorRowStr:", currentRowStr);
             rejcect(err);
           });
           streamFrom.on("finish", async () => {
@@ -1263,6 +1269,7 @@ export default {
                   }
                 }
                 let valueStr = values.join("\t") + "\n";
+                currentRowStr = valueStr;
                 this.push(valueStr);
                 callback();
               })
@@ -1284,6 +1291,7 @@ export default {
               }
             })
             .on("error", (err) => {
+              console.log("errorRowStr:", currentRowStr);
               rejcect(err);
             })
             .on("end", async () => {
@@ -1293,6 +1301,7 @@ export default {
         });
       } catch (e) {
         log.info(e);
+        console.log("errorRowStr:", currentRowStr);
         this.$electron.ipcRenderer.send("import-one-table-process", {
           id,
           success: false,

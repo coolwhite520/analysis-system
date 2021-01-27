@@ -465,7 +465,7 @@ export default {
         .replace(/\$TABLENAME\$/g, tableename)
         .replace(/\$FILTER\$/g, filter)
         .replace(/\$SQLORDERBY\$/g, orderby)
-        .replace(/\$COUNT\$/g, 100000)
+        .replace(/\$COUNT\$/g, 10000000)
         .replace(/\$OFFSET\$/g, 0);
 
       let countSql = countSqlTemp

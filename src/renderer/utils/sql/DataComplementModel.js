@@ -158,6 +158,7 @@ function DataSupplementWinModel(ajid) {
     this.bool_3 = false;
     this.dictionary_1 = {};
   };
+
   this.GetMasterData = async function() {
     this.bool_4 = true;
     await this.Initalize();
@@ -230,6 +231,7 @@ function DataSupplementWinModel(ajid) {
     GROUP BY
     shard_id 
     ) B`;
+    console.log(sql);
     let res = await Base.QueryCustom(sql, this.ajid);
     if (!Default.IsNullOrEmpty(res) && res.rows.length > 0) {
       let count = parseInt(res.rows[0].count);
@@ -319,15 +321,6 @@ function DataSupplementWinModel(ajid) {
         simpleAccountModel.Zzhm = Default.IsNullOrEmpty(dataRow["zzhm"])
           ? ""
           : dataRow["zzhm"];
-        // if (Default.IsNullOrEmpty(simpleAccountModel.Zhmc)) {
-        //   simpleAccountModel.ZhmcIsenable = true;
-        // }
-        // if (Default.IsNullOrEmpty(simpleAccountModel.Khyh)) {
-        //   simpleAccountModel.KhyhIsenable = true;
-        // }
-        // if (Default.IsNullOrEmpty(simpleAccountModel.Zzhm)) {
-        //   simpleAccountModel.ZzhmIsenable = true;
-        // }
         if (this.dictionary_0.hasOwnProperty(simpleAccountModel.Zh)) {
           let flag = false;
           if (this.dictionary_1.hasOwnProperty(simpleAccountModel.Zh)) {
@@ -510,7 +503,7 @@ function DataSupplementWinModel(ajid) {
     zh 
     ) A `;
     if (sql != undefined && sql != null && sql != "") {
-      return await await Base.QueryCustom(sql, this.ajid);
+      return await Base.QueryCustom(sql, this.ajid);
     }
   };
   this.GetCanData = async function() {
@@ -640,7 +633,6 @@ function DataSupplementWinModel(ajid) {
   };
 
   this.UpdataAllData = async function(Modelscan, callbackProcess) {
-    let stringBuilderArr = [];
     this.AccountModelscan = Modelscan;
     if (
       this.AccountModelscan == undefined ||
@@ -649,7 +641,9 @@ function DataSupplementWinModel(ajid) {
     ) {
       return;
     }
-    this.AccountModelscan.forEach((current) => {
+    let sumLoop = this.AccountModelscan.length;
+    let indexLoop = 0;
+    this.AccountModelscan.forEach(async (current) => {
       let stringBuilder = "";
       if (!current.get_IsHandUpdate()) {
         return true;
@@ -743,18 +737,15 @@ function DataSupplementWinModel(ajid) {
           stringBuilder += text6;
         }
       }
-      stringBuilderArr.push(stringBuilder);
+      await Base.QueryCustom(stringBuilder, this.ajid);
+      let percentage = parseInt((indexLoop / sumLoop) * 100);
+      callbackProcess(percentage);
+      indexLoop++;
     });
     // console.log(stringBuilderArr);
     // return;
     // console.log(stringBuilder);
     // const fs = require("fs");
-    // fs.writeFileSync("./a.txt", stringBuilder);
-    for (let i = 0; i < stringBuilderArr.length; i++) {
-      await Base.QueryCustom(stringBuilderArr[i], this.ajid);
-      let percentage = parseInt((i / stringBuilderArr.length) * 100);
-      callbackProcess(percentage);
-    }
   };
 }
 

@@ -24,7 +24,7 @@ export default {
     try {
       await cases.SwitchDefaultCase(client);
       let sql = `SELECT ID, MBDM, TABLEENAME, FIELDCNAME, FIELDENAME, FIELDTYPE, fieldlength FROM st_data_template_field where MBDM = '${mbdm}' order by FIELDCNAME asc `;
-      
+
       const res = await client.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } finally {
@@ -475,7 +475,7 @@ export default {
     try {
       await cases.SwitchCase(client, ajid);
       let sql = `SELECT ${matchedFields} from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength};`;
-      // log.info(sql);
+      if (fieldLength == 50) console.log(sql);
       let res = await client.query(sql);
       let rows = res.rows;
       let sqlCount = `SELECT count(*)::int count from ${tableName} WHERE LENGTH(TRIM(both '  ' FROM ${fieldName}))>${fieldLength} ;`;
@@ -1251,6 +1251,7 @@ export default {
         //进销项税务 gas_tax_records_150001
         sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
       }
+      console.log(sql);
       await client.query(sql);
 
       return { success: true };
@@ -1283,22 +1284,22 @@ export default {
       let res = await client.query(sql);
       for (let row of res.rows) {
         let obj = {};
-        if (row.type.includes("char")) {
+        if (row.type.indexOf("char") !== -1) {
           obj.fieldtype = 1;
           obj.fieldename = row.field.toLowerCase();
         } else if (
-          row.type.includes("int") ||
-          row.type.includes("num") ||
-          row.type.includes("float") ||
-          row.type.includes("double") ||
-          row.type.includes("byte") ||
-          row.type.includes("bool") ||
-          row.type.includes("bit") ||
-          row.type.includes("money")
+          row.type.indexOf("int") !== -1 ||
+          row.type.indexOf("num") !== -1 ||
+          row.type.indexOf("float") !== -1 ||
+          row.type.indexOf("double") !== -1 ||
+          row.type.indexOf("byte") !== -1 ||
+          row.type.indexOf("bool") !== -1 ||
+          row.type.indexOf("bit") !== -1 ||
+          row.type.indexOf("money") !== -1
         ) {
           obj.fieldtype = 2;
           obj.fieldename = row.field.toLowerCase();
-        } else if (row.type.includes("timestamp")) {
+        } else if (row.type.indexOf("timestamp") !== -1) {
           obj.fieldtype = 4;
           obj.fieldename = row.field.toLowerCase();
         }

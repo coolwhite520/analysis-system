@@ -10,6 +10,8 @@ import {
   session,
 } from "electron";
 app.commandLine.appendSwitch("disable-web-security");
+app.commandLine.appendSwitch("js-flags", "--max-old-space-size=8192");
+
 const isOnline = require("is-online");
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
