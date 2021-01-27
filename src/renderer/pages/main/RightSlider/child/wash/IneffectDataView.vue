@@ -48,6 +48,7 @@
           :default-checked-keys="myTreeList.checkedKeys"
           empty-text="当前表没有无效数据，不具备筛选清洗功能。"
           node-key="tid"
+          style="border-bottom: 1px solid #dddfe5"
         >
           <span class="custom-tree-node" slot-scope="{ node }">
             <span style="font-size: 10px">{{ node.label }}</span>
