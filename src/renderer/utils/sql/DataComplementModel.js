@@ -511,73 +511,69 @@ function DataSupplementWinModel(ajid) {
   };
   this.GetCanData = async function() {
     let client = await global.pool.connect();
-    try {
-      return await new Promise(async (resolve, reject) => {
-        let listTemp = [];
-        let sql = this.GetSqlForBackDictionary(this.bool_4);
-        if (sql != undefined && sql != null && sql != "") {
-          this.dictionary_0 = {};
-          this.dictionary_2 = [];
-          await cases.SwitchCase(client, this.ajid);
-          const Query = require("pg").Query;
-          const query = new Query(sql);
-          const result = client.query(query);
-          query.on("row", (dataRow) => {
-            let text = Default.IsNullOrEmpty(dataRow["zh"])
-              ? ""
-              : dataRow["zh"];
-            let str = Default.IsNullOrEmpty(dataRow["zhmcb"])
-              ? ""
-              : dataRow["zhmcb"];
-            let str2 = Default.IsNullOrEmpty(dataRow["khyhb"])
-              ? ""
-              : dataRow["khyhb"];
-            let str3 = Default.IsNullOrEmpty(dataRow["zzhmb"])
-              ? ""
-              : dataRow["zzhmb"];
-            let text2 = Default.IsNullOrEmpty(dataRow["shard_id"])
-              ? ""
-              : dataRow["shard_id"];
-            let str4 = Default.IsNullOrEmpty(dataRow["jydd"])
-              ? ""
-              : dataRow["jydd"];
-            if (!Default.IsNullOrEmpty(text)) {
-              if (this.dictionary_0.hasOwnProperty(text)) {
-                let array = this.dictionary_0[text];
-                this.AddStr(array[0], str);
-                this.AddStr(array[1], str2);
-                this.AddStr(array[2], str3);
-              } else {
-                let list = [];
-                let list2 = [];
-                let list3 = [];
-                let array2 = [];
-                this.AddStr(list, str);
-                this.AddStr(list2, str2);
-                this.AddStr(list3, str3);
-                array2[0] = list;
-                array2[1] = list2;
-                array2[2] = list3;
-                this.dictionary_0[text] = array2;
-              }
-              let key = text + "_" + str4;
-              listTemp.push(key);
+    return await new Promise(async (resolve, reject) => {
+      let listTemp = [];
+      let sql = this.GetSqlForBackDictionary(this.bool_4);
+      if (sql != undefined && sql != null && sql != "") {
+        this.dictionary_0 = {};
+        this.dictionary_2 = [];
+        await cases.SwitchCase(client, this.ajid);
+        const Query = require("pg").Query;
+        const query = new Query(sql);
+        client.query(query);
+        query.on("row", (dataRow) => {
+          let text = Default.IsNullOrEmpty(dataRow["zh"]) ? "" : dataRow["zh"];
+          let str = Default.IsNullOrEmpty(dataRow["zhmcb"])
+            ? ""
+            : dataRow["zhmcb"];
+          let str2 = Default.IsNullOrEmpty(dataRow["khyhb"])
+            ? ""
+            : dataRow["khyhb"];
+          let str3 = Default.IsNullOrEmpty(dataRow["zzhmb"])
+            ? ""
+            : dataRow["zzhmb"];
+          let str4 = Default.IsNullOrEmpty(dataRow["jydd"])
+            ? ""
+            : dataRow["jydd"];
+          if (!Default.IsNullOrEmpty(text)) {
+            if (this.dictionary_0.hasOwnProperty(text)) {
+              let array = this.dictionary_0[text];
+              this.AddStr(array[0], str);
+              this.AddStr(array[1], str2);
+              this.AddStr(array[2], str3);
+            } else {
+              let list = [];
+              let list2 = [];
+              let list3 = [];
+              let array2 = [];
+              this.AddStr(list, str);
+              this.AddStr(list2, str2);
+              this.AddStr(list3, str3);
+              array2[0] = list;
+              array2[1] = list2;
+              array2[2] = list3;
+              this.dictionary_0[text] = array2;
             }
-          });
-          query.on("end", () => {
-            console.log("query done");
-            this.dictionary_2 = Array.from(new Set(listTemp));
-            resolve("end");
-          });
-          query.on("error", (err) => {
-            console.error(err.stack);
-            reject(err);
-          });
-        }
-      });
-    } finally {
-      client.release();
-    }
+            let key = text + "_" + str4;
+            listTemp.push(key);
+          }
+        });
+        query.on("end", () => {
+          console.log("query done");
+          this.dictionary_2 = Array.from(new Set(listTemp));
+          client.release();
+          resolve("end");
+        });
+        query.on("error", (err) => {
+          console.error(err.stack);
+          client.release();
+          reject(err);
+        });
+      } else {
+        client.release();
+        resolve("end");
+      }
+    });
   };
   this.GetSqlForBackDictionary = function(ismasterdata = false) {
     let arg = "";
