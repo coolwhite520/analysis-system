@@ -14,7 +14,7 @@ export default {
     try {
       let sql = `SET search_path TO icap_${ajid}`;
       const res = await client.query(sql);
-      return res.command === "SET" ? true : false;
+      return client;
     } catch (e) {
       log.error(e);
     }

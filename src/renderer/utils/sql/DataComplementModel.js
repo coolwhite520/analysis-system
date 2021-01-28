@@ -2,6 +2,7 @@ import Default from "./Default";
 import Base from "../../db/Base";
 import cases from "../../db/Cases";
 const _ = require("lodash");
+const Query = require("pg").Query;
 
 function SimpleAccountModel() {
   this.Zzhm = "";
@@ -149,7 +150,7 @@ function DataSupplementWinModel(ajid) {
   this.bool_1 = false;
   this.bool_3 = false;
   this.dictionary_0 = {};
-  this.dictionary_2 = [];
+  this.dictionary_2 = "";
   this.AccountModelscan = [];
   this.InilaizeDataState = function() {
     this.bool_0 = false;
@@ -175,23 +176,20 @@ function DataSupplementWinModel(ajid) {
     return this.AccountModelscan;
   };
   this.Initalize = async function() {
+    console.log("Initalize");
     this.InilaizeDataState();
     this.bool_1 = true;
     await this.RefreashUIDatasCan_DoWork();
   };
   this.RefreashUIDatasCan_DoWork = async function() {
+    console.log("RefreashUIDatasCan_DoWork");
     this.bool_1 = true;
-    await this.method_2("");
+    await this.method_2();
     this.bool_1 = false;
   };
   this.method_2 = async function() {
+    console.log("method_2");
     await this.method_7();
-    console.log("length 0:", Object.keys(this.dictionary_0).length);
-    console.log("length 1:", Object.keys(this.dictionary_1).length);
-    console.log("length 2:", this.dictionary_2.length);
-    //for(let key in this.dictionary_2){
-    //    console.log( key)
-    //}
   };
   this.GetAllEmptyRowCount = async function() {
     let num = 0;
@@ -304,100 +302,126 @@ function DataSupplementWinModel(ajid) {
       return isNaN(count) ? 0 : count;
     }
   };
-  this.method_7 = async function() {
-    let AccountModelscan1 = [];
-    await this.GetCanData();
-    // console.log(this.dictionary_0, this.dictionary_1, this.dictionary_2);
-    let supplementAll = await this.GetSupplementAll(this.bool_4);
-    if (supplementAll != null && supplementAll != undefined) {
-      supplementAll.rows.forEach((dataRow) => {
-        let simpleAccountModel = new SimpleAccountModel();
-        simpleAccountModel.Zh = Default.IsNullOrEmpty(dataRow["zh"])
-          ? ""
-          : dataRow["zh"];
-        simpleAccountModel.Zhmc = Default.IsNullOrEmpty(dataRow["zhmc"])
-          ? ""
-          : dataRow["zhmc"];
-        simpleAccountModel.Khyh = Default.IsNullOrEmpty(dataRow["khyh"])
-          ? ""
-          : dataRow["khyh"];
-        simpleAccountModel.Zzhm = Default.IsNullOrEmpty(dataRow["zzhm"])
-          ? ""
-          : dataRow["zzhm"];
-        if (this.dictionary_0.hasOwnProperty(simpleAccountModel.Zh)) {
-          let flag = false;
-          if (this.dictionary_1.hasOwnProperty(simpleAccountModel.Zh)) {
-            flag = true;
-          }
-          if (Default.IsNullOrEmpty(simpleAccountModel.Zhmc)) {
-            let list = this.dictionary_0[simpleAccountModel.Zh][0];
-            if (list.length > 0 && !flag) {
-              simpleAccountModel.ZhmcColor = true;
-              if (!Default.IsNullOrEmpty(list[list.length - 1])) {
-                list.push("");
-              }
+
+  this.GetSupplementAll = async function() {
+    let client = await global.pool.connect();
+    try {
+      return new Promise(async (resolve, reject) => {
+        let sql = this.GetSupplementAllSql(this.bool_4);
+        let AccountModelscan1 = [];
+        client = await cases.SwitchCase(client, this.ajid);
+        const query = new Query(sql);
+        client.query(query);
+        query.on("row", (dataRow) => {
+          let simpleAccountModel = new SimpleAccountModel();
+          simpleAccountModel.Zh = Default.IsNullOrEmpty(dataRow["zh"])
+            ? ""
+            : dataRow["zh"];
+          simpleAccountModel.Zhmc = Default.IsNullOrEmpty(dataRow["zhmc"])
+            ? ""
+            : dataRow["zhmc"];
+          simpleAccountModel.Khyh = Default.IsNullOrEmpty(dataRow["khyh"])
+            ? ""
+            : dataRow["khyh"];
+          simpleAccountModel.Zzhm = Default.IsNullOrEmpty(dataRow["zzhm"])
+            ? ""
+            : dataRow["zzhm"];
+          if (this.dictionary_0.hasOwnProperty(simpleAccountModel.Zh)) {
+            let flag = false;
+            if (this.dictionary_1.hasOwnProperty(simpleAccountModel.Zh)) {
+              flag = true;
             }
-            simpleAccountModel.set_ZhmcList(list);
-          } else {
-            simpleAccountModel.ZhmcColor = false;
-          }
-          if (Default.IsNullOrEmpty(simpleAccountModel.Khyh)) {
-            let list2 = this.dictionary_0[simpleAccountModel.Zh][1];
-            if (list2.length > 0 && !flag) {
-              simpleAccountModel.KhyhcColor = true;
-              if (!Default.IsNullOrEmpty(list2[list2.length - 1])) {
-                list2.push("");
+            if (Default.IsNullOrEmpty(simpleAccountModel.Zhmc)) {
+              let list = this.dictionary_0[simpleAccountModel.Zh][0];
+              if (list.length > 0 && !flag) {
+                simpleAccountModel.ZhmcColor = true;
+                if (!Default.IsNullOrEmpty(list[list.length - 1])) {
+                  list.push("");
+                }
               }
+              simpleAccountModel.set_ZhmcList(list);
+            } else {
+              simpleAccountModel.ZhmcColor = false;
             }
-            simpleAccountModel.set_KhyhList(list2);
-          } else {
-            simpleAccountModel.KhyhcColor = false;
-          }
-          if (Default.IsNullOrEmpty(simpleAccountModel.Zzhm)) {
-            let list3 = this.dictionary_0[simpleAccountModel.Zh][2];
-            if (list3.length > 0 && !flag) {
-              simpleAccountModel.ZzhmColor = true;
-              if (!Default.IsNullOrEmpty(list3[list3.length - 1])) {
-                list3.push("");
+            if (Default.IsNullOrEmpty(simpleAccountModel.Khyh)) {
+              let list2 = this.dictionary_0[simpleAccountModel.Zh][1];
+              if (list2.length > 0 && !flag) {
+                simpleAccountModel.KhyhcColor = true;
+                if (!Default.IsNullOrEmpty(list2[list2.length - 1])) {
+                  list2.push("");
+                }
               }
+              simpleAccountModel.set_KhyhList(list2);
+            } else {
+              simpleAccountModel.KhyhcColor = false;
             }
-            simpleAccountModel.set_ZzhmList(list3);
+            if (Default.IsNullOrEmpty(simpleAccountModel.Zzhm)) {
+              let list3 = this.dictionary_0[simpleAccountModel.Zh][2];
+              if (list3.length > 0 && !flag) {
+                simpleAccountModel.ZzhmColor = true;
+                if (!Default.IsNullOrEmpty(list3[list3.length - 1])) {
+                  list3.push("");
+                }
+              }
+              simpleAccountModel.set_ZzhmList(list3);
+            } else {
+              simpleAccountModel.ZzhmColor = false;
+            }
           } else {
-            simpleAccountModel.ZzhmColor = false;
+            let list4 = [];
+            let list5 = [];
+            let list6 = [];
+            let array = [];
+            this.AddStr(list4, simpleAccountModel.Zhmc);
+            this.AddStr(list5, simpleAccountModel.Khyh);
+            this.AddStr(list6, simpleAccountModel.Zzhm);
+            array[0] = list4;
+            array[1] = list5;
+            array[2] = list6;
+            this.dictionary_1[simpleAccountModel.Zh] = true;
+            this.dictionary_0[simpleAccountModel.Zh] = array;
+            simpleAccountModel.ZhmcList = this.dictionary_0[
+              simpleAccountModel.Zh
+            ][0];
+            simpleAccountModel.KhyhList = this.dictionary_0[
+              simpleAccountModel.Zh
+            ][1];
+            simpleAccountModel.ZzhmList = this.dictionary_0[
+              simpleAccountModel.Zh
+            ][2];
           }
-        } else {
-          let list4 = [];
-          let list5 = [];
-          let list6 = [];
-          let array = [];
-          this.AddStr(list4, simpleAccountModel.Zhmc);
-          this.AddStr(list5, simpleAccountModel.Khyh);
-          this.AddStr(list6, simpleAccountModel.Zzhm);
-          array[0] = list4;
-          array[1] = list5;
-          array[2] = list6;
-          this.dictionary_1[simpleAccountModel.Zh] = true;
-          this.dictionary_0[simpleAccountModel.Zh] = array;
-          simpleAccountModel.ZhmcList = this.dictionary_0[
-            simpleAccountModel.Zh
-          ][0];
-          simpleAccountModel.KhyhList = this.dictionary_0[
-            simpleAccountModel.Zh
-          ][1];
-          simpleAccountModel.ZzhmList = this.dictionary_0[
-            simpleAccountModel.Zh
-          ][2];
-        }
-        simpleAccountModel.set_RankNum(simpleAccountModel.get_RankNum());
-        AccountModelscan1.push(simpleAccountModel);
+          simpleAccountModel.set_RankNum(simpleAccountModel.get_RankNum());
+          AccountModelscan1.push(simpleAccountModel);
+        });
+
+        query.on("end", () => {
+          AccountModelscan1.sort(function(a, b) {
+            return b.int_1 - a.int_1;
+          });
+          this.AccountModelscan = AccountModelscan1;
+          console.log("query done");
+          resolve("end");
+        });
+        query.on("error", (err) => {
+          console.error(err.stack);
+          reject(err);
+        });
       });
-      AccountModelscan1.sort(function(a, b) {
-        return b.int_1 - a.int_1;
-      });
-      this.AccountModelscan = AccountModelscan1;
+    } catch (e) {
+      console.log(e);
+    } finally {
+      client.release();
     }
   };
-  this.GetSupplementAll = async function(isgetmasterdata = false) {
+  this.method_7 = async function() {
+    try {
+      await this.GetCanData();
+      await this.GetSupplementAll();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  this.GetSupplementAllSql = function(isgetmasterdata = false) {
     let arg = "";
     let arg2 = "";
     if (!isgetmasterdata) {
@@ -505,20 +529,19 @@ function DataSupplementWinModel(ajid) {
     ORDER BY
     zh 
     ) A `;
-    if (sql != undefined && sql != null && sql != "") {
-      return await Base.QueryCustom(sql, this.ajid);
-    }
+    // if (sql != undefined && sql != null && sql != "") {
+    //   return await Base.QueryCustom(sql, this.ajid);
+    // }
+    return sql;
   };
   this.GetCanData = async function() {
     let client = await global.pool.connect();
     return await new Promise(async (resolve, reject) => {
-      let listTemp = [];
       let sql = this.GetSqlForBackDictionary(this.bool_4);
       if (sql != undefined && sql != null && sql != "") {
         this.dictionary_0 = {};
-        this.dictionary_2 = [];
-        await cases.SwitchCase(client, this.ajid);
-        const Query = require("pg").Query;
+        this.dictionary_2 = "";
+        client = await cases.SwitchCase(client, this.ajid);
         const query = new Query(sql);
         client.query(query);
         query.on("row", (dataRow) => {
@@ -555,13 +578,13 @@ function DataSupplementWinModel(ajid) {
               this.dictionary_0[text] = array2;
             }
             let key = text + "_" + str4;
-            listTemp.push(key);
+            if (this.dictionary_2.indexOf(key) === -1)
+              this.dictionary_2 += `${key},`;
           }
         });
         query.on("end", () => {
-          console.log("query done");
-          this.dictionary_2 = Array.from(new Set(listTemp));
           client.release();
+          console.log("query done end");
           resolve("end");
         });
         query.on("error", (err) => {
@@ -685,7 +708,7 @@ function DataSupplementWinModel(ajid) {
         ",'')='' or coalesce(" +
         array2[2] +
         ",'')='') ";
-      if (this.dictionary_2.includes(key)) {
+      if (this.dictionary_2.indexOf(key) !== -1) {
         let text4 = "update   gas_bank_records set  ";
         let text5 = "";
         if (current.IsZZHMHandUpdate()) {
@@ -719,7 +742,7 @@ function DataSupplementWinModel(ajid) {
         }
       }
       key = current.Zh + "_0";
-      if (this.dictionary_2.includes(key)) {
+      if (this.dictionary_2.indexOf(key) !== -1) {
         let text6 = "update   gas_bank_records set  ";
         let text7 = "";
         if (current.IsZZHMHandUpdate()) {
