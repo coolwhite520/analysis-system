@@ -1,5 +1,7 @@
 import Default from "./Default";
 import Base from "../../db/Base";
+import cases from "../../db/Cases";
+const _ = require("lodash");
 
 function SimpleAccountModel() {
   this.Zzhm = "";
@@ -147,7 +149,7 @@ function DataSupplementWinModel(ajid) {
   this.bool_1 = false;
   this.bool_3 = false;
   this.dictionary_0 = {};
-  this.dictionary_2 = {};
+  this.dictionary_2 = [];
   this.AccountModelscan = [];
   this.InilaizeDataState = function() {
     this.bool_0 = false;
@@ -186,7 +188,7 @@ function DataSupplementWinModel(ajid) {
     await this.method_7();
     console.log("length 0:", Object.keys(this.dictionary_0).length);
     console.log("length 1:", Object.keys(this.dictionary_1).length);
-    console.log("length 2:", Object.keys(this.dictionary_2).length);
+    console.log("length 2:", this.dictionary_2.length);
     //for(let key in this.dictionary_2){
     //    console.log( key)
     //}
@@ -305,6 +307,7 @@ function DataSupplementWinModel(ajid) {
   this.method_7 = async function() {
     let AccountModelscan1 = [];
     await this.GetCanData();
+    // console.log(this.dictionary_0, this.dictionary_1, this.dictionary_2);
     let supplementAll = await this.GetSupplementAll(this.bool_4);
     if (supplementAll != null && supplementAll != undefined) {
       supplementAll.rows.forEach((dataRow) => {
@@ -507,57 +510,73 @@ function DataSupplementWinModel(ajid) {
     }
   };
   this.GetCanData = async function() {
-    let sql = this.GetSqlForBackDictionary(this.bool_4);
-    if (sql != undefined && sql != null && sql != "") {
-      let arg_35_0 = await Base.QueryCustom(sql, this.ajid);
-      this.dictionary_0 = {};
-      this.dictionary_2 = {};
-      arg_35_0.rows.forEach((dataRow) => {
-        let text = Default.IsNullOrEmpty(dataRow["zh"]) ? "" : dataRow["zh"];
-        let str = Default.IsNullOrEmpty(dataRow["zhmcb"])
-          ? ""
-          : dataRow["zhmcb"];
-        let str2 = Default.IsNullOrEmpty(dataRow["khyhb"])
-          ? ""
-          : dataRow["khyhb"];
-        let str3 = Default.IsNullOrEmpty(dataRow["zzhmb"])
-          ? ""
-          : dataRow["zzhmb"];
-        let text2 = Default.IsNullOrEmpty(dataRow["shard_id"])
-          ? ""
-          : dataRow["shard_id"];
-        let str4 = Default.IsNullOrEmpty(dataRow["jydd"])
-          ? ""
-          : dataRow["jydd"];
-        if (!Default.IsNullOrEmpty(text)) {
-          if (this.dictionary_0.hasOwnProperty(text)) {
-            let array = this.dictionary_0[text];
-            this.AddStr(array[0], str);
-            this.AddStr(array[1], str2);
-            this.AddStr(array[2], str3);
-          } else {
-            let list = [];
-            let list2 = [];
-            let list3 = [];
-            let array2 = [];
-            this.AddStr(list, str);
-            this.AddStr(list2, str2);
-            this.AddStr(list3, str3);
-            array2[0] = list;
-            array2[1] = list2;
-            array2[2] = list3;
-            this.dictionary_0[text] = array2;
-          }
-          let key = text + "_" + str4;
-          if (this.dictionary_2.hasOwnProperty(key)) {
-            if (!this.dictionary_2[key].includes(text2)) {
-              this.dictionary_2[key] = this.dictionary_2[key] + "," + text2;
+    let client = await global.pool.connect();
+    try {
+      return await new Promise(async (resolve, reject) => {
+        let listTemp = [];
+        let sql = this.GetSqlForBackDictionary(this.bool_4);
+        if (sql != undefined && sql != null && sql != "") {
+          this.dictionary_0 = {};
+          this.dictionary_2 = [];
+          await cases.SwitchCase(client, this.ajid);
+          const Query = require("pg").Query;
+          const query = new Query(sql);
+          const result = client.query(query);
+          query.on("row", (dataRow) => {
+            let text = Default.IsNullOrEmpty(dataRow["zh"])
+              ? ""
+              : dataRow["zh"];
+            let str = Default.IsNullOrEmpty(dataRow["zhmcb"])
+              ? ""
+              : dataRow["zhmcb"];
+            let str2 = Default.IsNullOrEmpty(dataRow["khyhb"])
+              ? ""
+              : dataRow["khyhb"];
+            let str3 = Default.IsNullOrEmpty(dataRow["zzhmb"])
+              ? ""
+              : dataRow["zzhmb"];
+            let text2 = Default.IsNullOrEmpty(dataRow["shard_id"])
+              ? ""
+              : dataRow["shard_id"];
+            let str4 = Default.IsNullOrEmpty(dataRow["jydd"])
+              ? ""
+              : dataRow["jydd"];
+            if (!Default.IsNullOrEmpty(text)) {
+              if (this.dictionary_0.hasOwnProperty(text)) {
+                let array = this.dictionary_0[text];
+                this.AddStr(array[0], str);
+                this.AddStr(array[1], str2);
+                this.AddStr(array[2], str3);
+              } else {
+                let list = [];
+                let list2 = [];
+                let list3 = [];
+                let array2 = [];
+                this.AddStr(list, str);
+                this.AddStr(list2, str2);
+                this.AddStr(list3, str3);
+                array2[0] = list;
+                array2[1] = list2;
+                array2[2] = list3;
+                this.dictionary_0[text] = array2;
+              }
+              let key = text + "_" + str4;
+              listTemp.push(key);
             }
-          } else {
-            this.dictionary_2[key] = text2;
-          }
+          });
+          query.on("end", () => {
+            console.log("query done");
+            this.dictionary_2 = Array.from(new Set(listTemp));
+            resolve("end");
+          });
+          query.on("error", (err) => {
+            console.error(err.stack);
+            reject(err);
+          });
         }
       });
+    } finally {
+      client.release();
     }
   };
   this.GetSqlForBackDictionary = function(ismasterdata = false) {
@@ -670,7 +689,7 @@ function DataSupplementWinModel(ajid) {
         ",'')='' or coalesce(" +
         array2[2] +
         ",'')='') ";
-      if (this.dictionary_2.hasOwnProperty(key)) {
+      if (this.dictionary_2.includes(key)) {
         let text4 = "update   gas_bank_records set  ";
         let text5 = "";
         if (current.IsZZHMHandUpdate()) {
@@ -704,7 +723,7 @@ function DataSupplementWinModel(ajid) {
         }
       }
       key = current.Zh + "_0";
-      if (this.dictionary_2.hasOwnProperty(key)) {
+      if (this.dictionary_2.includes(key)) {
         let text6 = "update   gas_bank_records set  ";
         let text7 = "";
         if (current.IsZZHMHandUpdate()) {
