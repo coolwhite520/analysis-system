@@ -46,6 +46,12 @@ const mutations = {
   // 根据传递的索引修改最佳匹配的模版
   MODIFY_CSV_BESTMATCHTEMPLATE_DATA(state, { index, matchedMbdm }) {
     state.exampleDataList[index].matchedMbdm = matchedMbdm;
+    let obj = state.exampleDataList[index].matchedMbdmList.find(
+      (item) => item.mbdm === matchedMbdm
+    );
+    if (obj) {
+      Vue.set(state.exampleDataList[index], "mbmc", obj.mbmc);
+    }
   },
   // 通过传递索引、对应的template对应的列名、日志list重新修改匹配的列名称
   MODIFY_CSV_TEMPLATETOFIELDNAMES_DATA(

@@ -150,7 +150,7 @@ function DataSupplementWinModel(ajid) {
   this.bool_1 = false;
   this.bool_3 = false;
   this.dictionary_0 = {};
-  this.dictionary_2 = "";
+  this.dictionary_2 = {};
   this.AccountModelscan = [];
   this.InilaizeDataState = function() {
     this.bool_0 = false;
@@ -540,7 +540,7 @@ function DataSupplementWinModel(ajid) {
       let sql = this.GetSqlForBackDictionary(this.bool_4);
       if (sql != undefined && sql != null && sql != "") {
         this.dictionary_0 = {};
-        this.dictionary_2 = "";
+        this.dictionary_2 = {};
         client = await cases.SwitchCase(client, this.ajid);
         const query = new Query(sql);
         client.query(query);
@@ -578,8 +578,9 @@ function DataSupplementWinModel(ajid) {
               this.dictionary_0[text] = array2;
             }
             let key = text + "_" + str4;
-            if (this.dictionary_2.indexOf(key) === -1)
-              this.dictionary_2 += `${key},`;
+            if(!this.dictionary_2[key]){
+                this.dictionary_2[key]="";
+            }
           }
         });
         query.on("end", () => {
@@ -708,7 +709,7 @@ function DataSupplementWinModel(ajid) {
         ",'')='' or coalesce(" +
         array2[2] +
         ",'')='') ";
-      if (this.dictionary_2.indexOf(key) !== -1) {
+      if (this.dictionary_2.hasOwnProperty(key)) {
         let text4 = "update   gas_bank_records set  ";
         let text5 = "";
         if (current.IsZZHMHandUpdate()) {
@@ -742,7 +743,7 @@ function DataSupplementWinModel(ajid) {
         }
       }
       key = current.Zh + "_0";
-      if (this.dictionary_2.indexOf(key) !== -1) {
+      if (this.dictionary_2.hasOwnProperty(key)) {
         let text6 = "update   gas_bank_records set  ";
         let text7 = "";
         if (current.IsZZHMHandUpdate()) {

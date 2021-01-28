@@ -3,39 +3,50 @@
     <!-- <el-row>
       <span style="font-size:12px;">标准导入：</span>
     </el-row>-->
-    <div style="text-align: center">
-      导入数据方式：
-      <el-radio v-model="radioImportType" label="openFile">文件</el-radio>
-      <el-radio v-model="radioImportType" label="openDirectory">目录</el-radio>
-    </div>
-    <el-row style="text-align: center; margin-top: 10px">
-      <el-button-group>
-        <el-button
-          size="mini"
-          v-for="item of buttonGroupList"
-          :key="item.id"
-          @click="handleClickImportData(item.pdm)"
+    <div class="fileImport" v-show="exampleDataList.length === 0">
+      <div style="text-align: center">
+        导入数据方式：
+        <el-radio v-model="radioImportType" label="openFile">文件</el-radio>
+        <el-radio v-model="radioImportType" label="openDirectory"
+          >目录</el-radio
         >
-          <span class="mybutton iconfont" v-html="item.icon"></span>
-          <span>{{ item.mc }}</span>
-        </el-button>
-      </el-button-group>
-    </el-row>
-
-    <el-row style="margin-top: 20px"></el-row>
-    <el-row>
-      <!-- <span style="font-size:12px;">自动导入：</span> -->
-      <!-- <el-tooltip effect="dark" content="可以自动分析文件字段并进行自动匹配" placement="top"> -->
-      <el-button size="mini" @click="handleClickImportData('')">
-        <span class="mybutton iconfont">&#xe620;</span>
-        <span>智能文件导入</span>
-      </el-button>
-      <span style="font-size: 10px; color: gray"
-        >可自动分析文件字段并进行自动匹配</span
-      >
-      <!-- </el-tooltip> -->
-    </el-row>
-    <el-row v-if="oldVersionXlsFileList.length > 0" style="margin-top: 10px">
+      </div>
+      <el-row style="text-align: center; margin-top: 10px">
+        <el-button-group>
+          <el-button
+            size="mini"
+            v-for="item of buttonGroupList"
+            :key="item.id"
+            @click="handleClickImportData(item.pdm)"
+          >
+            <span class="mybutton iconfont" v-html="item.icon"></span>
+            <span>{{ item.mc }}</span>
+          </el-button>
+        </el-button-group>
+      </el-row>
+      <el-row style="margin-top: 20px"></el-row>
+      <el-row style="text-align: center">
+        <!-- <span style="font-size:12px;">自动导入：</span> -->
+        <el-tooltip
+          :hide-after="1000 * 5"
+          effect="dark"
+          content="可以自动分析文件字段并进行自动匹配"
+          placement="top"
+        >
+          <el-button size="mini" @click="handleClickImportData('')">
+            <span class="mybutton iconfont">&#xe620;</span>
+            <span>智能文件导入</span>
+          </el-button>
+        </el-tooltip>
+      </el-row>
+    </div>
+    <!-- <span style="font-size: 10px; color: gray"
+      >可自动分析文件字段并进行自动匹配</span
+    > -->
+    <el-row
+      v-if="oldVersionXlsFileList.length > 0"
+      style="margin-top: 10px; margin-bottom: 10px"
+    >
       <span style="font-size: 10px; color: red">
         检测到不兼容的数据文件：Office 2007 之前的excel文件
         <b>{{ oldVersionXlsFileList.length }}</b> 个
@@ -49,163 +60,247 @@
         <span>打开文件格式转换工具</span>
       </el-button>
     </el-row>
-    <div style="margin-top: 20px" v-show="exampleDataList.length > 0">
-      <span style="font-size: 16px">
-        <b>数据文件表</b>
-      </span>
-      <el-table
-        :ref="multipleTableId"
-        :data="exampleDataList"
-        height="200"
-        border
-        style="width: 100%"
-        size="mini"
-        highlight-current-row
-        @current-change="handleCurrentChange"
-        :row-class-name="rowClassName"
-        @select="handleSelectRow"
+    <div v-show="exampleDataList.length > 0">
+      <div
+        class="mainTable"
+        v-show="!isExpandDetailTable"
+        style="margin-bottom: 10px"
       >
+        <el-row>
+          <el-col :span="5">
+            <span style="font-size: 16px; color: black">
+              <b>文件匹配表:</b>
+            </span>
+            <el-button-group>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="智能文件导入"
+                placement="top"
+                :hide-after="1000 * 5"
+              >
+                <el-button
+                  size="mini"
+                  type="primary"
+                  @click="handleClickImportData('')"
+                  class="iconfont"
+                  style="font-size: 10px"
+                >
+                  &#xe620;</el-button
+                >
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="重新采集数据"
+                placement="top"
+                :hide-after="1000 * 5"
+              >
+                <el-button
+                  type="success"
+                  size="mini"
+                  class="iconfont"
+                  style="font-size: 10px"
+                  @click="handleClickReImportData"
+                  >&#xe652;</el-button
+                >
+              </el-tooltip>
+            </el-button-group>
+            <!-- <span v-for="(item, index) of groupCheckBoxList" :key="index"
+              >{{ item.label }},</span
+            > -->
+          </el-col>
+          <el-col :span="18" style="text-align: right">
+            <el-checkbox-group v-model="selectedCheckBoxList" size="mini">
+              <el-checkbox-button
+                v-for="(item, index) of groupCheckBoxList"
+                :label="
+                  item.ids.length > 0
+                    ? item.label + '(' + item.ids.length + ')'
+                    : item.label
+                "
+                :key="index"
+                border
+                @change="
+                  (checked) => handleChangeCheckBox(item.matchedMbdm, checked)
+                "
+              >
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </el-col>
+          <el-col :span="1" style="text-align: right">
+            <el-button size="mini" type="text" @click="handleClickExpandMain">
+              <span class="iconfont">{{
+                isExpandMainTable ? "&#xe6db;" : "&#xe6cc;"
+              }}</span>
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-table
+          :ref="multipleTableId"
+          :data="exampleDataList"
+          :height="isExpandMainTable ? 400 : 200"
+          border
+          style="width: 100%"
+          size="mini"
+          highlight-current-row
+          @current-change="handleCurrentChange"
+          :row-class-name="rowClassName"
+          @select="handleSelectRow"
+          @select-all="handleSelectAll"
         >
-        <el-table-column type="selection"></el-table-column>
-        <!-- <el-table-column
+          >
+          <el-table-column type="selection"></el-table-column>
+          <!-- <el-table-column
           label="序号"
           width="60"
           fixed
           type="index"
         ></el-table-column> -->
-        <el-table-column
-          prop="rowIndex"
-          label="序号"
-          width="60"
-          header-align="center"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="fileName"
-          label="工作簿（文件名）"
-          show-overflow-tooltip
-        >
-          <template slot-scope="scope">
-            <div>
-              <span
-                v-if="
-                  scope.row.fileName.endsWith('.xls') ||
-                  scope.row.fileName.endsWith('.xlsx')
-                "
-              >
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-xls"></use>
-                </svg>
-              </span>
-              <span v-else-if="scope.row.fileName.endsWith('.csv')">
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-CSV"></use>
-                </svg>
-              </span>
-              <span v-if="scope.row.fileName.endsWith('.txt')">
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-txt"></use>
-                </svg>
-              </span>
-              {{ scope.row.fileName }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="sheetName"
-          label="工作表（sheet）"
-          show-overflow-tooltip
-        >
-          <!-- <template slot-scope="scope">
+          <el-table-column
+            prop="rowIndex"
+            label="序号"
+            width="60"
+            header-align="center"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="fileName"
+            label="工作簿（文件名）"
+            show-overflow-tooltip
+          >
+            <template slot-scope="scope">
+              <div>
+                <span
+                  v-if="
+                    scope.row.fileName.endsWith('.xls') ||
+                    scope.row.fileName.endsWith('.xlsx')
+                  "
+                >
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-xls"></use>
+                  </svg>
+                </span>
+                <span v-else-if="scope.row.fileName.endsWith('.csv')">
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-CSV"></use>
+                  </svg>
+                </span>
+                <span v-if="scope.row.fileName.endsWith('.txt')">
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-txt"></use>
+                  </svg>
+                </span>
+                {{ scope.row.fileName }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="sheetName"
+            label="工作表（sheet）"
+            show-overflow-tooltip
+          >
+            <!-- <template slot-scope="scope">
             <el-input
               :value="scope.row.sheetName"
               size="mini"
               disabled
             ></el-input>
           </template> -->
-        </el-table-column>
-        <el-table-column prop="mc" label="数据类型" show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-select
-              :value="scope.row.mc"
-              placeholder="请选择"
-              size="mini"
-              :disabled="!scope.row.enableModify"
-              @change="
-                (val) => {
-                  handleChangeDataType(val, scope.$index);
-                }
-              "
+          </el-table-column>
+          <el-table-column prop="mc" label="数据类型" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-select
+                :value="scope.row.mc"
+                placeholder="请选择"
+                size="mini"
+                :disabled="!scope.row.enableModify"
+                @change="
+                  (val) => {
+                    handleChangeDataType(val, scope.$index);
+                  }
+                "
+              >
+                <el-option
+                  v-for="item in scope.row.DataTypeList"
+                  :key="item.pdm"
+                  :label="item.mc"
+                  :value="item.pdm"
+                ></el-option>
+              </el-select>
+              <el-button
+                size="mini"
+                class="iconfont"
+                style="font-size: 15px"
+                type="text"
+                @click="handleModify(scope.$index, scope.row)"
+                >{{
+                  !scope.row.enableModify ? "&#xe60d;" : "&#xe60e;"
+                }}</el-button
+              >
+            </template>
+          </el-table-column>
+          <el-table-column label="匹配目标表" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-select
+                filterable
+                :value="scope.row.matchedMbdm"
+                placeholder="请选择"
+                size="mini"
+                @change="
+                  (val) => {
+                    handleChangeMatchTemplate(val, scope.$index);
+                  }
+                "
+              >
+                <el-option
+                  v-for="item in scope.row.matchedMbdmList"
+                  :key="item.id"
+                  :label="item.mbmc"
+                  :value="item.mbdm"
+                  :disabled="item.disabled"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="detailTable" v-if="currentRow" v-show="!isExpandMainTable">
+        <el-row>
+          <el-col :span="22"
+            ><span style="font-size: 16px; color: black">
+              <b>字段匹配表:</b>
+            </span>
+            <el-tooltip
+              effect="dark"
+              content="点击查看文件"
+              placement="top-start"
             >
-              <el-option
-                v-for="item in scope.row.DataTypeList"
-                :key="item.pdm"
-                :label="item.mc"
-                :value="item.pdm"
-              ></el-option>
-            </el-select>
-            <el-button
-              size="mini"
-              class="iconfont"
-              style="font-size: 15px"
-              type="text"
-              @click="handleModify(scope.$index, scope.row)"
-              >{{
-                !scope.row.enableModify ? "&#xe60d;" : "&#xe60e;"
-              }}</el-button
-            >
-          </template>
-        </el-table-column>
-        <el-table-column label="匹配目标表" show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-select
-              filterable
-              :value="scope.row.matchedMbdm"
-              placeholder="请选择"
-              size="mini"
-              @change="
-                (val) => {
-                  handleChangeMatchTemplate(val, scope.$index);
-                }
-              "
-            >
-              <el-option
-                v-for="item in scope.row.matchedMbdmList"
-                :key="item.id"
-                :label="item.mbmc"
-                :value="item.mbdm"
-                :disabled="item.disabled"
-              ></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div style="margin-top: 20px" v-if="currentRow">
-        <div>
-          <span style="font-size: 16px">
-            <b>数据文件实例表</b>
-          </span>
-          <el-tooltip
-            effect="dark"
-            content="点击查看文件"
-            placement="top-start"
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleClickLookFile(currentRow.filePathName)"
+              >
+                {{ currentRow.fileName }}</el-button
+              >
+            </el-tooltip>
+            <span style="color: #f29c38; font-size: 10px"
+              >首次进行某类文件导入时，建议手动对字段进行精确匹配，系统会记录以便后续自动匹配。</span
+            ></el-col
           >
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleClickLookFile(currentRow.filePathName)"
-            >
-              {{ currentRow.fileName }}</el-button
-            >
-          </el-tooltip>
-          <span style="color: #f29c38; font-size: 10px"
-            >首次进行某类文件导入时，建议手动对字段进行精确匹配，系统会记录以便后续自动匹配。</span
-          >
-        </div>
+          <el-col :span="2" style="text-align: right">
+            <el-button size="mini" type="text" @click="handleClickExpandDetail">
+              <span class="iconfont">{{
+                isExpandDetailTable ? "&#xe6db;" : "&#xe6cc;"
+              }}</span>
+            </el-button>
+          </el-col>
+        </el-row>
         <el-table
+          :ref="detailTableId"
           stripe
           :data="currentRow ? currentRow.dataList : []"
-          height="200"
+          :height="isExpandDetailTable ? 400 : 200"
           border
           style="width: 100%"
           size="mini"
@@ -214,7 +309,6 @@
             label="序号"
             width="60"
             type="index"
-            fixed
           ></el-table-column>
           <el-table-column
             prop="fileColName"
@@ -276,35 +370,37 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-row style="margin-top: 20px">
-          <el-col :span="8">&nbsp;</el-col>
-          <el-col :span="8"
-            ><div style="text-align: center">
-              <el-button
-                @click="handleClickSubmit"
-                type="primary"
-                size="small"
-                style="width: 100%"
-                :loading="btnLoading"
-                >导入到临时数据表</el-button
-              >
-            </div></el-col
-          >
-          <el-col :span="8">
-            <div
-              v-if="errorRowNumArr.length > 0 && checkOver"
-              style="text-align: right"
-            >
-              <el-button
-                type="text"
-                @click="handleClickCancelErrorRow"
-                size="mini"
-                >取消勾选错误的行?</el-button
-              >
-            </div></el-col
-          >
-        </el-row>
       </div>
+
+      <el-row style="margin-top: 20px">
+        <el-col :span="8"> &nbsp; </el-col>
+        <el-col :span="8"
+          ><div style="text-align: center">
+            <el-button
+              @click="handleClickSubmit"
+              type="primary"
+              size="small"
+              style="width: 100%"
+              :loading="btnLoading"
+              >导入到临时数据表</el-button
+            >
+          </div></el-col
+        >
+        <el-col :span="8">
+          <div
+            v-if="errorRowNumArr.length > 0 && checkOver"
+            style="text-align: right"
+          >
+            <el-button
+              type="text"
+              @click="handleClickCancelErrorRow"
+              style="font-size: 11px"
+              size="mini"
+              >取消勾选错误的行?</el-button
+            >
+          </div></el-col
+        >
+      </el-row>
     </div>
     <div v-if="showJdbzDialogVisible">
       <jdbz-dialog :formData="formData"></jdbz-dialog>
@@ -321,7 +417,6 @@ import { mapState, mapGetters } from "vuex";
 import path from "path";
 import fs from "fs";
 const uuid = require("uuid");
-import { BrowserWindow } from "electron";
 import JdbzDialog from "./child/jdbzDialog";
 import FileConvert from "@/pages/dialog/fileConvert/fileConvert";
 export default {
@@ -369,6 +464,9 @@ export default {
         _this.loading = false;
         _this.currentRow =
           _this.exampleDataList[_this.exampleDataList.length - 1];
+        this.calculateCheckBoxBySelection(
+          this.$refs[`${this.multipleTableId}`].selection
+        );
       }
     );
   },
@@ -387,7 +485,12 @@ export default {
   },
   data() {
     return {
+      groupCheckBoxList: [],
+      selectedCheckBoxList: [],
+      isExpandMainTable: false,
+      isExpandDetailTable: false,
       multipleTableId: uuid.v1(),
+      detailTableId: uuid.v1(),
       btnLoading: false,
       oldVersionXlsFileList: [],
       radioImportType: "openFile",
@@ -404,6 +507,41 @@ export default {
   },
   components: { JdbzDialog, "file-convert": FileConvert },
   methods: {
+    handleChangeCheckBox(matchedMbdm, val) {
+      let ids = [];
+      for (let row of this.exampleDataList) {
+        if (row.matchedMbdm === matchedMbdm) {
+          this.$refs[`${this.multipleTableId}`].toggleRowSelection(row, val);
+          if (val) ids.push(row.id);
+        }
+      }
+      console.log(this.selectedCheckBoxList);
+      this.selectedCheckBoxList = [];
+      for (let item of this.groupCheckBoxList) {
+        if (item.matchedMbdm === matchedMbdm) {
+          item.ids = ids;
+        }
+        if (item.ids.length > 0) {
+          this.selectedCheckBoxList.push(
+            item.label + "(" + item.ids.length + ")"
+          );
+        }
+      }
+    },
+    handleClickExpandMain() {
+      this.isExpandMainTable = !this.isExpandMainTable;
+      this.$nextTick(() => {
+        this.$refs[`${this.detailTableId}`].doLayout();
+        this.$refs[`${this.multipleTableId}`].doLayout();
+      });
+    },
+    handleClickExpandDetail() {
+      this.isExpandDetailTable = !this.isExpandDetailTable;
+      this.$nextTick(() => {
+        this.$refs[`${this.detailTableId}`].doLayout();
+        this.$refs[`${this.multipleTableId}`].doLayout();
+      });
+    },
     async handleClickShowOldVersionFile() {
       await this.$electron.shell.openPath(this.oldVersionTempPath);
     },
@@ -427,12 +565,12 @@ export default {
     async handleClickCancelErrorRow() {
       for (let row of this.$refs[`${this.multipleTableId}`].selection) {
         if (this.errorRowNumArr.includes(row.rowIndex)) {
-          await this.$refs[`${this.multipleTableId}`].toggleRowSelection(
-            row,
-            false
-          );
+          this.$refs[`${this.multipleTableId}`].toggleRowSelection(row, false);
         }
       }
+      this.calculateCheckBoxBySelection(
+        this.$refs[`${this.multipleTableId}`].selection
+      );
       this.$message({
         type: "success",
         message: "取消勾选成功",
@@ -445,8 +583,67 @@ export default {
         }, ms);
       });
     },
+    calculateCheckBoxBySelection(selection) {
+      // 先构造整体按钮组，然后赋值
+      let list = this.exampleDataList.map((item) => {
+        return {
+          id: item.id,
+          matchedMbdm: item.matchedMbdm,
+          label: item.mbmc ? item.mbmc : "未匹配",
+        };
+      });
+      let retArr = [];
+      for (let item of list) {
+        let { id, label, matchedMbdm } = item;
+        let obj = retArr.find((obj) => obj.matchedMbdm === matchedMbdm);
+        if (!obj) {
+          retArr.push({
+            label,
+            matchedMbdm,
+            ids: [],
+          });
+        }
+      }
+      this.groupCheckBoxList = retArr;
+
+      if (selection.length > 0) {
+        let list = selection.map((item) => {
+          return {
+            id: item.id,
+            matchedMbdm: item.matchedMbdm,
+            label: item.mbmc ? item.mbmc : "未匹配",
+          };
+        });
+        // let retArr = [];
+        for (let item of list) {
+          let { matchedMbdm } = item;
+          let obj = this.groupCheckBoxList.find(
+            (obj) => obj.matchedMbdm === matchedMbdm
+          );
+          if (obj) {
+            obj.ids.push(item.id);
+          }
+        }
+        this.groupCheckBoxList.sort(function (a, b) {
+          return b.label - a.label;
+        });
+        // 重新赋值选中
+        this.selectedCheckBoxList = [];
+        for (let item of this.groupCheckBoxList) {
+          if (item.ids.length > 0) {
+            this.selectedCheckBoxList.push(
+              item.label + "(" + item.ids.length + ")"
+            );
+          }
+        }
+      }
+    },
+    handleSelectAll(selection) {
+      this.calculateCheckBoxBySelection(selection);
+    },
     handleSelectRow(selection, row) {
       this.$refs[`${this.multipleTableId}`].setCurrentRow(row);
+      this.calculateCheckBoxBySelection(selection);
     },
     async checkFileRowError(data) {
       if (data.matchedMbdm === "") {
@@ -601,6 +798,9 @@ export default {
         value,
         rowIndex,
       });
+      this.calculateCheckBoxBySelection(
+        this.$refs[`${this.multipleTableId}`].selection
+      );
     },
     //修改enableModify
     handleModify(index, row) {
@@ -614,13 +814,16 @@ export default {
       await this.$electron.shell.openPath(filePathName);
     },
     // 选择模版下拉框
-    handleChangeMatchTemplate(selValue, index, row) {
+    handleChangeMatchTemplate(selValue, index) {
       this.$store.dispatch("DataCollection/changeMatchList", {
         index,
         matchedMbdm: selValue,
       });
       this.$refs[`${this.multipleTableId}`].setCurrentRow(
         this.exampleDataList[index]
+      );
+      this.calculateCheckBoxBySelection(
+        this.$refs[`${this.multipleTableId}`].selection
       );
     },
     // 选择模版对应的列名称下拉框
@@ -671,6 +874,20 @@ export default {
       });
       return filesList;
     },
+    async handleClickReImportData() {
+      let result = await this.$electron.remote.dialog.showMessageBox(null, {
+        type: "warning",
+        title: "关闭",
+        message: `确定要重新采集数据吗？`,
+        buttons: ["确定", "取消"],
+        defaultId: 0,
+      });
+      if (result.response === 0) {
+        this.$store.commit("DataCollection/RET_SET_EXAMPLEDATALIST", []);
+      } else {
+        return;
+      }
+    },
     // 导入数据
     async handleClickImportData(pdm) {
       let _this = this;
@@ -719,5 +936,12 @@ export default {
 </script>
 
 <style>
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 </style>
 

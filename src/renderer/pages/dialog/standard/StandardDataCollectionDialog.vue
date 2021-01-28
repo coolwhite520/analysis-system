@@ -10,7 +10,7 @@
         standardViewSwitch === 'process-import' ||
         (standardViewSwitch === 'begin-import' && exampleDataList.length === 0)
           ? '30%'
-          : '65%'
+          : '70%'
       "
       @close="handleClose"
       :modal="true"
