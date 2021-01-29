@@ -5,9 +5,9 @@
         <el-col :span="2">
           <el-tooltip placement="bottom">
             <div slot="content">
-              <svg class="icon" aria-hidden="true">
+              <!-- <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-kaixin1"></use>
-              </svg>
+              </svg> -->
               <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
             </div>
 

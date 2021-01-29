@@ -4,6 +4,7 @@ const state = {
   mainViewHeight: 0,
   contentViewHeight: 0,
   isCollapseLeftBar: false,
+  isCollapseTimeLine: false,
 };
 
 const mutations = {
@@ -18,6 +19,9 @@ const mutations = {
   },
   SET_ISCOLLAPSELEFTBAR(state, isCollapseLeftBar) {
     state.isCollapseLeftBar = isCollapseLeftBar;
+  },
+  SWITCH_ISCOLLAPSETIMELINE(state) {
+    state.isCollapseTimeLine = !state.isCollapseTimeLine;
   },
 };
 

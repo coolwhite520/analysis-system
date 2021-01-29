@@ -702,7 +702,7 @@ WHERE
                   checkedKeys: JSON.parse(JSON.stringify(keys)),
                   renderTree: [
                     {
-                      describe: "检测🌲",
+                      describe: "检测树",
                       children: renderTree,
                       tid: -1,
                     },

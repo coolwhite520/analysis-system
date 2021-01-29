@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :style="{ height: height + 'px' }">
     <keep-alive>
       <router-view />
     </keep-alive>
@@ -11,6 +11,7 @@ export default {
   name: "App",
   data() {
     return {
+      height: 0,
       update: true,
     };
   },
@@ -23,7 +24,9 @@ export default {
       });
     },
   },
-  async mounted() {},
+  async mounted() {
+    this.height = this.$electron.remote.getGlobal("height");
+  },
 };
 </script>
 
