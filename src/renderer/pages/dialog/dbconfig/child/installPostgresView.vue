@@ -3,7 +3,7 @@
     <h3 style="color: #151924">
       如果您没有安装数据库服务，那么请点击下面的按钮进行安装。
     </h3>
-    <p style="color: red; margin-top: 10px">
+    <p style="color: #efb242; margin-top: 10px">
       注意：安装过程中可能会要求输入数据库密码，请留意并记住。
     </p>
     <div style="margin-top: 20px; text-align: center">

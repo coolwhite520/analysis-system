@@ -1330,7 +1330,7 @@ export default {
     this.$electron.ipcRenderer.send("data-collection-open-complete");
   },
   destroyed() {
-    log.info("datacollection destroyed.");
+    global.pool.end();
   },
 };
 </script>

@@ -27,7 +27,7 @@ export default {
         await cases.SwitchDefaultCase(client);
       }
       const res = await client.query(sql);
-      console.log("queryCustom:", res);
+      // console.log("queryCustom:", res);
       return {
         success: true,
         rows: res.rows ? res.rows : [],

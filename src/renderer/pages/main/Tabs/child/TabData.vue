@@ -253,7 +253,7 @@ import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import ShowDataVisibleView from "@/pages/dialog/visible/visibleDialog";
 import CollectionRecord from "@/pages/dialog/record/CollectionRecordDialog";
-import dataComplementVue from "@/pages/dialog/dataComplement/dataComplement.vue";
+import dataComplementVue from "@/pages/dialog/dataComplement/dataComplementDialog.vue";
 import { mapState } from "vuex";
 import DataCleanDb from "@/db/DataClean.js";
 import Base from "@/db/Base.js";

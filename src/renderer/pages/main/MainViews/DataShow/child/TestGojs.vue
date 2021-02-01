@@ -392,6 +392,7 @@ export default {
   created() {},
   data() {
     return {
+      currentGraphData: null,
       inputNewLinkJe: 0,
       inputNewLinkBs: 0,
       sourceNodeData: null,
@@ -458,12 +459,11 @@ export default {
           this.tempgraphicMoneySectionStrMd5 = md5(JSON.stringify(newValue));
           let { nodes, links } = this.makeData();
           this.myDiagram.model = new go.GraphLinksModel(nodes, links); // 加载数据
-          this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
-          this.accordingSpreadNodeSwitchRefreshNodes();
+          this.freshLinkWidth();
+          this.freshSpreadNodes();
           this.allNodesToFront();
+          console.log("tableData.graphicMoneySectionList");
           this.updateEntityList();
-          let layout = this.tableData.graphType;
-          this.onSwitchLayout({ graphid: this.graphid, layout });
         }
       },
       immediate: false,
@@ -478,8 +478,9 @@ export default {
             this.tempAllRowsStrMd5 = md5(JSON.stringify(newValue));
             let { nodes, links } = this.makeData();
             this.myDiagram.model = new go.GraphLinksModel(nodes, links); // 加载数据
+            console.log("tableData.allrows");
             this.updateEntityList();
-            this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+            this.freshLinkWidth();
             this.allNodesToFront();
           }
         }
@@ -489,7 +490,7 @@ export default {
     },
     "tableData.xianKuanSetting": {
       handler(newValue, oldValue) {
-        this.accordingXianKuanRefreshEdges(newValue);
+        this.freshLinkWidth();
       },
       immediate: false,
       deep: true,
@@ -562,30 +563,36 @@ export default {
       this.$store.commit("ShowTable/MODIFY_MONDY_SECTION_CHECKED", value);
       // 重新渲染页面
     },
-    accordingSpreadNodeSwitchRefreshNodes() {
+    freshSpreadNodes() {
       let allNodes = this.myDiagram.nodes;
       if (this.bSpreadNodeSwitch) {
-        // 显示离散点
-        allNodes.each((node) => {
-          node.visible = true;
-        });
+        // // 显示离散点
+        // allNodes.each((node) => {
+        //   node.visible = true;
+        // });
       } else {
         allNodes.each((node) => {
           if (node instanceof go.Group) {
-            node.visible = true;
+            // node.visible = true;
           } else if (
             node instanceof go.Node &&
             node.linksConnected.count === 0
           ) {
-            node.visible = false;
-          } else node.visible = true;
+            // node.visible = false;
+            this.myDiagram.remove(node);
+          }
         });
       }
-      console.log("accordingSpreadNodeSwitchRefreshNodes");
+      console.log("freshSpreadNodes");
     },
     // 根据线宽设置
-    accordingXianKuanRefreshEdges(xianKuanSetting) {
-      let { category, levelNum, open, openNodeSpread } = xianKuanSetting;
+    freshLinkWidth() {
+      let {
+        category,
+        levelNum,
+        open,
+        openNodeSpread,
+      } = this.tableData.xianKuanSetting;
       let allEdges = this.myDiagram.links;
       if (open) {
         let minJe, maxJe, minBs, maxBs;
@@ -700,8 +707,12 @@ export default {
       return colorHex;
     },
     handleChangeSpreadNodeValue(newVal) {
-      this.accordingSpreadNodeSwitchRefreshNodes();
+      let { nodes, links } = this.makeData();
+      this.myDiagram.model = new go.GraphLinksModel(nodes, links); // 加载数据
+      this.freshSpreadNodes();
+      console.log("handleChangeSpreadNodeValue");
       this.updateEntityList();
+      this.freshLinkWidth();
     },
     handleClickEnlarge() {
       this.myDiagram.scale += 0.1;
@@ -998,7 +1009,7 @@ export default {
       this.myDiagram.layout = $(go.ForceDirectedLayout);
     },
     // 组织结构布局
-    func1() {
+    TreeLayout() {
       this.myDiagram.layout = $(
         go.TreeLayout, // use a TreeLayout to position all of the nodes
         {
@@ -1286,16 +1297,18 @@ export default {
         }
       );
     },
-    initLinkTemplate() {
+    initLinkTemplate(linkType = null) {
       let _this = this;
-      let linkType = null;
-      if (this.tableData.tableType === "dataVisible") {
-        linkType = ParallelRouteLink;
-      } else if (this.tableData.tableType === "zjctGraph") {
-        linkType = go.Link; // the whole link panel
-      } else {
-        linkType = ParallelRouteLink;
+      if (linkType === null) {
+        if (this.tableData.tableType === "dataVisible") {
+          linkType = ParallelRouteLink;
+        } else if (this.tableData.tableType === "zjctGraph") {
+          linkType = go.Link; // the whole link panel
+        } else {
+          linkType = ParallelRouteLink;
+        }
       }
+
       this.myDiagram.linkTemplate = $(
         linkType,
         {
@@ -1618,15 +1631,18 @@ export default {
 
     makeData() {
       // 数据可视化
+      let data;
       if (this.tableData.tableType === "dataVisible") {
-        return this.makeDataVisible();
+        data = this.makeDataVisible();
       } else if (this.tableData.tableType === "zjctGraph") {
         // 资金透视模型图
-        return this.makeDataZjCt();
+        data = this.makeDataZjCt();
       } else {
         // 其他发现模型
-        return this.makeDataNormal();
+        data = this.makeDataNormal();
       }
+      this.currentGraphData = data;
+      return this.currentGraphData;
     },
     makeDataZjCt() {
       let nodes = this.tableData.originGraphData.nodes.map((node) => {
@@ -1674,7 +1690,6 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = "/static/images/icons/银行卡.png";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -1836,7 +1851,6 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = "/static/images/icons/银行卡.png";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -1923,7 +1937,6 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = "/static/images/icons/银行卡.png";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -2010,7 +2023,6 @@ export default {
         links.push(...templinks);
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = this.defaultImg;
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -2450,6 +2462,7 @@ export default {
     },
     dagreLayout() {
       this.myDiagram.layout = $(go.LayeredDigraphLayout, {
+        setsPortSpots: false,
         direction: 90,
         layerSpacing: 60,
       });
@@ -2463,7 +2476,19 @@ export default {
           this.randomLayout();
           break;
         case "dagre": //层次
-          this.dagreLayout();
+          let result = this.$electron.remote.dialog.showMessageBoxSync(null, {
+            type: "warning",
+            title: "关闭",
+            message: `分层布局切换可能耗时较长，确定继续切换吗？`,
+            buttons: ["确定", "取消"],
+            defaultId: 0,
+          });
+          console.log(result);
+          if (result === 0) {
+            this.dagreLayout();
+          } else {
+            return;
+          }
           break;
         case "circular": // 圆形
           this.CircularLayout();
@@ -2474,13 +2499,12 @@ export default {
         case "fruchterman":
           this.ForceDirectedLayout();
           break;
-        case "force":
+        case "tree":
           // 组织结构布局
-          this.func1();
+          this.TreeLayout();
           break;
       }
-      this.updateEntityList();
-      this.accordingXianKuanRefreshEdges(this.tableData.xianKuanSetting);
+      this.freshLinkWidth();
       this.myDiagram.commandHandler.zoomToFit();
       this.$store.commit("ShowTable/SWITCH_GRAPH_LAYOUT_TYPE", layout);
     },
@@ -2500,23 +2524,16 @@ export default {
         console.log({ nodes, links });
         let gm = new go.GraphLinksModel(nodes, links);
         gm.linkKeyProperty = "panda";
-        // gm.linkKeyProperty = function (a, b) {
-        //   return uuid.v1();
-        // };
-        // gm.makeUniqueLinkKeyFunction = function (a, b) {
-        //   return uuid.v1();
-        // };
         this.myDiagram.model = gm;
         this.onSwitchLayout({ graphid: this.graphid, layout: "grid" });
-        // this.ForceDirectedLayout();
       }
       this.initLinkTemplate();
       this.initGroupTemplate();
-      this.accordingSpreadNodeSwitchRefreshNodes();
-      this.updateEntityList();
+      this.freshSpreadNodes();
       this.switchAllowScroll();
       this.myDiagram.commandHandler.zoomToFit();
       this.allNodesToFront();
+      this.updateEntityList();
       console.log("init completed...");
     },
 
@@ -2629,7 +2646,6 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = this.tableData.imgSrc;
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -2734,7 +2750,6 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = this.tableData.imgSrc;
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -2842,7 +2857,6 @@ export default {
         links.push(...tempEdges);
       });
       nodes.forEach((node) => {
-        node.loc = "0 0";
         node.img = this.tableData.imgSrc;
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
@@ -2886,7 +2900,7 @@ export default {
       var node = {};
       node["key"] = key;
       node["text"] = text;
-      node.loc = "0 0";
+
       node.img = this.defaultImg;
       node.bkColor = this.defaultNodeFillColor;
       node.strokeColor = this.defaultNodeStrokeColor;
@@ -3028,7 +3042,6 @@ export default {
       console.log(e);
     });
     this.myDiagram.addDiagramListener("LayoutCompleted", (e) => {
-      console.log(e, "over....");
       this.myDiagram.layout.isOngoing = false;
     });
   },

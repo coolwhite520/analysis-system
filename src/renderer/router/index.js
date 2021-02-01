@@ -33,6 +33,14 @@ export default new Router({
         require(["@/pages/mini/ZjctWorkerView"], resolve);
       },
     },
+    {
+      path: "/dataCompletion",
+      name: "dataCompletion",
+      component: function(resolve) {
+        require(["@/pages/mini/DataCompletion"], resolve);
+      },
+    },
+
     // {
     //   path: "/dbconfig",
     //   name: "dbconfig",

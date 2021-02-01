@@ -1,6 +1,7 @@
 import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 import createDataImportWindow from "./window/dataCollectionWindow";
 import createZjctWorkerWindow from "./window/zjctWorkerWindow";
+import createDataCompletionWindow from "./window/dataCompletionWindow";
 
 import { Pool } from "pg";
 const log = require("electron-log");
@@ -81,6 +82,14 @@ export default function() {
     global.mainWindow.webContents.send("calculate-link-end", args);
   });
 
+  // 给dataCompletionWnd窗口发送消息
+  ipcMain.on("data-completion-begin", (e, args) => {
+    global.dataCompletionWnd.webContents.send("data-completion-begin", args);
+  });
+  ipcMain.on("data-completion-end", (e, args) => {
+    global.mainWindow.webContents.send("data-completion-end", args);
+  });
+
   // 数据库初始化操作窗口
   ipcMain.on("hide-db-init", () => {
     global.dbInitWindow.hide();
@@ -125,6 +134,25 @@ export default function() {
     if (global.zjctWorkerWnd) {
       global.zjctWorkerWnd.close();
       global.zjctWorkerWnd = null;
+    }
+  });
+
+  // 打开DataCompletion分析进程,数据补全
+  ipcMain.on("data-completion-open", () => {
+    if (global.dataCompletionWnd) {
+      global.dataCompletionWnd.close();
+      global.dataCompletionWnd = null;
+    }
+    global.dataCompletionWnd = createDataCompletionWindow(BrowserWindow);
+    if (process.env.NODE_ENV === "development") global.dataCompletionWnd.show();
+  });
+  ipcMain.on("data-completion-ready", () => {
+    global.mainWindow.webContents.send("data-completion-ready");
+  });
+  ipcMain.on("data-completion-close", () => {
+    if (global.dataCompletionWnd) {
+      global.dataCompletionWnd.close();
+      global.dataCompletionWnd = null;
     }
   });
 

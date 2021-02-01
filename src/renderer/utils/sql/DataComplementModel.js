@@ -306,7 +306,7 @@ function DataSupplementWinModel(ajid) {
   this.GetSupplementAll = async function() {
     let client = await global.pool.connect();
     try {
-      return new Promise(async (resolve, reject) => {
+      return await new Promise(async (resolve, reject) => {
         let sql = this.GetSupplementAllSql(this.bool_4);
         let AccountModelscan1 = [];
         client = await cases.SwitchCase(client, this.ajid);
@@ -403,7 +403,7 @@ function DataSupplementWinModel(ajid) {
           resolve("end");
         });
         query.on("error", (err) => {
-          console.error(err.stack);
+          console.error(err);
           reject(err);
         });
       });
@@ -536,68 +536,71 @@ function DataSupplementWinModel(ajid) {
   };
   this.GetCanData = async function() {
     let client = await global.pool.connect();
-    return await new Promise(async (resolve, reject) => {
-      let sql = this.GetSqlForBackDictionary(this.bool_4);
-      if (sql != undefined && sql != null && sql != "") {
-        this.dictionary_0 = {};
-        this.dictionary_2 = {};
-        client = await cases.SwitchCase(client, this.ajid);
-        const query = new Query(sql);
-        client.query(query);
-        query.on("row", (dataRow) => {
-          let text = Default.IsNullOrEmpty(dataRow["zh"]) ? "" : dataRow["zh"];
-          let str = Default.IsNullOrEmpty(dataRow["zhmcb"])
-            ? ""
-            : dataRow["zhmcb"];
-          let str2 = Default.IsNullOrEmpty(dataRow["khyhb"])
-            ? ""
-            : dataRow["khyhb"];
-          let str3 = Default.IsNullOrEmpty(dataRow["zzhmb"])
-            ? ""
-            : dataRow["zzhmb"];
-          let str4 = Default.IsNullOrEmpty(dataRow["jydd"])
-            ? ""
-            : dataRow["jydd"];
-          if (!Default.IsNullOrEmpty(text)) {
-            if (this.dictionary_0.hasOwnProperty(text)) {
-              let array = this.dictionary_0[text];
-              this.AddStr(array[0], str);
-              this.AddStr(array[1], str2);
-              this.AddStr(array[2], str3);
-            } else {
-              let list = [];
-              let list2 = [];
-              let list3 = [];
-              let array2 = [];
-              this.AddStr(list, str);
-              this.AddStr(list2, str2);
-              this.AddStr(list3, str3);
-              array2[0] = list;
-              array2[1] = list2;
-              array2[2] = list3;
-              this.dictionary_0[text] = array2;
+    try {
+      return await new Promise(async (resolve, reject) => {
+        let sql = this.GetSqlForBackDictionary(this.bool_4);
+        if (sql != undefined && sql != null && sql != "") {
+          this.dictionary_0 = {};
+          this.dictionary_2 = {};
+          client = await cases.SwitchCase(client, this.ajid);
+          const query = new Query(sql);
+          client.query(query);
+          query.on("row", (dataRow) => {
+            let text = Default.IsNullOrEmpty(dataRow["zh"])
+              ? ""
+              : dataRow["zh"];
+            let str = Default.IsNullOrEmpty(dataRow["zhmcb"])
+              ? ""
+              : dataRow["zhmcb"];
+            let str2 = Default.IsNullOrEmpty(dataRow["khyhb"])
+              ? ""
+              : dataRow["khyhb"];
+            let str3 = Default.IsNullOrEmpty(dataRow["zzhmb"])
+              ? ""
+              : dataRow["zzhmb"];
+            let str4 = Default.IsNullOrEmpty(dataRow["jydd"])
+              ? ""
+              : dataRow["jydd"];
+            if (!Default.IsNullOrEmpty(text)) {
+              if (this.dictionary_0.hasOwnProperty(text)) {
+                let array = this.dictionary_0[text];
+                this.AddStr(array[0], str);
+                this.AddStr(array[1], str2);
+                this.AddStr(array[2], str3);
+              } else {
+                let list = [];
+                let list2 = [];
+                let list3 = [];
+                let array2 = [];
+                this.AddStr(list, str);
+                this.AddStr(list2, str2);
+                this.AddStr(list3, str3);
+                array2[0] = list;
+                array2[1] = list2;
+                array2[2] = list3;
+                this.dictionary_0[text] = array2;
+              }
+              let key = text + "_" + str4;
+              if (!this.dictionary_2[key]) {
+                this.dictionary_2[key] = "";
+              }
             }
-            let key = text + "_" + str4;
-            if(!this.dictionary_2[key]){
-                this.dictionary_2[key]="";
-            }
-          }
-        });
-        query.on("end", () => {
-          client.release();
-          console.log("query done end");
+          });
+          query.on("end", () => {
+            console.log("query done end");
+            resolve("end");
+          });
+          query.on("error", (err) => {
+            console.error(err);
+            reject(err);
+          });
+        } else {
           resolve("end");
-        });
-        query.on("error", (err) => {
-          console.error(err.stack);
-          client.release();
-          reject(err);
-        });
-      } else {
-        client.release();
-        resolve("end");
-      }
-    });
+        }
+      });
+    } finally {
+      client.release();
+    }
   };
   this.GetSqlForBackDictionary = function(ismasterdata = false) {
     let arg = "";
@@ -672,7 +675,26 @@ function DataSupplementWinModel(ajid) {
   };
 
   this.UpdataAllData = async function(Modelscan, callbackProcess) {
-    this.AccountModelscan = Modelscan;
+    console.log(
+      "UpdataAllData:",
+      Object.keys(this.dictionary_2).length,
+      Modelscan.length
+    );
+    this.AccountModelscan = Modelscan.map((current) => {
+      let obj = new SimpleAccountModel();
+      obj.IsChecked = current.IsChecked;
+      obj.Khyh = current.Khyh;
+      obj.KhyhIsenable = current.KhyhIsenable;
+      obj.KhyhList = current.KhyhList;
+      obj.Zh = current.Zh;
+      obj.Zhmc = current.Zhmc;
+      obj.ZhmcIsenable = current.ZhmcIsenable;
+      obj.ZhmcList = current.ZhmcList;
+      obj.Zzhm = current.Zzhm;
+      obj.ZzhmIsenable = current.ZzhmIsenable;
+      obj.ZzhmList = current.ZzhmList;
+      return obj;
+    });
     if (
       this.AccountModelscan == undefined ||
       this.AccountModelscan == null ||
@@ -680,107 +702,144 @@ function DataSupplementWinModel(ajid) {
     ) {
       return;
     }
-    let sumLoop = this.AccountModelscan.length;
-    let indexLoop = 0;
-    for (let current of this.AccountModelscan) {
-      let stringBuilder = "";
-      if (!current.get_IsHandUpdate()) {
-        return true;
-      }
-      let key = current.Zh + "_1";
-      let array = ["JYZJHM", "JYMC", "JYKHH"];
-      let array2 = ["JYDFZJHM", "JYDFMC", "JYDFZHKHH"];
-      let text = " ajid=" + this.ajid + " and  cxkh='" + current.Zh + "' ";
-      let text_df =
-        " ajid=" + this.ajid + " and  jydfzkh='" + current.Zh + "' ";
-      let text2 =
-        "(coalesce(" +
-        array[0] +
-        ",'')='' or coalesce(" +
-        array[1] +
-        ",'')='' or coalesce(" +
-        array[2] +
-        ",'')='') ";
-      let text3 =
-        "(coalesce(" +
-        array2[0] +
-        ",'')='' or coalesce(" +
-        array2[1] +
-        ",'')='' or coalesce(" +
-        array2[2] +
-        ",'')='') ";
-      if (this.dictionary_2.hasOwnProperty(key)) {
-        let text4 = "update   gas_bank_records set  ";
-        let text5 = "";
-        if (current.IsZZHMHandUpdate()) {
-          let selectzzhm = current.get_ZzhmSelected();
-          if (!Default.IsNullOrEmpty(selectzzhm)) {
-            text5 = text5 + array[0] + "='" + selectzzhm + "',";
-          } else {
-            text5 = text5 + array[0] + "='',";
+    const client = await global.pool.connect();
+    try {
+      return await new Promise(async (resolve, reject) => {
+        await cases.SwitchCase(client, this.ajid);
+        let sumLoop = this.AccountModelscan.length;
+        let indexLoop = 0;
+        let stringBuilder = "";
+        for (let current of this.AccountModelscan) {
+          indexLoop++;
+          let now = new Date();
+          console.log("begin:", now.getTime());
+          if (!current.get_IsHandUpdate()) {
+            return true;
+          }
+          let key = current.Zh + "_1";
+          let array = ["JYZJHM", "JYMC", "JYKHH"];
+          let array2 = ["JYDFZJHM", "JYDFMC", "JYDFZHKHH"];
+          let text = " ajid=" + this.ajid + " and  cxkh='" + current.Zh + "' ";
+          let text_df =
+            " ajid=" + this.ajid + " and  jydfzkh='" + current.Zh + "' ";
+          let text2 =
+            "(coalesce(" +
+            array[0] +
+            ",'')='' or coalesce(" +
+            array[1] +
+            ",'')='' or coalesce(" +
+            array[2] +
+            ",'')='') ";
+          let text3 =
+            "(coalesce(" +
+            array2[0] +
+            ",'')='' or coalesce(" +
+            array2[1] +
+            ",'')='' or coalesce(" +
+            array2[2] +
+            ",'')='') ";
+          if (this.dictionary_2.hasOwnProperty(key)) {
+            let text4 = "update gas_bank_records set  ";
+            let text5 = "";
+            if (current.IsZZHMHandUpdate()) {
+              let selectzzhm = current.get_ZzhmSelected();
+              if (!Default.IsNullOrEmpty(selectzzhm)) {
+                text5 = text5 + array[0] + "='" + selectzzhm + "',";
+              } else {
+                text5 = text5 + array[0] + "='',";
+              }
+            }
+            if (current.IsZZMCHandUpdate()) {
+              let selectzzmc = current.get_ZhmcSelected();
+              if (!Default.IsNullOrEmpty(selectzzmc)) {
+                text5 = text5 + array[1] + "='" + selectzzmc + "',";
+              } else {
+                text5 = text5 + array[1] + "='',";
+              }
+            }
+            if (current.IsKHYHHandUpdate()) {
+              let selectKhyh = current.get_KhyhSelected();
+              if (!Default.IsNullOrEmpty(selectKhyh)) {
+                text5 = text5 + array[2] + "='" + selectKhyh + "',";
+              } else {
+                text5 = text5 + array[2] + "='',";
+              }
+            }
+            if (text5 != "") {
+              text5 = text5.substring(0, text5.length - 1);
+              text4 = text4 + text5 + " where " + text + " and " + text2 + " ;";
+              stringBuilder += text4;
+            }
+          }
+          key = current.Zh + "_0";
+          if (this.dictionary_2.hasOwnProperty(key)) {
+            let text6 = "update   gas_bank_records set  ";
+            let text7 = "";
+            if (current.IsZZHMHandUpdate()) {
+              let selectzzhm = current.get_ZzhmSelected();
+              if (!Default.IsNullOrEmpty(selectzzhm)) {
+                text7 = text7 + array2[0] + "='" + selectzzhm + "',";
+              } else {
+                text7 = text7 + array2[0] + "='',";
+              }
+            }
+            if (current.IsZZMCHandUpdate()) {
+              let selectzzmc = current.get_ZhmcSelected();
+              if (!Default.IsNullOrEmpty(selectzzmc)) {
+                text7 = text7 + array2[1] + "='" + selectzzmc + "',";
+              } else {
+                text7 = text7 + array2[1] + "='',";
+              }
+            }
+            if (current.IsKHYHHandUpdate()) {
+              let selectKhyh = current.get_KhyhSelected();
+              if (!Default.IsNullOrEmpty(selectKhyh)) {
+                text7 = text7 + array2[2] + "='" + selectKhyh + "',";
+              } else {
+                text7 = text7 + array2[2] + "='',";
+              }
+            }
+            if (text7 != "") {
+              text7 = text7.substring(0, text7.length - 1);
+              text6 =
+                text6 + text7 + " where " + text_df + " and " + text3 + " ;";
+              stringBuilder += text6;
+            }
+          }
+          if (indexLoop % 10 === 0) {
+            try {
+              now = new Date();
+              console.log("end:", now.getTime());
+              await client.query(stringBuilder);
+              console.log(stringBuilder);
+              let percentage = parseInt((indexLoop / sumLoop) * 100);
+              console.log(percentage);
+              callbackProcess(percentage);
+            } catch (e) {
+              reject(e);
+            }
+            stringBuilder = "";
           }
         }
-        if (current.IsZZMCHandUpdate()) {
-          let selectzzmc = current.get_ZhmcSelected();
-          if (!Default.IsNullOrEmpty(selectzzmc)) {
-            text5 = text5 + array[1] + "='" + selectzzmc + "',";
-          } else {
-            text5 = text5 + array[1] + "='',";
+        if (stringBuilder !== "") {
+          try {
+            await client.query(stringBuilder);
+            console.log(stringBuilder);
+            let percentage = parseInt((indexLoop / sumLoop) * 100);
+            console.log(percentage);
+            callbackProcess(percentage);
+          } catch (e) {
+            reject(e);
           }
         }
-        if (current.IsKHYHHandUpdate()) {
-          let selectKhyh = current.get_KhyhSelected();
-          if (!Default.IsNullOrEmpty(selectKhyh)) {
-            text5 = text5 + array[2] + "='" + selectKhyh + "',";
-          } else {
-            text5 = text5 + array[2] + "='',";
-          }
-        }
-        if (text5 != "") {
-          text5 = text5.substring(0, text5.length - 1);
-          text4 = text4 + text5 + " where " + text + " and " + text2 + " ;";
-          stringBuilder += text4;
-        }
-      }
-      key = current.Zh + "_0";
-      if (this.dictionary_2.hasOwnProperty(key)) {
-        let text6 = "update   gas_bank_records set  ";
-        let text7 = "";
-        if (current.IsZZHMHandUpdate()) {
-          let selectzzhm = current.get_ZzhmSelected();
-          if (!Default.IsNullOrEmpty(selectzzhm)) {
-            text7 = text7 + array2[0] + "='" + selectzzhm + "',";
-          } else {
-            text7 = text7 + array2[0] + "='',";
-          }
-        }
-        if (current.IsZZMCHandUpdate()) {
-          let selectzzmc = current.get_ZhmcSelected();
-          if (!Default.IsNullOrEmpty(selectzzmc)) {
-            text7 = text7 + array2[1] + "='" + selectzzmc + "',";
-          } else {
-            text7 = text7 + array2[1] + "='',";
-          }
-        }
-        if (current.IsKHYHHandUpdate()) {
-          let selectKhyh = current.get_KhyhSelected();
-          if (!Default.IsNullOrEmpty(selectKhyh)) {
-            text7 = text7 + array2[2] + "='" + selectKhyh + "',";
-          } else {
-            text7 = text7 + array2[2] + "='',";
-          }
-        }
-        if (text7 != "") {
-          text7 = text7.substring(0, text7.length - 1);
-          text6 = text6 + text7 + " where " + text_df + " and " + text3 + " ;";
-          stringBuilder += text6;
-        }
-      }
-      await Base.QueryCustom(stringBuilder, this.ajid);
-      let percentage = parseInt((indexLoop / sumLoop) * 100);
-      callbackProcess(percentage);
-      indexLoop++;
+        resolve("done");
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      client.release();
     }
+
     // console.log(stringBuilderArr);
     // return;
     // console.log(stringBuilder);

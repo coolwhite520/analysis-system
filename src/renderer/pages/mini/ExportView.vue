@@ -7,6 +7,9 @@ import path from "path";
 import { Pool, Client, Query } from "pg";
 import cases from "@/db/Cases.js";
 export default {
+  destroyed() {
+    global.pool.end();
+  },
   methods: {
     async sleep(ms) {
       return new Promise(function (resolve, reject) {

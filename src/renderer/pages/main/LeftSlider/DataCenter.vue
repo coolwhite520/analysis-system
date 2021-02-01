@@ -1,6 +1,6 @@
 <template>
   <div class="data-center-left" :style="{ height: contentViewHeight + 'px' }">
-    <div class="titleBar">
+    <div class="titleBar" @click="handleClickSwith">
       <b>
         <span class="iconfont" style="font-size: 18px">&#xe612;</span>
         <span v-show="!isCollapseLeftBar">数据中心</span>
@@ -99,6 +99,11 @@ export default {
     };
   },
   methods: {
+    handleClickSwith() {
+      if (this.isCollapseLeftBar) {
+        this.$store.commit("AppPageSwitch/SET_ISCOLLAPSELEFTBAR", false);
+      }
+    },
     async handleSelect(parentid, tableTid) {
       // 获取右侧的模型数据
       let tid = parseInt(tableTid[1]);

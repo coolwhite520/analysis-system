@@ -62,6 +62,9 @@ export default {
     // 每个子进程自己一个pool
     global.pool = new Pool(await this.$electron.remote.getGlobal("dbCon"));
   },
+  destroyed() {
+    global.pool.end();
+  },
   mounted() {
     this.$electron.ipcRenderer.send("calculate-link-ready");
     this.$electron.ipcRenderer.on("calculate-link-begin", this.onCalLinkData);

@@ -45,8 +45,8 @@
           style="width: 100%"
           :data="dataShowRows"
           size="mini"
-          :max-height="400"
-          :height="400"
+          :max-height="300"
+          :height="300"
           stripe
           border
         >
@@ -164,7 +164,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage4"
-            :page-sizes="[100, 150, 200, 300]"
+            :page-sizes="[50, 100, 150, 200, 300]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="this.dataRows.length"
@@ -191,7 +191,6 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import DataSupplementWinModel from "@/utils/sql/DataComplementModel.js";
 export default {
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -199,34 +198,72 @@ export default {
     ...mapState("ShowTable", ["tableDataList"]),
   },
   async mounted() {
-    try {
-      this.loading = true;
-      this.dataSupplementInstance = new DataSupplementWinModel(
-        this.caseBase.ajid
-      );
-      this.dataRows = await this.dataSupplementInstance.GetMasterData();
-      this.dataShowRows = this.dataRows.slice(0, this.pageSize);
-      this.num = await this.dataSupplementInstance.GetAllEmptyRowCount();
-      this.count = await this.dataSupplementInstance.GetCanSuppleentRowCount(
-        true
-      );
+    this.loading = true;
+    this.$electron.ipcRenderer.on("data-completion-ready", (e, data) => {
+      console.log("data-completion-ready.....");
+      this.isDataCompletionReady = true;
+    });
+    this.$electron.ipcRenderer.on("data-completion-end", (e, args) => {
+      let { success, type, msg, data } = args;
       this.loading = false;
-    } catch (e) {
-      this.loading = false;
-      this.$message.error({
-        message: e.message,
-      });
-    }
+      if (success) {
+        if (type === "select") {
+          let { dataRows, num, count } = data;
+          this.dataRows = dataRows;
+          this.dataShowRows = this.dataRows.slice(0, this.pageSize);
+          this.num = num;
+          this.count = count;
+        } else if (type === "progress") {
+          this.loading = true;
+          this.percentage = data.percentage;
+        } else {
+          this.$message({
+            message: "补全数据成功！",
+            type: "success",
+          });
+          this.handleClose();
+          // 更新当前的展示列表中的数据;
+          for (let tableData of this.tableDataList) {
+            // 根据tableName获取表的数据
+            if (tableData.tableType === "base") {
+              this.$store.dispatch(tableData.dispatchName, {
+                ...tableData,
+                offset: 0,
+                count: 30,
+              });
+            }
+          }
+        }
+      } else {
+        this.$message({
+          message: msg,
+        });
+      }
+    });
+    this.$electron.ipcRenderer.send("data-completion-open");
+    console.log("is not ok....");
+    await this.waitForProcessReady();
+    console.log("is ok....");
+    this.$electron.ipcRenderer.send("data-completion-begin", {
+      ajid: this.caseBase.ajid,
+      type: "select",
+      val: false,
+    });
+  },
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners("data-completion-end");
+    this.$electron.ipcRenderer.removeAllListeners("data-completion-ready");
   },
   data() {
     return {
+      isDataCompletionReady: false,
       loadingText: "查询数据较多，正在拼命计算中...",
       num: 0,
       count: 0,
       percentage: 0,
       switchValue: false,
       currentPage4: 1,
-      pageSize: 100,
+      pageSize: 50,
       title: "数据补全",
       dataRows: [],
       dataShowRows: [],
@@ -235,59 +272,39 @@ export default {
     };
   },
   methods: {
-    async handleChangeSwitch(val) {
-      try {
-        this.loading = true;
-        this.loadingText = "查询数据较多，正在拼命计算中...";
-        this.num = await this.dataSupplementInstance.GetAllEmptyRowCount();
-        this.count = await this.dataSupplementInstance.GetCanSuppleentRowCount(
-          !val
-        );
-        if (val) {
-          this.dataRows = await this.dataSupplementInstance.GetAllData();
-        } else {
-          this.dataRows = await this.dataSupplementInstance.GetMasterData();
+    async sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("done");
+        }, ms);
+      });
+    },
+    async waitForProcessReady() {
+      while (true) {
+        if (this.isDataCompletionReady) {
+          break;
         }
-        this.dataShowRows = this.dataRows.slice(0, this.pageSize);
-        this.loading = false;
-      } catch (e) {
-        this.loading = false;
-        this.$message.error({
-          message: e.message,
-        });
+        await this.sleep(200);
       }
     },
+    async handleChangeSwitch(val) {
+      this.loading = true;
+      this.loadingText = "查询数据较多，正在拼命计算中...";
+      this.$electron.ipcRenderer.send("data-completion-begin", {
+        ajid: this.caseBase.ajid,
+        type: "select",
+        val,
+      });
+    },
     async handleClickSure() {
-      try {
-        this.loading = true;
-        this.percentage = 0;
-        this.loadingText = "执行更新任务量较大，请耐心等待...";
-        await this.dataSupplementInstance.UpdataAllData(
-          this.dataRows,
-          (percentage) => {
-            this.percentage = percentage;
-          }
-        );
-        this.loading = false;
-        this.$message({
-          message: "补全数据成功！",
-          type: "success",
-        });
-        // 更新当前的展示列表中的数据;
-        for (let tableData of this.tableDataList) {
-          // 根据tableName获取表的数据
-          if (tableData.tableType === "base") {
-            this.$store.dispatch(tableData.dispatchName, {
-              ...tableData,
-              offset: 0,
-              count: 30,
-            });
-          }
-        }
-        this.handleClose();
-      } catch (e) {
-        this.loading = false;
-      }
+      this.loading = true;
+      this.percentage = 0;
+      this.loadingText = "执行更新任务量较大，请耐心等待...";
+      this.$electron.ipcRenderer.send("data-completion-begin", {
+        ajid: this.caseBase.ajid,
+        type: "update",
+        data: { dataRows: this.dataRows },
+      });
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -313,6 +330,7 @@ export default {
       this.dataRows[this.pageSize * (this.currentPage4 - 1) + index].Zzhm = val;
     },
     handleClose() {
+      this.$electron.ipcRenderer.send("data-completion-close");
       this.$store.commit("DialogPopWnd/SET_SHOWDATACOMPLEMENTVISIBLE", false);
     },
   },

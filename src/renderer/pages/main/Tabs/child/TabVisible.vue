@@ -1,61 +1,60 @@
 <template>
   <div class="TabVisible">
     <el-row style="text-align: center">
-      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="4" style="border-right: 1px solid #e5e7ec">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               class="iconfont"
               @click="handleClickSwitchLayout('random')"
               :disabled="disabledButtons"
               >&#xe6cd;&nbsp;随机布局</el-button
             >
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               class="iconfont"
               @click="handleClickSwitchLayout('grid')"
               :disabled="disabledButtons"
               >&#xe667;&nbsp;网格布局</el-button
             >
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               class="iconfont"
               @click="handleClickSwitchLayout('circular')"
               :disabled="disabledButtons"
               >&#xe609;&nbsp;圆形布局</el-button
             >
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <!-- <el-col :span="12">
             <el-button
               v-if="false"
               size="mini"
               type="text"
               style="padding: 4px; font-size: 12px"
               class="iconfont"
-              @click="handleClickSwitchLayout('concentric')"
+              @click="handleClickSwitchLayout('radialLayout')"
               :disabled="disabledButtons"
-              >&#xe605;&nbsp;同心圆布局</el-button
+              >&#xe605;&nbsp;径向布局</el-button
             >
-          </el-col>
-          <el-col :span="12">
+          </el-col> -->
+          <el-col :span="8">
             <el-button
-              v-if="false"
               size="mini"
               type="text"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               class="iconfont"
               @click="handleClickSwitchLayout('dagre')"
               :disabled="disabledButtons"
@@ -63,7 +62,7 @@
             >
           </el-col>
 
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-button
               v-if="false"
               size="mini"
@@ -74,34 +73,33 @@
               :disabled="disabledButtons"
               >&#xe7bb;&nbsp;辐射状布局</el-button
             >
-          </el-col>
-          <el-col :span="12">
+          </el-col> -->
+          <el-col :span="8">
             <el-button
-              v-if="false"
               size="mini"
               type="text"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               class="iconfont"
-              @click="handleClickSwitchLayout('force')"
+              @click="handleClickSwitchLayout('tree')"
               :disabled="disabledButtons"
-              >&#xe63f;&nbsp;结构布局</el-button
+              >&#xe6b1;&nbsp;树形布局</el-button
             >
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button
               size="mini"
               type="text"
-              style="padding: 4px; font-size: 12px"
+              style="padding: 4px; font-size: 13px"
               class="iconfont"
               @click="handleClickSwitchLayout('fruchterman')"
               :disabled="disabledButtons"
-              >&#xe6b1;&nbsp;聚类布局</el-button
+              >&#xe63f;&nbsp;聚类布局</el-button
             >
           </el-col>
         </el-row>
       </el-col>
       <el-col
-        :span="5"
+        :span="4"
         style="
           border-right: 1px solid #e5e7ec;
           padding-top: 15px;
@@ -144,7 +142,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="5" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
         <el-row>
           <el-col :span="8">
             <el-tooltip
@@ -266,7 +264,7 @@
       </el-col>
 
       <el-col
-        :span="5"
+        :span="4"
         style="
           border-right: 1px solid #e5e7ec;
           padding-top: 15px;
@@ -318,24 +316,24 @@
         padding-bottom: 4px;
       "
     >
-      <el-col :span="3" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="4" style="border-right: 1px solid #e5e7ec">
         <div>布局</div>
       </el-col>
       <el-col
-        :span="5"
+        :span="4"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>新建</div>
       </el-col>
       <el-col
-        :span="5"
+        :span="3"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>操作</div>
       </el-col>
 
       <el-col
-        :span="5"
+        :span="4"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>查看与导出</div>
@@ -389,6 +387,9 @@ export default {
       let layout;
       let isNormalLayout = false;
       switch (layoutName) {
+        case "radialLayout":
+          layout = "radialLayout";
+          break;
         case "random": // 随机
           layout = "random"; // 指定为力导向布局
           break;
@@ -404,7 +405,6 @@ export default {
           break;
         case "radial": // 辐射
           layout = "radial";
-
           break;
         case "concentric": // 同心圆
           layout = "concentric";
@@ -412,8 +412,8 @@ export default {
         case "fruchterman":
           layout = "fruchterman";
           break;
-        case "force":
-          layout = "force";
+        case "tree":
+          layout = "tree";
           break;
       }
       if (this.currentTableData.hasOwnProperty("graphid")) {
