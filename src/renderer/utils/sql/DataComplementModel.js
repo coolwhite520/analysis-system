@@ -703,18 +703,16 @@ function DataSupplementWinModel(ajid) {
       return;
     }
     const client = await global.pool.connect();
+    await cases.SwitchCase(client, this.ajid);
     try {
       return await new Promise(async (resolve, reject) => {
-        await cases.SwitchCase(client, this.ajid);
         let sumLoop = this.AccountModelscan.length;
         let indexLoop = 0;
         let stringBuilder = "";
         for (let current of this.AccountModelscan) {
           indexLoop++;
-          let now = new Date();
-          console.log("begin:", now.getTime());
           if (!current.get_IsHandUpdate()) {
-            return true;
+            continue;
           }
           let key = current.Zh + "_1";
           let array = ["JYZJHM", "JYMC", "JYKHH"];
@@ -806,14 +804,10 @@ function DataSupplementWinModel(ajid) {
               stringBuilder += text6;
             }
           }
-          if (indexLoop % 10 === 0) {
+          if (indexLoop % 100 === 0) {
             try {
-              now = new Date();
-              console.log("end:", now.getTime());
               await client.query(stringBuilder);
-              console.log(stringBuilder);
               let percentage = parseInt((indexLoop / sumLoop) * 100);
-              console.log(percentage);
               callbackProcess(percentage);
             } catch (e) {
               reject(e);
@@ -824,9 +818,7 @@ function DataSupplementWinModel(ajid) {
         if (stringBuilder !== "") {
           try {
             await client.query(stringBuilder);
-            console.log(stringBuilder);
             let percentage = parseInt((indexLoop / sumLoop) * 100);
-            console.log(percentage);
             callbackProcess(percentage);
           } catch (e) {
             reject(e);
