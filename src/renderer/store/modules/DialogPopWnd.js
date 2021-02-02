@@ -30,6 +30,7 @@ const state = {
   showZjytVisible: false,
   showZjytLinkVisible: false,
   showDataComplementVisible: false,
+  showDataResetVisible: false,
 };
 
 const mutations = {
@@ -124,6 +125,9 @@ const mutations = {
   },
   SET_SHOWDATACOMPLEMENTVISIBLE(state, showDataComplementVisible) {
     state.showDataComplementVisible = showDataComplementVisible;
+  },
+  SET_SHOWDATARESETVISIBLE(state, showDataResetVisible) {
+    state.showDataResetVisible = showDataResetVisible;
   },
 };
 

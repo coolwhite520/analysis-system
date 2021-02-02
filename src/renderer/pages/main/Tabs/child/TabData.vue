@@ -139,7 +139,7 @@
           <span class="title-content">同笔交易去重</span>
         </el-button>
       </el-col>
-      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+      <el-col :span="1" class="el-col">
         <el-button
           type="text"
           class="ctrl-button"
@@ -149,6 +149,18 @@
           <span class="iconfont selfIcont">&#xe645;</span>
           <br />
           <span class="title-content">数据补全</span>
+        </el-button>
+      </el-col>
+      <el-col :span="1" class="el-col" style="border-right: 1px solid #e5e7ec">
+        <el-button
+          type="text"
+          class="ctrl-button"
+          :disabled="disabledDataComplementButton"
+          @click="handleClickWashingButton('data-reset')"
+        >
+          <span class="iconfont selfIcont">&#xe652;</span>
+          <br />
+          <span class="title-content">数据重置</span>
         </el-button>
       </el-col>
       <el-col :span="1">
@@ -212,7 +224,7 @@
         <div>显示</div>
       </el-col>
       <el-col
-        :span="6"
+        :span="7"
         style="text-align: center; border-right: 1px solid #e5e7ec"
       >
         <div>清洗</div>
@@ -245,10 +257,12 @@
     </div>
     <collection-record v-if="showCollectionRecordVisible"></collection-record>
     <data-complement v-if="showDataComplementVisible"></data-complement>
+    <data-reset v-if="showDataResetVisible"></data-reset>
   </div>
 </template>
 <script >
 import StandardDataCollectionDialog from "@/pages/dialog/standard/StandardDataCollectionDialog";
+import dataResetDialog from "@/pages/dialog/dataReset/dataResetDialog";
 import FilterDialog from "@/pages/dialog/filter/FilterDIalog";
 import ShowFieldsDialog from "@/pages/dialog/filter/ShowFieldsDialog";
 import ShowDataVisibleView from "@/pages/dialog/visible/visibleDialog";
@@ -261,7 +275,6 @@ import cases from "@/db/Cases.js";
 import aes from "@/utils/aes";
 import DataShowTable from "@/db/DataShowTable";
 import Default from "@/utils/sql/Default";
-import DataCollection from "../../../mini/DataCollection.vue";
 
 export default {
   data() {
@@ -280,6 +293,7 @@ export default {
     "show-visible-dialog": ShowDataVisibleView,
     "collection-record": CollectionRecord,
     "data-complement": dataComplementVue,
+    "data-reset": dataResetDialog,
   },
   computed: {
     ...mapState("CaseDetail", ["caseBase"]),
@@ -290,6 +304,7 @@ export default {
       "showDataVisibilityDialogVisible",
       "showCollectionRecordVisible",
       "showDataComplementVisible",
+      "showDataResetVisible",
     ]),
     ...mapState("ShowTable", ["currentTableData"]),
     ...mapState("MainPageSwitch", ["exportProcessVisible"]),
@@ -780,6 +795,12 @@ WHERE
                 "DialogPopWnd/SET_SHOWDATACOMPLEMENTVISIBLE",
                 true
               );
+              return;
+            }
+            break;
+          case "data-reset":
+            {
+              this.$store.commit("DialogPopWnd/SET_SHOWDATARESETVISIBLE", true);
               return;
             }
             break;

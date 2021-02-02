@@ -221,7 +221,7 @@ export default {
             message: "补全数据成功！",
             type: "success",
           });
-          this.handleClose();
+          // this.handleClose();
           // 更新当前的展示列表中的数据;
           for (let tableData of this.tableDataList) {
             // 根据tableName获取表的数据
@@ -244,6 +244,7 @@ export default {
     console.log("is not ok....");
     await this.waitForProcessReady();
     console.log("is ok....");
+    await this.sleep(1000 * 2);
     this.$electron.ipcRenderer.send("data-completion-begin", {
       ajid: this.caseBase.ajid,
       type: "select",

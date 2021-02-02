@@ -76,15 +76,8 @@ export default {
         try {
           await this.dataSupplementInstance.UpdataAllData(
             data.dataRows,
-            (percentage) => {
-              console.log(percentage);
-              this.$electron.ipcRenderer.send("data-completion-end", {
-                success: true,
-                type: "progress",
-                data: {
-                  percentage,
-                },
-              });
+            (obj) => {
+              this.$electron.ipcRenderer.send("data-completion-end", obj);
             }
           );
           this.$electron.ipcRenderer.send("data-completion-end", {

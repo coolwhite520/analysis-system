@@ -1,6 +1,7 @@
 import Default from "./Default";
 import Base from "../../db/Base";
 import cases from "../../db/Cases";
+import { cat } from "shelljs";
 const _ = require("lodash");
 const Query = require("pg").Query;
 
@@ -24,13 +25,13 @@ function SimpleAccountModel() {
     this.bool_0 = value;
   };
   this.IsZZMCHandUpdate = function() {
-    return this.ZhmcList.length > 1;
+    return this.ZhmcList.length > 1 && this.Zhmc != this.ZhmcList[0];
   };
   this.IsKHYHHandUpdate = function() {
-    return this.KhyhList.length > 1;
+    return this.KhyhList.length > 1 && this.Khyh != this.KhyhList[0];
   };
   this.IsZZHMHandUpdate = function() {
-    return this.ZzhmList.length > 1;
+    return this.ZzhmList.length > 1 && this.Zzhm != this.ZzhmList[0];
   };
   this.Zh; //this.string_0;
   this.ZhmcColor = false; //this.bool_4;
@@ -170,6 +171,20 @@ function DataSupplementWinModel(ajid) {
     //}
     return this.AccountModelscan;
   };
+  this.createTableIndex = async function() {
+    const client = await global.pool.connect();
+    try {
+      // 创建索引
+      await cases.SwitchCase(client, this.ajid);
+      let sqlIndexCreate = `CREATE INDEX search_fast_index
+      ON gas_bank_records (cxkh, jydfzkh);`;
+      await client.query(sqlIndexCreate);
+    } catch (e) {
+      console.log(e.message);
+    } finally {
+      client.release();
+    }
+  };
   this.GetAllData = async function() {
     this.bool_4 = false;
     await this.Initalize();
@@ -177,6 +192,7 @@ function DataSupplementWinModel(ajid) {
   };
   this.Initalize = async function() {
     console.log("Initalize");
+    await this.createTableIndex();
     this.InilaizeDataState();
     this.bool_1 = true;
     await this.RefreashUIDatasCan_DoWork();
@@ -709,8 +725,10 @@ function DataSupplementWinModel(ajid) {
         let sumLoop = this.AccountModelscan.length;
         let indexLoop = 0;
         let stringBuilder = "";
+        let percentage = 0;
         for (let current of this.AccountModelscan) {
           indexLoop++;
+          stringBuilder = "";
           if (!current.get_IsHandUpdate()) {
             continue;
           }
@@ -744,7 +762,7 @@ function DataSupplementWinModel(ajid) {
               if (!Default.IsNullOrEmpty(selectzzhm)) {
                 text5 = text5 + array[0] + "='" + selectzzhm + "',";
               } else {
-                text5 = text5 + array[0] + "='',";
+                text5 = text5 + array[0] + "='A@A',";
               }
             }
             if (current.IsZZMCHandUpdate()) {
@@ -752,7 +770,7 @@ function DataSupplementWinModel(ajid) {
               if (!Default.IsNullOrEmpty(selectzzmc)) {
                 text5 = text5 + array[1] + "='" + selectzzmc + "',";
               } else {
-                text5 = text5 + array[1] + "='',";
+                text5 = text5 + array[1] + "='A@A',";
               }
             }
             if (current.IsKHYHHandUpdate()) {
@@ -760,7 +778,7 @@ function DataSupplementWinModel(ajid) {
               if (!Default.IsNullOrEmpty(selectKhyh)) {
                 text5 = text5 + array[2] + "='" + selectKhyh + "',";
               } else {
-                text5 = text5 + array[2] + "='',";
+                text5 = text5 + array[2] + "='A@A',";
               }
             }
             if (text5 != "") {
@@ -778,7 +796,7 @@ function DataSupplementWinModel(ajid) {
               if (!Default.IsNullOrEmpty(selectzzhm)) {
                 text7 = text7 + array2[0] + "='" + selectzzhm + "',";
               } else {
-                text7 = text7 + array2[0] + "='',";
+                text7 = text7 + array2[0] + "='A@A',";
               }
             }
             if (current.IsZZMCHandUpdate()) {
@@ -786,7 +804,7 @@ function DataSupplementWinModel(ajid) {
               if (!Default.IsNullOrEmpty(selectzzmc)) {
                 text7 = text7 + array2[1] + "='" + selectzzmc + "',";
               } else {
-                text7 = text7 + array2[1] + "='',";
+                text7 = text7 + array2[1] + "='A@A',";
               }
             }
             if (current.IsKHYHHandUpdate()) {
@@ -794,7 +812,7 @@ function DataSupplementWinModel(ajid) {
               if (!Default.IsNullOrEmpty(selectKhyh)) {
                 text7 = text7 + array2[2] + "='" + selectKhyh + "',";
               } else {
-                text7 = text7 + array2[2] + "='',";
+                text7 = text7 + array2[2] + "='A@A',";
               }
             }
             if (text7 != "") {
@@ -804,30 +822,51 @@ function DataSupplementWinModel(ajid) {
               stringBuilder += text6;
             }
           }
-          if (indexLoop % 100 === 0) {
+          if (stringBuilder.length > 0) {
             try {
+              console.log(stringBuilder);
               await client.query(stringBuilder);
-              let percentage = parseInt((indexLoop / sumLoop) * 100);
-              callbackProcess(percentage);
+              percentage = parseInt((indexLoop / sumLoop) * 100);
+              callbackProcess({
+                data: { percentage },
+                success: true,
+                type: "progress",
+              });
             } catch (e) {
               reject(e);
             }
-            stringBuilder = "";
           }
         }
-        if (stringBuilder !== "") {
-          try {
-            await client.query(stringBuilder);
-            let percentage = parseInt((indexLoop / sumLoop) * 100);
-            callbackProcess(percentage);
-          } catch (e) {
-            reject(e);
+        let loop = setInterval(() => {
+          percentage++;
+          if (percentage >= 99) {
+            percentage = 99;
           }
+          callbackProcess({
+            data: { percentage },
+            success: true,
+            type: "progress",
+          });
+        }, 100);
+        for (let i = 0; i < 2; i++) {
+          await this.execSqlUpdate();
         }
+        clearInterval(loop);
+        callbackProcess({
+          data: { percentage: 100 },
+          success: true,
+          type: "progress",
+        });
         resolve("done");
       });
     } catch (e) {
       console.log(e);
+      callbackProcess({
+        data: { percentage },
+        success: false,
+        msg: e.message,
+        type: "progress",
+      });
     } finally {
       client.release();
     }
@@ -836,6 +875,151 @@ function DataSupplementWinModel(ajid) {
     // return;
     // console.log(stringBuilder);
     // const fs = require("fs");
+  };
+  this.execSqlUpdate = async function() {
+    let sql1 = `UPDATE gas_bank_records A 
+    SET JYZJHM =
+    CASE
+        
+        WHEN JYZJHM IS NULL 
+        OR JYZJHM = '' THEN
+          B.KHRZJHM ELSE JYZJHM 
+          END,
+        JYMC =
+      CASE
+          
+          WHEN JYMC IS NULL 
+          OR JYMC = '' THEN
+            B.ZHKHMC ELSE JYMC 
+            END,
+          JYKHH =
+        CASE
+            
+            WHEN JYKHH IS NULL 
+            OR JYKHH = '' THEN
+              B.ZHKHYH ELSE JYKHH 
+            END 
+            FROM
+              gas_account_info B 
+            WHERE
+              B.KH = A.CXKH 
+              AND A.AJID = ${this.ajid} 
+              AND B.KH IS NOT NULL 
+              AND B.KH != '' 
+              AND (
+                (
+                  ( b.KHRZJHM IS NOT NULL AND b.KHRZJHM != '' ) 
+                  AND ( A.JYZJHM IS NULL OR LENGTH ( A.JYZJHM ) = 0 ) 
+                ) 
+                OR (
+                  ( b.ZHKHMC IS NOT NULL AND b.ZHKHMC != '' ) 
+                  AND ( A.JYMC IS NULL OR LENGTH ( A.JYMC ) = 0 ) 
+                ) 
+                OR (
+                  ( b.ZHKHYH IS NOT NULL AND b.ZHKHYH != '' ) 
+                  AND ( A.JYKHH IS NULL OR LENGTH ( A.JYKHH ) = 0 ) 
+                ) 
+              ) 
+      AND B.AJID = ${this.ajid};`;
+
+    let sql2 = `UPDATE gas_bank_records A 
+    SET JYDFZJHM =
+    CASE
+        
+        WHEN JYDFZJHM IS NULL 
+        OR JYDFZJHM = '' THEN
+          B.KHRZJHM ELSE JYDFZJHM 
+          END,
+        JYDFMC =
+      CASE
+          
+          WHEN JYDFMC IS NULL 
+          OR JYDFMC = '' THEN
+            B.ZHKHMC ELSE JYDFMC 
+            END,
+          JYDFZHKHH =
+        CASE
+            
+            WHEN JYDFZHKHH IS NULL 
+            OR JYDFZHKHH = '' THEN
+              B.ZHKHYH ELSE JYDFZHKHH 
+            END 
+            FROM
+              gas_account_info B 
+            WHERE
+              B.KH = A.JYDFZKH 
+              AND A.AJID = ${this.ajid} 
+              AND B.KH IS NOT NULL 
+              AND B.KH != '' 
+              AND (
+                (
+                  ( b.KHRZJHM IS NOT NULL AND b.KHRZJHM != '' ) 
+                  AND ( A.JYDFZJHM IS NULL OR LENGTH ( A.JYDFZJHM ) = 0 ) 
+                ) 
+                OR (
+                  ( b.ZHKHMC IS NOT NULL AND b.ZHKHMC != '' ) 
+                  AND ( A.JYDFMC IS NULL OR LENGTH ( A.JYDFMC ) = 0 ) 
+                ) 
+                OR (
+                  ( b.ZHKHYH IS NOT NULL AND b.ZHKHYH != '' ) 
+                  AND ( A.JYDFZHKHH IS NULL OR LENGTH ( A.JYDFZHKHH ) = 0 ) 
+                ) 
+              ) 
+      AND B.AJID = ${this.ajid};`;
+
+    let sql3 = `UPDATE gas_bank_records 
+      SET JYZJHM =
+      CASE
+          
+          WHEN JYZJHM = 'A@A' THEN
+          '' ELSE JYZJHM 
+        END,
+        JYMC =
+      CASE
+        
+        WHEN JYMC = 'A@A' THEN
+        '' ELSE JYMC 
+        END,
+        JYKHH =
+      CASE
+        
+        WHEN JYKHH = 'A@A' THEN
+        '' ELSE JYKHH 
+      END 
+      WHERE
+        JYZJHM = 'A@A' 
+        OR JYMC = 'A@A' 
+        OR JYKHH = 'A@A' 
+        AND ajid = ${this.ajid};
+        
+      UPDATE gas_bank_records 
+      SET JYDFZJHM =
+      CASE
+          
+          WHEN JYDFZJHM = 'A@A' THEN
+          '' ELSE JYDFZJHM 
+        END,
+        JYDFMC =
+      CASE
+        
+        WHEN JYDFMC = 'A@A' THEN
+        '' ELSE JYDFMC 
+        END,
+        JYDFZHKHH =
+      CASE
+        
+        WHEN JYDFZHKHH = 'A@A' THEN
+        '' ELSE JYDFZHKHH 
+      END 
+      WHERE
+        JYDFZJHM = 'A@A' 
+        OR JYDFMC = 'A@A' 
+        OR JYDFZHKHH = 'A@A' 
+        AND ajid = ${this.ajid};`;
+
+    await Base.QueryCustom(sql1, this.ajid);
+    await Base.QueryCustom(sql2, this.ajid);
+    await Base.QueryCustom(sql3, this.ajid);
   };
 }
 
