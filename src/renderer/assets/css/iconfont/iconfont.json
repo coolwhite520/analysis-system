@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8157462",
+      "name": "恢复",
+      "font_class": "huifu",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
       "icon_id": "12686559",
       "name": "交换",
       "font_class": "icon_jiaohuan",

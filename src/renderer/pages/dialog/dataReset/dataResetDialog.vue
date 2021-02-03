@@ -11,7 +11,7 @@
     :modal="true"
   >
     <div slot="title" class="dialog-title">
-      <i class="iconfont" style="color: white; font-size: 30px">&#xe652;</i>
+      <i class="iconfont" style="color: white; font-size: 30px">&#xe64b;</i>
       <span class="title-text" style="color: white; cursor: pointer">{{
         title
       }}</span>
@@ -30,15 +30,14 @@
                 <el-radio :label="false">正序</el-radio>
               </el-radio-group>
             </div>
-
+            <el-checkbox
+              :indeterminate="isIndeterminate"
+              v-model="checkedAll"
+              @change="handleChangeCheckAll"
+              >全选</el-checkbox
+            >
             <div style="height: 300px">
               <div class="importTimeLine">
-                <el-checkbox
-                  :indeterminate="isIndeterminate"
-                  v-model="checkedAll"
-                  @change="handleChangeCheckAll"
-                  >全选</el-checkbox
-                >
                 <el-timeline :reverse="reverse">
                   <el-timeline-item
                     v-for="(activity, index) in activities"
@@ -72,7 +71,7 @@
           style="width: 50%"
           type="primary"
           @click="handleClickResetData"
-          >确定重置</el-button
+          >确定恢复</el-button
         >
       </el-row>
     </div>
@@ -93,6 +92,7 @@ export default {
   async mounted() {
     console.log("Mounted");
     try {
+      this.loading = true;
       let {
         success,
         rows,
@@ -123,17 +123,19 @@ export default {
         this.activities.sort((a, b) => {
           return a.batch - b.batch;
         });
+        this.loading = false;
       }
     } catch (e) {
       this.$message.error({
         message: "出错了：" + e.message,
       });
+      this.loading = false;
     }
   },
   data() {
     return {
       loading: false,
-      title: "数据重置",
+      title: "数据恢复",
       reverse: true,
       activities: [],
       checkedAll: true,

@@ -136,7 +136,7 @@
         >
           <span class="iconfont selfIcont">&#xea30;</span>
           <br />
-          <span class="title-content">同笔交易去重</span>
+          <span class="title-content">交易去重</span>
         </el-button>
       </el-col>
       <el-col :span="1" class="el-col">
@@ -158,9 +158,9 @@
           :disabled="disabledDataComplementButton"
           @click="handleClickWashingButton('data-reset')"
         >
-          <span class="iconfont selfIcont">&#xe652;</span>
+          <span class="iconfont selfIcont">&#xe64b;</span>
           <br />
-          <span class="title-content">数据重置</span>
+          <span class="title-content">数据恢复</span>
         </el-button>
       </el-col>
       <el-col :span="1">
