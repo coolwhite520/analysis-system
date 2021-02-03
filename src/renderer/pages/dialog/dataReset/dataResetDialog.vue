@@ -19,63 +19,68 @@
         <span class="title-close" @click="handleClose"></span>
       </div>
     </div>
-    <div class="content" v-loading="loading" v-if="activities.length > 0">
-      <el-row>
-        <el-col :span="4">&nbsp;</el-col>
-        <el-col :span="16">
-          <div class="block">
-            <div class="radio">
-              <el-radio-group v-model="reverse">
-                <el-radio :label="true">倒序</el-radio>
-                <el-radio :label="false">正序</el-radio>
-              </el-radio-group>
-            </div>
-            <el-checkbox
-              :indeterminate="isIndeterminate"
-              v-model="checkedAll"
-              @change="handleChangeCheckAll"
-              >全选</el-checkbox
-            >
-            <div style="height: 300px">
-              <div class="importTimeLine">
-                <el-timeline :reverse="reverse">
-                  <el-timeline-item
-                    v-for="(activity, index) in activities"
-                    :key="index"
-                    :timestamp="activity.timestamp"
-                    placement="top"
-                  >
-                    <el-card>
-                      <el-checkbox
-                        v-model="activity.checked"
-                        @change="handleChangeBatch"
-                        >批次编号：{{ activity.batch }}</el-checkbox
-                      >
-                      <div style="margin-top: 10px">
-                        <span style="color: #3e4d6b"><b>本次明细文件：</b></span
-                        ><span style="font-size: 10px; color: gray">{{
-                          activity.files.join(",")
-                        }}</span>
-                      </div>
-                    </el-card>
-                  </el-timeline-item>
-                </el-timeline>
+    <div class="content" v-loading="loading">
+      <div v-if="activities.length > 0">
+        <el-row>
+          <el-col :span="4">&nbsp;</el-col>
+          <el-col :span="16">
+            <div class="block">
+              <div class="radio">
+                <el-radio-group v-model="reverse">
+                  <el-radio :label="true">倒序</el-radio>
+                  <el-radio :label="false">正序</el-radio>
+                </el-radio-group>
+              </div>
+              <el-checkbox
+                :indeterminate="isIndeterminate"
+                v-model="checkedAll"
+                @change="handleChangeCheckAll"
+                >全选</el-checkbox
+              >
+              <div style="height: 300px">
+                <div class="importTimeLine">
+                  <el-timeline :reverse="reverse">
+                    <el-timeline-item
+                      v-for="(activity, index) in activities"
+                      :key="index"
+                      :timestamp="activity.timestamp"
+                      placement="top"
+                    >
+                      <el-card>
+                        <el-checkbox
+                          v-model="activity.checked"
+                          @change="handleChangeBatch"
+                          >批次编号：{{ activity.batch }}</el-checkbox
+                        >
+                        <div style="margin-top: 10px">
+                          <span style="color: #3e4d6b"
+                            ><b>本次明细文件：</b></span
+                          ><span style="font-size: 10px; color: gray">{{
+                            activity.files.join(",")
+                          }}</span>
+                        </div>
+                      </el-card>
+                    </el-timeline-item>
+                  </el-timeline>
+                </div>
               </div>
             </div>
-          </div>
-        </el-col>
-        <el-col :span="4">&nbsp;</el-col>
-      </el-row>
-      <el-row style="text-align: center">
-        <el-button
-          style="width: 50%"
-          type="primary"
-          @click="handleClickResetData"
-          >确定恢复</el-button
-        >
-      </el-row>
+          </el-col>
+          <el-col :span="4">&nbsp;</el-col>
+        </el-row>
+        <el-row style="text-align: center">
+          <el-button
+            style="width: 50%"
+            type="primary"
+            @click="handleClickResetData"
+            >确定恢复</el-button
+          >
+        </el-row>
+      </div>
+      <div v-else style="text-align: center">
+        当前无记录，请先进行数据采集。
+      </div>
     </div>
-    <div v-else style="text-align: center">当前无记录，请先进行数据采集。</div>
   </el-dialog>
 </template>
 <script>
@@ -89,6 +94,7 @@ export default {
     ...mapState("DialogPopWnd", ["showDataResetVisible"]),
     ...mapState("CaseDetail", ["CollectionRecords", "caseBase"]),
   },
+
   async mounted() {
     console.log("Mounted");
     try {
