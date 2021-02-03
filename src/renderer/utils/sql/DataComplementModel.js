@@ -847,7 +847,7 @@ function DataSupplementWinModel(ajid) {
             success: true,
             type: "progress",
           });
-        }, 100);
+        }, 600);
         for (let i = 0; i < 2; i++) {
           await this.execSqlUpdate();
         }

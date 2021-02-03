@@ -90,11 +90,12 @@ export default {
       client.release();
     }
   },
-  // 删除一个案件中所有表中包含sjlyid字段，并且值为特定值的数据
-  DeleteCollectionRecords: async function(ajid, sjlyid) {
+  // 删除一个案件中所有表中包含sjlyid字段，并且值为特定值的数据, excludeTables为不处理的表名称数组
+  DeleteCollectionRecords: async function(ajid, sjlyid, excludeTables = []) {
     try {
       let { success, rows } = await this.showLAllTableTableName(ajid);
       if (!success) return { success: false };
+      rows = rows.filter((row) => !excludeTables.includes(row.table_name));
       let chunkCount = 5;
       let newChunkList = lodash.chunk(rows, chunkCount);
       console.log(newChunkList);
@@ -133,11 +134,11 @@ export default {
         }
         let ret = await Promise.all(promiseArr);
       }
-
-      // 把base库的记录表中的数据删除
-      let sqlDelRows = `DELETE FROM  icap_base.st_data_source WHERE ajid =${ajid} AND SJLYID IN(${sjlyid})`;
-      console.log(sqlDelRows);
-      await base.QueryCustom(sqlDelRows);
+      if (!excludeTables.includes("st_data_source")) {
+        // 把base库的记录表中的数据删除
+        let sqlDelRows = `DELETE FROM  icap_base.st_data_source WHERE ajid =${ajid} AND SJLYID IN(${sjlyid})`;
+        await base.QueryCustom(sqlDelRows);
+      }
       return { success: true };
     } catch (e) {
       return { success: false, msg: e.message };

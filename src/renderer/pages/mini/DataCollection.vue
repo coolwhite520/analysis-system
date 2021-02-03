@@ -1186,6 +1186,7 @@ export default {
       let targetTableName = tablecname;
       let client = await global.pool.connect();
       let client2 = await global.pool.connect();
+      let client3 = await global.pool.connect();
       let lastPercentage = 0;
       let index = 0;
       let currentRowStr = "";
@@ -1193,6 +1194,7 @@ export default {
         return await new Promise(async (resolve, rejcect) => {
           await cases.SwitchCase(client, ajid);
           await cases.SwitchCase(client2, ajid);
+          await cases.SwitchCase(client3, ajid);
           let targetTableStruct = await dataImport.showTableStruct(
             ajid,
             targetTableName
@@ -1221,6 +1223,14 @@ export default {
           let copyFromStr = `COPY ${targetTableName}(${needInsertFields}) FROM STDIN`;
           // console.log(copyFromStr);
           let streamFrom = await client2.query(copyFrom(copyFromStr));
+
+          // 如果为gas_bank_records 那么备份
+          let streamFrom2 = null;
+          if (targetTableName === "gas_bank_records") {
+            // 创建copyFrom流
+            let copyFromStr2 = `COPY ${targetTableName}_source (${needInsertFields}) FROM STDIN`;
+            streamFrom2 = await client3.query(copyFrom(copyFromStr2));
+          }
           streamFrom.on("error", (err) => {
             console.log("errorRowStr:", currentRowStr);
             rejcect(err);
@@ -1285,7 +1295,13 @@ export default {
                   msg: "success",
                 });
               }
-              if (!streamFrom.write(data)) {
+              let writeSuccess = streamFrom.write(data);
+              let writeSuccess2 = true;
+              if (streamFrom2 && !streamFrom2.write(data)) {
+                writeSuccess2 = false;
+              }
+              if (writeSuccess && writeSuccess2) {
+              } else {
                 stream.pause();
               }
             })
@@ -1296,6 +1312,7 @@ export default {
             .on("end", async () => {
               log.info("querystream.end");
               streamFrom.end();
+              streamFrom2.end();
             });
         });
       } catch (e) {
@@ -1309,6 +1326,7 @@ export default {
       } finally {
         client.release();
         client2.release();
+        client3.release();
       }
     },
   },

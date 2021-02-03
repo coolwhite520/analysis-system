@@ -1022,6 +1022,454 @@ export default {
     return sql;
   },
 
+  // 数据重置的抽取逻辑
+  getDataResetExtractSqlByGasbankrecords: async function(
+    tempTableName,
+    ryid,
+    sjlyids
+  ) {
+    let sql = "";
+    // 抽取到人员信息表中
+    sql += `INSERT INTO gas_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
+       batch,
+       ryid,
+       ajid,
+       sjlylx,
+       sjlyid,
+     CASE
+         WHEN TRIM ( BOTH '  ' FROM jyzjhm ) IS NOT NULL 
+         AND TRIM ( BOTH '  ' FROM jyzjhm ) != '' THEN
+           TRIM ( BOTH '  ' FROM jyzjhm ) ELSE'0' 
+         END zzhm,
+       TRIM ( BOTH '  ' FROM jymc ) khmc,
+     CASE
+         
+         WHEN (
+           LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 15 
+           AND LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 18 
+           AND LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 4 
+         ) 
+         OR (
+           ( LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 15 ) 
+           AND (
+             LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 6 
+             AND (
+               POSITION ( '公司' IN jymc ) > 0 
+               OR POSITION ( '集团' IN jymc ) > 0 
+               OR POSITION ( '厂' IN jymc ) > 0 
+               OR POSITION ( '中心' IN jymc ) > 0 
+               OR POSITION ( '商行' IN jymc ) > 0 
+               OR POSITION ( '企业' IN jymc ) > 0 
+               OR POSITION ( '工作室' IN jymc ) > 0 
+               OR POSITION ( '研究院' IN jymc ) > 0 
+               OR POSITION ( 'TRADING' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'TRADE' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'CO.' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'LTD' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'LLC' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'INC' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'LIMIT' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'COMPANY' IN UPPER ( jymc ) ) > 0 
+               OR POSITION ( 'IMP AND EXP' IN UPPER ( jymc ) ) > 0 
+             ) 
+           ) 
+           ) THEN
+           'dz1' ELSE'z1' 
+         END zzlx,
+     CASE
+       
+       WHEN (
+         LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 15 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 18 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 4 
+       ) 
+       OR (
+         ( LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 15 ) 
+         AND (
+           LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 6 
+           AND (
+             POSITION ( '公司' IN jymc ) > 0 
+             OR POSITION ( '集团' IN jymc ) > 0 
+             OR POSITION ( '厂' IN jymc ) > 0 
+             OR POSITION ( '中心' IN jymc ) > 0 
+             OR POSITION ( '商行' IN jymc ) > 0 
+             OR POSITION ( '企业' IN jymc ) > 0 
+             OR POSITION ( '工作室' IN jymc ) > 0 
+             OR POSITION ( '研究院' IN jymc ) > 0 
+             OR POSITION ( 'TRADING' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'TRADE' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'CO.' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LTD' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LLC' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'INC' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LIMIT' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'COMPANY' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'IMP AND EXP' IN UPPER ( jymc ) ) > 0 
+           ) 
+         ) 
+         ) THEN
+         '企业法人营业执照' ELSE'居民身份证' 
+       END zzlxmc,
+     CASE
+       
+       WHEN (
+         LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 15 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 18 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 4 
+       ) 
+       OR (
+         ( LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 15 ) 
+         AND (
+           LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 6 
+           AND (
+             POSITION ( '公司' IN jymc ) > 0 
+             OR POSITION ( '集团' IN jymc ) > 0 
+             OR POSITION ( '厂' IN jymc ) > 0 
+             OR POSITION ( '中心' IN jymc ) > 0 
+             OR POSITION ( '商行' IN jymc ) > 0 
+             OR POSITION ( '企业' IN jymc ) > 0 
+             OR POSITION ( '工作室' IN jymc ) > 0 
+             OR POSITION ( '研究院' IN jymc ) > 0 
+             OR POSITION ( 'TRADING' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'TRADE' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'CO.' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LTD' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LLC' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'INC' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LIMIT' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'COMPANY' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'IMP AND EXP' IN UPPER ( jymc ) ) > 0 
+           ) 
+         ) 
+         ) THEN
+         '02' ELSE'01' 
+       END ckztlb,
+     CASE
+       
+       WHEN (
+         LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 15 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) != 18 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 4 
+       ) 
+       OR (
+         ( LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jyzjhm ) ) = 15 ) 
+         AND (
+           LENGTH ( TRIM ( BOTH '  ' FROM jymc ) ) > 6 
+           AND (
+             POSITION ( '公司' IN jymc ) > 0 
+             OR POSITION ( '集团' IN jymc ) > 0 
+             OR POSITION ( '厂' IN jymc ) > 0 
+             OR POSITION ( '中心' IN jymc ) > 0 
+             OR POSITION ( '商行' IN jymc ) > 0 
+             OR POSITION ( '企业' IN jymc ) > 0 
+             OR POSITION ( '工作室' IN jymc ) > 0 
+             OR POSITION ( '研究院' IN jymc ) > 0 
+             OR POSITION ( 'TRADING' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'TRADE' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'CO.' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LTD' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LLC' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'INC' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'LIMIT' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'COMPANY' IN UPPER ( jymc ) ) > 0 
+             OR POSITION ( 'IMP AND EXP' IN UPPER ( jymc ) ) > 0 
+           ) 
+         ) 
+         ) THEN
+         '98' ELSE'99' 
+       END sjlx,
+     CASE
+       
+       WHEN sfddbs = '1' THEN
+       '0' ELSE'1' 
+       END sfdd 
+     FROM
+       (
+       SELECT
+         *,
+         ROW_NUMBER ( ) OVER ( PARTITION BY sjlyid, jyzjhm, jymc ) 
+       FROM
+         (
+         SELECT
+           batch,
+           '${ryid}' as ryid,
+           ajid,
+           sjlyid,
+           jyzjhm,
+           jymc,
+           '' as sfddbs,
+           sjlylx 
+         FROM
+           ${tempTableName} 
+         WHERE
+           SJLYID IN (${sjlyids}) 
+           AND jyzjhm IS NOT NULL 
+           AND jyzjhm != '' 
+           AND jymc IS NOT NULL 
+           AND jymc != '' 
+         ) tt 
+       WHERE
+         tt.jyzjhm != '0' 
+       ) ss 
+     WHERE
+       ss.ROW_NUMBER = 1; `;
+
+    sql += `\r\nINSERT INTO gas_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
+       batch,
+       ryid,
+       ajid,
+       sjlylx,
+       sjlyid,
+     CASE
+         
+         WHEN TRIM ( BOTH '  ' FROM jydfzjhm ) IS NOT NULL 
+         AND TRIM ( BOTH '  ' FROM jydfzjhm ) != '' THEN
+           TRIM ( BOTH '  ' FROM jydfzjhm ) ELSE'0' 
+         END zzhm,
+       TRIM ( BOTH '  ' FROM jydfmc ) khmc,
+     CASE
+         
+         WHEN (
+           LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 15 
+           AND LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 18 
+           AND LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 4 
+         ) 
+         OR (
+           ( LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 15 ) 
+           AND (
+             LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 6 
+             AND (
+               POSITION ( '公司' IN jydfmc ) > 0 
+               OR POSITION ( '集团' IN jydfmc ) > 0 
+               OR POSITION ( '厂' IN jydfmc ) > 0 
+               OR POSITION ( '中心' IN jydfmc ) > 0 
+               OR POSITION ( '商行' IN jydfmc ) > 0 
+               OR POSITION ( '企业' IN jydfmc ) > 0 
+               OR POSITION ( '工作室' IN jydfmc ) > 0 
+               OR POSITION ( '研究院' IN jydfmc ) > 0 
+               OR POSITION ( 'TRADING' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'TRADE' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'CO.' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'LTD' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'LLC' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'INC' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'LIMIT' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'COMPANY' IN UPPER ( jydfmc ) ) > 0 
+               OR POSITION ( 'IMP AND EXP' IN UPPER ( jydfmc ) ) > 0 
+             ) 
+           ) 
+           ) THEN
+           'dz1' ELSE'z1' 
+         END zzlx,
+     CASE
+       
+       WHEN (
+         LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 15 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 18 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 4 
+       ) 
+       OR (
+         ( LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 15 ) 
+         AND (
+           LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 6 
+           AND (
+             POSITION ( '公司' IN jydfmc ) > 0 
+             OR POSITION ( '集团' IN jydfmc ) > 0 
+             OR POSITION ( '厂' IN jydfmc ) > 0 
+             OR POSITION ( '中心' IN jydfmc ) > 0 
+             OR POSITION ( '商行' IN jydfmc ) > 0 
+             OR POSITION ( '企业' IN jydfmc ) > 0 
+             OR POSITION ( '工作室' IN jydfmc ) > 0 
+             OR POSITION ( '研究院' IN jydfmc ) > 0 
+             OR POSITION ( 'TRADING' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'TRADE' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'CO.' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LTD' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LLC' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'INC' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LIMIT' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'COMPANY' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'IMP AND EXP' IN UPPER ( jydfmc ) ) > 0 
+           ) 
+         ) 
+         ) THEN
+         '企业法人营业执照' ELSE'居民身份证' 
+       END zzlxmc,
+     CASE
+       
+       WHEN (
+         LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 15 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 18 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 4 
+       ) 
+       OR (
+         ( LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 15 ) 
+         AND (
+           LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 6 
+           AND (
+             POSITION ( '公司' IN jydfmc ) > 0 
+             OR POSITION ( '集团' IN jydfmc ) > 0 
+             OR POSITION ( '厂' IN jydfmc ) > 0 
+             OR POSITION ( '中心' IN jydfmc ) > 0 
+             OR POSITION ( '商行' IN jydfmc ) > 0 
+             OR POSITION ( '企业' IN jydfmc ) > 0 
+             OR POSITION ( '工作室' IN jydfmc ) > 0 
+             OR POSITION ( '研究院' IN jydfmc ) > 0 
+             OR POSITION ( 'TRADING' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'TRADE' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'CO.' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LTD' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LLC' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'INC' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LIMIT' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'COMPANY' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'IMP AND EXP' IN UPPER ( jydfmc ) ) > 0 
+           ) 
+         ) 
+         ) THEN
+         '02' ELSE'01' 
+       END ckztlb,
+     CASE
+       
+       WHEN (
+         LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 15 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) != 18 
+         AND LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 4 
+       ) 
+       OR (
+         ( LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 18 OR LENGTH ( TRIM ( BOTH '  ' FROM jydfzjhm ) ) = 15 ) 
+         AND (
+           LENGTH ( TRIM ( BOTH '  ' FROM jydfmc ) ) > 6 
+           AND (
+             POSITION ( '公司' IN jydfmc ) > 0 
+             OR POSITION ( '集团' IN jydfmc ) > 0 
+             OR POSITION ( '厂' IN jydfmc ) > 0 
+             OR POSITION ( '中心' IN jydfmc ) > 0 
+             OR POSITION ( '商行' IN jydfmc ) > 0 
+             OR POSITION ( '企业' IN jydfmc ) > 0 
+             OR POSITION ( '工作室' IN jydfmc ) > 0 
+             OR POSITION ( '研究院' IN jydfmc ) > 0 
+             OR POSITION ( 'TRADING' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'TRADE' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'CO.' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LTD' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LLC' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'INC' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'LIMIT' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'COMPANY' IN UPPER ( jydfmc ) ) > 0 
+             OR POSITION ( 'IMP AND EXP' IN UPPER ( jydfmc ) ) > 0 
+           ) 
+         ) 
+         ) THEN
+         '98' ELSE'99' 
+       END sjlx,
+       '0' sfdd 
+     FROM
+       (
+       SELECT
+         *,
+         ROW_NUMBER ( ) OVER ( PARTITION BY sjlyid, jydfzjhm, jydfmc ) 
+       FROM
+         (
+         SELECT
+           batch,
+           '${ryid}' as ryid,
+           ajid,
+           sjlyid,
+           jydfzjhm,
+           jydfmc,
+           '' as sfddbs,
+           sjlylx 
+         FROM
+           ${tempTableName} 
+         WHERE
+         SJLYID IN (${sjlyids}) 
+           AND jydfzjhm IS NOT NULL 
+           AND jydfzjhm != '' 
+           AND jydfmc IS NOT NULL 
+           AND jydfmc != '' 
+      
+         ) tt 
+       WHERE
+         tt.jydfzjhm != '0' 
+       ) ss 
+     WHERE
+       ss.ROW_NUMBER = 1;`;
+
+    sql += `\r\nINSERT INTO gas_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
+     batch,
+     '${ryid}' as ryid,
+     ajid,
+     sjlylx,
+     sjlyid,
+     zh,
+     kh,
+     zhkhmc,
+     khrzjhm,
+     zhkhyh 
+     FROM
+       (
+       SELECT 
+         batch,
+         '${ryid}' as ryid,
+         ajid,
+         sjlylx,
+         sjlyid,
+         TRIM ( BOTH '  ' FROM cxzh ) zh,
+         TRIM ( BOTH '  ' FROM cxkh ) kh,
+         TRIM ( BOTH '  ' FROM jymc ) zhkhmc,
+         TRIM ( BOTH '  ' FROM jyzjhm ) khrzjhm,
+         TRIM ( BOTH '  ' FROM jykhh ) zhkhyh,
+         ROW_NUMBER ( ) OVER ( PARTITION BY ajid, sjlylx, sjlyid, cxzh, cxkh, jymc, jyzjhm ) 
+       FROM
+         ${tempTableName} 
+       WHERE
+       SJLYID IN (${sjlyids}) 
+         AND cxzh IS NOT NULL 
+         AND cxzh != '' 
+         AND cxkh IS NOT NULL 
+         AND cxkh != '' 
+       ) ss 
+     WHERE
+       ss.ROW_NUMBER = 1;`;
+
+    sql += `\r\nINSERT INTO gas_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
+     batch,
+     '${ryid}' as ryid,
+     ajid,
+     sjlylx,
+     sjlyid,
+     zh,
+     kh,
+     zhkhmc,
+     khrzjhm,
+     zhkhyh 
+     FROM
+       (
+       SELECT 
+         batch,
+         '${ryid}' as ryid,
+         ajid,
+         sjlylx,
+         sjlyid,
+         TRIM ( BOTH '  ' FROM jydfzkh ) zh,
+         TRIM ( BOTH '  ' FROM jydfzkh ) kh,
+         TRIM ( BOTH '  ' FROM jydfmc ) zhkhmc,
+         TRIM ( BOTH '  ' FROM jydfzjhm ) khrzjhm,
+         TRIM ( BOTH '  ' FROM jydfzhkhh ) zhkhyh,
+         ROW_NUMBER ( ) OVER ( PARTITION BY ajid, sjlylx, sjlyid, jydfzkh, jydfmc, jydfzjhm ) 
+       FROM
+         ${tempTableName} 
+       WHERE
+       SJLYID IN (${sjlyids}) 
+         AND jydfzkh IS NOT NULL 
+         AND jydfzkh != '' 
+       ) ss 
+     WHERE
+       ss.ROW_NUMBER = 1;`;
+    return sql;
+  },
+
   // 根据反洗钱表中的temp数据抽取
   extractDataByFanxiqianTable: async function(tempTableName, sjlyid) {
     let sql = "";
