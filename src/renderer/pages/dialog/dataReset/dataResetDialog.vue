@@ -93,6 +93,8 @@ export default {
     console.log("Mounted");
     try {
       this.loading = true;
+      let sjlyidsSource = await this.getBakSourceSjlyids();
+      console.log(sjlyidsSource);
       let {
         success,
         rows,
@@ -102,6 +104,9 @@ export default {
       if (success) {
         console.log(success, rows, headers, rowCount);
         rows.forEach((row) => {
+          if (!sjlyidsSource.includes(row.sjlyid)) {
+            return;
+          }
           let obj = this.activities.find((item) => item.batch === row.batch);
           if (obj) {
             if (row.mbmc === "通用模板") {
@@ -120,9 +125,11 @@ export default {
             }
           }
         });
-        this.activities.sort((a, b) => {
-          return a.batch - b.batch;
-        });
+        if (this.activities.length > 0) {
+          this.activities = this.activities.sort((a, b) => {
+            return a.batch - b.batch;
+          });
+        }
         this.loading = false;
       }
     } catch (e) {
@@ -143,6 +150,15 @@ export default {
     };
   },
   methods: {
+    async getBakSourceSjlyids() {
+      try {
+        let sql = `SELECT DISTINCT sjlyid from gas_bank_records_source;`;
+        let ret = await Base.QueryCustom(sql, this.caseBase.ajid);
+        return ret.rows.map((row) => row.sjlyid);
+      } catch (e) {
+        return [];
+      }
+    },
     handleChangeBatch(val) {
       let checkCount = 0;
       this.activities.forEach((item) => {
