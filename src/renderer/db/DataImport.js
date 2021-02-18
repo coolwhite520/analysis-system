@@ -36,7 +36,7 @@ export default {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
-      let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM gas_match_log where MBDM = '${mbdm}'`;
+      let sql = `SELECT ID, MBDM, COLUMNNAME,FIELDNAME FROM ff_match_log where MBDM = '${mbdm}'`;
       const res = await client.query(sql);
       return res.rows; // id, fieldcname, fieldename, ...
     } finally {
@@ -53,7 +53,7 @@ export default {
       if (pdm.length > 0) {
         sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
         st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
-        st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
+        st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  ff_match_log)D where mbdm  in 
       (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
         (upper(B.tablename)=upper(A.tablecname)  or upper(B.tablename||'_source')=upper(A.tablecname) ) 
          where pdm='${pdm}'
@@ -63,7 +63,7 @@ export default {
       } else {
         sql = `SELECT count(*),mbdm from (SELECT fieldcname, tableename,mbdm  from (SELECT  fieldcname, tableename,mbdm from  
         st_data_template_createfield  union SELECT fieldcname, tableename, mbdm from 
-        st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  gas_match_log)D where mbdm  in 
+        st_data_template_field union SELECT columnname as fieldcname, 'ff' as tableename,mbdm  from  ff_match_log)D where mbdm  in 
       (SELECT mbdm FROM st_data_template A INNER JOIN layout_table_info B on      
         (upper(B.tablename)=upper(A.tablecname)  or upper(B.tablename||'_source')=upper(A.tablecname) ) 
          where tablecname is not null AND tablecname != '' and ishide='0' and     
@@ -549,7 +549,7 @@ export default {
   extractSqlByGasbankrecords: async function(tempTableName, sjlyid) {
     let sql = "";
     // 抽取到人员信息表中
-    sql += `INSERT INTO gas_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
+    sql += `INSERT INTO ff_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
      CASE
          
        WHEN TRIM
@@ -750,7 +750,7 @@ export default {
      WHERE
        ss.ROW_NUMBER = 1; `;
 
-    sql += `INSERT INTO gas_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
+    sql += `INSERT INTO ff_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
      CASE
          
        WHEN TRIM
@@ -948,7 +948,7 @@ export default {
      WHERE
        ss.ROW_NUMBER = 1;`;
 
-    sql += `INSERT INTO gas_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
+    sql += `INSERT INTO ff_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
      batch,
      ryid,
      ajid,
@@ -985,7 +985,7 @@ export default {
      WHERE
        ss.ROW_NUMBER = 1;`;
 
-    sql += `INSERT INTO gas_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
+    sql += `INSERT INTO ff_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
      batch,
      ryid,
      ajid,
@@ -1030,7 +1030,7 @@ export default {
   ) {
     let sql = "";
     // 抽取到人员信息表中
-    sql += `INSERT INTO gas_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
+    sql += `INSERT INTO ff_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
        batch,
        ryid,
        ajid,
@@ -1214,7 +1214,7 @@ export default {
      WHERE
        ss.ROW_NUMBER = 1; `;
 
-    sql += `\r\nINSERT INTO gas_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
+    sql += `\r\nINSERT INTO ff_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
        batch,
        ryid,
        ajid,
@@ -1396,7 +1396,7 @@ export default {
      WHERE
        ss.ROW_NUMBER = 1;`;
 
-    sql += `\r\nINSERT INTO gas_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
+    sql += `\r\nINSERT INTO ff_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
      batch,
      '${ryid}' as ryid,
      ajid,
@@ -1433,7 +1433,7 @@ export default {
      WHERE
        ss.ROW_NUMBER = 1;`;
 
-    sql += `\r\nINSERT INTO gas_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
+    sql += `\r\nINSERT INTO ff_account_info ( batch, ryid, ajid, sjlylx, sjlyid, zh, kh, zhkhmc, khrzjhm, zhkhyh ) SELECT
      batch,
      '${ryid}' as ryid,
      ajid,
@@ -1474,7 +1474,7 @@ export default {
   extractDataByFanxiqianTable: async function(tempTableName, sjlyid) {
     let sql = "";
     // 先抽取到account表
-    sql += `INSERT into gas_account_info (batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh) 
+    sql += `INSERT into ff_account_info (batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh) 
     SELECT batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh  from ( SELECT TRIM(both '  ' FROM batch)::bigint batch,ryid, 
     TRIM(both '  ' FROM ajid)::bigint ajid,'数据抽取' sjlylx,TRIM(both '  ' FROM sjlyid)::bigint sjlyid, 
     TRIM(both '  ' FROM cxzh) zh,TRIM(both '  ' FROM cxkh) kh,TRIM(both '  ' FROM jymc) zhkhmc,TRIM(both '  ' FROM jyzjhm) khrzjhm, 
@@ -1482,7 +1482,7 @@ export default {
      row_number() OVER(PARTITION BY ajid,sjlylx,sjlyid,cxzh,cxkh,jymc,jyzjhm ) from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  AND 
     cxzh is not null and cxzh != '' and cxkh is not null and cxkh != '')  ss where   ss.ROW_NUMBER = 1 
     ;`;
-    sql += `INSERT into gas_account_info (batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh) 
+    sql += `INSERT into ff_account_info (batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh) 
     SELECT batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh from ( SELECT TRIM(both '  ' FROM batch)::bigint batch,ryid, 
     TRIM(both '  ' FROM ajid)::bigint ajid,'数据抽取' sjlylx,TRIM(both '  ' FROM sjlyid)::bigint sjlyid, 
     TRIM(both '  ' FROM jydfzkh) zh,TRIM(both '  ' FROM jydfzkh) kh,TRIM(both '  ' FROM jydfmc) zhkhmc,TRIM(both '  ' FROM jydfzjhm) khrzjhm, 
@@ -1491,7 +1491,7 @@ export default {
     jydfzkh is not null and jydfzkh != '' )  ss where   ss.ROW_NUMBER = 1; 
     `;
     //抽取数据到person表
-    sql += `INSERT into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
+    sql += `INSERT into ff_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
     ryid, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
@@ -1518,7 +1518,7 @@ export default {
     '0' sfdd  from ( select *, row_number() OVER(PARTITION BY sjlyid,jydfzjhm,jydfmc) from  (SELECT batch,ryid,ajid,sjlyid,jydfzjhm,jydfmc,sfddbs,sjlylx 
     from ${tempTableName} WHERE SJLYID IN('${sjlyid}') and jydfzjhm is not null and jydfzjhm != '' and jydfmc is not null and jydfmc != '') tt  where tt.jydfzjhm!='0' ) ss where ss.ROW_NUMBER = 1 
     ;`;
-    sql += `INSERT into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
+    sql += `INSERT into ff_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
     ryid, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
@@ -1547,10 +1547,10 @@ export default {
     ;`;
     return sql;
   },
-  extractDataByGas_tax_swdj: async function(tempTableName, sjlyid) {
+  extractDataByff_tax_swdj: async function(tempTableName, sjlyid) {
     let sql = "";
-    //gas_person
-    sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,zzhm,khmc,zcdz,jyd,frdbxm,frdbzjhm,zczb,jyfw,yyksqx,yyjsqx,frdbzjlx,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
+    //ff_person
+    sql += `insert into ff_person(batch,ajid,sjlylx,sjlyid,zzhm,khmc,zcdz,jyd,frdbxm,frdbzjhm,zczb,jyfw,yyksqx,yyjsqx,frdbzjlx,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
     nssbh zzhm,nsrmc khmc,gsdjdz zcdz,scjydz jyd,fddbrmc frdbxm,fddbrsfzh frdbzjhm,zczb zczb,jyfw jyfw,'' yyksqx,'' yyjsqx,'' frdbzjlx,ryid , CASE WHEN (LENGTH(TRIM(both '  ' FROM nssbh))!=15 and LENGTH(TRIM(both '  ' FROM nssbh))!=18  and  LENGTH(TRIM(both '  ' FROM nsrmc))>4 ) or  
@@ -1575,7 +1575,7 @@ export default {
     ,'1' sfdd from ${tempTableName}  
     where SJLYID IN('${sjlyid}') and nssbh is not null and nssbh!='';`;
 
-    sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
+    sql += `insert into ff_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
     fddbrmc khmc,fddbrsfzh zzhm,frlxfs lxsj,'' lxdh,'' ryid , CASE WHEN (LENGTH(TRIM(both '  ' FROM fddbrsfzh))!=15 and LENGTH(TRIM(both '  ' FROM fddbrsfzh))!=18  and  LENGTH(TRIM(both '  ' FROM fddbrmc))>4 ) or  
@@ -1600,7 +1600,7 @@ export default {
     ,'1' sfdd from ${tempTableName}  
     where SJLYID IN('${sjlyid}') and fddbrsfzh is not null and fddbrsfzh!='';`;
 
-    sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
+    sql += `insert into ff_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
     cwxm khmc,cwsfzh zzhm,'' lxsj,cwfzrgddh lxdh,'' ryid , CASE WHEN (LENGTH(TRIM(both '  ' FROM cwsfzh))!=15 and LENGTH(TRIM(both '  ' FROM cwsfzh))!=18  and  LENGTH(TRIM(both '  ' FROM cwxm))>4 ) or  
@@ -1626,7 +1626,7 @@ export default {
     ,'1' sfdd from ${tempTableName}  
     where SJLYID IN('${sjlyid}')  and cwsfzh is not null and cwsfzh!='';`;
 
-    sql += `insert into gas_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
+    sql += `insert into ff_person(batch,ajid,sjlylx,sjlyid,khmc,zzhm,lxsj,lxdh,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
     select case when batch is not null and TRIM(both '  ' FROM batch) !='' then batch else '0' end::bigint batch, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
     bsrxm khmc,bsrsfzh zzhm,bsrlxfs lxsj,cwfzrgddh lxdh,'' ryid , CASE WHEN (LENGTH(TRIM(both '  ' FROM bsrsfzh))!=15 and LENGTH(TRIM(both '  ' FROM bsrsfzh))!=18  and  LENGTH(TRIM(both '  ' FROM bsrxm))>4 ) or  
@@ -1653,9 +1653,9 @@ export default {
     where SJLYID IN('${sjlyid}') and bsrsfzh is not null and bsrsfzh!='';`;
     return sql;
   },
-  extractDataByGas_tax_records: async function(tempTableName, sjlyid) {
+  extractDataByff_tax_records: async function(tempTableName, sjlyid) {
     let sql = "";
-    sql += `insert into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,sjlx,sfdd)
+    sql += `insert into ff_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,sjlx,sfdd)
     SELECT case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
     ryid, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
@@ -1663,7 +1663,7 @@ export default {
      TRIM(both '  ' FROM gfgsmc) khmc,'dz1' zzlx,'企业法人营业执照' zzlxmc ,'98' sjlx, 
     '1' sfdd 
     from ${tempTableName} WHERE SJLYID IN('${sjlyid}')  and gfsh is not null and gfsh != '' ;`;
-    sql += `insert into gas_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,sjlx,sfdd)
+    sql += `insert into ff_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,sjlx,sfdd)
     SELECT case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
     ryid, case when TRIM(both '  ' FROM ajid) is not null and TRIM(both '  ' FROM ajid) !='' then TRIM(both '  ' FROM ajid) else '0' end::bigint ajid, 
     '数据抽取' sjlylx, case when TRIM(both '  ' FROM sjlyid) is not null and TRIM(both '  ' FROM sjlyid) !='' then TRIM(both '  ' FROM sjlyid) else '0' end::bigint sjlyid,  
@@ -1693,11 +1693,11 @@ export default {
         // 反洗钱模版
         sql = await this.extractDataByFanxiqianTable(tempTableName, sjlyid);
       } else if (mbdm === "10100001011") {
-        // 税务登记表 gas_tax_swdj
-        sql = await this.extractDataByGas_tax_swdj(tempTableName, sjlyid);
+        // 税务登记表 ff_tax_swdj
+        sql = await this.extractDataByff_tax_swdj(tempTableName, sjlyid);
       } else if (mbdm === "150001") {
-        //进销项税务 gas_tax_records_150001
-        sql = await this.extractDataByGas_tax_records(tempTableName, sjlyid);
+        //进销项税务 ff_tax_records_150001
+        sql = await this.extractDataByff_tax_records(tempTableName, sjlyid);
       }
       console.log(sql);
       await client.query(sql);
@@ -1770,7 +1770,7 @@ export default {
         .createHash("md5")
         .update(filecols_str)
         .digest("hex");
-      let sql = `select * from icap_base.gas_match_file_record where md5='${md5_str}' and matchedmbdm='${matchedmbdm}'`;
+      let sql = `select * from icap_base.ff_match_file_record where md5='${md5_str}' and matchedmbdm='${matchedmbdm}'`;
       let res = await client.query(sql);
       if (res.rows.length > 0) {
         return {
@@ -1824,7 +1824,7 @@ export default {
         outflag,
         new Date().Format("yyyy-MM-dd hh:mm:ss"),
       ];
-      let sql = `INSERT INTO icap_base.gas_match_file_record(${createFields})
+      let sql = `INSERT INTO icap_base.ff_match_file_record(${createFields})
       VALUES($1, $2, $3, $4, $5, $6, $7, $8)
       ON conflict(md5) DO UPDATE
       set 

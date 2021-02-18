@@ -30,7 +30,7 @@ const dataCenterTableTemplate = {
     $FIELDS$
   FROM
     (
-      ( SELECT * FROM gas_person WHERE ( ckztlb = '01' OR ZZLX = 'z1' ) AND ajid = $AJID$ )
+      ( SELECT * FROM ff_person WHERE ( ckztlb = '01' OR ZZLX = 'z1' ) AND ajid = $AJID$ )
       P LEFT JOIN (
       SELECT
         zjhm,
@@ -38,8 +38,8 @@ const dataCenterTableTemplate = {
         ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
-          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
         ) C 
       ) G ON P.zzhm = G.zjhm 
       AND P.khmc = G.mc
@@ -50,8 +50,8 @@ const dataCenterTableTemplate = {
         COUNT ( DISTINCT kh ) AS glzhs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
-          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
         ) F 
       GROUP BY
         zjhm,
@@ -68,7 +68,7 @@ const dataCenterTableTemplate = {
     count(*)::int count
   FROM
     (
-      ( SELECT * FROM gas_person WHERE ( ckztlb = '01' OR ZZLX = 'z1' ) AND ajid = $AJID$ )
+      ( SELECT * FROM ff_person WHERE ( ckztlb = '01' OR ZZLX = 'z1' ) AND ajid = $AJID$ )
       P LEFT JOIN (
       SELECT
         zjhm,
@@ -76,8 +76,8 @@ const dataCenterTableTemplate = {
         ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
-          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
         ) C 
       ) G ON P.zzhm = G.zjhm 
       AND P.khmc = G.mc
@@ -88,8 +88,8 @@ const dataCenterTableTemplate = {
         COUNT ( DISTINCT kh ) AS glzhs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
-          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
         ) F 
       GROUP BY
         zjhm,
@@ -107,7 +107,7 @@ const dataCenterTableTemplate = {
     $FIELDS$
   FROM
     (
-      ( SELECT * FROM gas_person WHERE ( ckztlb = '02' OR ZZLX = 'dz1' ) AND ajid = $AJID$ )
+      ( SELECT * FROM ff_person WHERE ( ckztlb = '02' OR ZZLX = 'dz1' ) AND ajid = $AJID$ )
       P LEFT JOIN (
       SELECT
         zjhm,
@@ -115,8 +115,8 @@ const dataCenterTableTemplate = {
         ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
-          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
         ) C 
       ) G ON P.zzhm = G.zjhm 
       AND P.khmc = G.mc
@@ -127,8 +127,8 @@ const dataCenterTableTemplate = {
         COUNT ( DISTINCT kh ) AS glzhs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
-          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
         ) F 
       GROUP BY
         zjhm,
@@ -145,7 +145,7 @@ const dataCenterTableTemplate = {
     count(*)::int count
   FROM
     (
-      ( SELECT * FROM gas_person WHERE ( ckztlb = '02' OR ZZLX = 'dz1' ) AND ajid = $AJID$ )
+      ( SELECT * FROM ff_person WHERE ( ckztlb = '02' OR ZZLX = 'dz1' ) AND ajid = $AJID$ )
       P LEFT JOIN (
       SELECT
         zjhm,
@@ -153,8 +153,8 @@ const dataCenterTableTemplate = {
         ( CASE WHEN jybs IS NULL THEN dfjybs WHEN dfjybs IS NULL THEN jybs ELSE jybs + dfjybs END ) AS jybs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
-          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, COUNT ( jyzjhm ) AS jybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc )
+          A FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, COUNT ( jydfzjhm ) AS dfjybs FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc ) B USING ( ZJHM, MC ) 
         ) C 
       ) G ON P.zzhm = G.zjhm 
       AND P.khmc = G.mc
@@ -165,8 +165,8 @@ const dataCenterTableTemplate = {
         COUNT ( DISTINCT kh ) AS glzhs 
       FROM
         (
-          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
-          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
+          ( SELECT jyzjhm AS zjhm, jymc AS mc, cxkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jyzjhm, jymc, cxkh ) D
+          FULL JOIN ( SELECT jydfzjhm AS zjhm, jydfmc AS mc, jydfzkh AS kh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY jydfzjhm, jydfmc, jydfzkh ) E USING ( zjhm, mc, kh ) 
         ) F 
       GROUP BY
         zjhm,
@@ -193,7 +193,7 @@ const dataCenterTableTemplate = {
         SELECT
           * 
         FROM
-          gas_account_info 
+          ff_account_info 
         WHERE
           ajid = $AJID$ 
           AND (
@@ -203,7 +203,7 @@ const dataCenterTableTemplate = {
             AND zh IS NOT NULL 
           ) 
         )
-        A LEFT JOIN ( SELECT cxkh FROM gas_bank_records WHERE ajid = $AJID$ GROUP BY cxkh ) B ON A.kh = B.cxkh 
+        A LEFT JOIN ( SELECT cxkh FROM ff_bank_records WHERE ajid = $AJID$ GROUP BY cxkh ) B ON A.kh = B.cxkh 
       ) 
     ) C 
   WHERE
@@ -211,10 +211,10 @@ const dataCenterTableTemplate = {
     $SQLORDERBY$
     LIMIT $COUNT$ OFFSET $OFFSET$`,
     countSql: `SELECT count(*)::int count FROM( SELECT *  ,(case WHEN cxkh is NULL then '未调单' else '已调单' end ) as sfdd 
-    from((SELECT * FROM  gas_account_info  WHERE ajid = $AJID$  
+    from((SELECT * FROM  ff_account_info  WHERE ajid = $AJID$  
        AND(LENGTH(coalesce(Kh, '0')) > 0 
        AND kh IS NOt NULL OR LENGTH(coalesce(zh, '0')) > 0 
-       AND zh IS NOt NULL))A left join(SELECT  cxkh  FROM gas_bank_records where ajid=$AJID$  GROUP BY cxkh)B on A.kh = B.cxkh) )C WHERE 1=1  $FILTER$`,
+       AND zh IS NOt NULL))A left join(SELECT  cxkh  FROM ff_bank_records where ajid=$AJID$  GROUP BY cxkh)B on A.kh = B.cxkh) )C WHERE 1=1  $FILTER$`,
   },
   //银行信息模版
   bankTemplate: {
@@ -232,13 +232,13 @@ const dataCenterTableTemplate = {
       ( CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END ) AS JYDFMCGROUP 
     FROM
       (
-        ( SELECT * FROM gas_bank_records WHERE ajid = $AJID$ ) BANK
-        LEFT JOIN ( SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP1 ON BANK.CXKH = GROUP1.GROUPMEMBER
-        LEFT JOIN ( SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP2 ON BANK.JYDFZKH = GROUP2.GROUPMEMBER
-        LEFT JOIN ( SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP3 ON BANK.JYZJHM = GROUP3.GROUPMEMBER
-        LEFT JOIN ( SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP4 ON BANK.JYDFZJHM = GROUP4.GROUPMEMBER
-        LEFT JOIN ( SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP5 ON BANK.JYMC = GROUP5.GROUPMEMBER
-        LEFT JOIN ( SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP6 ON BANK.JYDFMC = GROUP6.GROUPMEMBER 
+        ( SELECT * FROM ff_bank_records WHERE ajid = $AJID$ ) BANK
+        LEFT JOIN ( SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'ff_bank_records' ) GROUP1 ON BANK.CXKH = GROUP1.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'ff_bank_records' ) GROUP2 ON BANK.JYDFZKH = GROUP2.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'ff_bank_records' ) GROUP3 ON BANK.JYZJHM = GROUP3.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'ff_bank_records' ) GROUP4 ON BANK.JYDFZJHM = GROUP4.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'ff_bank_records' ) GROUP5 ON BANK.JYMC = GROUP5.GROUPMEMBER
+        LEFT JOIN ( SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'ff_bank_records' ) GROUP6 ON BANK.JYDFMC = GROUP6.GROUPMEMBER 
       ) ALLBANK 
     ) GROUPBANKTABLE 
   WHERE
@@ -261,21 +261,21 @@ SELECT
   ( CASE WHEN JYDFMCGROUPNAME IS NULL THEN JYDFMC ELSE JYDFMCGROUPNAME END ) AS JYDFMCGROUP 
 FROM
   (
-    ( SELECT * FROM gas_bank_records WHERE ajid = $AJID$ ) BANK
-    LEFT JOIN ( SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP1 ON BANK.CXKH = GROUP1.GROUPMEMBER
-    LEFT JOIN ( SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'gas_bank_records' ) GROUP2 ON BANK.JYDFZKH = GROUP2.GROUPMEMBER
-    LEFT JOIN ( SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP3 ON BANK.JYZJHM = GROUP3.GROUPMEMBER
-    LEFT JOIN ( SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'gas_bank_records' ) GROUP4 ON BANK.JYDFZJHM = GROUP4.GROUPMEMBER
-    LEFT JOIN ( SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP5 ON BANK.JYMC = GROUP5.GROUPMEMBER
-    LEFT JOIN ( SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'gas_bank_records' ) GROUP6 ON BANK.JYDFMC = GROUP6.GROUPMEMBER 
+    ( SELECT * FROM ff_bank_records WHERE ajid = $AJID$ ) BANK
+    LEFT JOIN ( SELECT GROUPNAME AS CXKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'ff_bank_records' ) GROUP1 ON BANK.CXKH = GROUP1.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYDFZKHGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'CXKH&JYDFZKH' AND TABLENAME = 'ff_bank_records' ) GROUP2 ON BANK.JYDFZKH = GROUP2.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'ff_bank_records' ) GROUP3 ON BANK.JYZJHM = GROUP3.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYDFZJHMGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYZJHM&JYDFZJHM' AND TABLENAME = 'ff_bank_records' ) GROUP4 ON BANK.JYDFZJHM = GROUP4.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'ff_bank_records' ) GROUP5 ON BANK.JYMC = GROUP5.GROUPMEMBER
+    LEFT JOIN ( SELECT GROUPNAME AS JYDFMCGROUPNAME, GROUPMEMBER FROM mark_group_detail WHERE ajid = $AJID$ AND TABLECOLUMN = 'JYMC&JYDFMC' AND TABLENAME = 'ff_bank_records' ) GROUP6 ON BANK.JYDFMC = GROUP6.GROUPMEMBER 
   ) ALLBANK 
 ) GROUPBANKTABLE 
 WHERE
 1 = 1 $FILTER$`,
   },
   taxTemplate: {
-    querySql: `SELECT $FIELDS$ FROM gas_tax_records WHERE ajid = '$AJID$' $FILTER$ ORDER BY shard_id DESC LIMIT $COUNT$ OFFSET $OFFSET$`,
-    countSql: `select count(1)::int count from gas_tax_records where 1=1 $FILTER$`,
+    querySql: `SELECT $FIELDS$ FROM ff_tax_records WHERE ajid = '$AJID$' $FILTER$ ORDER BY shard_id DESC LIMIT $COUNT$ OFFSET $OFFSET$`,
+    countSql: `select count(1)::int count from ff_tax_records where 1=1 $FILTER$`,
   },
   otherTemplate: {
     querySql: `SELECT $FIELDS$ FROM $TABLENAME$ WHERE ajid = '$AJID$' $FILTER$ ORDER BY shard_id DESC LIMIT $COUNT$ OFFSET $OFFSET$`,

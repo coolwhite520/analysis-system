@@ -34,7 +34,7 @@ export default {
     async getValueOfMbdm(ryid, fileName, mbdm, extField) {
       let value = "";
       switch (mbdm) {
-        case "150001": //"gas_tax_records_source":
+        case "150001": //"ff_tax_records_source":
           {
             if (extField.toLowerCase() === "ryid") {
               value = ryid;
@@ -48,21 +48,21 @@ export default {
             }
           }
           break;
-        case "220001": //"gas_phone_call_info":
+        case "220001": //"ff_phone_call_info":
           {
             if (extField.toLowerCase() === "thjlid") {
               value = UUID.v1();
             }
           }
           break;
-        case "61000021": //"gas_account_info": 平台导出账户信息
+        case "61000021": //"ff_account_info": 平台导出账户信息
           {
             if (extField.toLowerCase() === "ryid") {
               value = ryid;
             }
           }
           break;
-        case "61000020": //"gas_person": 平台导出人员信息
+        case "61000020": //"ff_person": 平台导出人员信息
           {
             if (extField.toLowerCase() === "ryid") {
               value = ryid;
@@ -96,7 +96,7 @@ export default {
             }
           }
           break;
-        case "130002": //"gas_bank_records_source": // 交易明细
+        case "130002": //"ff_bank_records_source": // 交易明细
           {
             if (extField.toLowerCase() === "yhjymxid") {
               // 交易记录
@@ -108,7 +108,7 @@ export default {
             }
           }
           break;
-        case "10100001011": //"gas_tax_swdj":
+        case "10100001011": //"ff_tax_swdj":
           {
             if (extField.toLowerCase() === "ryid") {
               value = ryid;
@@ -118,7 +118,7 @@ export default {
             }
           }
           break;
-        case "145001": //"gas_im_msg":  微信通讯记录
+        case "145001": //"ff_im_msg":  微信通讯记录
           {
             if (extField.toLowerCase() === "sjlx") {
               // 0：QQ 1：微信 2：MailBox 3:微博 4:其它
@@ -126,7 +126,7 @@ export default {
             }
           }
           break;
-        case "110002": //"gas_bank_records_source": // 通用模版
+        case "110002": //"ff_bank_records_source": // 通用模版
           {
             //ryid,yhjymxid,sfddbs
             if (extField.toLowerCase() === "ryid") {
@@ -139,7 +139,7 @@ export default {
             }
           }
           break;
-        case "160001": //"gas_account_info": 开户信息
+        case "160001": //"ff_account_info": 开户信息
           {
             if (extField.toLowerCase() === "ryid") {
               // 交易记录
@@ -147,7 +147,7 @@ export default {
             }
           }
           break;
-        case "130001": //gas_account_info 账户信息列表
+        case "130001": //ff_account_info 账户信息列表
           {
             if (extField.toLowerCase() === "ryid") {
               // 交易记录
@@ -155,7 +155,7 @@ export default {
             }
           }
           break;
-        case "130003": //gas_person 身份信息列表
+        case "130003": //ff_person 身份信息列表
           {
             //ryid,zzlx,zzlxmc,sjlx
             if (extField.toLowerCase() === "ryid") {
@@ -1224,9 +1224,9 @@ export default {
           // console.log(copyFromStr);
           let streamFrom = await client2.query(copyFrom(copyFromStr));
 
-          // 如果为gas_bank_records 那么备份
+          // 如果为ff_bank_records 那么备份
           let streamFrom2 = null;
-          if (targetTableName === "gas_bank_records") {
+          if (targetTableName === "ff_bank_records") {
             // 创建copyFrom流
             let copyFromStr2 = `COPY ${targetTableName}_source (${needInsertFields}) FROM STDIN`;
             streamFrom2 = await client3.query(copyFrom(copyFromStr2));

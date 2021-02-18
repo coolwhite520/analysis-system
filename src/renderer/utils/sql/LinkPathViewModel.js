@@ -114,11 +114,11 @@ function GetAnalysisOtherTable(
     return itemSql
       .replace(
         /\$MODEL_FILTER_GROUP\$/g,
-        Default.GetBankDetailTableSql("gas_bank_records")
+        Default.GetBankDetailTableSql("ff_bank_records")
       )
       .replace(
         /\$MODEL_FILTER_GROUP_SUM\$/g,
-        Default.GetBankDetailTableSumSql("gas_bank_records")
+        Default.GetBankDetailTableSumSql("ff_bank_records")
       )
       .replace(/\$AJID\$/g, caseId)
       .replace(/\$ZXJYJE_CONDITION\$/g, "")
@@ -441,7 +441,7 @@ function DetailDataProvider() {
   this.GetGroupSqlTemplate = function() {
     return (
       "select shard_id as ids, '出' as jdbz, to_char(jysj::timestamp, 'yyyy-MM-dd HH24:mi:ss') as jysj, jyje,'0' as istrue, case when jdbz = '出' then cxkhgroup else jydfzkhgroup end cxkh, case when jdbz = '出' then jymcgroup else jydfmcgroup end jymc, case WHEN jdbz = '出' THEN jyzjhmgroup ELSE jydfzjhmgroup END jyzjhm, case when jdbz = '出' then jydfzkhgroup else cxkhgroup end jydfzkh, case when jdbz = '出' then jydfmcgroup else jymcgroup end jydfmc, case WHEN jdbz = '出' THEN jydfzjhmgroup ELSE jyzjhmgroup END jydfzjhm from " +
-      Default.GetBankDetailTableSumSql("gas_bank_records") +
+      Default.GetBankDetailTableSumSql("ff_bank_records") +
       " where ajid = " +
       this.base.Paras.Ajid +
       " and jysj is not null $parm2$ $parm2$ $parm4$ ORDER BY jymc"
@@ -449,7 +449,7 @@ function DetailDataProvider() {
   };
   this.GetSqlTemplate = function() {
     return (
-      "select shard_id as ids, '出' as jdbz, to_char(jysj::timestamp, 'yyyy-MM-dd HH24:mi:ss') as jysj, jyje,'0' as istrue, case when jdbz = '出' then cxkh else jydfzkh end cxkh, case when jdbz = '出' then jymc else jydfmc end jymc, case WHEN jdbz = '出' THEN jyzjhm ELSE jydfzjhm END jyzjhm, case when jdbz = '出' then jydfzkh else cxkh end jydfzkh, case when jdbz = '出' then jydfmc else jymc end jydfmc, case WHEN jdbz = '出' THEN jydfzjhm ELSE jyzjhm END jydfzjhm from gas_bank_records  where ajid = " +
+      "select shard_id as ids, '出' as jdbz, to_char(jysj::timestamp, 'yyyy-MM-dd HH24:mi:ss') as jysj, jyje,'0' as istrue, case when jdbz = '出' then cxkh else jydfzkh end cxkh, case when jdbz = '出' then jymc else jydfmc end jymc, case WHEN jdbz = '出' THEN jyzjhm ELSE jydfzjhm END jyzjhm, case when jdbz = '出' then jydfzkh else cxkh end jydfzkh, case when jdbz = '出' then jydfmc else jymc end jydfmc, case WHEN jdbz = '出' THEN jydfzjhm ELSE jyzjhm END jydfzjhm from ff_bank_records  where ajid = " +
       this.base.Paras.Ajid +
       " and jysj is not null $parm2$ $parm3$ $parm4$ ORDER BY jymc "
     );

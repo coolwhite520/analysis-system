@@ -177,7 +177,7 @@ function DataSupplementWinModel(ajid) {
       // 创建索引
       await cases.SwitchCase(client, this.ajid);
       let sqlIndexCreate = `CREATE INDEX search_fast_index
-      ON gas_bank_records (cxkh, jydfzkh);`;
+      ON ff_bank_records (cxkh, jydfzkh);`;
       await client.query(sqlIndexCreate);
     } catch (e) {
       console.log(e.message);
@@ -224,7 +224,7 @@ function DataSupplementWinModel(ajid) {
         jydfzhkhh khyh,
         jydfzjhm zzhm 
       FROM
-        gas_bank_records 
+        ff_bank_records 
       WHERE
         jydfzkh IS NOT NULL 
         AND jydfzkh != '' 
@@ -237,7 +237,7 @@ function DataSupplementWinModel(ajid) {
         JYKHH khyh,
         jyzjhm zzhm 
       FROM
-        gas_bank_records 
+        ff_bank_records 
       WHERE
         cxkh IS NOT NULL 
         AND cxkh != '' 
@@ -266,7 +266,7 @@ function DataSupplementWinModel(ajid) {
       jydfzhkhh khyh,
       jydfzjhm zzhm 
     FROM
-      gas_bank_records 
+      ff_bank_records 
     WHERE
       jydfzkh IS NOT NULL 
       AND jydfzkh != '' 
@@ -287,13 +287,13 @@ function DataSupplementWinModel(ajid) {
         JYKHH khyh,
         jyzjhm zzhm 
       FROM
-        gas_bank_records 
+        ff_bank_records 
       WHERE
          cxkh IS NOT NULL 
         AND cxkh != '' 
         AND ( ( jymc IS NULL OR jymc = '' ) OR ( JYKHH IS NULL OR JYKHH = '' ) OR ( jyzjhm IS NULL OR jyzjhm = '' ) )  AND ajid = ${this.ajid}
       )
-      A INNER JOIN gas_account_info B   ON A.zh = B.kh 
+      A INNER JOIN ff_account_info B   ON A.zh = B.kh 
     WHERE
       B.ajid = ${this.ajid} 
       AND  (
@@ -448,7 +448,7 @@ function DataSupplementWinModel(ajid) {
       COALESCE ( jydfzjhm, '' ) zzhm,
       '0' jydd  
     FROM
-       gas_bank_records  
+       ff_bank_records  
     WHERE
        jydfzkh IS NOT NULL 
       AND jydfzkh != '' 
@@ -461,7 +461,7 @@ function DataSupplementWinModel(ajid) {
       COALESCE ( jydfzjhm, '' ) zzhm,
       '0' jydd  
     FROM
-       gas_bank_records 
+       ff_bank_records 
     WHERE
       jydfzkh IS NOT NULL 
       AND jydfzkh != '' 
@@ -492,14 +492,14 @@ function DataSupplementWinModel(ajid) {
           COALESCE ( jyzjhm, '' ) zzhm,
           '1' jydd 
         FROM
-          gas_bank_records 
+          ff_bank_records 
         WHERE
           cxkh IS NOT NULL 
           AND cxkh != '' 
           AND ( ( jymc IS NULL OR jymc = '' ) OR ( JYKHH IS NULL OR JYKHH = '' ) OR ( jyzjhm IS NULL OR jyzjhm = '' ) ) 
           AND ajid = ${this.ajid}
         )
-        A INNER JOIN gas_account_info B ON A.zh = B.kh 
+        A INNER JOIN ff_account_info B ON A.zh = B.kh 
       WHERE
         B.ajid = ${this.ajid}
         AND (
@@ -534,7 +534,7 @@ function DataSupplementWinModel(ajid) {
       COALESCE ( jyzjhm, '' ) zzhm,
       '1' jydd 
     FROM
-      gas_bank_records 
+      ff_bank_records 
     WHERE
       cxkh IS NOT NULL 
       AND cxkh != '' 
@@ -629,7 +629,7 @@ function DataSupplementWinModel(ajid) {
       COALESCE ( jydfzjhm, '' ) zzhm,
       '0' jydd 
     FROM
-      gas_bank_records 
+      ff_bank_records 
     WHERE
       jydfzkh IS NOT NULL 
       AND jydfzkh != '' 
@@ -656,14 +656,14 @@ function DataSupplementWinModel(ajid) {
       COALESCE ( jyzjhm, '' ) zzhm,
       '1' jydd 
     FROM
-      gas_bank_records 
+      ff_bank_records 
     WHERE
       cxkh IS NOT NULL 
       AND cxkh != '' 
       AND ( ( jymc IS NULL OR jymc = '' ) OR ( JYKHH IS NULL OR JYKHH = '' ) OR ( jyzjhm IS NULL OR jyzjhm = '' ) ) 
       AND ajid = ${this.ajid}
     )
-    A INNER JOIN gas_account_info B ON A.zh = B.kh 
+    A INNER JOIN ff_account_info B ON A.zh = B.kh 
   WHERE
     B.ajid = ${this.ajid}
     AND (
@@ -755,7 +755,7 @@ function DataSupplementWinModel(ajid) {
             array2[2] +
             ",'')='') ";
           if (this.dictionary_2.hasOwnProperty(key)) {
-            let text4 = "update gas_bank_records set  ";
+            let text4 = "update ff_bank_records set  ";
             let text5 = "";
             if (current.IsZZHMHandUpdate()) {
               let selectzzhm = current.get_ZzhmSelected();
@@ -789,7 +789,7 @@ function DataSupplementWinModel(ajid) {
           }
           key = current.Zh + "_0";
           if (this.dictionary_2.hasOwnProperty(key)) {
-            let text6 = "update   gas_bank_records set  ";
+            let text6 = "update   ff_bank_records set  ";
             let text7 = "";
             if (current.IsZZHMHandUpdate()) {
               let selectzzhm = current.get_ZzhmSelected();
@@ -877,7 +877,7 @@ function DataSupplementWinModel(ajid) {
     // const fs = require("fs");
   };
   this.execSqlUpdate = async function() {
-    let sql1 = `UPDATE gas_bank_records A 
+    let sql1 = `UPDATE ff_bank_records A 
     SET JYZJHM =
     CASE
         
@@ -900,7 +900,7 @@ function DataSupplementWinModel(ajid) {
               B.ZHKHYH ELSE JYKHH 
             END 
             FROM
-              gas_account_info B 
+              ff_account_info B 
             WHERE
               B.KH = A.CXKH 
               AND A.AJID = ${this.ajid} 
@@ -922,7 +922,7 @@ function DataSupplementWinModel(ajid) {
               ) 
       AND B.AJID = ${this.ajid};`;
 
-    let sql2 = `UPDATE gas_bank_records A 
+    let sql2 = `UPDATE ff_bank_records A 
     SET JYDFZJHM =
     CASE
         
@@ -945,7 +945,7 @@ function DataSupplementWinModel(ajid) {
               B.ZHKHYH ELSE JYDFZHKHH 
             END 
             FROM
-              gas_account_info B 
+              ff_account_info B 
             WHERE
               B.KH = A.JYDFZKH 
               AND A.AJID = ${this.ajid} 
@@ -967,7 +967,7 @@ function DataSupplementWinModel(ajid) {
               ) 
       AND B.AJID = ${this.ajid};`;
 
-    let sql3 = `UPDATE gas_bank_records 
+    let sql3 = `UPDATE ff_bank_records 
       SET JYZJHM =
       CASE
           
@@ -992,7 +992,7 @@ function DataSupplementWinModel(ajid) {
         OR JYKHH = 'A@A' 
         AND ajid = ${this.ajid};
         
-      UPDATE gas_bank_records 
+      UPDATE ff_bank_records 
       SET JYDFZJHM =
       CASE
           

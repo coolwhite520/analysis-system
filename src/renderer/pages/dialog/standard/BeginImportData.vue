@@ -675,7 +675,7 @@ export default {
         return el.mbdm === data.matchedMbdm;
       });
       switch (matchedTemplateObj[0].tablecname) {
-        case "gas_account_info":
+        case "ff_account_info":
           {
             let filterTemp = allFieldList.filter((el) => {
               return el.toUpperCase() === "ZH" || el.toUpperCase() === "KH";
@@ -690,7 +690,7 @@ export default {
             }
           }
           break;
-        case "gas_tax_records":
+        case "ff_tax_records":
           {
             // let filterTemp = allFieldList.filter((el) => {
             //   return el === "ZH" || el === "KH";
@@ -704,7 +704,7 @@ export default {
             // }
           }
           break;
-        case "gas_bank_records_source":
+        case "ff_bank_records_source":
           {
             for (let item of data.dataList) {
               if (item.matchedFieldName.toLowerCase() === "jdbz") {

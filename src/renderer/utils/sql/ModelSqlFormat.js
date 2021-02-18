@@ -105,7 +105,7 @@ export default {
     condtion = "",
     condition_child = ""
   ) {
-    console.log(selectCondition )
+    console.log(selectCondition);
     try {
       if (pgsqlOrderby === null) {
         pgsqlOrderby = "";
@@ -218,11 +218,11 @@ export default {
       let text8 = pgsqlTemplate
         .replace(
           /\$MODEL_FILTER_GROUP\$/g,
-          GetBankDetailTableSql("gas_bank_records") //.replace(/\$/g,"$$$$")
+          GetBankDetailTableSql("ff_bank_records") //.replace(/\$/g,"$$$$")
         )
         .replace(
           /\$MODEL_FILTER_GROUP_SUM\$/g,
-          GetBankDetailTableSumSql("gas_bank_records")
+          GetBankDetailTableSumSql("ff_bank_records")
         )
         .replace(/\$AJID\$/g, caseId)
         .replace(/\${AJID}\$/g, caseId)
@@ -296,7 +296,8 @@ export default {
         .replace(
           /\$SUMFILEDTONULL\$/g,
           selectCondition.FiledsEmptyToNullCondition
-        ).replace(/\$QZ\$/g, selectCondition.QZ)
+        )
+        .replace(/\$QZ\$/g, selectCondition.QZ)
         .replace(/\$ZXGDZBS\$/g, selectCondition.ZXGDZBS)
         .replace(/\$ZXJZZBS\$/g, selectCondition.ZXJZZBS);
       //团伙选择判断

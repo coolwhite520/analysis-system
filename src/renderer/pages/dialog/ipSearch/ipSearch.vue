@@ -172,12 +172,12 @@ export default {
     },
     async fresh() {
       try {
-        let sql = `select shard_id,ip from gas_bank_records where length(ip)>0 order by shard_id`;
+        let sql = `select shard_id,ip from ff_bank_records where length(ip)>0 order by shard_id`;
         let res = await Base.QueryCustom(sql, this.caseBase.ajid);
         this.existIpRows = res.rows.filter((row) => this.isValidIP(row.ip));
         this.countIP = this.existIpRows.length;
 
-        let sql2 = `select shard_id,ip from gas_bank_records where length(ip)>0 and length(jyfsd)=0 order by shard_id`;
+        let sql2 = `select shard_id,ip from ff_bank_records where length(ip)>0 and length(jyfsd)=0 order by shard_id`;
         res = await Base.QueryCustom(sql2, this.caseBase.ajid);
         this.notAnalysisIpRows = res.rows.filter((row) =>
           this.isValidIP(row.ip)
@@ -202,7 +202,7 @@ export default {
             if (findCountry) {
               Country = findCountry;
             }
-            let updateSql = `update gas_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
+            let updateSql = `update ff_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
             await Base.QueryCustom(updateSql, this.caseBase.ajid);
             index++;
             this.percentage = parseInt((index / this.countIP) * 100);
@@ -231,7 +231,7 @@ export default {
             if (findCountry) {
               Country = findCountry;
             }
-            let updateSql = `update gas_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
+            let updateSql = `update ff_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
             await Base.QueryCustom(updateSql, this.caseBase.ajid);
             index++;
             this.percentage = parseInt((index / this.countIPNoAnalysis) * 100);

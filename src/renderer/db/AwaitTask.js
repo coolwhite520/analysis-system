@@ -4,7 +4,7 @@ export default {
     const client = await global.pool.connect();
     try {
       await Cases.SwitchCase(client, ajid);
-      let sql = `SELECT * FROM  gas_awaittask awaitTask  WHERE  awaitTask.ajid = '${ajid}'`;
+      let sql = `SELECT * FROM  ff_awaittask awaitTask  WHERE  awaitTask.ajid = '${ajid}'`;
       const res = await client.query(sql);
       return { success: true, rows: res.rows };
     } finally {
@@ -39,9 +39,9 @@ export default {
       await Cases.SwitchCase(client, ajid);
       let sql;
       if (task_type === "1" || task_type === "2") {
-        sql = `SELECT COUNT(*)::int count FROM gas_awaittask WHERE zz_code='${zz_code}'and zz_name='${zz_name}' and jyhm='${jyhm}' and task_type='${task_type}' `;
+        sql = `SELECT COUNT(*)::int count FROM ff_awaittask WHERE zz_code='${zz_code}'and zz_name='${zz_name}' and jyhm='${jyhm}' and task_type='${task_type}' `;
       } else {
-        sql = `SELECT COUNT(*)::int count FROM gas_awaittask WHERE yh_name='${yh_name}'and cxzh='${cxzh}' and zh_ztlb_name='${zh_ztlb_name}' and task_type='账卡号'`;
+        sql = `SELECT COUNT(*)::int count FROM ff_awaittask WHERE yh_name='${yh_name}'and cxzh='${cxzh}' and zh_ztlb_name='${zh_ztlb_name}' and task_type='账卡号'`;
       }
       console.log(sql);
       const res = await client.query(sql);
@@ -55,7 +55,7 @@ export default {
     try {
       await Cases.SwitchCase(client, ajid);
       let sql;
-      sql = `DELETE FROM gas_awaittask WHERE ID in (${ids})`;
+      sql = `DELETE FROM ff_awaittask WHERE ID in (${ids})`;
       console.log(sql);
       const res = await client.query(sql);
       return { success: true };
@@ -75,7 +75,7 @@ export default {
   ) {
     let sql;
     if (task_type === "1") {
-      sql = ` INSERT INTO gas_awaittask(ajid, yh_name, zz_code, zz_name, zh_ztlb, zh_ztlb_name, tjsj, tjrw, task_type, type_id, jyhm, target, xgsj) 
+      sql = ` INSERT INTO ff_awaittask(ajid, yh_name, zz_code, zz_name, zh_ztlb, zh_ztlb_name, tjsj, tjrw, task_type, type_id, jyhm, target, xgsj) 
       VALUES(
       '${ajid}',
       '请选择银行...', 
@@ -92,7 +92,7 @@ export default {
       '${new Date().Format("yyyy-MM-dd hh:mm:ss")}'
       ); `;
     } else if (task_type === "2") {
-      sql = ` INSERT INTO gas_awaittask(ajid, yh_name, zz_code, zz_name, zh_ztlb, zh_ztlb_name, tjsj, tjrw, task_type, type_id, jyhm, target, xgsj) 
+      sql = ` INSERT INTO ff_awaittask(ajid, yh_name, zz_code, zz_name, zh_ztlb, zh_ztlb_name, tjsj, tjrw, task_type, type_id, jyhm, target, xgsj) 
       VALUES(
       '${ajid}',
       '请选择银行...', 
@@ -111,7 +111,7 @@ export default {
     } else {
       let zh_ztlb = zh_ztlb_name === "个人" ? "01" : "02";
       let target = zh_ztlb + yh_name;
-      sql = `INSERT INTO gas_awaittask(ajid, cxzh, yh_code, yh_name,zh_ztlb, zh_ztlb_name, tjsj, tjrw, task_type, type_id, jyhm, target, xgsj) 
+      sql = `INSERT INTO ff_awaittask(ajid, cxzh, yh_code, yh_name,zh_ztlb, zh_ztlb_name, tjsj, tjrw, task_type, type_id, jyhm, target, xgsj) 
       VALUES(
         '${ajid}',
         '${cxzh}',  
@@ -151,17 +151,17 @@ export default {
   ) {
     let sql;
     if (task_type === "1") {
-      sql = `UPDATE gas_awaittask SET zz_code = '${zz_code}',zz_name = '${zz_name}',tjrw = '00000000', jyhm = '${jyhm}', xgsj = '${new Date().Format(
+      sql = `UPDATE ff_awaittask SET zz_code = '${zz_code}',zz_name = '${zz_name}',tjrw = '00000000', jyhm = '${jyhm}', xgsj = '${new Date().Format(
         "yyyy-MM-dd hh:mm:ss"
       )}' WHERE id = ${id};`;
     } else if (task_type === "2") {
-      sql = `UPDATE gas_awaittask SET zz_code = '${zz_code}',zz_name = '${zz_name}',tjrw = '00000000', jyhm = '${jyhm}', xgsj = '${new Date().Format(
+      sql = `UPDATE ff_awaittask SET zz_code = '${zz_code}',zz_name = '${zz_name}',tjrw = '00000000', jyhm = '${jyhm}', xgsj = '${new Date().Format(
         "yyyy-MM-dd hh:mm:ss"
       )}' WHERE id = ${id};`;
     } else {
       let zh_ztlb = zh_ztlb_name === "个人" ? "01" : "02";
       let target = zh_ztlb + yh_name;
-      sql = `UPDATE gas_awaittask 
+      sql = `UPDATE ff_awaittask 
       SET cxzh = '${cxzh}',
       yh_name = '${yh_name}',
       zh_ztlb = '${zh_ztlb}',
@@ -184,7 +184,7 @@ export default {
   },
   // 在待调单模型库的表中点击 【添加待调单】
   QueryHaveSameInfoInModelTable: async function(ajid, cxzh) {
-    let sql = `SELECT COUNT(*)::int count FROM gas_awaittask
+    let sql = `SELECT COUNT(*)::int count FROM ff_awaittask
      WHERE ajid=${ajid} and type_id=3 AND CXZH ='${cxzh}'`;
     console.log(sql);
     const client = await global.pool.connect();
@@ -201,7 +201,7 @@ export default {
     let sql;
     switch (tid) {
       case "251":
-        sql = `INSERT INTO gas_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET)
+        sql = `INSERT INTO ff_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET)
         VALUES ('${ajid}','${cxzh}','','','','','01','个人','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
         )}','${new Date().Format(
@@ -209,7 +209,7 @@ export default {
         )}','00000000','账卡号','3','${jyhm}','主要人员未调单对手账户'); `;
         break;
       case "252":
-        sql = `INSERT INTO gas_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
+        sql = `INSERT INTO ff_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
         VALUES ('${ajid}','${cxzh}','','','','','01','个人','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
         )}','${new Date().Format(
@@ -217,7 +217,7 @@ export default {
         )}','00000000','账卡号','3','${jyhm}','大额交易对手未调单账户'); `;
         break;
       case "253":
-        sql = `INSERT INTO gas_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
+        sql = `INSERT INTO ff_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
         VALUES ('${ajid}','${cxzh}','','','','','02','单位','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
         )}','${new Date().Format(
@@ -225,7 +225,7 @@ export default {
         )}','00000000','账卡号','3','${jyhm}','大额获利对手未调单账户'); `;
         break;
       case "254":
-        sql = `INSERT INTO gas_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
+        sql = `INSERT INTO ff_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
         VALUES ('${ajid}','${cxzh}','','','','','01','个人','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
         )}','${new Date().Format(
@@ -233,7 +233,7 @@ export default {
         )}','00000000','账卡号','3','${jyhm}','主要关联对手未调单账户'); `;
         break;
       case "255":
-        sql = `INSERT INTO gas_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET)
+        sql = `INSERT INTO ff_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET)
          VALUES ('${ajid}','${cxzh}','','','','','02','单位','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
         )}','${new Date().Format(
