@@ -163,7 +163,7 @@ export default {
         return;
       }
       try {
-        let sql = `DELETE FROM  ff_bank_records where ajid = ${this.caseBase.ajid}  AND shard_id in(${this.waitDelList})`;
+        let sql = `DELETE FROM  mz_bank_records where ajid = ${this.caseBase.ajid}  AND shard_id in(${this.waitDelList})`;
         console.log(sql);
         await baseDb.QueryCustom(sql, this.caseBase.ajid);
         this.sameCount = 0;

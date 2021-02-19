@@ -239,7 +239,7 @@ function TestingHandle(
   fileName = ""
 ) {
   try {
-    if (tablename.startsWith("ff_phone_call_info")) {
+    if (tablename.startsWith("mz_phone_call_info")) {
       // 给调单方姓名赋值
       if (Columns.includes("ddfzsxm")) {
         if (!dataRow.hasOwnProperty("ddfzsxm")) {
@@ -270,7 +270,7 @@ function TestingHandle(
         }
       }
     }
-    if (tablename.startsWith("ff_tax_records")) {
+    if (tablename.startsWith("mz_tax_records")) {
       try {
         if (Columns.includes("kpyf")) {
           if (Columns.includes("kprq")) {
@@ -307,7 +307,7 @@ function TestingHandle(
     }
     if (
       tablename.startsWith(
-        "ff_bank_records"
+        "mz_bank_records"
       ) /*&& impotrt == ImportFileClass.Normal*/
     ) {
       try {
@@ -404,7 +404,7 @@ function TestingHandle(
       }
     }
     if (
-      tablename.startsWith("ff_phone_call_info") &&
+      tablename.startsWith("mz_phone_call_info") &&
       Columns.includes("fx") &&
       dataRow.hasOwnProperty("fx")
     ) {
@@ -567,7 +567,7 @@ function getfulltime_(str) {
 // let e = TestingHandle(
 //   ["hjrq", "hjsj", "thsj", "fx", "cxsj"],
 //   { hjrq: "2019/4/5", hjsj: "12:12:12", thsj: "", cxsj: "1时1分1秒", fx: "1" },
-//   "ff_phone_call_info",
+//   "mz_phone_call_info",
 //   ImportFileClass.DiSanFang,
 //   "1",
 //   "0"

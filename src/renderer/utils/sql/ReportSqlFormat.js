@@ -55,7 +55,7 @@ function GetReportSql(caseId, item, param) {
     }
     return item.CurrentExeSql.replace(
       /\$MODEL_FILTER_GROUP\$/g,
-      Default.GetBankDetailTableSql("ff_bank_records")
+      Default.GetBankDetailTableSql("mz_bank_records")
     )
       .replace(/\$AJID\$/g, caseId)
       .replace(/\$TABLENAME\$/g, item.Tb_Name)

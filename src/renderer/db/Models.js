@@ -596,7 +596,7 @@ export default {
       }
       text +=
         ` TID,sum(jyje) je,count(distinct (jyzjhm,jymc)) jyzjhm,count(distinct (cxzh,jymc)) cxzh,count(distinct (jydfzjhm,jydfmc)) jydfzjhm,count(distinct (jydfzkh,jydfmc)) jydfzkh,count(*) count from ` +
-        Default.GetBankDetailTableSql("ff_bank_records").replace(
+        Default.GetBankDetailTableSql("mz_bank_records").replace(
           /\$AJID\$/g,
           caseId
         ) +
@@ -891,7 +891,7 @@ export default {
         " END TID,shard_id,count(" +
         string_7 +
         ") count from " +
-        Default.GetBankDetailTableSql("ff_bank_records").replace(
+        Default.GetBankDetailTableSql("mz_bank_records").replace(
           /\$AJID\$/g,
           ajid
         ) +
@@ -901,7 +901,7 @@ export default {
         string_6 +
         "' " +
         MODEL_FILTER +
-        " GROUP BY TID,shard_id ) t left join ff_bank_records s on s.shard_id = t.shard_id where ajid = " +
+        " GROUP BY TID,shard_id ) t left join mz_bank_records s on s.shard_id = t.shard_id where ajid = " +
         ajid +
         " and jdbz = '" +
         string_6 +
@@ -1084,7 +1084,7 @@ export default {
         " END TID,shard_id,count((" +
         string_7 +
         ")) count from " +
-        Default.GetBankDetailTableSql("ff_bank_records").replace(
+        Default.GetBankDetailTableSql("mz_bank_records").replace(
           /\$AJID\$/g,
           ajid
         ) +
@@ -1094,7 +1094,7 @@ export default {
         string_6 +
         "' " +
         MODEL_FILTER +
-        " GROUP BY TID,shard_id ) t left join ff_bank_records s on s.shard_id = t.shard_id where ajid = " +
+        " GROUP BY TID,shard_id ) t left join mz_bank_records s on s.shard_id = t.shard_id where ajid = " +
         ajid +
         " and jdbz = '" +
         string_6 +

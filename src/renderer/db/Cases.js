@@ -186,71 +186,71 @@ export default {
       drop table if exists ck_cbrc_return_info; 
       drop table if exists ck_cbrc_return_jjzf; 
       drop table if exists ck_cbrc_return_jjzf_detail; 
-      drop table if exists ff_account_info; 
-      drop table if exists ff_account_info_chakong; 
-      drop table if exists ff_analysis_record; 
-      drop table if exists ff_analysis_record_visual; 
-      drop table if exists ff_awaittask; 
-      drop table if exists ff_bank_records; 
-      drop table if exists ff_bank_records_source; 
-      drop table if exists ff_cft_accountinfo; 
-      drop table if exists ff_cft_zjxx; 
-      drop table if exists ff_dsf_dlip; 
-      drop table if exists ff_dsf_jbxx; 
-      drop table if exists ff_dsf_jyjl; 
-      drop table if exists ff_dsf_records; 
-      drop table if exists ff_im_msg; 
-      drop table if exists ff_jass_info; 
-      drop table if exists ff_jstxhy_info; 
-      drop table if exists ff_logistics_info; 
-      drop table if exists ff_person; 
-      drop table if exists ff_person_chakong; 
-      drop table if exists ff_person_glzzh; 
-      drop table if exists ff_person_gyyxq; 
-      drop table if exists ff_person_pic; 
-      drop table if exists ff_person_qzcs; 
-      drop table if exists ff_phone_call_info; 
-      drop table if exists ff_rmb_exrate_midprice; 
-      drop table if exists ff_safe_trading; 
-      drop table if exists ff_sjdx; 
-      drop table if exists ff_sjtxl; 
-      drop table if exists ff_taobao_info; 
-      drop table if exists ff_taobao_log; 
-      drop table if exists ff_taobao_trade_info; 
-      drop table if exists ff_tax_bgd; 
-      drop table if exists ff_tax_bgh; 
-      drop table if exists ff_tax_hgjkshbd; 
-      drop table if exists ff_tax_hgjkshxx; 
-      drop table if exists ff_tax_hgjkzzs; 
-      drop table if exists ff_tax_hgwspzjhbd; 
-      drop table if exists ff_tax_records; 
-      drop table if exists ff_tax_records_source; 
-      drop table if exists ff_tax_swdj; 
-      drop table if exists ff_ys_crjjl; 
-      drop table if exists ff_ys_dbq_ldzs; 
-      drop table if exists ff_ys_hyzk; 
-      drop table if exists ff_ys_jsr; 
-      drop table if exists ff_ys_jyxx; 
-      drop table if exists ff_ys_mhlg; 
-      drop table if exists ff_ys_qgjdc; 
-      drop table if exists ff_ys_qgjdcwzxx; 
-      drop table if exists ff_ys_sjhb; 
-      drop table if exists ff_ys_sxrxx; 
-      drop table if exists ff_ys_tlsp; 
-      drop table if exists ff_ys_yhhc; 
-      drop table if exists ff_zhifubao_trade; 
-      drop table if exists ff_zhifubao_transfer; 
+      drop table if exists mz_account_info; 
+      drop table if exists mz_account_info_chakong; 
+      drop table if exists mz_analysis_record; 
+      drop table if exists mz_analysis_record_visual; 
+      drop table if exists mz_awaittask; 
+      drop table if exists mz_bank_records; 
+      drop table if exists mz_bank_records_source; 
+      drop table if exists mz_cft_accountinfo; 
+      drop table if exists mz_cft_zjxx; 
+      drop table if exists mz_dsf_dlip; 
+      drop table if exists mz_dsf_jbxx; 
+      drop table if exists mz_dsf_jyjl; 
+      drop table if exists mz_dsf_records; 
+      drop table if exists mz_im_msg; 
+      drop table if exists mz_jass_info; 
+      drop table if exists mz_jstxhy_info; 
+      drop table if exists mz_logistics_info; 
+      drop table if exists mz_person; 
+      drop table if exists mz_person_chakong; 
+      drop table if exists mz_person_glzzh; 
+      drop table if exists mz_person_gyyxq; 
+      drop table if exists mz_person_pic; 
+      drop table if exists mz_person_qzcs; 
+      drop table if exists mz_phone_call_info; 
+      drop table if exists mz_rmb_exrate_midprice; 
+      drop table if exists mz_safe_trading; 
+      drop table if exists mz_sjdx; 
+      drop table if exists mz_sjtxl; 
+      drop table if exists mz_taobao_info; 
+      drop table if exists mz_taobao_log; 
+      drop table if exists mz_taobao_trade_info; 
+      drop table if exists mz_tax_bgd; 
+      drop table if exists mz_tax_bgh; 
+      drop table if exists mz_tax_hgjkshbd; 
+      drop table if exists mz_tax_hgjkshxx; 
+      drop table if exists mz_tax_hgjkzzs; 
+      drop table if exists mz_tax_hgwspzjhbd; 
+      drop table if exists mz_tax_records; 
+      drop table if exists mz_tax_records_source; 
+      drop table if exists mz_tax_swdj; 
+      drop table if exists mz_ys_crjjl; 
+      drop table if exists mz_ys_dbq_ldzs; 
+      drop table if exists mz_ys_hyzk; 
+      drop table if exists mz_ys_jsr; 
+      drop table if exists mz_ys_jyxx; 
+      drop table if exists mz_ys_mhlg; 
+      drop table if exists mz_ys_qgjdc; 
+      drop table if exists mz_ys_qgjdcwzxx; 
+      drop table if exists mz_ys_sjhb; 
+      drop table if exists mz_ys_sxrxx; 
+      drop table if exists mz_ys_tlsp; 
+      drop table if exists mz_ys_yhhc; 
+      drop table if exists mz_zhifubao_trade; 
+      drop table if exists mz_zhifubao_transfer; 
       drop table if exists mark_detail; 
       drop table if exists mark_dm_entity; 
       drop table if exists mark_group_detail; 
       drop table if exists mark_info; 
-      drop table if exists result_ff_antimoney_core; 
-      drop table if exists result_ff_antimoney_loop; 
-      drop table if exists result_ff_antimoney_person; 
-      drop table if exists result_ff_antimoney_point; 
-      drop table if exists result_ff_model_xs_info; 
-      drop table if exists result_ff_model_xs_info_tmp; 
-      drop table if exists result_ff_phone_call_info_model_tmp; 
+      drop table if exists result_mz_antimoney_core; 
+      drop table if exists result_mz_antimoney_loop; 
+      drop table if exists result_mz_antimoney_person; 
+      drop table if exists result_mz_antimoney_point; 
+      drop table if exists result_mz_model_xs_info; 
+      drop table if exists result_mz_model_xs_info_tmp; 
+      drop table if exists result_mz_phone_call_info_model_tmp; 
       drop table if exists result_model_fxq_dxqz; 
       drop table if exists result_model_fxq_dxqzcjzh_1; 
       drop table if exists result_model_fxq_dxqzhxzh_1; 
@@ -262,7 +262,7 @@ export default {
       drop table if exists result_model_fxq_dxqzrjzh_1; 
       drop table if exists t_model_antimoney_param; 
       DROP SCHEMA IF EXISTS icap_${ajid}  CASCADE;
-      delete from icap_base.ff_report_records where id=${ajid} or reportajid=${ajid};
+      delete from icap_base.mz_report_records where id=${ajid} or reportajid=${ajid};
       delete from icap_base.diy_graphic_layout where AJID=${ajid} ; 
       delete from icap_base.layout_visual_line_parm where AJID=${ajid} ; 
       delete from icap_base.st_case where AJID=${ajid} ;
@@ -554,10 +554,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_account_info_chakong_shard_id_seq 
+        -- Sequence structure for mz_account_info_chakong_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_account_info_chakong_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_account_info_chakong_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_account_info_chakong_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_account_info_chakong_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -565,10 +565,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_account_info_shard_id_seq 
+        -- Sequence structure for mz_account_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_account_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_account_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_account_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_account_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -576,10 +576,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_analysis_record_id_seq 
+        -- Sequence structure for mz_analysis_record_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_analysis_record_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_analysis_record_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_analysis_record_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_analysis_record_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -587,10 +587,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_analysis_record_visual_id_seq 
+        -- Sequence structure for mz_analysis_record_visual_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_analysis_record_visual_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_analysis_record_visual_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_analysis_record_visual_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_analysis_record_visual_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -598,10 +598,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_awaittask_id_seq 
+        -- Sequence structure for mz_awaittask_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_awaittask_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_awaittask_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_awaittask_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_awaittask_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -609,10 +609,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_bank_records_shard_id_seq 
+        -- Sequence structure for mz_bank_records_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_bank_records_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_bank_records_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_bank_records_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_bank_records_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -620,10 +620,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_bank_records_source_shard_id_seq 
+        -- Sequence structure for mz_bank_records_source_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_bank_records_source_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_bank_records_source_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_bank_records_source_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_bank_records_source_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -631,10 +631,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_cft_accountinfo_shard_id_seq 
+        -- Sequence structure for mz_cft_accountinfo_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_cft_accountinfo_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_cft_accountinfo_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_cft_accountinfo_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_cft_accountinfo_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -642,10 +642,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_cft_zjxx_shard_id_seq 
+        -- Sequence structure for mz_cft_zjxx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_cft_zjxx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_cft_zjxx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_cft_zjxx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_cft_zjxx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -653,10 +653,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_dsf_dlip_shard_id_seq 
+        -- Sequence structure for mz_dsf_dlip_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_dsf_dlip_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_dsf_dlip_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_dsf_dlip_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_dsf_dlip_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -664,10 +664,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_dsf_jbxx_shard_id_seq 
+        -- Sequence structure for mz_dsf_jbxx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_dsf_jbxx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_dsf_jbxx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_dsf_jbxx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_dsf_jbxx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -675,10 +675,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_dsf_jyjl_shard_id_seq 
+        -- Sequence structure for mz_dsf_jyjl_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_dsf_jyjl_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_dsf_jyjl_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_dsf_jyjl_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_dsf_jyjl_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -686,10 +686,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_dsf_records_shard_id_seq 
+        -- Sequence structure for mz_dsf_records_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_dsf_records_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_dsf_records_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_dsf_records_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_dsf_records_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -697,10 +697,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_im_msg_imltjlid_seq 
+        -- Sequence structure for mz_im_msg_imltjlid_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_im_msg_imltjlid_seq" CASCADE; 
-        CREATE SEQUENCE "ff_im_msg_imltjlid_seq"  
+        DROP SEQUENCE IF EXISTS "mz_im_msg_imltjlid_seq" CASCADE; 
+        CREATE SEQUENCE "mz_im_msg_imltjlid_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -708,10 +708,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_im_msg_shard_id_seq 
+        -- Sequence structure for mz_im_msg_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_im_msg_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_im_msg_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_im_msg_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_im_msg_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -719,10 +719,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_jass_info_shard_id_seq 
+        -- Sequence structure for mz_jass_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_jass_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_jass_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_jass_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_jass_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -730,10 +730,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_jstxhy_info_id_seq 
+        -- Sequence structure for mz_jstxhy_info_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_jstxhy_info_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_jstxhy_info_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_jstxhy_info_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_jstxhy_info_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -741,10 +741,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_jstxhy_info_shard_id_seq 
+        -- Sequence structure for mz_jstxhy_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_jstxhy_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_jstxhy_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_jstxhy_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_jstxhy_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -752,10 +752,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_logistics_info_id_seq 
+        -- Sequence structure for mz_logistics_info_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_logistics_info_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_logistics_info_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_logistics_info_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_logistics_info_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -763,10 +763,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_logistics_info_shard_id_seq 
+        -- Sequence structure for mz_logistics_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_logistics_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_logistics_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_logistics_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_logistics_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -774,10 +774,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_person_chakong_shard_id_seq 
+        -- Sequence structure for mz_person_chakong_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_person_chakong_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_person_chakong_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_person_chakong_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_person_chakong_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -785,10 +785,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_person_glzzh_shard_id_seq 
+        -- Sequence structure for mz_person_glzzh_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_person_glzzh_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_person_glzzh_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_person_glzzh_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_person_glzzh_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -796,10 +796,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_person_gyyxq_shard_id_seq 
+        -- Sequence structure for mz_person_gyyxq_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_person_gyyxq_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_person_gyyxq_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_person_gyyxq_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_person_gyyxq_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -807,10 +807,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_person_pic_shard_id_seq 
+        -- Sequence structure for mz_person_pic_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_person_pic_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_person_pic_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_person_pic_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_person_pic_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -818,10 +818,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_person_qzcs_shard_id_seq 
+        -- Sequence structure for mz_person_qzcs_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_person_qzcs_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_person_qzcs_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_person_qzcs_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_person_qzcs_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -829,10 +829,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_person_shard_id_seq 
+        -- Sequence structure for mz_person_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_person_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_person_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_person_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_person_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -840,10 +840,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_phone_call_info_shard_id_seq 
+        -- Sequence structure for mz_phone_call_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_phone_call_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_phone_call_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_phone_call_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_phone_call_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -852,10 +852,10 @@ export default {
          
         -- ----------
         ------------------ 
-        -- Sequence structure for ff_safe_trading_shard_id_seq 
+        -- Sequence structure for mz_safe_trading_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_safe_trading_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_safe_trading_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_safe_trading_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_safe_trading_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -863,10 +863,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_sjdx_ch_id_seq 
+        -- Sequence structure for mz_sjdx_ch_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_sjdx_ch_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_sjdx_ch_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_sjdx_ch_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_sjdx_ch_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -874,10 +874,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_sjdx_shard_id_seq 
+        -- Sequence structure for mz_sjdx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_sjdx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_sjdx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_sjdx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_sjdx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -885,10 +885,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_sjtxl_id_seq 
+        -- Sequence structure for mz_sjtxl_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_sjtxl_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_sjtxl_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_sjtxl_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_sjtxl_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -896,10 +896,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_sjtxl_shard_id_seq 
+        -- Sequence structure for mz_sjtxl_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_sjtxl_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_sjtxl_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_sjtxl_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_sjtxl_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -907,10 +907,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_taobao_info_shard_id_seq 
+        -- Sequence structure for mz_taobao_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_taobao_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_taobao_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_taobao_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_taobao_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -918,10 +918,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_taobao_log_shard_id_seq 
+        -- Sequence structure for mz_taobao_log_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_taobao_log_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_taobao_log_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_taobao_log_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_taobao_log_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -929,10 +929,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_taobao_trade_info_shard_id_seq 
+        -- Sequence structure for mz_taobao_trade_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_taobao_trade_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_taobao_trade_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_taobao_trade_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_taobao_trade_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -940,10 +940,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_bgd_shard_id_seq 
+        -- Sequence structure for mz_tax_bgd_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_bgd_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_bgd_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_bgd_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_bgd_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -951,10 +951,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_bgh_shard_id_seq 
+        -- Sequence structure for mz_tax_bgh_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_bgh_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_bgh_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_bgh_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_bgh_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -962,10 +962,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_hgjkshbd_shard_id_seq 
+        -- Sequence structure for mz_tax_hgjkshbd_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_hgjkshbd_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_hgjkshbd_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_hgjkshbd_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_hgjkshbd_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -973,10 +973,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_hgjkshxx_shard_id_seq 
+        -- Sequence structure for mz_tax_hgjkshxx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_hgjkshxx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_hgjkshxx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_hgjkshxx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_hgjkshxx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -984,10 +984,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_hgjkzzs_shard_id_seq 
+        -- Sequence structure for mz_tax_hgjkzzs_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_hgjkzzs_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_hgjkzzs_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_hgjkzzs_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_hgjkzzs_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -995,10 +995,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_hgwspzjhbd_shard_id_seq 
+        -- Sequence structure for mz_tax_hgwspzjhbd_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_hgwspzjhbd_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_hgwspzjhbd_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_hgwspzjhbd_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_hgwspzjhbd_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1006,10 +1006,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_records_shard_id_seq 
+        -- Sequence structure for mz_tax_records_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_records_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_records_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_records_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_records_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1017,10 +1017,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_records_source_shard_id_seq 
+        -- Sequence structure for mz_tax_records_source_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_records_source_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_records_source_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_records_source_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_records_source_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1028,10 +1028,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_tax_swdj_shard_id_seq 
+        -- Sequence structure for mz_tax_swdj_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_tax_swdj_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_tax_swdj_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_tax_swdj_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_tax_swdj_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1039,10 +1039,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_crjjl_id_seq 
+        -- Sequence structure for mz_ys_crjjl_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_crjjl_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_crjjl_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_crjjl_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_crjjl_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1050,10 +1050,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_crjjl_shard_id_seq 
+        -- Sequence structure for mz_ys_crjjl_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_crjjl_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_crjjl_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_crjjl_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_crjjl_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1061,10 +1061,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_dbq_ldzs_id_seq 
+        -- Sequence structure for mz_ys_dbq_ldzs_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_dbq_ldzs_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_dbq_ldzs_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_dbq_ldzs_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_dbq_ldzs_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1072,10 +1072,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_dbq_ldzs_shard_id_seq 
+        -- Sequence structure for mz_ys_dbq_ldzs_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_dbq_ldzs_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_dbq_ldzs_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_dbq_ldzs_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_dbq_ldzs_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1083,10 +1083,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_hyzk_id_seq 
+        -- Sequence structure for mz_ys_hyzk_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_hyzk_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_hyzk_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_hyzk_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_hyzk_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1094,10 +1094,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_hyzk_shard_id_seq 
+        -- Sequence structure for mz_ys_hyzk_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_hyzk_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_hyzk_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_hyzk_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_hyzk_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1105,10 +1105,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_jsr_id_seq 
+        -- Sequence structure for mz_ys_jsr_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_jsr_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_jsr_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_jsr_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_jsr_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1116,10 +1116,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_jsr_shard_id_seq 
+        -- Sequence structure for mz_ys_jsr_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_jsr_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_jsr_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_jsr_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_jsr_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1127,10 +1127,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_jyxx_shard_id_seq 
+        -- Sequence structure for mz_ys_jyxx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_jyxx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_jyxx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_jyxx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_jyxx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1138,10 +1138,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_mhlg_id_seq 
+        -- Sequence structure for mz_ys_mhlg_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_mhlg_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_mhlg_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_mhlg_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_mhlg_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1149,10 +1149,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_mhlg_shard_id_seq 
+        -- Sequence structure for mz_ys_mhlg_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_mhlg_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_mhlg_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_mhlg_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_mhlg_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1160,10 +1160,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_qgjdc_id_seq 
+        -- Sequence structure for mz_ys_qgjdc_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_qgjdc_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_qgjdc_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_qgjdc_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_qgjdc_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1171,10 +1171,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_qgjdc_shard_id_seq 
+        -- Sequence structure for mz_ys_qgjdc_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_qgjdc_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_qgjdc_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_qgjdc_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_qgjdc_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1182,10 +1182,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_qgjdcwzxx_id_seq 
+        -- Sequence structure for mz_ys_qgjdcwzxx_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_qgjdcwzxx_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_qgjdcwzxx_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_qgjdcwzxx_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_qgjdcwzxx_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1193,10 +1193,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_qgjdcwzxx_shard_id_seq 
+        -- Sequence structure for mz_ys_qgjdcwzxx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_qgjdcwzxx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_qgjdcwzxx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_qgjdcwzxx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_qgjdcwzxx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1204,10 +1204,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_sjhb_id_seq 
+        -- Sequence structure for mz_ys_sjhb_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_sjhb_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_sjhb_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_sjhb_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_sjhb_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1215,10 +1215,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_sjhb_shard_id_seq 
+        -- Sequence structure for mz_ys_sjhb_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_sjhb_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_sjhb_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_sjhb_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_sjhb_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1226,10 +1226,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_sxrxx_id_seq 
+        -- Sequence structure for mz_ys_sxrxx_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_sxrxx_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_sxrxx_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_sxrxx_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_sxrxx_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1237,10 +1237,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_sxrxx_shard_id_seq 
+        -- Sequence structure for mz_ys_sxrxx_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_sxrxx_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_sxrxx_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_sxrxx_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_sxrxx_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1248,10 +1248,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_tlsp_id_seq 
+        -- Sequence structure for mz_ys_tlsp_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_tlsp_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_tlsp_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_tlsp_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_tlsp_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1259,10 +1259,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_tlsp_shard_id_seq 
+        -- Sequence structure for mz_ys_tlsp_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_tlsp_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_tlsp_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_tlsp_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_tlsp_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1270,10 +1270,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_yhhc_id_seq 
+        -- Sequence structure for mz_ys_yhhc_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_yhhc_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_yhhc_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_yhhc_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_yhhc_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1281,10 +1281,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_ys_yhhc_shard_id_seq 
+        -- Sequence structure for mz_ys_yhhc_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_ys_yhhc_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_ys_yhhc_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_ys_yhhc_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_ys_yhhc_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1292,10 +1292,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_zhifubao_trade_shard_id_seq 
+        -- Sequence structure for mz_zhifubao_trade_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_zhifubao_trade_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_zhifubao_trade_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_zhifubao_trade_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_zhifubao_trade_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1303,10 +1303,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for ff_zhifubao_transfer_shard_id_seq 
+        -- Sequence structure for mz_zhifubao_transfer_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_zhifubao_transfer_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_zhifubao_transfer_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_zhifubao_transfer_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_zhifubao_transfer_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1358,10 +1358,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for result_ff_model_xs_info_shard_id_seq 
+        -- Sequence structure for result_mz_model_xs_info_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "result_ff_model_xs_info_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "result_ff_model_xs_info_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "result_mz_model_xs_info_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "result_mz_model_xs_info_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1369,10 +1369,10 @@ export default {
         CACHE 1; 
          
         -- ---------------------------- 
-        -- Sequence structure for result_ff_model_xs_info_tmp_shard_id_seq 
+        -- Sequence structure for result_mz_model_xs_info_tmp_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "result_ff_model_xs_info_tmp_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "result_ff_model_xs_info_tmp_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "result_mz_model_xs_info_tmp_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "result_mz_model_xs_info_tmp_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -1480,10 +1480,10 @@ export default {
          
          
         -- ---------------------------- 
-        -- Sequence structure for ff_rmb_exrate_midprice_shard_id_seq 
+        -- Sequence structure for mz_rmb_exrate_midprice_shard_id_seq 
         -- ---------------------------- 
-        DROP SEQUENCE IF EXISTS "ff_rmb_exrate_midprice_shard_id_seq" CASCADE; 
-        CREATE SEQUENCE "ff_rmb_exrate_midprice_shard_id_seq"  
+        DROP SEQUENCE IF EXISTS "mz_rmb_exrate_midprice_shard_id_seq" CASCADE; 
+        CREATE SEQUENCE "mz_rmb_exrate_midprice_shard_id_seq"  
         INCREMENT 1 
         MINVALUE  1 
         MAXVALUE 9223372036854775807 
@@ -2123,11 +2123,11 @@ export default {
          COMMENT ON TABLE "ck_cbrc_return_jjzf_detail" IS '银监查控紧急止付明细反馈信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_account_info 
+         -- Table structure for mz_account_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_account_info" CASCADE; 
-         CREATE TABLE "ff_account_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_account_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_account_info" CASCADE; 
+         CREATE TABLE "mz_account_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_account_info_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "zh" varchar(80) COLLATE "pg_catalog"."default" NOT NULL, 
            "kh" varchar(80) COLLATE "pg_catalog"."default" NOT NULL, 
@@ -2216,101 +2216,101 @@ export default {
            "wbbs" float8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_account_info"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_account_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_account_info"."zh" IS '帐号'; 
-         COMMENT ON COLUMN "ff_account_info"."kh" IS '卡号'; 
-         COMMENT ON COLUMN "ff_account_info"."yhkid" IS '银行卡ID'; 
-         COMMENT ON COLUMN "ff_account_info"."ah" IS '案号'; 
-         COMMENT ON COLUMN "ff_account_info"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_account_info"."ryid" IS '人员ID'; 
-         COMMENT ON COLUMN "ff_account_info"."sjkzryid" IS '实际控制人ID'; 
-         COMMENT ON COLUMN "ff_account_info"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_account_info"."bz" IS '币种'; 
-         COMMENT ON COLUMN "ff_account_info"."chbz" IS '钞汇标志'; 
-         COMMENT ON COLUMN "ff_account_info"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_account_info"."cljg" IS '处理结果'; 
-         COMMENT ON COLUMN "ff_account_info"."cxsj" IS '查询时间'; 
-         COMMENT ON COLUMN "ff_account_info"."dbrzjhm" IS '代办人证件号码'; 
-         COMMENT ON COLUMN "ff_account_info"."dbrzjlx" IS '代办人证件类型'; 
-         COMMENT ON COLUMN "ff_account_info"."dlr" IS '代理人'; 
-         COMMENT ON COLUMN "ff_account_info"."dlrdh" IS '代理人电话'; 
-         COMMENT ON COLUMN "ff_account_info"."dsnsh" IS '地税纳税号'; 
-         COMMENT ON COLUMN "ff_account_info"."dwdh" IS '单位电话'; 
-         COMMENT ON COLUMN "ff_account_info"."dwdz" IS '单位地址'; 
-         COMMENT ON COLUMN "ff_account_info"."fksj" IS '反馈时间'; 
-         COMMENT ON COLUMN "ff_account_info"."frdb" IS '法人代表'; 
-         COMMENT ON COLUMN "ff_account_info"."frdbzjhm" IS '法人证件号码'; 
-         COMMENT ON COLUMN "ff_account_info"."frdbzjlx" IS '法人证件类型'; 
-         COMMENT ON COLUMN "ff_account_info"."glzjzh" IS '关联资金帐户'; 
-         COMMENT ON COLUMN "ff_account_info"."gsnsh" IS '国税纳税号'; 
-         COMMENT ON COLUMN "ff_account_info"."gzdw" IS '工作单位'; 
-         COMMENT ON COLUMN "ff_account_info"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_account_info"."ifdkh" IS '是否调开户'; 
-         COMMENT ON COLUMN "ff_account_info"."jrjgdm" IS '金融机构代码'; 
-         COMMENT ON COLUMN "ff_account_info"."khcs" IS '开户城市'; 
-         COMMENT ON COLUMN "ff_account_info"."khdm" IS '客户代码'; 
-         COMMENT ON COLUMN "ff_account_info"."khgszzhm" IS '客户工商执照号码'; 
-         COMMENT ON COLUMN "ff_account_info"."khrgj" IS '开户人国籍'; 
-         COMMENT ON COLUMN "ff_account_info"."khrq" IS '开户日期'; 
-         COMMENT ON COLUMN "ff_account_info"."khrzjhm" IS '开户人证件号码'; 
-         COMMENT ON COLUMN "ff_account_info"."khrzjlx" IS '开户人证件类型'; 
-         COMMENT ON COLUMN "ff_account_info"."khsf" IS '开户省份'; 
-         COMMENT ON COLUMN "ff_account_info"."khwd" IS '开户网点'; 
-         COMMENT ON COLUMN "ff_account_info"."khwddm" IS '开户网点代码'; 
-         COMMENT ON COLUMN "ff_account_info"."kyye" IS '可用余额'; 
-         COMMENT ON COLUMN "ff_account_info"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_account_info"."lxfs" IS '开户联系方式'; 
-         COMMENT ON COLUMN "ff_account_info"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_account_info"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_account_info"."sfydq" IS '是否已调集'; 
-         COMMENT ON COLUMN "ff_account_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_account_info"."txdz" IS '通信地址'; 
-         COMMENT ON COLUMN "ff_account_info"."xhrq" IS '销户日期'; 
-         COMMENT ON COLUMN "ff_account_info"."xhwd" IS '销户网点'; 
-         COMMENT ON COLUMN "ff_account_info"."xycd" IS '嫌疑程度'; 
-         COMMENT ON COLUMN "ff_account_info"."yxdz" IS '邮箱地址'; 
-         COMMENT ON COLUMN "ff_account_info"."yzbm" IS '邮政编码'; 
-         COMMENT ON COLUMN "ff_account_info"."zdr" IS '帐单日'; 
-         COMMENT ON COLUMN "ff_account_info"."zhjysj" IS '最后交易时间'; 
-         COMMENT ON COLUMN "ff_account_info"."zhkhmc" IS '帐户客户名称'; 
-         COMMENT ON COLUMN "ff_account_info"."zhkhyh" IS '帐户开户银行'; 
-         COMMENT ON COLUMN "ff_account_info"."zhlx" IS '帐户类型'; 
-         COMMENT ON COLUMN "ff_account_info"."zhxhyh" IS '帐户销户银行'; 
-         COMMENT ON COLUMN "ff_account_info"."zhye" IS '帐户余额'; 
-         COMMENT ON COLUMN "ff_account_info"."zhzl" IS '帐户种类(个人,单位)'; 
-         COMMENT ON COLUMN "ff_account_info"."zhzt" IS '帐户状态'; 
-         COMMENT ON COLUMN "ff_account_info"."zzdh" IS '住宅电话'; 
-         COMMENT ON COLUMN "ff_account_info"."zzdz" IS '住宅地址'; 
-         COMMENT ON COLUMN "ff_account_info"."cjrq" IS '创建日期'; 
-         COMMENT ON COLUMN "ff_account_info"."cjr" IS '创建人'; 
-         COMMENT ON COLUMN "ff_account_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_account_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_account_info"."yt" IS '用途'; 
-         COMMENT ON COLUMN "ff_account_info"."jrjgmc" IS '金融机构名称'; 
-         COMMENT ON COLUMN "ff_account_info"."yxq" IS '有效期'; 
-         COMMENT ON COLUMN "ff_account_info"."sftm" IS '是否同名'; 
-         COMMENT ON COLUMN "ff_account_info"."hqfs" IS '获取方式'; 
-         COMMENT ON COLUMN "ff_account_info"."qm" IS '签名'; 
-         COMMENT ON COLUMN "ff_account_info"."sfwz" IS '是否伪造'; 
-         COMMENT ON COLUMN "ff_account_info"."xyrbh" IS '嫌疑人编号'; 
-         COMMENT ON COLUMN "ff_account_info"."khrzjlxmc" IS '开户人证件类型名称'; 
-         COMMENT ON COLUMN "ff_account_info"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_account_info"."bh" IS '编号'; 
-         COMMENT ON COLUMN "ff_account_info"."maxid" IS '最大ID'; 
-         COMMENT ON COLUMN "ff_account_info"."mark" IS '标签'; 
-         COMMENT ON COLUMN "ff_account_info"."bbzje" IS '本币总金额'; 
-         COMMENT ON COLUMN "ff_account_info"."wbzje" IS '外币总金额'; 
-         COMMENT ON COLUMN "ff_account_info"."bbbs" IS '本币笔数'; 
-         COMMENT ON COLUMN "ff_account_info"."wbbs" IS '外币笔数'; 
-         COMMENT ON TABLE "ff_account_info" IS '案件数据-银行卡信息'; 
+         COMMENT ON COLUMN "mz_account_info"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_account_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_account_info"."zh" IS '帐号'; 
+         COMMENT ON COLUMN "mz_account_info"."kh" IS '卡号'; 
+         COMMENT ON COLUMN "mz_account_info"."yhkid" IS '银行卡ID'; 
+         COMMENT ON COLUMN "mz_account_info"."ah" IS '案号'; 
+         COMMENT ON COLUMN "mz_account_info"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_account_info"."ryid" IS '人员ID'; 
+         COMMENT ON COLUMN "mz_account_info"."sjkzryid" IS '实际控制人ID'; 
+         COMMENT ON COLUMN "mz_account_info"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_account_info"."bz" IS '币种'; 
+         COMMENT ON COLUMN "mz_account_info"."chbz" IS '钞汇标志'; 
+         COMMENT ON COLUMN "mz_account_info"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_account_info"."cljg" IS '处理结果'; 
+         COMMENT ON COLUMN "mz_account_info"."cxsj" IS '查询时间'; 
+         COMMENT ON COLUMN "mz_account_info"."dbrzjhm" IS '代办人证件号码'; 
+         COMMENT ON COLUMN "mz_account_info"."dbrzjlx" IS '代办人证件类型'; 
+         COMMENT ON COLUMN "mz_account_info"."dlr" IS '代理人'; 
+         COMMENT ON COLUMN "mz_account_info"."dlrdh" IS '代理人电话'; 
+         COMMENT ON COLUMN "mz_account_info"."dsnsh" IS '地税纳税号'; 
+         COMMENT ON COLUMN "mz_account_info"."dwdh" IS '单位电话'; 
+         COMMENT ON COLUMN "mz_account_info"."dwdz" IS '单位地址'; 
+         COMMENT ON COLUMN "mz_account_info"."fksj" IS '反馈时间'; 
+         COMMENT ON COLUMN "mz_account_info"."frdb" IS '法人代表'; 
+         COMMENT ON COLUMN "mz_account_info"."frdbzjhm" IS '法人证件号码'; 
+         COMMENT ON COLUMN "mz_account_info"."frdbzjlx" IS '法人证件类型'; 
+         COMMENT ON COLUMN "mz_account_info"."glzjzh" IS '关联资金帐户'; 
+         COMMENT ON COLUMN "mz_account_info"."gsnsh" IS '国税纳税号'; 
+         COMMENT ON COLUMN "mz_account_info"."gzdw" IS '工作单位'; 
+         COMMENT ON COLUMN "mz_account_info"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_account_info"."ifdkh" IS '是否调开户'; 
+         COMMENT ON COLUMN "mz_account_info"."jrjgdm" IS '金融机构代码'; 
+         COMMENT ON COLUMN "mz_account_info"."khcs" IS '开户城市'; 
+         COMMENT ON COLUMN "mz_account_info"."khdm" IS '客户代码'; 
+         COMMENT ON COLUMN "mz_account_info"."khgszzhm" IS '客户工商执照号码'; 
+         COMMENT ON COLUMN "mz_account_info"."khrgj" IS '开户人国籍'; 
+         COMMENT ON COLUMN "mz_account_info"."khrq" IS '开户日期'; 
+         COMMENT ON COLUMN "mz_account_info"."khrzjhm" IS '开户人证件号码'; 
+         COMMENT ON COLUMN "mz_account_info"."khrzjlx" IS '开户人证件类型'; 
+         COMMENT ON COLUMN "mz_account_info"."khsf" IS '开户省份'; 
+         COMMENT ON COLUMN "mz_account_info"."khwd" IS '开户网点'; 
+         COMMENT ON COLUMN "mz_account_info"."khwddm" IS '开户网点代码'; 
+         COMMENT ON COLUMN "mz_account_info"."kyye" IS '可用余额'; 
+         COMMENT ON COLUMN "mz_account_info"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_account_info"."lxfs" IS '开户联系方式'; 
+         COMMENT ON COLUMN "mz_account_info"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_account_info"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_account_info"."sfydq" IS '是否已调集'; 
+         COMMENT ON COLUMN "mz_account_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_account_info"."txdz" IS '通信地址'; 
+         COMMENT ON COLUMN "mz_account_info"."xhrq" IS '销户日期'; 
+         COMMENT ON COLUMN "mz_account_info"."xhwd" IS '销户网点'; 
+         COMMENT ON COLUMN "mz_account_info"."xycd" IS '嫌疑程度'; 
+         COMMENT ON COLUMN "mz_account_info"."yxdz" IS '邮箱地址'; 
+         COMMENT ON COLUMN "mz_account_info"."yzbm" IS '邮政编码'; 
+         COMMENT ON COLUMN "mz_account_info"."zdr" IS '帐单日'; 
+         COMMENT ON COLUMN "mz_account_info"."zhjysj" IS '最后交易时间'; 
+         COMMENT ON COLUMN "mz_account_info"."zhkhmc" IS '帐户客户名称'; 
+         COMMENT ON COLUMN "mz_account_info"."zhkhyh" IS '帐户开户银行'; 
+         COMMENT ON COLUMN "mz_account_info"."zhlx" IS '帐户类型'; 
+         COMMENT ON COLUMN "mz_account_info"."zhxhyh" IS '帐户销户银行'; 
+         COMMENT ON COLUMN "mz_account_info"."zhye" IS '帐户余额'; 
+         COMMENT ON COLUMN "mz_account_info"."zhzl" IS '帐户种类(个人,单位)'; 
+         COMMENT ON COLUMN "mz_account_info"."zhzt" IS '帐户状态'; 
+         COMMENT ON COLUMN "mz_account_info"."zzdh" IS '住宅电话'; 
+         COMMENT ON COLUMN "mz_account_info"."zzdz" IS '住宅地址'; 
+         COMMENT ON COLUMN "mz_account_info"."cjrq" IS '创建日期'; 
+         COMMENT ON COLUMN "mz_account_info"."cjr" IS '创建人'; 
+         COMMENT ON COLUMN "mz_account_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_account_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_account_info"."yt" IS '用途'; 
+         COMMENT ON COLUMN "mz_account_info"."jrjgmc" IS '金融机构名称'; 
+         COMMENT ON COLUMN "mz_account_info"."yxq" IS '有效期'; 
+         COMMENT ON COLUMN "mz_account_info"."sftm" IS '是否同名'; 
+         COMMENT ON COLUMN "mz_account_info"."hqfs" IS '获取方式'; 
+         COMMENT ON COLUMN "mz_account_info"."qm" IS '签名'; 
+         COMMENT ON COLUMN "mz_account_info"."sfwz" IS '是否伪造'; 
+         COMMENT ON COLUMN "mz_account_info"."xyrbh" IS '嫌疑人编号'; 
+         COMMENT ON COLUMN "mz_account_info"."khrzjlxmc" IS '开户人证件类型名称'; 
+         COMMENT ON COLUMN "mz_account_info"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_account_info"."bh" IS '编号'; 
+         COMMENT ON COLUMN "mz_account_info"."maxid" IS '最大ID'; 
+         COMMENT ON COLUMN "mz_account_info"."mark" IS '标签'; 
+         COMMENT ON COLUMN "mz_account_info"."bbzje" IS '本币总金额'; 
+         COMMENT ON COLUMN "mz_account_info"."wbzje" IS '外币总金额'; 
+         COMMENT ON COLUMN "mz_account_info"."bbbs" IS '本币笔数'; 
+         COMMENT ON COLUMN "mz_account_info"."wbbs" IS '外币笔数'; 
+         COMMENT ON TABLE "mz_account_info" IS '案件数据-银行卡信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_account_info_chakong 
+         -- Table structure for mz_account_info_chakong 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_account_info_chakong" CASCADE; 
-         CREATE TABLE "ff_account_info_chakong" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_account_info_chakong_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_account_info_chakong" CASCADE; 
+         CREATE TABLE "mz_account_info_chakong" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_account_info_chakong_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "zh" varchar(80) COLLATE "pg_catalog"."default" NOT NULL, 
            "kh" varchar(80) COLLATE "pg_catalog"."default" NOT NULL, 
@@ -2394,94 +2394,94 @@ export default {
          ) 
          ; 
          
-         COMMENT ON COLUMN "ff_account_info_chakong"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zh" IS '帐号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."kh" IS '卡号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."yhkid" IS '银行卡ID'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."ah" IS '案号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."ryid" IS '人员ID'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."sjkzryid" IS '实际控制人ID'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."bz" IS '币种'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."chbz" IS '钞汇标志'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."cljg" IS '处理结果'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."cxsj" IS '查询时间'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dbrzjhm" IS '代办人证件号码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dbrzjlx" IS '代办人证件类型'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dlr" IS '代理人'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dlrdh" IS '代理人电话'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dsnsh" IS '地税纳税号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dwdh" IS '单位电话'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."dwdz" IS '单位地址'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."fksj" IS '反馈时间'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."frdb" IS '法人代表'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."frdbzjhm" IS '法人证件号码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."frdbzjlx" IS '法人证件类型'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."glzjzh" IS '关联资金帐户'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."gsnsh" IS '国税纳税号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."gzdw" IS '工作单位'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."ifdkh" IS '是否调开户'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."jrjgdm" IS '金融机构代码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khcs" IS '开户城市'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khdm" IS '客户代码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khgszzhm" IS '客户工商执照号码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khrgj" IS '开户人国籍'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khrq" IS '开户日期'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khrzjhm" IS '开户人证件号码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khrzjlx" IS '开户人证件类型'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khsf" IS '开户省份'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khwd" IS '开户网点'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khwddm" IS '开户网点代码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."kyye" IS '可用余额'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."lxfs" IS '开户联系方式'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."sfydq" IS '是否已调集'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."txdz" IS '通信地址'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."xhrq" IS '销户日期'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."xhwd" IS '销户网点'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."xycd" IS '嫌疑程度'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."yxdz" IS '邮箱地址'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."yzbm" IS '邮政编码'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zdr" IS '帐单日'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhjysj" IS '最后交易时间'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhkhmc" IS '帐户客户名称'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhkhyh" IS '帐户开户银行'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhlx" IS '帐户类型'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhxhyh" IS '帐户销户银行'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhye" IS '帐户余额'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhzl" IS '帐户种类(个人,单位)'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zhzt" IS '帐户状态'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zzdh" IS '住宅电话'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."zzdz" IS '住宅地址'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."cjrq" IS '创建日期'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."cjr" IS '创建人'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."yt" IS '用途'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."jrjgmc" IS '金融机构名称'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."yxq" IS '有效期'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."sftm" IS '是否同名'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."hqfs" IS '获取方式'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."qm" IS '签名'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."sfwz" IS '是否伪造'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."xyrbh" IS '嫌疑人编号'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."khrzjlxmc" IS '开户人证件类型名称'; 
-         COMMENT ON COLUMN "ff_account_info_chakong"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_account_info_chakong" IS '银行卡信息(查控返回数据)'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zh" IS '帐号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."kh" IS '卡号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."yhkid" IS '银行卡ID'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."ah" IS '案号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."ryid" IS '人员ID'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."sjkzryid" IS '实际控制人ID'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."bz" IS '币种'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."chbz" IS '钞汇标志'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."cljg" IS '处理结果'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."cxsj" IS '查询时间'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dbrzjhm" IS '代办人证件号码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dbrzjlx" IS '代办人证件类型'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dlr" IS '代理人'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dlrdh" IS '代理人电话'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dsnsh" IS '地税纳税号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dwdh" IS '单位电话'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."dwdz" IS '单位地址'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."fksj" IS '反馈时间'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."frdb" IS '法人代表'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."frdbzjhm" IS '法人证件号码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."frdbzjlx" IS '法人证件类型'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."glzjzh" IS '关联资金帐户'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."gsnsh" IS '国税纳税号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."gzdw" IS '工作单位'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."ifdkh" IS '是否调开户'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."jrjgdm" IS '金融机构代码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khcs" IS '开户城市'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khdm" IS '客户代码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khgszzhm" IS '客户工商执照号码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khrgj" IS '开户人国籍'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khrq" IS '开户日期'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khrzjhm" IS '开户人证件号码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khrzjlx" IS '开户人证件类型'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khsf" IS '开户省份'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khwd" IS '开户网点'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khwddm" IS '开户网点代码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."kyye" IS '可用余额'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."lxfs" IS '开户联系方式'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."sfydq" IS '是否已调集'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."txdz" IS '通信地址'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."xhrq" IS '销户日期'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."xhwd" IS '销户网点'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."xycd" IS '嫌疑程度'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."yxdz" IS '邮箱地址'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."yzbm" IS '邮政编码'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zdr" IS '帐单日'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhjysj" IS '最后交易时间'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhkhmc" IS '帐户客户名称'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhkhyh" IS '帐户开户银行'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhlx" IS '帐户类型'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhxhyh" IS '帐户销户银行'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhye" IS '帐户余额'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhzl" IS '帐户种类(个人,单位)'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zhzt" IS '帐户状态'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zzdh" IS '住宅电话'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."zzdz" IS '住宅地址'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."cjrq" IS '创建日期'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."cjr" IS '创建人'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."yt" IS '用途'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."jrjgmc" IS '金融机构名称'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."yxq" IS '有效期'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."sftm" IS '是否同名'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."hqfs" IS '获取方式'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."qm" IS '签名'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."sfwz" IS '是否伪造'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."xyrbh" IS '嫌疑人编号'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."khrzjlxmc" IS '开户人证件类型名称'; 
+         COMMENT ON COLUMN "mz_account_info_chakong"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_account_info_chakong" IS '银行卡信息(查控返回数据)'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_analysis_record 
+         -- Table structure for mz_analysis_record 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_analysis_record" CASCADE; 
-         CREATE TABLE "ff_analysis_record" ( 
-           "id" int8 NOT NULL DEFAULT nextval('ff_analysis_record_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_analysis_record" CASCADE; 
+         CREATE TABLE "mz_analysis_record" ( 
+           "id" int8 NOT NULL DEFAULT nextval('mz_analysis_record_id_seq'::regclass), 
            "m_type" varchar(255) COLLATE "pg_catalog"."default", 
            "ajid" varchar(255) COLLATE "pg_catalog"."default", 
            "userid" varchar(50) COLLATE "pg_catalog"."default", 
@@ -2501,33 +2501,33 @@ export default {
            "sql_orderby" varchar(255) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_analysis_record"."m_type" IS '模型类型标识'; 
-         COMMENT ON COLUMN "ff_analysis_record"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_analysis_record"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_analysis_record"."r_name" IS '记录名称标签'; 
-         COMMENT ON COLUMN "ff_analysis_record"."tjsj" IS '记录添加时间'; 
-         COMMENT ON COLUMN "ff_analysis_record"."out_type" IS '''输出表类型 1表格， 2视图，3上表下图'''; 
-         COMMENT ON COLUMN "ff_analysis_record"."page_type" IS '页面类型'; 
-         COMMENT ON COLUMN "ff_analysis_record"."sql_var" IS '存储当前执行SQL模板语句 '; 
-         COMMENT ON COLUMN "ff_analysis_record"."md_type" IS '模型数据类型（0账卡号，1证照号，2主体名称）'; 
-         COMMENT ON COLUMN "ff_analysis_record"."mpids" IS '模型匹配条件编号'; 
-         COMMENT ON COLUMN "ff_analysis_record"."sql_detail" IS '详细数据笔数SQL'; 
-         COMMENT ON COLUMN "ff_analysis_record"."batchid" IS '反洗钱批次标识'; 
-         COMMENT ON COLUMN "ff_analysis_record"."version" IS '版本号'; 
-         COMMENT ON COLUMN "ff_analysis_record"."alreadymids" IS '已完成子model'; 
-         COMMENT ON COLUMN "ff_analysis_record"."mpids_describe" IS '模型匹配条件运算逻辑关系描述，如： 
+         COMMENT ON COLUMN "mz_analysis_record"."m_type" IS '模型类型标识'; 
+         COMMENT ON COLUMN "mz_analysis_record"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_analysis_record"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_analysis_record"."r_name" IS '记录名称标签'; 
+         COMMENT ON COLUMN "mz_analysis_record"."tjsj" IS '记录添加时间'; 
+         COMMENT ON COLUMN "mz_analysis_record"."out_type" IS '''输出表类型 1表格， 2视图，3上表下图'''; 
+         COMMENT ON COLUMN "mz_analysis_record"."page_type" IS '页面类型'; 
+         COMMENT ON COLUMN "mz_analysis_record"."sql_var" IS '存储当前执行SQL模板语句 '; 
+         COMMENT ON COLUMN "mz_analysis_record"."md_type" IS '模型数据类型（0账卡号，1证照号，2主体名称）'; 
+         COMMENT ON COLUMN "mz_analysis_record"."mpids" IS '模型匹配条件编号'; 
+         COMMENT ON COLUMN "mz_analysis_record"."sql_detail" IS '详细数据笔数SQL'; 
+         COMMENT ON COLUMN "mz_analysis_record"."batchid" IS '反洗钱批次标识'; 
+         COMMENT ON COLUMN "mz_analysis_record"."version" IS '版本号'; 
+         COMMENT ON COLUMN "mz_analysis_record"."alreadymids" IS '已完成子model'; 
+         COMMENT ON COLUMN "mz_analysis_record"."mpids_describe" IS '模型匹配条件运算逻辑关系描述，如： 
          条件编号：1,2,3的逻辑关系为且，则需要编辑为： 
          DESC_1且DESC_2且DESC_3'; 
-         COMMENT ON COLUMN "ff_analysis_record"."m_param" IS '模型参数'; 
-         COMMENT ON COLUMN "ff_analysis_record"."sql_orderby" IS 'sql排序'; 
-         COMMENT ON TABLE "ff_analysis_record" IS '分析历史记录-存储分析条件'; 
+         COMMENT ON COLUMN "mz_analysis_record"."m_param" IS '模型参数'; 
+         COMMENT ON COLUMN "mz_analysis_record"."sql_orderby" IS 'sql排序'; 
+         COMMENT ON TABLE "mz_analysis_record" IS '分析历史记录-存储分析条件'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_analysis_record_visual 
+         -- Table structure for mz_analysis_record_visual 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_analysis_record_visual" CASCADE; 
-         CREATE TABLE "ff_analysis_record_visual" ( 
-           "id" int8 NOT NULL DEFAULT nextval('ff_analysis_record_visual_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_analysis_record_visual" CASCADE; 
+         CREATE TABLE "mz_analysis_record_visual" ( 
+           "id" int8 NOT NULL DEFAULT nextval('mz_analysis_record_visual_id_seq'::regclass), 
            "ajid" varchar(255) COLLATE "pg_catalog"."default", 
            "userid" varchar(50) COLLATE "pg_catalog"."default", 
            "v_name" varchar(200) COLLATE "pg_catalog"."default" NOT NULL, 
@@ -2541,24 +2541,24 @@ export default {
            "m_param" bytea 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."v_name" IS '记录名称'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."v_tjsj" IS '记录添加时间'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."v_content" IS '视图内容'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."m_name" IS '保存模型名称'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."m_type" IS '模型类型标识'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."md_type" IS '模型数据类型（0账卡号，1证照号，2主体名称,100筛选）'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."version" IS '版本号'; 
-         COMMENT ON COLUMN "ff_analysis_record_visual"."m_param" IS '模型条件'; 
-         COMMENT ON TABLE "ff_analysis_record_visual" IS '分析历史记录-存储可视化视图'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."v_name" IS '记录名称'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."v_tjsj" IS '记录添加时间'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."v_content" IS '视图内容'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."m_name" IS '保存模型名称'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."m_type" IS '模型类型标识'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."md_type" IS '模型数据类型（0账卡号，1证照号，2主体名称,100筛选）'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."version" IS '版本号'; 
+         COMMENT ON COLUMN "mz_analysis_record_visual"."m_param" IS '模型条件'; 
+         COMMENT ON TABLE "mz_analysis_record_visual" IS '分析历史记录-存储可视化视图'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_awaittask 
+         -- Table structure for mz_awaittask 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_awaittask" CASCADE; 
-         CREATE TABLE "ff_awaittask" ( 
-           "id" int8 NOT NULL DEFAULT nextval('ff_awaittask_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_awaittask" CASCADE; 
+         CREATE TABLE "mz_awaittask" ( 
+           "id" int8 NOT NULL DEFAULT nextval('mz_awaittask_id_seq'::regclass), 
            "ajid" int8, 
            "cxzh" varchar(100) COLLATE "pg_catalog"."default", 
            "yh_code" varchar(100) COLLATE "pg_catalog"."default", 
@@ -2576,29 +2576,29 @@ export default {
            "xgsj" timestamp(6) 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_awaittask"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_awaittask"."cxzh" IS '账卡号'; 
-         COMMENT ON COLUMN "ff_awaittask"."yh_code" IS '账号银行代码'; 
-         COMMENT ON COLUMN "ff_awaittask"."yh_name" IS '账号银行名称'; 
-         COMMENT ON COLUMN "ff_awaittask"."zz_code" IS '开户证照号码'; 
-         COMMENT ON COLUMN "ff_awaittask"."zz_name" IS '开户证照名称'; 
-         COMMENT ON COLUMN "ff_awaittask"."zh_ztlb" IS '账号主体类别（01个人/02单位）'; 
-         COMMENT ON COLUMN "ff_awaittask"."zh_ztlb_name" IS '账号主体类别名称'; 
-         COMMENT ON COLUMN "ff_awaittask"."tjsj" IS '添加时间'; 
-         COMMENT ON COLUMN "ff_awaittask"."tjrw" IS '添加任务人员（登录警号）'; 
-         COMMENT ON COLUMN "ff_awaittask"."task_type" IS '待办任务类型'; 
-         COMMENT ON COLUMN "ff_awaittask"."type_id" IS '调单类型编号'; 
-         COMMENT ON COLUMN "ff_awaittask"."jyhm" IS '交易户名'; 
-         COMMENT ON COLUMN "ff_awaittask"."target" IS '交易方或者对手方标识'; 
-         COMMENT ON COLUMN "ff_awaittask"."xgsj" IS '修改时间'; 
-         COMMENT ON TABLE "ff_awaittask" IS '待办任务信息表'; 
+         COMMENT ON COLUMN "mz_awaittask"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_awaittask"."cxzh" IS '账卡号'; 
+         COMMENT ON COLUMN "mz_awaittask"."yh_code" IS '账号银行代码'; 
+         COMMENT ON COLUMN "mz_awaittask"."yh_name" IS '账号银行名称'; 
+         COMMENT ON COLUMN "mz_awaittask"."zz_code" IS '开户证照号码'; 
+         COMMENT ON COLUMN "mz_awaittask"."zz_name" IS '开户证照名称'; 
+         COMMENT ON COLUMN "mz_awaittask"."zh_ztlb" IS '账号主体类别（01个人/02单位）'; 
+         COMMENT ON COLUMN "mz_awaittask"."zh_ztlb_name" IS '账号主体类别名称'; 
+         COMMENT ON COLUMN "mz_awaittask"."tjsj" IS '添加时间'; 
+         COMMENT ON COLUMN "mz_awaittask"."tjrw" IS '添加任务人员（登录警号）'; 
+         COMMENT ON COLUMN "mz_awaittask"."task_type" IS '待办任务类型'; 
+         COMMENT ON COLUMN "mz_awaittask"."type_id" IS '调单类型编号'; 
+         COMMENT ON COLUMN "mz_awaittask"."jyhm" IS '交易户名'; 
+         COMMENT ON COLUMN "mz_awaittask"."target" IS '交易方或者对手方标识'; 
+         COMMENT ON COLUMN "mz_awaittask"."xgsj" IS '修改时间'; 
+         COMMENT ON TABLE "mz_awaittask" IS '待办任务信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_bank_records 
+         -- Table structure for mz_bank_records 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_bank_records" CASCADE; 
-         CREATE TABLE "ff_bank_records" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_bank_records_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_bank_records" CASCADE; 
+         CREATE TABLE "mz_bank_records" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_bank_records_shard_id_seq'::regclass), 
            "ajid" int4 NOT NULL, 
            "yhjymxid" varchar(50) COLLATE "pg_catalog"."default", 
            "cxzh" varchar(100) COLLATE "pg_catalog"."default", 
@@ -2737,151 +2737,151 @@ export default {
            "ipdq" varchar(200) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_bank_records"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."yhjymxid" IS '银行交易明细ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."cxzh" IS '查询账号'; 
-         COMMENT ON COLUMN "ff_bank_records"."cxkh" IS '交易账号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jymc" IS '交易名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyzjhm" IS '交易证件号码'; 
-         COMMENT ON COLUMN "ff_bank_records"."jdbz" IS '借贷标志'; 
-         COMMENT ON COLUMN "ff_bank_records"."jysj" IS '交易时间'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyrq" IS '交易日期'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyye" IS '交易余额'; 
-         COMMENT ON COLUMN "ff_bank_records"."jybz" IS '交易币种'; 
-         COMMENT ON COLUMN "ff_bank_records"."jydfzkh" IS '对手账号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jydfmc" IS '对手户名'; 
-         COMMENT ON COLUMN "ff_bank_records"."jydfzjhm" IS '对手身份证号'; 
-         COMMENT ON COLUMN "ff_bank_records"."dsjyye" IS '对手交易余额'; 
-         COMMENT ON COLUMN "ff_bank_records"."jydfzhkhh" IS '对手开户银行'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyyhmc" IS '交易银行名'; 
-         COMMENT ON COLUMN "ff_bank_records"."shh" IS '商户代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."shmc" IS '商户名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."zysm" IS '摘要说明'; 
-         COMMENT ON COLUMN "ff_bank_records"."qd" IS '渠道'; 
-         COMMENT ON COLUMN "ff_bank_records"."jywdmc" IS '交易网点名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."ip" IS 'IP地址'; 
-         COMMENT ON COLUMN "ff_bank_records"."mac" IS 'MAC地址'; 
-         COMMENT ON COLUMN "ff_bank_records"."rzh" IS '日志号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jylx" IS '交易类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."jygj" IS '交易国家'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyhwdd" IS '交易网点号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyfsd" IS '交易发生地'; 
-         COMMENT ON COLUMN "ff_bank_records"."jycs" IS '交易场所'; 
-         COMMENT ON COLUMN "ff_bank_records"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_bank_records"."ssfkyhjgdm" IS '所属发卡银行机构代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_bank_records"."sbyy" IS '失败原因'; 
-         COMMENT ON COLUMN "ff_bank_records"."xycd" IS '嫌疑程度'; 
-         COMMENT ON COLUMN "ff_bank_records"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_bank_records"."ajcjrq" IS '案件采集日期'; 
-         COMMENT ON COLUMN "ff_bank_records"."jysfcg" IS '交易是否成功'; 
-         COMMENT ON COLUMN "ff_bank_records"."pzzl" IS '凭证种类'; 
-         COMMENT ON COLUMN "ff_bank_records"."cxjssj" IS '查询结束时间'; 
-         COMMENT ON COLUMN "ff_bank_records"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."sljgmc" IS '受理机构名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."ah" IS '案号（工商查询时使用）'; 
-         COMMENT ON COLUMN "ff_bank_records"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_bank_records"."sljgdm" IS '受理机构代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyyhkid" IS '交易银行卡ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."dqmc" IS '地区名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."xtgzh" IS '系统跟踪号'; 
-         COMMENT ON COLUMN "ff_bank_records"."fsjgmc" IS '发送机构名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."ysbh" IS '编号'; 
-         COMMENT ON COLUMN "ff_bank_records"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_bank_records"."jsckh" IS '检索参考号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jylsh" IS '交易流水号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jydfzkhlx" IS '交易对方账卡号类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."mxlx" IS '明细类型，0为账户交易明显，1为商户信息，2调集银行卡信息'; 
-         COMMENT ON COLUMN "ff_bank_records"."qxdm" IS '区县代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."fsjgbsm" IS '发送机构标识码'; 
-         COMMENT ON COLUMN "ff_bank_records"."dsyhkid" IS '对手银行卡ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."qxmc" IS '区县名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."jygyh" IS '交易柜员号'; 
-         COMMENT ON COLUMN "ff_bank_records"."cxfkjgyy" IS '查询反馈结果原因'; 
-         COMMENT ON COLUMN "ff_bank_records"."zdh" IS '终端号'; 
-         COMMENT ON COLUMN "ff_bank_records"."jykhh" IS '交易账户开户银行'; 
-         COMMENT ON COLUMN "ff_bank_records"."xjbz" IS '现金标志'; 
-         COMMENT ON COLUMN "ff_bank_records"."cxkssj" IS '查询开始时间'; 
-         COMMENT ON COLUMN "ff_bank_records"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."sjlylx" IS '数据来源类型(采集录入、手工录入、数据抽取)'; 
-         COMMENT ON COLUMN "ff_bank_records"."ksx" IS '卡属性'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyds_ssfkyhjgdm" IS '交易对手所属发卡银行机构代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_bank_records"."bankcode" IS '银行代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."dqdm" IS '地区代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."cljg" IS '处理结果 0-成功；1-失败；2-零数据；'; 
-         COMMENT ON COLUMN "ff_bank_records"."cph" IS '传票号'; 
-         COMMENT ON COLUMN "ff_bank_records"."cxfkjg" IS '查询反馈结果'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyjz" IS '交易介质'; 
-         COMMENT ON COLUMN "ff_bank_records"."pzh" IS '凭证号'; 
-         COMMENT ON COLUMN "ff_bank_records"."lytype" IS '来源类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."markrow" IS '标记行'; 
-         COMMENT ON COLUMN "ff_bank_records"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_bank_records"."jkje" IS '借款金额'; 
-         COMMENT ON COLUMN "ff_bank_records"."dkje" IS '贷款金额'; 
-         COMMENT ON COLUMN "ff_bank_records"."maxid" IS '最大ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."bsfs" IS '报送方式'; 
-         COMMENT ON COLUMN "ff_bank_records"."bsrq" IS '报送日期'; 
-         COMMENT ON COLUMN "ff_bank_records"."bwid" IS '报文ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."dbrgj" IS '代办人国籍'; 
-         COMMENT ON COLUMN "ff_bank_records"."dbrmc" IS '代办人名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."dbrzjhm" IS '代办人证件号码'; 
-         COMMENT ON COLUMN "ff_bank_records"."dbrzjlx" IS '代办人证件类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."dekybs" IS '大额可疑标识'; 
-         COMMENT ON COLUMN "ff_bank_records"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkfgj" IS '付款方国籍'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkflx" IS '付款方类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkfwddm" IS '付款方网点代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkfwddmlx" IS '付款方网点代码类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkfyhszd" IS '付款方银行所在地'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkfzhlx" IS '付款方账号类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."fkfzjlx" IS '付款方证件类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyfsdtemyqdm" IS '交易发生地特殊贸易区代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyfsmc" IS '交易方式名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyjlid" IS '交易记录ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."jytzdm" IS '交易特征代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."kjjybj" IS '跨境交易标记'; 
-         COMMENT ON COLUMN "ff_bank_records"."kjlb" IS '跨境类别'; 
-         COMMENT ON COLUMN "ff_bank_records"."ldrq" IS '落地日期'; 
-         COMMENT ON COLUMN "ff_bank_records"."mbdm" IS '模板代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."mbmc" IS '模板名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."myje" IS '美元金额'; 
-         COMMENT ON COLUMN "ff_bank_records"."rketlsj" IS '入库ETL时间'; 
-         COMMENT ON COLUMN "ff_bank_records"."rmbje" IS '人民币金额'; 
-         COMMENT ON COLUMN "ff_bank_records"."scbs" IS '删除标识'; 
-         COMMENT ON COLUMN "ff_bank_records"."sffzhlx" IS '收款方账号类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."skfgj" IS '收款方国籍'; 
-         COMMENT ON COLUMN "ff_bank_records"."skflx" IS '收款方类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."skftemyqdm" IS '收款方贸易特殊区代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."skfwddm" IS '收款方网点代码'; 
-         COMMENT ON COLUMN "ff_bank_records"."skfwddmlx" IS '收款方网点代码类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."skfyhszd" IS '收款方银行所在地'; 
-         COMMENT ON COLUMN "ff_bank_records"."skfzjlx" IS '收款方证件类型'; 
-         COMMENT ON COLUMN "ff_bank_records"."sxetlsj" IS '失效ETL时间'; 
-         COMMENT ON COLUMN "ff_bank_records"."tjzt" IS '统计状态'; 
-         COMMENT ON COLUMN "ff_bank_records"."ybje" IS '原币金额'; 
-         COMMENT ON COLUMN "ff_bank_records"."ydejygx" IS '与大额交易的关系'; 
-         COMMENT ON COLUMN "ff_bank_records"."yjyid" IS '原交易ID'; 
-         COMMENT ON COLUMN "ff_bank_records"."ywbsh" IS '业务标识号'; 
-         COMMENT ON COLUMN "ff_bank_records"."zt" IS '状态'; 
-         COMMENT ON COLUMN "ff_bank_records"."jyfs" IS '交易方式'; 
-         COMMENT ON COLUMN "ff_bank_records"."hbmc" IS '货币名称'; 
-         COMMENT ON COLUMN "ff_bank_records"."bgjg" IS '报告机构'; 
-         COMMENT ON COLUMN "ff_bank_records"."swszfl" IS '涉外收支分类'; 
-         COMMENT ON COLUMN "ff_bank_records"."wyipdz" IS '网银IP地址'; 
-         COMMENT ON COLUMN "ff_bank_records"."ipsf" IS 'ip所属省份'; 
-         COMMENT ON COLUMN "ff_bank_records"."ipcs" IS 'ip所属城市'; 
-         COMMENT ON COLUMN "ff_bank_records"."ipdq" IS 'ip所属地区'; 
-         COMMENT ON TABLE "ff_bank_records" IS '资金分析账户交易明细表'; 
+         COMMENT ON COLUMN "mz_bank_records"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."yhjymxid" IS '银行交易明细ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."cxzh" IS '查询账号'; 
+         COMMENT ON COLUMN "mz_bank_records"."cxkh" IS '交易账号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jymc" IS '交易名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyzjhm" IS '交易证件号码'; 
+         COMMENT ON COLUMN "mz_bank_records"."jdbz" IS '借贷标志'; 
+         COMMENT ON COLUMN "mz_bank_records"."jysj" IS '交易时间'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyrq" IS '交易日期'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyye" IS '交易余额'; 
+         COMMENT ON COLUMN "mz_bank_records"."jybz" IS '交易币种'; 
+         COMMENT ON COLUMN "mz_bank_records"."jydfzkh" IS '对手账号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jydfmc" IS '对手户名'; 
+         COMMENT ON COLUMN "mz_bank_records"."jydfzjhm" IS '对手身份证号'; 
+         COMMENT ON COLUMN "mz_bank_records"."dsjyye" IS '对手交易余额'; 
+         COMMENT ON COLUMN "mz_bank_records"."jydfzhkhh" IS '对手开户银行'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyyhmc" IS '交易银行名'; 
+         COMMENT ON COLUMN "mz_bank_records"."shh" IS '商户代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."shmc" IS '商户名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."zysm" IS '摘要说明'; 
+         COMMENT ON COLUMN "mz_bank_records"."qd" IS '渠道'; 
+         COMMENT ON COLUMN "mz_bank_records"."jywdmc" IS '交易网点名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."ip" IS 'IP地址'; 
+         COMMENT ON COLUMN "mz_bank_records"."mac" IS 'MAC地址'; 
+         COMMENT ON COLUMN "mz_bank_records"."rzh" IS '日志号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jylx" IS '交易类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."jygj" IS '交易国家'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyhwdd" IS '交易网点号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyfsd" IS '交易发生地'; 
+         COMMENT ON COLUMN "mz_bank_records"."jycs" IS '交易场所'; 
+         COMMENT ON COLUMN "mz_bank_records"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_bank_records"."ssfkyhjgdm" IS '所属发卡银行机构代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_bank_records"."sbyy" IS '失败原因'; 
+         COMMENT ON COLUMN "mz_bank_records"."xycd" IS '嫌疑程度'; 
+         COMMENT ON COLUMN "mz_bank_records"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_bank_records"."ajcjrq" IS '案件采集日期'; 
+         COMMENT ON COLUMN "mz_bank_records"."jysfcg" IS '交易是否成功'; 
+         COMMENT ON COLUMN "mz_bank_records"."pzzl" IS '凭证种类'; 
+         COMMENT ON COLUMN "mz_bank_records"."cxjssj" IS '查询结束时间'; 
+         COMMENT ON COLUMN "mz_bank_records"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."sljgmc" IS '受理机构名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."ah" IS '案号（工商查询时使用）'; 
+         COMMENT ON COLUMN "mz_bank_records"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_bank_records"."sljgdm" IS '受理机构代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyyhkid" IS '交易银行卡ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."dqmc" IS '地区名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."xtgzh" IS '系统跟踪号'; 
+         COMMENT ON COLUMN "mz_bank_records"."fsjgmc" IS '发送机构名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."ysbh" IS '编号'; 
+         COMMENT ON COLUMN "mz_bank_records"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_bank_records"."jsckh" IS '检索参考号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jylsh" IS '交易流水号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jydfzkhlx" IS '交易对方账卡号类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."mxlx" IS '明细类型，0为账户交易明显，1为商户信息，2调集银行卡信息'; 
+         COMMENT ON COLUMN "mz_bank_records"."qxdm" IS '区县代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."fsjgbsm" IS '发送机构标识码'; 
+         COMMENT ON COLUMN "mz_bank_records"."dsyhkid" IS '对手银行卡ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."qxmc" IS '区县名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."jygyh" IS '交易柜员号'; 
+         COMMENT ON COLUMN "mz_bank_records"."cxfkjgyy" IS '查询反馈结果原因'; 
+         COMMENT ON COLUMN "mz_bank_records"."zdh" IS '终端号'; 
+         COMMENT ON COLUMN "mz_bank_records"."jykhh" IS '交易账户开户银行'; 
+         COMMENT ON COLUMN "mz_bank_records"."xjbz" IS '现金标志'; 
+         COMMENT ON COLUMN "mz_bank_records"."cxkssj" IS '查询开始时间'; 
+         COMMENT ON COLUMN "mz_bank_records"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."sjlylx" IS '数据来源类型(采集录入、手工录入、数据抽取)'; 
+         COMMENT ON COLUMN "mz_bank_records"."ksx" IS '卡属性'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyds_ssfkyhjgdm" IS '交易对手所属发卡银行机构代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_bank_records"."bankcode" IS '银行代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."dqdm" IS '地区代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."cljg" IS '处理结果 0-成功；1-失败；2-零数据；'; 
+         COMMENT ON COLUMN "mz_bank_records"."cph" IS '传票号'; 
+         COMMENT ON COLUMN "mz_bank_records"."cxfkjg" IS '查询反馈结果'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyjz" IS '交易介质'; 
+         COMMENT ON COLUMN "mz_bank_records"."pzh" IS '凭证号'; 
+         COMMENT ON COLUMN "mz_bank_records"."lytype" IS '来源类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."markrow" IS '标记行'; 
+         COMMENT ON COLUMN "mz_bank_records"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_bank_records"."jkje" IS '借款金额'; 
+         COMMENT ON COLUMN "mz_bank_records"."dkje" IS '贷款金额'; 
+         COMMENT ON COLUMN "mz_bank_records"."maxid" IS '最大ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."bsfs" IS '报送方式'; 
+         COMMENT ON COLUMN "mz_bank_records"."bsrq" IS '报送日期'; 
+         COMMENT ON COLUMN "mz_bank_records"."bwid" IS '报文ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."dbrgj" IS '代办人国籍'; 
+         COMMENT ON COLUMN "mz_bank_records"."dbrmc" IS '代办人名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."dbrzjhm" IS '代办人证件号码'; 
+         COMMENT ON COLUMN "mz_bank_records"."dbrzjlx" IS '代办人证件类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."dekybs" IS '大额可疑标识'; 
+         COMMENT ON COLUMN "mz_bank_records"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkfgj" IS '付款方国籍'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkflx" IS '付款方类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkfwddm" IS '付款方网点代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkfwddmlx" IS '付款方网点代码类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkfyhszd" IS '付款方银行所在地'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkfzhlx" IS '付款方账号类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."fkfzjlx" IS '付款方证件类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyfsdtemyqdm" IS '交易发生地特殊贸易区代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyfsmc" IS '交易方式名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyjlid" IS '交易记录ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."jytzdm" IS '交易特征代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."kjjybj" IS '跨境交易标记'; 
+         COMMENT ON COLUMN "mz_bank_records"."kjlb" IS '跨境类别'; 
+         COMMENT ON COLUMN "mz_bank_records"."ldrq" IS '落地日期'; 
+         COMMENT ON COLUMN "mz_bank_records"."mbdm" IS '模板代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."mbmc" IS '模板名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."myje" IS '美元金额'; 
+         COMMENT ON COLUMN "mz_bank_records"."rketlsj" IS '入库ETL时间'; 
+         COMMENT ON COLUMN "mz_bank_records"."rmbje" IS '人民币金额'; 
+         COMMENT ON COLUMN "mz_bank_records"."scbs" IS '删除标识'; 
+         COMMENT ON COLUMN "mz_bank_records"."sffzhlx" IS '收款方账号类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."skfgj" IS '收款方国籍'; 
+         COMMENT ON COLUMN "mz_bank_records"."skflx" IS '收款方类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."skftemyqdm" IS '收款方贸易特殊区代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."skfwddm" IS '收款方网点代码'; 
+         COMMENT ON COLUMN "mz_bank_records"."skfwddmlx" IS '收款方网点代码类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."skfyhszd" IS '收款方银行所在地'; 
+         COMMENT ON COLUMN "mz_bank_records"."skfzjlx" IS '收款方证件类型'; 
+         COMMENT ON COLUMN "mz_bank_records"."sxetlsj" IS '失效ETL时间'; 
+         COMMENT ON COLUMN "mz_bank_records"."tjzt" IS '统计状态'; 
+         COMMENT ON COLUMN "mz_bank_records"."ybje" IS '原币金额'; 
+         COMMENT ON COLUMN "mz_bank_records"."ydejygx" IS '与大额交易的关系'; 
+         COMMENT ON COLUMN "mz_bank_records"."yjyid" IS '原交易ID'; 
+         COMMENT ON COLUMN "mz_bank_records"."ywbsh" IS '业务标识号'; 
+         COMMENT ON COLUMN "mz_bank_records"."zt" IS '状态'; 
+         COMMENT ON COLUMN "mz_bank_records"."jyfs" IS '交易方式'; 
+         COMMENT ON COLUMN "mz_bank_records"."hbmc" IS '货币名称'; 
+         COMMENT ON COLUMN "mz_bank_records"."bgjg" IS '报告机构'; 
+         COMMENT ON COLUMN "mz_bank_records"."swszfl" IS '涉外收支分类'; 
+         COMMENT ON COLUMN "mz_bank_records"."wyipdz" IS '网银IP地址'; 
+         COMMENT ON COLUMN "mz_bank_records"."ipsf" IS 'ip所属省份'; 
+         COMMENT ON COLUMN "mz_bank_records"."ipcs" IS 'ip所属城市'; 
+         COMMENT ON COLUMN "mz_bank_records"."ipdq" IS 'ip所属地区'; 
+         COMMENT ON TABLE "mz_bank_records" IS '资金分析账户交易明细表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_bank_records_source 
+         -- Table structure for mz_bank_records_source 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_bank_records_source" CASCADE; 
-         CREATE TABLE "ff_bank_records_source" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_bank_records_source_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_bank_records_source" CASCADE; 
+         CREATE TABLE "mz_bank_records_source" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_bank_records_source_shard_id_seq'::regclass), 
            "ajid" int4 NOT NULL, 
            "yhjymxid" varchar(50) COLLATE "pg_catalog"."default", 
            "cxzh" varchar(100) COLLATE "pg_catalog"."default", 
@@ -3017,148 +3017,148 @@ export default {
            "wyipdz" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_bank_records_source"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."yhjymxid" IS '银行交易明细ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cxzh" IS '查询账号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cxkh" IS '交易账号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jymc" IS '交易名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyzjhm" IS '交易证件号码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jdbz" IS '借贷标志'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jysj" IS '交易时间'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyrq" IS '交易日期'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyye" IS '交易余额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jybz" IS '交易币种'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jydfzkh" IS '对手账号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jydfmc" IS '对手户名'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jydfzjhm" IS '对手身份证号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dsjyye" IS '对手交易余额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jydfzhkhh" IS '对手开户银行'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyyhmc" IS '交易银行名'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."shh" IS '商户代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."shmc" IS '商户名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."zysm" IS '摘要说明'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."qd" IS '渠道'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jywdmc" IS '交易网点名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ip" IS 'IP地址'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."mac" IS 'MAC地址'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."rzh" IS '日志号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jylx" IS '交易类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jygj" IS '交易国家'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyhwdd" IS '交易网点号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyfsd" IS '交易发生地'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jycs" IS '交易场所'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ssfkyhjgdm" IS '所属发卡银行机构代码';
+         COMMENT ON COLUMN "mz_bank_records_source"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."yhjymxid" IS '银行交易明细ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cxzh" IS '查询账号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cxkh" IS '交易账号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jymc" IS '交易名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyzjhm" IS '交易证件号码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jdbz" IS '借贷标志'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jysj" IS '交易时间'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyrq" IS '交易日期'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyye" IS '交易余额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jybz" IS '交易币种'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jydfzkh" IS '对手账号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jydfmc" IS '对手户名'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jydfzjhm" IS '对手身份证号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dsjyye" IS '对手交易余额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jydfzhkhh" IS '对手开户银行'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyyhmc" IS '交易银行名'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."shh" IS '商户代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."shmc" IS '商户名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."zysm" IS '摘要说明'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."qd" IS '渠道'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jywdmc" IS '交易网点名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ip" IS 'IP地址'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."mac" IS 'MAC地址'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."rzh" IS '日志号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jylx" IS '交易类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jygj" IS '交易国家'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyhwdd" IS '交易网点号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyfsd" IS '交易发生地'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jycs" IS '交易场所'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ssfkyhjgdm" IS '所属发卡银行机构代码';
           
-         COMMENT ON COLUMN "ff_bank_records_source"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sbyy" IS '失败原因'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."xycd" IS '嫌疑程度'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ajcjrq" IS '案件采集日期'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jysfcg" IS '交易是否成功'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."pzzl" IS '凭证种类'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cxjssj" IS '查询结束时间'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sljgmc" IS '受理机构名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ah" IS '案号（工商查询时使用）'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sljgdm" IS '受理机构代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyyhkid" IS '交易银行卡ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dqmc" IS '地区名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."xtgzh" IS '系统跟踪号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fsjgmc" IS '发送机构名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ysbh" IS '编号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jsckh" IS '检索参考号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jylsh" IS '交易流水号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jydfzkhlx" IS '交易对方账卡号类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."mxlx" IS '明细类型，0为账户交易明显，1为商户信息，2调集银行卡信息'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."qxdm" IS '区县代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fsjgbsm" IS '发送机构标识码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dsyhkid" IS '对手银行卡ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."qxmc" IS '区县名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jygyh" IS '交易柜员号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cxfkjgyy" IS '查询反馈结果原因'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."zdh" IS '终端号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jykhh" IS '交易账户开户银行'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."xjbz" IS '现金标志'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cxkssj" IS '查询开始时间'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sjlylx" IS '数据来源类型(采集录入、手工录入、数据抽取)'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ksx" IS '卡属性'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyds_ssfkyhjgdm" IS '交易对手所属发卡银行机构代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."bankcode" IS '银行代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dqdm" IS '地区代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cljg" IS '处理结果 0-成功；1-失败；2-零数据；'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cph" IS '传票号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."cxfkjg" IS '查询反馈结果'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyjz" IS '交易介质'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."pzh" IS '凭证号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."lytype" IS '来源类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."markrow" IS '标记行'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jkje" IS '借款金额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dkje" IS '贷款金额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."maxid" IS '最大ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."bsfs" IS '报送方式'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."bsrq" IS '报送日期'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."bwid" IS '报文ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dbrgj" IS '代办人国籍'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dbrmc" IS '代办人名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dbrzjhm" IS '代办人证件号码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dbrzjlx" IS '代办人证件类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."dekybs" IS '大额可疑标识'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkfgj" IS '付款方国籍'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkflx" IS '付款方类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkfwddm" IS '付款方网点代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkfwddmlx" IS '付款方网点代码类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkfyhszd" IS '付款方银行所在地'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkfzhlx" IS '付款方账号类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."fkfzjlx" IS '付款方证件类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyfsdtemyqdm" IS '交易发生地特殊贸易区代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyfsmc" IS '交易方式名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyjlid" IS '交易记录ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jytzdm" IS '交易特征代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."kjjybj" IS '跨境交易标记'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."kjlb" IS '跨境类别'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ldrq" IS '落地日期'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."mbdm" IS '模板代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."mbmc" IS '模板名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."myje" IS '美元金额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."rketlsj" IS '入库ETL时间'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."rmbje" IS '人民币金额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."scbs" IS '删除标识'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sffzhlx" IS '收款方账号类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skfgj" IS '收款方国籍'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skflx" IS '收款方类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skftemyqdm" IS '收款方贸易特殊区代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skfwddm" IS '收款方网点代码'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skfwddmlx" IS '收款方网点代码类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skfyhszd" IS '收款方银行所在地'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."skfzjlx" IS '收款方证件类型'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."sxetlsj" IS '失效ETL时间'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."tjzt" IS '统计状态'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ybje" IS '原币金额'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ydejygx" IS '与大额交易的关系'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."yjyid" IS '原交易ID'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."ywbsh" IS '业务标识号'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."zt" IS '状态'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."jyfs" IS '交易方式'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."hbmc" IS '货币名称'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."bgjg" IS '报告机构'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."swszfl" IS '涉外收支分类'; 
-         COMMENT ON COLUMN "ff_bank_records_source"."wyipdz" IS '网银IP地址'; 
-         COMMENT ON TABLE "ff_bank_records_source" IS '资金分析账户交易明细表'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sbyy" IS '失败原因'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."xycd" IS '嫌疑程度'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ajcjrq" IS '案件采集日期'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jysfcg" IS '交易是否成功'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."pzzl" IS '凭证种类'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cxjssj" IS '查询结束时间'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sljgmc" IS '受理机构名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ah" IS '案号（工商查询时使用）'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sljgdm" IS '受理机构代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyyhkid" IS '交易银行卡ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dqmc" IS '地区名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."xtgzh" IS '系统跟踪号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fsjgmc" IS '发送机构名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ysbh" IS '编号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jsckh" IS '检索参考号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jylsh" IS '交易流水号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jydfzkhlx" IS '交易对方账卡号类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."mxlx" IS '明细类型，0为账户交易明显，1为商户信息，2调集银行卡信息'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."qxdm" IS '区县代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fsjgbsm" IS '发送机构标识码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dsyhkid" IS '对手银行卡ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."qxmc" IS '区县名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jygyh" IS '交易柜员号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cxfkjgyy" IS '查询反馈结果原因'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."zdh" IS '终端号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jykhh" IS '交易账户开户银行'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."xjbz" IS '现金标志'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cxkssj" IS '查询开始时间'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sjlylx" IS '数据来源类型(采集录入、手工录入、数据抽取)'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ksx" IS '卡属性'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyds_ssfkyhjgdm" IS '交易对手所属发卡银行机构代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."bankcode" IS '银行代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dqdm" IS '地区代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cljg" IS '处理结果 0-成功；1-失败；2-零数据；'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cph" IS '传票号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."cxfkjg" IS '查询反馈结果'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyjz" IS '交易介质'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."pzh" IS '凭证号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."lytype" IS '来源类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."markrow" IS '标记行'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jkje" IS '借款金额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dkje" IS '贷款金额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."maxid" IS '最大ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."bsfs" IS '报送方式'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."bsrq" IS '报送日期'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."bwid" IS '报文ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dbrgj" IS '代办人国籍'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dbrmc" IS '代办人名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dbrzjhm" IS '代办人证件号码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dbrzjlx" IS '代办人证件类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."dekybs" IS '大额可疑标识'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkfgj" IS '付款方国籍'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkflx" IS '付款方类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkfwddm" IS '付款方网点代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkfwddmlx" IS '付款方网点代码类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkfyhszd" IS '付款方银行所在地'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkfzhlx" IS '付款方账号类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."fkfzjlx" IS '付款方证件类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyfsdtemyqdm" IS '交易发生地特殊贸易区代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyfsmc" IS '交易方式名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyjlid" IS '交易记录ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jytzdm" IS '交易特征代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."kjjybj" IS '跨境交易标记'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."kjlb" IS '跨境类别'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ldrq" IS '落地日期'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."mbdm" IS '模板代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."mbmc" IS '模板名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."myje" IS '美元金额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."rketlsj" IS '入库ETL时间'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."rmbje" IS '人民币金额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."scbs" IS '删除标识'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sffzhlx" IS '收款方账号类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skfgj" IS '收款方国籍'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skflx" IS '收款方类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skftemyqdm" IS '收款方贸易特殊区代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skfwddm" IS '收款方网点代码'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skfwddmlx" IS '收款方网点代码类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skfyhszd" IS '收款方银行所在地'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."skfzjlx" IS '收款方证件类型'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."sxetlsj" IS '失效ETL时间'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."tjzt" IS '统计状态'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ybje" IS '原币金额'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ydejygx" IS '与大额交易的关系'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."yjyid" IS '原交易ID'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."ywbsh" IS '业务标识号'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."zt" IS '状态'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."jyfs" IS '交易方式'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."hbmc" IS '货币名称'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."bgjg" IS '报告机构'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."swszfl" IS '涉外收支分类'; 
+         COMMENT ON COLUMN "mz_bank_records_source"."wyipdz" IS '网银IP地址'; 
+         COMMENT ON TABLE "mz_bank_records_source" IS '资金分析账户交易明细表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_cft_accountinfo 
+         -- Table structure for mz_cft_accountinfo 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_cft_accountinfo" CASCADE; 
-         CREATE TABLE "ff_cft_accountinfo" ( 
+         DROP TABLE IF EXISTS "mz_cft_accountinfo" CASCADE; 
+         CREATE TABLE "mz_cft_accountinfo" ( 
            "ajid" int4 NOT NULL, 
            "zhzt" varchar(20) COLLATE "pg_catalog"."default", 
            "zh" varchar(80) COLLATE "pg_catalog"."default", 
@@ -3172,33 +3172,33 @@ export default {
            "sjlylx" varchar(20) COLLATE "pg_catalog"."default", 
            "zcsj" varchar(50) COLLATE "pg_catalog"."default", 
            "crrq" varchar(50) COLLATE "pg_catalog"."default", 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_cft_accountinfo_shard_id_seq'::regclass), 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_cft_accountinfo_shard_id_seq'::regclass), 
            "batch" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."zhzt" IS '账户状态'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."zh" IS '账号'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."zcxm" IS '注册姓名'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."zcsfzh" IS '注册身份证号'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."bdsj" IS '绑定手机'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."bdzt" IS '绑定状态'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."khhxx" IS '开户行信息'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."yhzh" IS '银行账号'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."sjlylx" IS '数据来源类型(手工?既?采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."zcsj" IS '注册时间'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_cft_accountinfo"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_cft_accountinfo" IS '财付通开户信息'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."zhzt" IS '账户状态'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."zh" IS '账号'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."zcxm" IS '注册姓名'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."zcsfzh" IS '注册身份证号'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."bdsj" IS '绑定手机'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."bdzt" IS '绑定状态'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."khhxx" IS '开户行信息'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."yhzh" IS '银行账号'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."sjlylx" IS '数据来源类型(手工?既?采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."zcsj" IS '注册时间'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_cft_accountinfo"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_cft_accountinfo" IS '财付通开户信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_cft_zjxx 
+         -- Table structure for mz_cft_zjxx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_cft_zjxx" CASCADE; 
-         CREATE TABLE "ff_cft_zjxx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_cft_zjxx_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_cft_zjxx" CASCADE; 
+         CREATE TABLE "mz_cft_zjxx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_cft_zjxx_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "userid" varchar(50) COLLATE "pg_catalog"."default", 
            "jdbz" varchar(20) COLLATE "pg_catalog"."default", 
@@ -3221,35 +3221,35 @@ export default {
            "batch" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jdbz" IS '借贷类型'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jylx" IS '交易类型'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jyje" IS '交易金额(分)'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."zhye" IS '账户余额'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jysj" IS '交易时间'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."yhlx" IS '银行类型'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jysm" IS '交易说明'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."shmc" IS '商户名称'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."fsf" IS '发送方'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."fsje" IS '发送金额'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jsf" IS '接收方'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jssj" IS '接收时间'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jsje" IS '接收金额（分）'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."jydh" IS '交易单号'; 
-         COMMENT ON COLUMN "ff_cft_zjxx"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_cft_zjxx" IS '财付通资金信息'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jdbz" IS '借贷类型'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jylx" IS '交易类型'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jyje" IS '交易金额(分)'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."zhye" IS '账户余额'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jysj" IS '交易时间'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."yhlx" IS '银行类型'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jysm" IS '交易说明'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."shmc" IS '商户名称'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."fsf" IS '发送方'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."fsje" IS '发送金额'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jsf" IS '接收方'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jssj" IS '接收时间'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jsje" IS '接收金额（分）'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."jydh" IS '交易单号'; 
+         COMMENT ON COLUMN "mz_cft_zjxx"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_cft_zjxx" IS '财付通资金信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_dsf_dlip 
+         -- Table structure for mz_dsf_dlip 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_dsf_dlip" CASCADE; 
-         CREATE TABLE "ff_dsf_dlip" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_dsf_dlip_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_dsf_dlip" CASCADE; 
+         CREATE TABLE "mz_dsf_dlip" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_dsf_dlip_shard_id_seq'::regclass), 
            "dlip" varchar(30) COLLATE "pg_catalog"."default", 
            "dlsfcg" varchar(30) COLLATE "pg_catalog"."default", 
            "dlrq" varchar(50) COLLATE "pg_catalog"."default", 
@@ -3262,25 +3262,25 @@ export default {
            "sjlx" varchar(20) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."dlip" IS '登录IP'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."dlsfcg" IS '登录是否成功'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."dlrq" IS '登陆日期'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."sjlyid" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."del"
+         COMMENT ON COLUMN "mz_dsf_dlip"."dlip" IS '登录IP'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."dlsfcg" IS '登录是否成功'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."dlrq" IS '登陆日期'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."sjlyid" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."del"
           IS '删除标记'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_dsf_dlip"."sjlx" IS '数据类型'; 
-         COMMENT ON TABLE "ff_dsf_dlip" IS '第三方登录IP'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_dsf_dlip"."sjlx" IS '数据类型'; 
+         COMMENT ON TABLE "mz_dsf_dlip" IS '第三方登录IP'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_dsf_jbxx 
+         -- Table structure for mz_dsf_jbxx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_dsf_jbxx" CASCADE; 
-         CREATE TABLE "ff_dsf_jbxx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_dsf_jbxx_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_dsf_jbxx" CASCADE; 
+         CREATE TABLE "mz_dsf_jbxx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_dsf_jbxx_shard_id_seq'::regclass), 
            "yhid" varchar(60) COLLATE "pg_catalog"."default", 
            "yhmc" varchar(50) COLLATE "pg_catalog"."default", 
            "gsmc" varchar(50) COLLATE "pg_catalog"."default", 
@@ -3309,40 +3309,40 @@ export default {
            "sjlx" varchar(20) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."yhid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."yhmc" IS '用户名称'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."gsmc" IS '公司名称'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."dlyx" IS '登录邮箱'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."yx" IS '邮箱'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."dlsj" IS '登录手机'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."bdsj" IS '绑定手机'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."sj" IS '手机'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."gh" IS '固话'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."zcsj" IS '注册时间'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."zhlx" IS '账户类型'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."zhye" IS '账户余额'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."bdyhk" IS '绑定银行卡'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."rzrq" IS '认证日期'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."rzlx" IS '认证类型'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."zcsyid" IS '注册使用ID'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."rzsyid" IS '认证使用ID'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."gj" IS '国家'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."zt" IS '状态'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."sjlyid" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_dsf_jbxx"."sjlx" IS '数据类型'; 
-         COMMENT ON TABLE "ff_dsf_jbxx" IS '第三方基本信息'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."yhid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."yhmc" IS '用户名称'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."gsmc" IS '公司名称'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."dlyx" IS '登录邮箱'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."yx" IS '邮箱'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."dlsj" IS '登录手机'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."bdsj" IS '绑定手机'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."sj" IS '手机'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."gh" IS '固话'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."zcsj" IS '注册时间'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."zhlx" IS '账户类型'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."zhye" IS '账户余额'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."bdyhk" IS '绑定银行卡'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."rzrq" IS '认证日期'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."rzlx" IS '认证类型'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."zcsyid" IS '注册使用ID'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."rzsyid" IS '认证使用ID'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."gj" IS '国家'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."zt" IS '状态'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."sjlyid" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_dsf_jbxx"."sjlx" IS '数据类型'; 
+         COMMENT ON TABLE "mz_dsf_jbxx" IS '第三方基本信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_dsf_jyjl 
+         -- Table structure for mz_dsf_jyjl 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_dsf_jyjl" CASCADE; 
-         CREATE TABLE "ff_dsf_jyjl" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_dsf_jyjl_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_dsf_jyjl" CASCADE; 
+         CREATE TABLE "mz_dsf_jyjl" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_dsf_jyjl_shard_id_seq'::regclass), 
            "jyjl" varchar(50) COLLATE "pg_catalog"."default", 
            "wbjyh" varchar(50) COLLATE "pg_catalog"."default", 
            "cjrq" varchar(50) COLLATE "pg_catalog"."default", 
@@ -3377,46 +3377,46 @@ export default {
            "sjlx" varchar(20) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyjl" IS '交易号'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."wbjyh" IS '外部交易号'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."cjrq" IS '创建日期'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyly" IS '交易来源'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyzt" IS '交易状态'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."gfid" IS '买家ID'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."gfdlh" IS '买家登录号'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."gfxm" IS '买家姓名'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."gfnc" IS '买家昵称'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sfid" IS '卖家ID'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sfdlh" IS '卖家登录号'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sfxm" IS '卖家姓名'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sfnc" IS '卖家昵称'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyspmc" IS '交易商品名称'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyfs" IS '交易方式'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jycjip" IS '交易创建IP'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."jyfkip" IS '交易付款IP'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."qrship" IS '确认收货IP'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."gffkrq" IS '买家付款日期'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."qrfkrq" IS '确认付款日期'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."shrxm" IS '收货人姓名'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."shsj" IS '收货手机'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."shgh" IS '收货固话'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."shdz" IS '收货地址'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sjlyid" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_dsf_jyjl"."sjlx" IS '数据类型'; 
-         COMMENT ON TABLE "ff_dsf_jyjl" IS '第三方交易记录'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyjl" IS '交易号'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."wbjyh" IS '外部交易号'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."cjrq" IS '创建日期'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyly" IS '交易来源'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyzt" IS '交易状态'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."gfid" IS '买家ID'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."gfdlh" IS '买家登录号'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."gfxm" IS '买家姓名'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."gfnc" IS '买家昵称'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sfid" IS '卖家ID'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sfdlh" IS '卖家登录号'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sfxm" IS '卖家姓名'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sfnc" IS '卖家昵称'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyspmc" IS '交易商品名称'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyfs" IS '交易方式'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jycjip" IS '交易创建IP'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."jyfkip" IS '交易付款IP'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."qrship" IS '确认收货IP'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."gffkrq" IS '买家付款日期'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."qrfkrq" IS '确认付款日期'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."shrxm" IS '收货人姓名'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."shsj" IS '收货手机'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."shgh" IS '收货固话'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."shdz" IS '收货地址'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sjlyid" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_dsf_jyjl"."sjlx" IS '数据类型'; 
+         COMMENT ON TABLE "mz_dsf_jyjl" IS '第三方交易记录'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_dsf_records 
+         -- Table structure for mz_dsf_records 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_dsf_records" CASCADE; 
-         CREATE TABLE "ff_dsf_records" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_dsf_records_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_dsf_records" CASCADE; 
+         CREATE TABLE "mz_dsf_records" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_dsf_records_shard_id_seq'::regclass), 
            "jyzh" varchar(50) COLLATE "pg_catalog"."default", 
            "dfzh" varchar(50) COLLATE "pg_catalog"."default", 
            "dfdlzh" varchar(50) COLLATE "pg_catalog"."default", 
@@ -3452,47 +3452,47 @@ export default {
            "jyye" numeric(22,2) 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_dsf_records"."jyzh" IS '交易账号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."dfzh" IS '对手账号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."dfdlzh" IS '对手登录账号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."dfmc" IS '对方名称'; 
-         COMMENT ON COLUMN "ff_dsf_records"."xfbt" IS '消费标题'; 
-         COMMENT ON COLUMN "ff_dsf_records"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_dsf_records"."fwfy" IS '服务费用'; 
-         COMMENT ON COLUMN "ff_dsf_records"."zffs" IS '支付方式'; 
-         COMMENT ON COLUMN "ff_dsf_records"."bz" IS '币种'; 
-         COMMENT ON COLUMN "ff_dsf_records"."zjlx" IS '资金流向'; 
-         COMMENT ON COLUMN "ff_dsf_records"."xfly" IS '消费来源'; 
-         COMMENT ON COLUMN "ff_dsf_records"."ywlx" IS '业务类型'; 
-         COMMENT ON COLUMN "ff_dsf_records"."ywlxms" IS '业务类型描述'; 
-         COMMENT ON COLUMN "ff_dsf_records"."nblsh" IS '内部流水号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."wblsh" IS '外部流水号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."kzxx" IS '扩展信息'; 
-         COMMENT ON COLUMN "ff_dsf_records"."ywzt" IS '业务状态'; 
-         COMMENT ON COLUMN "ff_dsf_records"."ywztms" IS '业务状态描述'; 
-         COMMENT ON COLUMN "ff_dsf_records"."xfjlcjsj" IS '消费记录创建时间'; 
-         COMMENT ON COLUMN "ff_dsf_records"."xfjlxgsj" IS '消费记录修改时间'; 
-         COMMENT ON COLUMN "ff_dsf_records"."fkfkh" IS '付款方银行卡号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."fkfyh" IS '付款方银行'; 
-         COMMENT ON COLUMN "ff_dsf_records"."skfkh" IS '收款方银行卡号'; 
-         COMMENT ON COLUMN "ff_dsf_records"."skfyh" IS '收款方银行'; 
-         COMMENT ON COLUMN "ff_dsf_records"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_dsf_records"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_dsf_records"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_dsf_records"."sjlyid" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_dsf_records"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_dsf_records"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_dsf_records"."sjlx" IS '数据类型'; 
-         COMMENT ON COLUMN "ff_dsf_records"."jyye" IS '交易余额'; 
-         COMMENT ON TABLE "ff_dsf_records" IS '第三方交易明细信息'; 
+         COMMENT ON COLUMN "mz_dsf_records"."jyzh" IS '交易账号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."dfzh" IS '对手账号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."dfdlzh" IS '对手登录账号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."dfmc" IS '对方名称'; 
+         COMMENT ON COLUMN "mz_dsf_records"."xfbt" IS '消费标题'; 
+         COMMENT ON COLUMN "mz_dsf_records"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_dsf_records"."fwfy" IS '服务费用'; 
+         COMMENT ON COLUMN "mz_dsf_records"."zffs" IS '支付方式'; 
+         COMMENT ON COLUMN "mz_dsf_records"."bz" IS '币种'; 
+         COMMENT ON COLUMN "mz_dsf_records"."zjlx" IS '资金流向'; 
+         COMMENT ON COLUMN "mz_dsf_records"."xfly" IS '消费来源'; 
+         COMMENT ON COLUMN "mz_dsf_records"."ywlx" IS '业务类型'; 
+         COMMENT ON COLUMN "mz_dsf_records"."ywlxms" IS '业务类型描述'; 
+         COMMENT ON COLUMN "mz_dsf_records"."nblsh" IS '内部流水号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."wblsh" IS '外部流水号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."kzxx" IS '扩展信息'; 
+         COMMENT ON COLUMN "mz_dsf_records"."ywzt" IS '业务状态'; 
+         COMMENT ON COLUMN "mz_dsf_records"."ywztms" IS '业务状态描述'; 
+         COMMENT ON COLUMN "mz_dsf_records"."xfjlcjsj" IS '消费记录创建时间'; 
+         COMMENT ON COLUMN "mz_dsf_records"."xfjlxgsj" IS '消费记录修改时间'; 
+         COMMENT ON COLUMN "mz_dsf_records"."fkfkh" IS '付款方银行卡号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."fkfyh" IS '付款方银行'; 
+         COMMENT ON COLUMN "mz_dsf_records"."skfkh" IS '收款方银行卡号'; 
+         COMMENT ON COLUMN "mz_dsf_records"."skfyh" IS '收款方银行'; 
+         COMMENT ON COLUMN "mz_dsf_records"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_dsf_records"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_dsf_records"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_dsf_records"."sjlyid" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_dsf_records"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_dsf_records"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_dsf_records"."sjlx" IS '数据类型'; 
+         COMMENT ON COLUMN "mz_dsf_records"."jyye" IS '交易余额'; 
+         COMMENT ON TABLE "mz_dsf_records" IS '第三方交易明细信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_im_msg 
+         -- Table structure for mz_im_msg 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_im_msg" CASCADE; 
-         CREATE TABLE "ff_im_msg" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_im_msg_shard_id_seq'::regclass), 
-           "imltjlid" int8 NOT NULL DEFAULT nextval('ff_im_msg_imltjlid_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_im_msg" CASCADE; 
+         CREATE TABLE "mz_im_msg" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_im_msg_shard_id_seq'::regclass), 
+           "imltjlid" int8 NOT NULL DEFAULT nextval('mz_im_msg_imltjlid_seq'::regclass), 
            "ajid" int4 NOT NULL, 
            "fsfip" varchar(20) COLLATE "pg_catalog"."default", 
            "jsfgsd" varchar(20) COLLATE "pg_catalog"."default", 
@@ -3521,42 +3521,42 @@ export default {
            "maxid" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_im_msg"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."imltjlid" IS 'ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."fsfip" IS '发送方IP'; 
-         COMMENT ON COLUMN "ff_im_msg"."jsfgsd" IS '接收方归属地'; 
-         COMMENT ON COLUMN "ff_im_msg"."fssj" IS '发送（接收）时间'; 
-         COMMENT ON COLUMN "ff_im_msg"."sjlx" IS '数据类型，0：QQ 1：微信 2：MailBox 3:微博 4:其它'; 
-         COMMENT ON COLUMN "ff_im_msg"."zjfimh" IS '主叫方IM号'; 
-         COMMENT ON COLUMN "ff_im_msg"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_im_msg"."lywx" IS '来源IM号'; 
-         COMMENT ON COLUMN "ff_im_msg"."ltnr" IS '聊天内容'; 
-         COMMENT ON COLUMN "ff_im_msg"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_im_msg"."bjfimh" IS '被叫方IM号'; 
-         COMMENT ON COLUMN "ff_im_msg"."bjfimhid" IS '被叫方IM号ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."bjfxm" IS '被叫方姓名'; 
-         COMMENT ON COLUMN "ff_im_msg"."bjfnc" IS '被叫方昵称'; 
-         COMMENT ON COLUMN "ff_im_msg"."fsfgsd" IS '发送方归属地'; 
-         COMMENT ON COLUMN "ff_im_msg"."zjfimhid" IS '主叫方IM号ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."jsfip" IS '接收方IP'; 
-         COMMENT ON COLUMN "ff_im_msg"."zjfxm" IS '主叫方姓名'; 
-         COMMENT ON COLUMN "ff_im_msg"."zjfnc" IS '主叫方昵称'; 
-         COMMENT ON COLUMN "ff_im_msg"."sfydj" IS '是否已调集'; 
-         COMMENT ON COLUMN "ff_im_msg"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_im_msg"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_im_msg"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_im_msg"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_im_msg" IS '资金分析即时通讯明细信息表'; 
+         COMMENT ON COLUMN "mz_im_msg"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."imltjlid" IS 'ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."fsfip" IS '发送方IP'; 
+         COMMENT ON COLUMN "mz_im_msg"."jsfgsd" IS '接收方归属地'; 
+         COMMENT ON COLUMN "mz_im_msg"."fssj" IS '发送（接收）时间'; 
+         COMMENT ON COLUMN "mz_im_msg"."sjlx" IS '数据类型，0：QQ 1：微信 2：MailBox 3:微博 4:其它'; 
+         COMMENT ON COLUMN "mz_im_msg"."zjfimh" IS '主叫方IM号'; 
+         COMMENT ON COLUMN "mz_im_msg"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_im_msg"."lywx" IS '来源IM号'; 
+         COMMENT ON COLUMN "mz_im_msg"."ltnr" IS '聊天内容'; 
+         COMMENT ON COLUMN "mz_im_msg"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_im_msg"."bjfimh" IS '被叫方IM号'; 
+         COMMENT ON COLUMN "mz_im_msg"."bjfimhid" IS '被叫方IM号ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."bjfxm" IS '被叫方姓名'; 
+         COMMENT ON COLUMN "mz_im_msg"."bjfnc" IS '被叫方昵称'; 
+         COMMENT ON COLUMN "mz_im_msg"."fsfgsd" IS '发送方归属地'; 
+         COMMENT ON COLUMN "mz_im_msg"."zjfimhid" IS '主叫方IM号ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."jsfip" IS '接收方IP'; 
+         COMMENT ON COLUMN "mz_im_msg"."zjfxm" IS '主叫方姓名'; 
+         COMMENT ON COLUMN "mz_im_msg"."zjfnc" IS '主叫方昵称'; 
+         COMMENT ON COLUMN "mz_im_msg"."sfydj" IS '是否已调集'; 
+         COMMENT ON COLUMN "mz_im_msg"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_im_msg"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_im_msg"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_im_msg"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_im_msg" IS '资金分析即时通讯明细信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_jass_info 
+         -- Table structure for mz_jass_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_jass_info" CASCADE; 
-         CREATE TABLE "ff_jass_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_jass_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_jass_info" CASCADE; 
+         CREATE TABLE "mz_jass_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_jass_info_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "jykh" varchar(255) COLLATE "pg_catalog"."default", 
            "ksx" varchar(255) COLLATE "pg_catalog"."default", 
@@ -3592,50 +3592,50 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_jass_info"."shard_id" IS '自动ID'; 
-         COMMENT ON COLUMN "ff_jass_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_jass_info"."jykh" IS '交易卡号'; 
-         COMMENT ON COLUMN "ff_jass_info"."ksx" IS '卡属性'; 
-         COMMENT ON COLUMN "ff_jass_info"."ssfkyxjgdm" IS '所属发卡银行机构代码'; 
-         COMMENT ON COLUMN "ff_jass_info"."ssfkyx" IS '所属发卡银行'; 
-         COMMENT ON COLUMN "ff_jass_info"."jyrq" IS '交易日期'; 
-         COMMENT ON COLUMN "ff_jass_info"."jygj" IS '交易国家'; 
-         COMMENT ON COLUMN "ff_jass_info"."jydd" IS '交易地点'; 
-         COMMENT ON COLUMN "ff_jass_info"."shdm" IS '商户代码'; 
-         COMMENT ON COLUMN "ff_jass_info"."shmc" IS '商户名称'; 
-         COMMENT ON COLUMN "ff_jass_info"."jyqd" IS '交易渠道'; 
-         COMMENT ON COLUMN "ff_jass_info"."zdh" IS '终端号'; 
-         COMMENT ON COLUMN "ff_jass_info"."jylx" IS '交易类型'; 
-         COMMENT ON COLUMN "ff_jass_info"."sljgdm" IS '受理机构代码'; 
-         COMMENT ON COLUMN "ff_jass_info"."sljgmc" IS '受理机构名称'; 
-         COMMENT ON COLUMN "ff_jass_info"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_jass_info"."jysfcg" IS '交易是否成功'; 
-         COMMENT ON COLUMN "ff_jass_info"."zrkh" IS '转入卡号（转账类交易）'; 
-         COMMENT ON COLUMN "ff_jass_info"."zrkssyxjgdm" IS ' 转入卡所属银行机构代码'; 
-         COMMENT ON COLUMN "ff_jass_info"."zrkssyx" IS ' 转入卡所属银行'; 
-         COMMENT ON COLUMN "ff_jass_info"."zckh" IS '转出卡号（转账类交易）'; 
-         COMMENT ON COLUMN "ff_jass_info"."zckssyxjgdm" IS '转出卡所属银行机构代码'; 
-         COMMENT ON COLUMN "ff_jass_info"."zckssyx" IS '转出卡所属银行'; 
-         COMMENT ON COLUMN "ff_jass_info"."jyjz" IS '交易介质'; 
-         COMMENT ON COLUMN "ff_jass_info"."fsjgbsm" IS '发送机构标识码'; 
-         COMMENT ON COLUMN "ff_jass_info"."fsjgmc" IS '发送机构名称'; 
-         COMMENT ON COLUMN "ff_jass_info"."xtgzh" IS '系统跟踪号'; 
-         COMMENT ON COLUMN "ff_jass_info"."jsckh" IS '检索参考号'; 
-         COMMENT ON COLUMN "ff_jass_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_jass_info"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_jass_info"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_jass_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_jass_info"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_jass_info" IS 'JASS交易商户数据'; 
+         COMMENT ON COLUMN "mz_jass_info"."shard_id" IS '自动ID'; 
+         COMMENT ON COLUMN "mz_jass_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_jass_info"."jykh" IS '交易卡号'; 
+         COMMENT ON COLUMN "mz_jass_info"."ksx" IS '卡属性'; 
+         COMMENT ON COLUMN "mz_jass_info"."ssfkyxjgdm" IS '所属发卡银行机构代码'; 
+         COMMENT ON COLUMN "mz_jass_info"."ssfkyx" IS '所属发卡银行'; 
+         COMMENT ON COLUMN "mz_jass_info"."jyrq" IS '交易日期'; 
+         COMMENT ON COLUMN "mz_jass_info"."jygj" IS '交易国家'; 
+         COMMENT ON COLUMN "mz_jass_info"."jydd" IS '交易地点'; 
+         COMMENT ON COLUMN "mz_jass_info"."shdm" IS '商户代码'; 
+         COMMENT ON COLUMN "mz_jass_info"."shmc" IS '商户名称'; 
+         COMMENT ON COLUMN "mz_jass_info"."jyqd" IS '交易渠道'; 
+         COMMENT ON COLUMN "mz_jass_info"."zdh" IS '终端号'; 
+         COMMENT ON COLUMN "mz_jass_info"."jylx" IS '交易类型'; 
+         COMMENT ON COLUMN "mz_jass_info"."sljgdm" IS '受理机构代码'; 
+         COMMENT ON COLUMN "mz_jass_info"."sljgmc" IS '受理机构名称'; 
+         COMMENT ON COLUMN "mz_jass_info"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_jass_info"."jysfcg" IS '交易是否成功'; 
+         COMMENT ON COLUMN "mz_jass_info"."zrkh" IS '转入卡号（转账类交易）'; 
+         COMMENT ON COLUMN "mz_jass_info"."zrkssyxjgdm" IS ' 转入卡所属银行机构代码'; 
+         COMMENT ON COLUMN "mz_jass_info"."zrkssyx" IS ' 转入卡所属银行'; 
+         COMMENT ON COLUMN "mz_jass_info"."zckh" IS '转出卡号（转账类交易）'; 
+         COMMENT ON COLUMN "mz_jass_info"."zckssyxjgdm" IS '转出卡所属银行机构代码'; 
+         COMMENT ON COLUMN "mz_jass_info"."zckssyx" IS '转出卡所属银行'; 
+         COMMENT ON COLUMN "mz_jass_info"."jyjz" IS '交易介质'; 
+         COMMENT ON COLUMN "mz_jass_info"."fsjgbsm" IS '发送机构标识码'; 
+         COMMENT ON COLUMN "mz_jass_info"."fsjgmc" IS '发送机构名称'; 
+         COMMENT ON COLUMN "mz_jass_info"."xtgzh" IS '系统跟踪号'; 
+         COMMENT ON COLUMN "mz_jass_info"."jsckh" IS '检索参考号'; 
+         COMMENT ON COLUMN "mz_jass_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_jass_info"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_jass_info"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_jass_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_jass_info"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_jass_info" IS 'JASS交易商户数据'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_jstxhy_info 
+         -- Table structure for mz_jstxhy_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_jstxhy_info" CASCADE; 
-         CREATE TABLE "ff_jstxhy_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_jstxhy_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_jstxhy_info" CASCADE; 
+         CREATE TABLE "mz_jstxhy_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_jstxhy_info_shard_id_seq'::regclass), 
            "ajid" int4 NOT NULL, 
-           "id" int8 NOT NULL DEFAULT nextval('ff_jstxhy_info_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_jstxhy_info_id_seq'::regclass), 
            "hync" varchar(255) COLLATE "pg_catalog"."default", 
            "hyfz" varchar(255) COLLATE "pg_catalog"."default", 
            "zh" varchar(100) COLLATE "pg_catalog"."default", 
@@ -3657,38 +3657,38 @@ export default {
            "maxid" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."id" IS '自增ID'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."hync" IS '好友昵称'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."hyfz" IS '好友分组'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."zh" IS '账号'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."zhmc" IS '账号名称'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."sjlx" IS '账号类型 0：QQ 1：微信 2：MailBox 3:微博 4:其它'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."hysr" IS '生日'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."zhzjhm" IS '账号证件号码'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."hyxb" IS '性别'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."lxfs" IS '联系方式'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."by2" IS '备用2'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."by1" IS '备用1'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."ybaglms" IS '与本案关联描述'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."hyzh" IS '好友账号'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."hybzmc" IS '好友备注名称'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_jstxhy_info"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_jstxhy_info" IS '即时通讯好友表'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."id" IS '自增ID'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."hync" IS '好友昵称'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."hyfz" IS '好友分组'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."zh" IS '账号'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."zhmc" IS '账号名称'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."sjlx" IS '账号类型 0：QQ 1：微信 2：MailBox 3:微博 4:其它'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."hysr" IS '生日'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."zhzjhm" IS '账号证件号码'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."hyxb" IS '性别'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."lxfs" IS '联系方式'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."by2" IS '备用2'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."by1" IS '备用1'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."ybaglms" IS '与本案关联描述'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."hyzh" IS '好友账号'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."hybzmc" IS '好友备注名称'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_jstxhy_info"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_jstxhy_info" IS '即时通讯好友表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_logistics_info 
+         -- Table structure for mz_logistics_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_logistics_info" CASCADE; 
-         CREATE TABLE "ff_logistics_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_logistics_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_logistics_info" CASCADE; 
+         CREATE TABLE "mz_logistics_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_logistics_info_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
-           "id" int8 NOT NULL DEFAULT nextval('ff_logistics_info_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_logistics_info_id_seq'::regclass), 
            "sjrajjs" varchar(200) COLLATE "pg_catalog"."default", 
            "hwbz" varchar(100) COLLATE "pg_catalog"."default", 
            "lrrbh" varchar(100) COLLATE "pg_catalog"."default", 
@@ -3754,80 +3754,80 @@ export default {
            "maxid" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_logistics_info"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."id" IS '主键ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjrajjs" IS '收件人案件角色'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwbz" IS '货物外包装'; 
-         COMMENT ON COLUMN "ff_logistics_info"."lrrbh" IS '录入人编号'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwsl" IS '货物数量'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhgs" IS '发货公司'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhcs" IS '发货城市'; 
-         COMMENT ON COLUMN "ff_logistics_info"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrdz" IS '发货人地址'; 
-         COMMENT ON COLUMN "ff_logistics_info"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."ydh" IS '运单号'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fjrajjs" IS '寄件人案件角色'; 
-         COMMENT ON COLUMN "ff_logistics_info"."pjy" IS '派件员'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjksj" IS '数据库时间'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrq" IS '发货日期'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shcs" IS '收货城市'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwzl" IS '货物重量'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shgs" IS '收货公司'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrdh" IS '发货人电话'; 
-         COMMENT ON COLUMN "ff_logistics_info"."wlgs" IS '物流公司'; 
-         COMMENT ON COLUMN "ff_logistics_info"."code2" IS 'CODE2'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrssid" IS '发货人所属人员ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."dshkje" IS '代收货款金额'; 
-         COMMENT ON COLUMN "ff_logistics_info"."code1" IS 'CODE1'; 
-         COMMENT ON COLUMN "ff_logistics_info"."code3" IS 'CODE3'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrssid" IS '收货人所属人员ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwbh" IS '货物编号'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrxm" IS '发货人姓名'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrdz" IS '收货人地址'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwmc" IS '货物名称'; 
-         COMMENT ON COLUMN "ff_logistics_info"."zgsmc" IS '子公司名称'; 
-         COMMENT ON COLUMN "ff_logistics_info"."unitcode" IS 'UNITCODE'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrzjmc" IS '收货人证件名称'; 
-         COMMENT ON COLUMN "ff_logistics_info"."ysfs" IS '运输方式'; 
-         COMMENT ON COLUMN "ff_logistics_info"."wlzxdm" IS '物流中心代码'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrdh" IS '收货人电话'; 
-         COMMENT ON COLUMN "ff_logistics_info"."remark" IS '是否已经抽取'; 
-         COMMENT ON COLUMN "ff_logistics_info"."pfkhbm" IS '派方客户编码'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrxm" IS '收货人名称'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhfkhbm" IS '发货方客户编码'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjy" IS '收件员'; 
-         COMMENT ON COLUMN "ff_logistics_info"."wlgslrsj" IS '物流公司录入时间'; 
-         COMMENT ON COLUMN "ff_logistics_info"."thfs" IS '提货方式'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwtj" IS '货物体积'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrzjmc" IS '发货人证件名称'; 
-         COMMENT ON COLUMN "ff_logistics_info"."remark1" IS 'REMARK1'; 
-         COMMENT ON COLUMN "ff_logistics_info"."remark3" IS 'REMARK3'; 
-         COMMENT ON COLUMN "ff_logistics_info"."remark2" IS 'REMARK2'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrq" IS '收货日期'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fkfs" IS '付款方式'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwdj" IS '运费单价'; 
-         COMMENT ON COLUMN "ff_logistics_info"."fhrzjhm" IS '发货人证件号码'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjrksj" IS '数据入库时间'; 
-         COMMENT ON COLUMN "ff_logistics_info"."shrzjhm" IS '收货人证件号码'; 
-         COMMENT ON COLUMN "ff_logistics_info"."hwyf" IS '货物运费'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjdrbh" IS '数据导入编号'; 
-         COMMENT ON COLUMN "ff_logistics_info"."lrsj" IS '录入时间'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_logistics_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_logistics_info"."requestid" IS '任务唯一编号'; 
-         COMMENT ON COLUMN "ff_logistics_info"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_logistics_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_logistics_info"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_logistics_info" IS '资金分析物流信息表'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."id" IS '主键ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjrajjs" IS '收件人案件角色'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwbz" IS '货物外包装'; 
+         COMMENT ON COLUMN "mz_logistics_info"."lrrbh" IS '录入人编号'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwsl" IS '货物数量'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhgs" IS '发货公司'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhcs" IS '发货城市'; 
+         COMMENT ON COLUMN "mz_logistics_info"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrdz" IS '发货人地址'; 
+         COMMENT ON COLUMN "mz_logistics_info"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."ydh" IS '运单号'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fjrajjs" IS '寄件人案件角色'; 
+         COMMENT ON COLUMN "mz_logistics_info"."pjy" IS '派件员'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjksj" IS '数据库时间'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrq" IS '发货日期'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shcs" IS '收货城市'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwzl" IS '货物重量'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shgs" IS '收货公司'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrdh" IS '发货人电话'; 
+         COMMENT ON COLUMN "mz_logistics_info"."wlgs" IS '物流公司'; 
+         COMMENT ON COLUMN "mz_logistics_info"."code2" IS 'CODE2'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrssid" IS '发货人所属人员ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."dshkje" IS '代收货款金额'; 
+         COMMENT ON COLUMN "mz_logistics_info"."code1" IS 'CODE1'; 
+         COMMENT ON COLUMN "mz_logistics_info"."code3" IS 'CODE3'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrssid" IS '收货人所属人员ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwbh" IS '货物编号'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrxm" IS '发货人姓名'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrdz" IS '收货人地址'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwmc" IS '货物名称'; 
+         COMMENT ON COLUMN "mz_logistics_info"."zgsmc" IS '子公司名称'; 
+         COMMENT ON COLUMN "mz_logistics_info"."unitcode" IS 'UNITCODE'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrzjmc" IS '收货人证件名称'; 
+         COMMENT ON COLUMN "mz_logistics_info"."ysfs" IS '运输方式'; 
+         COMMENT ON COLUMN "mz_logistics_info"."wlzxdm" IS '物流中心代码'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrdh" IS '收货人电话'; 
+         COMMENT ON COLUMN "mz_logistics_info"."remark" IS '是否已经抽取'; 
+         COMMENT ON COLUMN "mz_logistics_info"."pfkhbm" IS '派方客户编码'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrxm" IS '收货人名称'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhfkhbm" IS '发货方客户编码'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjy" IS '收件员'; 
+         COMMENT ON COLUMN "mz_logistics_info"."wlgslrsj" IS '物流公司录入时间'; 
+         COMMENT ON COLUMN "mz_logistics_info"."thfs" IS '提货方式'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwtj" IS '货物体积'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrzjmc" IS '发货人证件名称'; 
+         COMMENT ON COLUMN "mz_logistics_info"."remark1" IS 'REMARK1'; 
+         COMMENT ON COLUMN "mz_logistics_info"."remark3" IS 'REMARK3'; 
+         COMMENT ON COLUMN "mz_logistics_info"."remark2" IS 'REMARK2'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrq" IS '收货日期'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fkfs" IS '付款方式'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwdj" IS '运费单价'; 
+         COMMENT ON COLUMN "mz_logistics_info"."fhrzjhm" IS '发货人证件号码'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjrksj" IS '数据入库时间'; 
+         COMMENT ON COLUMN "mz_logistics_info"."shrzjhm" IS '收货人证件号码'; 
+         COMMENT ON COLUMN "mz_logistics_info"."hwyf" IS '货物运费'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjdrbh" IS '数据导入编号'; 
+         COMMENT ON COLUMN "mz_logistics_info"."lrsj" IS '录入时间'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_logistics_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_logistics_info"."requestid" IS '任务唯一编号'; 
+         COMMENT ON COLUMN "mz_logistics_info"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_logistics_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_logistics_info"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_logistics_info" IS '资金分析物流信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_person 
+         -- Table structure for mz_person 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_person" CASCADE; 
-         CREATE TABLE "ff_person" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_person_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_person" CASCADE; 
+         CREATE TABLE "mz_person" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_person_shard_id_seq'::regclass), 
            "ryid" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int8 NOT NULL, 
            "zzlx" varchar(30) COLLATE "pg_catalog"."default" NOT NULL, 
@@ -3913,12 +3913,12 @@ export default {
            "mark" varchar(2048) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_person"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_person"."ryid" IS '人员编号'; 
-         COMMENT ON COLUMN "ff_person"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_person"."zzlx" IS '证照类型'; 
-         COMMENT ON COLUMN "ff_person"."zzhm" IS '证照号??'; 
-         COMMENT ON COLUMN "ff_person"."sjlx" IS '数据类型(DM) 嫌疑人1 
+         COMMENT ON COLUMN "mz_person"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_person"."ryid" IS '人员编号'; 
+         COMMENT ON COLUMN "mz_person"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_person"."zzlx" IS '证照类型'; 
+         COMMENT ON COLUMN "mz_person"."zzhm" IS '证照号??'; 
+         COMMENT ON COLUMN "mz_person"."sjlx" IS '数据类型(DM) 嫌疑人1 
          被调查人2 
          证人3 
          受害人4 
@@ -3941,93 +3941,93 @@ export default {
          法人23 
          查控单位98查控人员99 
          '; 
-         COMMENT ON COLUMN "ff_person"."khmc" IS '开户名称'; 
-         COMMENT ON COLUMN "ff_person"."cym" IS '曾用名'; 
-         COMMENT ON COLUMN "ff_person"."xb" IS '性别代码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."mz" IS '民族代码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."gj" IS '国籍代码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."hyzk" IS '婚姻状况代码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."xl" IS '学历代码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."csrq" IS '出生日期'; 
-         COMMENT ON COLUMN "ff_person"."xx" IS '血型代码'; 
-         COMMENT ON COLUMN "ff_person"."jgssx" IS '籍贯省市县代码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."hjdzxzqh" IS '户籍行政区划码(DM)'; 
-         COMMENT ON COLUMN "ff_person"."hjdzqhnxxdz" IS '户籍区划内详细地址'; 
-         COMMENT ON COLUMN "ff_person"."zzmm" IS '政治面貌(DM)'; 
-         COMMENT ON COLUMN "ff_person"."gszchm" IS '工商注册号码'; 
-         COMMENT ON COLUMN "ff_person"."yyzzhm" IS '营业执照号码'; 
-         COMMENT ON COLUMN "ff_person"."jrjgdm" IS '金融机构代码'; 
-         COMMENT ON COLUMN "ff_person"."wwmc" IS '外文名称'; 
-         COMMENT ON COLUMN "ff_person"."gjhdq" IS '所属国家地区(DM)'; 
-         COMMENT ON COLUMN "ff_person"."zcdzdm" IS '注册地(DM)'; 
-         COMMENT ON COLUMN "ff_person"."zcdz" IS '注册地名称'; 
-         COMMENT ON COLUMN "ff_person"."frdbxm" IS '法人代表姓名'; 
-         COMMENT ON COLUMN "ff_person"."frdbzjlx" IS '法人代表证件类型'; 
-         COMMENT ON COLUMN "ff_person"."frdbzjhm" IS '法人代表证件号码'; 
-         COMMENT ON COLUMN "ff_person"."zgbmmc" IS '主管部门名称'; 
-         COMMENT ON COLUMN "ff_person"."yyksqx" IS '营业开始期限'; 
-         COMMENT ON COLUMN "ff_person"."yyjsqx" IS '营业结束期限'; 
-         COMMENT ON COLUMN "ff_person"."zczb" IS '注册资本(万元)'; 
-         COMMENT ON COLUMN "ff_person"."gdczqk" IS '股东出资情况'; 
-         COMMENT ON COLUMN "ff_person"."dwlx" IS '单位类型(DM)'; 
-         COMMENT ON COLUMN "ff_person"."xxdz" IS '详细地址'; 
-         COMMENT ON COLUMN "ff_person"."clrq" IS '成立日期'; 
-         COMMENT ON COLUMN "ff_person"."jyfw" IS '经营范围'; 
-         COMMENT ON COLUMN "ff_person"."djjg" IS '登记机关'; 
-         COMMENT ON COLUMN "ff_person"."dwzt" IS '单位状态(DM)'; 
-         COMMENT ON COLUMN "ff_person"."gsdjhm" IS '国税登记号码'; 
-         COMMENT ON COLUMN "ff_person"."dsdjhm" IS '地税登记号码'; 
-         COMMENT ON COLUMN "ff_person"."fdwid" IS '父单位编号'; 
-         COMMENT ON COLUMN "ff_person"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_person"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_person"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_person"."zzjgdm" IS '组织机构代码'; 
-         COMMENT ON COLUMN "ff_person"."dwmc" IS '单位名称'; 
-         COMMENT ON COLUMN "ff_person"."yhzh" IS '银行账号'; 
-         COMMENT ON COLUMN "ff_person"."khyhmc" IS '开户银行名称'; 
-         COMMENT ON COLUMN "ff_person"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_person"."jyd_xzqhdm" IS '经营地区划'; 
-         COMMENT ON COLUMN "ff_person"."jyd" IS '经营地'; 
-         COMMENT ON COLUMN "ff_person"."jyd_qhnxxdz" IS '经营地区划内详址'; 
-         COMMENT ON COLUMN "ff_person"."cxfkjgyy" IS '查询反馈结果原因'; 
-         COMMENT ON COLUMN "ff_person"."lxsj" IS '联系手机'; 
-         COMMENT ON COLUMN "ff_person"."dbrxm" IS '代办人姓名'; 
-         COMMENT ON COLUMN "ff_person"."dwdz" IS '单位地址'; 
-         COMMENT ON COLUMN "ff_person"."dsnsh" IS '地税纳税号'; 
-         COMMENT ON COLUMN "ff_person"."xzzxzqh" IS '住宅地址'; 
-         COMMENT ON COLUMN "ff_person"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_person"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_person"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_person"."qqdh" IS '请求单标识'; 
-         COMMENT ON COLUMN "ff_person"."gzdw" IS '工作单位'; 
-         COMMENT ON COLUMN "ff_person"."dbrzjlx" IS '代办人证件类型'; 
-         COMMENT ON COLUMN "ff_person"."frdb" IS '法人代表'; 
-         COMMENT ON COLUMN "ff_person"."dwdh" IS '单位电话'; 
-         COMMENT ON COLUMN "ff_person"."dbrzjhm" IS '代办人证件号码'; 
-         COMMENT ON COLUMN "ff_person"."gsnsh" IS '国税纳税号'; 
-         COMMENT ON COLUMN "ff_person"."khgszzhm" IS '客户工商执照号码'; 
-         COMMENT ON COLUMN "ff_person"."zzdh" IS '住宅电话'; 
-         COMMENT ON COLUMN "ff_person"."cxfkjg" IS '查询反馈结果'; 
-         COMMENT ON COLUMN "ff_person"."yxdz" IS '邮箱地址'; 
-         COMMENT ON COLUMN "ff_person"."zw" IS '职务'; 
-         COMMENT ON COLUMN "ff_person"."zj" IS '职级'; 
-         COMMENT ON COLUMN "ff_person"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_person"."zzlxmc" IS '证照类型名称'; 
-         COMMENT ON COLUMN "ff_person"."rybh" IS '原系统嫌疑人编号'; 
-         COMMENT ON COLUMN "ff_person"."xycd" IS '嫌疑程度'; 
-         COMMENT ON COLUMN "ff_person"."sfdd" IS '是否调单（1已调单）'; 
-         COMMENT ON COLUMN "ff_person"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_person"."maxid" IS '最大ID'; 
-         COMMENT ON COLUMN "ff_person"."mark" IS '标签'; 
-         COMMENT ON TABLE "ff_person" IS '案件-人员单位信息,分析用,带案件信息'; 
+         COMMENT ON COLUMN "mz_person"."khmc" IS '开户名称'; 
+         COMMENT ON COLUMN "mz_person"."cym" IS '曾用名'; 
+         COMMENT ON COLUMN "mz_person"."xb" IS '性别代码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."mz" IS '民族代码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."gj" IS '国籍代码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."hyzk" IS '婚姻状况代码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."xl" IS '学历代码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."csrq" IS '出生日期'; 
+         COMMENT ON COLUMN "mz_person"."xx" IS '血型代码'; 
+         COMMENT ON COLUMN "mz_person"."jgssx" IS '籍贯省市县代码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."hjdzxzqh" IS '户籍行政区划码(DM)'; 
+         COMMENT ON COLUMN "mz_person"."hjdzqhnxxdz" IS '户籍区划内详细地址'; 
+         COMMENT ON COLUMN "mz_person"."zzmm" IS '政治面貌(DM)'; 
+         COMMENT ON COLUMN "mz_person"."gszchm" IS '工商注册号码'; 
+         COMMENT ON COLUMN "mz_person"."yyzzhm" IS '营业执照号码'; 
+         COMMENT ON COLUMN "mz_person"."jrjgdm" IS '金融机构代码'; 
+         COMMENT ON COLUMN "mz_person"."wwmc" IS '外文名称'; 
+         COMMENT ON COLUMN "mz_person"."gjhdq" IS '所属国家地区(DM)'; 
+         COMMENT ON COLUMN "mz_person"."zcdzdm" IS '注册地(DM)'; 
+         COMMENT ON COLUMN "mz_person"."zcdz" IS '注册地名称'; 
+         COMMENT ON COLUMN "mz_person"."frdbxm" IS '法人代表姓名'; 
+         COMMENT ON COLUMN "mz_person"."frdbzjlx" IS '法人代表证件类型'; 
+         COMMENT ON COLUMN "mz_person"."frdbzjhm" IS '法人代表证件号码'; 
+         COMMENT ON COLUMN "mz_person"."zgbmmc" IS '主管部门名称'; 
+         COMMENT ON COLUMN "mz_person"."yyksqx" IS '营业开始期限'; 
+         COMMENT ON COLUMN "mz_person"."yyjsqx" IS '营业结束期限'; 
+         COMMENT ON COLUMN "mz_person"."zczb" IS '注册资本(万元)'; 
+         COMMENT ON COLUMN "mz_person"."gdczqk" IS '股东出资情况'; 
+         COMMENT ON COLUMN "mz_person"."dwlx" IS '单位类型(DM)'; 
+         COMMENT ON COLUMN "mz_person"."xxdz" IS '详细地址'; 
+         COMMENT ON COLUMN "mz_person"."clrq" IS '成立日期'; 
+         COMMENT ON COLUMN "mz_person"."jyfw" IS '经营范围'; 
+         COMMENT ON COLUMN "mz_person"."djjg" IS '登记机关'; 
+         COMMENT ON COLUMN "mz_person"."dwzt" IS '单位状态(DM)'; 
+         COMMENT ON COLUMN "mz_person"."gsdjhm" IS '国税登记号码'; 
+         COMMENT ON COLUMN "mz_person"."dsdjhm" IS '地税登记号码'; 
+         COMMENT ON COLUMN "mz_person"."fdwid" IS '父单位编号'; 
+         COMMENT ON COLUMN "mz_person"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_person"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_person"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_person"."zzjgdm" IS '组织机构代码'; 
+         COMMENT ON COLUMN "mz_person"."dwmc" IS '单位名称'; 
+         COMMENT ON COLUMN "mz_person"."yhzh" IS '银行账号'; 
+         COMMENT ON COLUMN "mz_person"."khyhmc" IS '开户银行名称'; 
+         COMMENT ON COLUMN "mz_person"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_person"."jyd_xzqhdm" IS '经营地区划'; 
+         COMMENT ON COLUMN "mz_person"."jyd" IS '经营地'; 
+         COMMENT ON COLUMN "mz_person"."jyd_qhnxxdz" IS '经营地区划内详址'; 
+         COMMENT ON COLUMN "mz_person"."cxfkjgyy" IS '查询反馈结果原因'; 
+         COMMENT ON COLUMN "mz_person"."lxsj" IS '联系手机'; 
+         COMMENT ON COLUMN "mz_person"."dbrxm" IS '代办人姓名'; 
+         COMMENT ON COLUMN "mz_person"."dwdz" IS '单位地址'; 
+         COMMENT ON COLUMN "mz_person"."dsnsh" IS '地税纳税号'; 
+         COMMENT ON COLUMN "mz_person"."xzzxzqh" IS '住宅地址'; 
+         COMMENT ON COLUMN "mz_person"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_person"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_person"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_person"."qqdh" IS '请求单标识'; 
+         COMMENT ON COLUMN "mz_person"."gzdw" IS '工作单位'; 
+         COMMENT ON COLUMN "mz_person"."dbrzjlx" IS '代办人证件类型'; 
+         COMMENT ON COLUMN "mz_person"."frdb" IS '法人代表'; 
+         COMMENT ON COLUMN "mz_person"."dwdh" IS '单位电话'; 
+         COMMENT ON COLUMN "mz_person"."dbrzjhm" IS '代办人证件号码'; 
+         COMMENT ON COLUMN "mz_person"."gsnsh" IS '国税纳税号'; 
+         COMMENT ON COLUMN "mz_person"."khgszzhm" IS '客户工商执照号码'; 
+         COMMENT ON COLUMN "mz_person"."zzdh" IS '住宅电话'; 
+         COMMENT ON COLUMN "mz_person"."cxfkjg" IS '查询反馈结果'; 
+         COMMENT ON COLUMN "mz_person"."yxdz" IS '邮箱地址'; 
+         COMMENT ON COLUMN "mz_person"."zw" IS '职务'; 
+         COMMENT ON COLUMN "mz_person"."zj" IS '职级'; 
+         COMMENT ON COLUMN "mz_person"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_person"."zzlxmc" IS '证照类型名称'; 
+         COMMENT ON COLUMN "mz_person"."rybh" IS '原系统嫌疑人编号'; 
+         COMMENT ON COLUMN "mz_person"."xycd" IS '嫌疑程度'; 
+         COMMENT ON COLUMN "mz_person"."sfdd" IS '是否调单（1已调单）'; 
+         COMMENT ON COLUMN "mz_person"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_person"."maxid" IS '最大ID'; 
+         COMMENT ON COLUMN "mz_person"."mark" IS '标签'; 
+         COMMENT ON TABLE "mz_person" IS '案件-人员单位信息,分析用,带案件信息'; 
           
          -- ----------------
          ------------ 
-         -- Table structure for ff_person_chakong 
+         -- Table structure for mz_person_chakong 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_person_chakong" CASCADE; 
-         CREATE TABLE "ff_person_chakong" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_person_chakong_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_person_chakong" CASCADE; 
+         CREATE TABLE "mz_person_chakong" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_person_chakong_shard_id_seq'::regclass), 
            "ryid" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "qqdh" varchar(30) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int8 NOT NULL, 
@@ -4109,50 +4109,50 @@ export default {
            "maxid" int4 DEFAULT 0 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_person_chakong"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_person_chakong"."ryid" IS '人员编号'; 
-         COMMENT ON COLUMN "ff_person_chakong"."qqdh" IS '请求单标识'; 
-         COMMENT ON COLUMN "ff_person_chakong"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zzlx" IS '证照类型'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zzhm" IS '证照号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."khmc" IS '开户名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."cym" IS '曾用名'; 
-         COMMENT ON COLUMN "ff_person_chakong"."xb" IS '性别代码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."mz" IS '民族代码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gj" IS '国籍代码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."hyzk" IS '婚姻状况代码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."xl" IS '学历代码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."csrq" IS '出生日期'; 
-         COMMENT ON COLUMN "ff_person_chakong"."xx" IS '血型代码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."jgssx" IS '籍贯省市县代码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."hjdzxzqh" IS '户籍行政区划码(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."hjdzqhnxxdz" IS '户籍区划内详细地址'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zzmm" IS '政治面貌(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gszchm" IS '工商注册号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."yyzzhm" IS '营业执照号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."jrjgdm" IS '金融机构代码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."wwmc" IS '外文名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gjhdq" IS '所属国家地区(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zcdzdm" IS '注册地(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zcdz" IS '注册地名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."frdbxm" IS '法人代表姓名'; 
-         COMMENT ON COLUMN "ff_person_chakong"."frdbzjlx" IS '法人代表证件类型'; 
-         COMMENT ON COLUMN "ff_person_chakong"."frdbzjhm" IS '法人代表证件号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zgbmmc" IS '主管部门名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."yyksqx" IS '营业开始期限'; 
-         COMMENT ON COLUMN "ff_person_chakong"."yyjsqx" IS '营业结束期限'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zczb" IS '注册资本(万元)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gdczqk" IS '股东出资情况'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dwlx" IS '单位类型(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."xxdz" IS '详细地址'; 
-         COMMENT ON COLUMN "ff_person_chakong"."clrq" IS '成立日期'; 
-         COMMENT ON COLUMN "ff_person_chakong"."jyfw" IS '经营范围'; 
-         COMMENT ON COLUMN "ff_person_chakong"."djjg" IS '登记机关'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dwzt" IS '单位状态(DM)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gsdjhm" IS '国税登记号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dsdjhm" IS '地税登记号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."fdwid" IS '父单位编号'; 
-         COMMENT ON COLUMN "ff_person_chakong"."sjlx" IS '数据类型(DM) 嫌疑人1 
+         COMMENT ON COLUMN "mz_person_chakong"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_person_chakong"."ryid" IS '人员编号'; 
+         COMMENT ON COLUMN "mz_person_chakong"."qqdh" IS '请求单标识'; 
+         COMMENT ON COLUMN "mz_person_chakong"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zzlx" IS '证照类型'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zzhm" IS '证照号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."khmc" IS '开户名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."cym" IS '曾用名'; 
+         COMMENT ON COLUMN "mz_person_chakong"."xb" IS '性别代码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."mz" IS '民族代码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gj" IS '国籍代码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."hyzk" IS '婚姻状况代码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."xl" IS '学历代码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."csrq" IS '出生日期'; 
+         COMMENT ON COLUMN "mz_person_chakong"."xx" IS '血型代码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."jgssx" IS '籍贯省市县代码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."hjdzxzqh" IS '户籍行政区划码(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."hjdzqhnxxdz" IS '户籍区划内详细地址'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zzmm" IS '政治面貌(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gszchm" IS '工商注册号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."yyzzhm" IS '营业执照号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."jrjgdm" IS '金融机构代码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."wwmc" IS '外文名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gjhdq" IS '所属国家地区(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zcdzdm" IS '注册地(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zcdz" IS '注册地名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."frdbxm" IS '法人代表姓名'; 
+         COMMENT ON COLUMN "mz_person_chakong"."frdbzjlx" IS '法人代表证件类型'; 
+         COMMENT ON COLUMN "mz_person_chakong"."frdbzjhm" IS '法人代表证件号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zgbmmc" IS '主管部门名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."yyksqx" IS '营业开始期限'; 
+         COMMENT ON COLUMN "mz_person_chakong"."yyjsqx" IS '营业结束期限'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zczb" IS '注册资本(万元)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gdczqk" IS '股东出资情况'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dwlx" IS '单位类型(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."xxdz" IS '详细地址'; 
+         COMMENT ON COLUMN "mz_person_chakong"."clrq" IS '成立日期'; 
+         COMMENT ON COLUMN "mz_person_chakong"."jyfw" IS '经营范围'; 
+         COMMENT ON COLUMN "mz_person_chakong"."djjg" IS '登记机关'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dwzt" IS '单位状态(DM)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gsdjhm" IS '国税登记号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dsdjhm" IS '地税登记号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."fdwid" IS '父单位编号'; 
+         COMMENT ON COLUMN "mz_person_chakong"."sjlx" IS '数据类型(DM) 嫌疑人1 
          被调查人2 
          证人3 
          受害人4 
@@ -4172,50 +4172,50 @@ export default {
          洗钱人员18 
          银行卡19 
          其他20 
-         '; COMMENT ON COLUMN "ff_person_chakong"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_person_chakong"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_person_chakong"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zzjgdm" IS '组织机构代码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dwmc" IS '单位名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."yhzh" IS '银行账号'; 
-         COMMENT ON COLUMN "ff_person_chakong"."khyhmc" IS '开户银行名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_person_chakong"."jyd_xzqhdm" IS '经营地区划'; 
-         COMMENT ON COLUMN "ff_person_chakong"."jyd" IS '经营地'; 
-         COMMENT ON COLUMN "ff_person_chakong"."jyd_qhnxxdz" IS '经营地区划内详址'; 
-         COMMENT ON COLUMN "ff_person_chakong"."cxfkjgyy" IS '查询反馈结果原因'; 
-         COMMENT ON COLUMN "ff_person_chakong"."lxsj" IS '联系手机'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dbrxm" IS '代办人姓名'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dwdz" IS '单位地址'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dsnsh" IS '地税纳税号'; 
-         COMMENT ON COLUMN "ff_person_chakong"."xzzxzqh" IS '住宅地址'; 
-         COMMENT ON COLUMN "ff_person_chakong"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_person_chakong"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_person_chakong"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gzdw" IS '工作单位'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dbrzjlx" IS '代办人证件类型'; 
-         COMMENT ON COLUMN "ff_person_chakong"."frdb" IS '法人代表'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dwdh" IS '单位电话'; 
-         COMMENT ON COLUMN "ff_person_chakong"."dbrzjhm" IS '代办人证件号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."gsnsh" IS '国税纳税号'; 
-         COMMENT ON COLUMN "ff_person_chakong"."khgszzhm" IS '客户工商执照号码'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zzdh" IS '住宅电话'; 
-         COMMENT ON COLUMN "ff_person_chakong"."cxfkjg" IS '查询反馈结果'; 
-         COMMENT ON COLUMN "ff_person_chakong"."yxdz" IS '邮箱地址'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zw" IS '职务'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zj" IS '职级'; 
-         COMMENT ON COLUMN "ff_person_chakong"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_person_chakong"."zzlxmc" IS '证照类型名称'; 
-         COMMENT ON COLUMN "ff_person_chakong"."xycd" IS '嫌疑程度'; 
-         COMMENT ON COLUMN "ff_person_chakong"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_person_chakong" IS '人员单位信息(查控返回数据)'; 
+         '; COMMENT ON COLUMN "mz_person_chakong"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_person_chakong"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_person_chakong"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zzjgdm" IS '组织机构代码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dwmc" IS '单位名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."yhzh" IS '银行账号'; 
+         COMMENT ON COLUMN "mz_person_chakong"."khyhmc" IS '开户银行名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_person_chakong"."jyd_xzqhdm" IS '经营地区划'; 
+         COMMENT ON COLUMN "mz_person_chakong"."jyd" IS '经营地'; 
+         COMMENT ON COLUMN "mz_person_chakong"."jyd_qhnxxdz" IS '经营地区划内详址'; 
+         COMMENT ON COLUMN "mz_person_chakong"."cxfkjgyy" IS '查询反馈结果原因'; 
+         COMMENT ON COLUMN "mz_person_chakong"."lxsj" IS '联系手机'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dbrxm" IS '代办人姓名'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dwdz" IS '单位地址'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dsnsh" IS '地税纳税号'; 
+         COMMENT ON COLUMN "mz_person_chakong"."xzzxzqh" IS '住宅地址'; 
+         COMMENT ON COLUMN "mz_person_chakong"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_person_chakong"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_person_chakong"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gzdw" IS '工作单位'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dbrzjlx" IS '代办人证件类型'; 
+         COMMENT ON COLUMN "mz_person_chakong"."frdb" IS '法人代表'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dwdh" IS '单位电话'; 
+         COMMENT ON COLUMN "mz_person_chakong"."dbrzjhm" IS '代办人证件号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."gsnsh" IS '国税纳税号'; 
+         COMMENT ON COLUMN "mz_person_chakong"."khgszzhm" IS '客户工商执照号码'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zzdh" IS '住宅电话'; 
+         COMMENT ON COLUMN "mz_person_chakong"."cxfkjg" IS '查询反馈结果'; 
+         COMMENT ON COLUMN "mz_person_chakong"."yxdz" IS '邮箱地址'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zw" IS '职务'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zj" IS '职级'; 
+         COMMENT ON COLUMN "mz_person_chakong"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_person_chakong"."zzlxmc" IS '证照类型名称'; 
+         COMMENT ON COLUMN "mz_person_chakong"."xycd" IS '嫌疑程度'; 
+         COMMENT ON COLUMN "mz_person_chakong"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_person_chakong" IS '人员单位信息(查控返回数据)'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_person_glzzh 
+         -- Table structure for mz_person_glzzh 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_person_glzzh" CASCADE; 
-         CREATE TABLE "ff_person_glzzh" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_person_glzzh_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_person_glzzh" CASCADE; 
+         CREATE TABLE "mz_person_glzzh" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_person_glzzh_shard_id_seq'::regclass), 
            "ajid" int8, 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "beiz" varchar(50) COLLATE "pg_catalog"."default", 
@@ -4240,36 +4240,36 @@ export default {
            "maxid" int4 DEFAULT 0 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_person_glzzh"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."id" IS '自增ID'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."bz" IS '币种'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."glzhhm" IS '关联账户户名'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."glzhlb" IS '关联账户类别'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."khzh" IS '开户账户'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."ye" IS '余额'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."zhrxm" IS '账户人员姓名'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."bankcode" IS '银行代码'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."ccxh" IS '查询卡号'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."xh" IS '序号'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."qqdh" 
+         COMMENT ON COLUMN "mz_person_glzzh"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."id" IS '自增ID'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."bz" IS '币种'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."glzhhm" IS '关联账户户名'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."glzhlb" IS '关联账户类别'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."khzh" IS '开户账户'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."ye" IS '余额'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."zhrxm" IS '账户人员姓名'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."bankcode" IS '银行代码'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."ccxh" IS '查询卡号'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."xh" IS '序号'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."qqdh" 
          IS '请求单号'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."chbz" IS '查询币种'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."zhzt" IS '账户主体'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."sjly_id" IS '数据类型ID'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_person_glzzh"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_person_glzzh" IS '关联子帐号'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."chbz" IS '查询币种'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."zhzt" IS '账户主体'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."sjly_id" IS '数据类型ID'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_person_glzzh"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_person_glzzh" IS '关联子帐号'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_person_gyyxq 
+         -- Table structure for mz_person_gyyxq 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_person_gyyxq" CASCADE; 
-         CREATE TABLE "ff_person_gyyxq" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_person_gyyxq_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_person_gyyxq" CASCADE; 
+         CREATE TABLE "mz_person_gyyxq" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_person_gyyxq_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "id" varchar(100) COLLATE "pg_catalog"."default" NOT NULL, 
            "qlrlxfs" varchar(100) COLLATE "pg_catalog"."default", 
@@ -4296,53 +4296,53 @@ export default {
            "zjhm" varchar(100) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."id" IS '自增ID'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qlrlxfs" IS '权利人联系方式'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qllx" IS '权利类型'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."khzh" IS '开户账号'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."zh" IS '账号'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."zhrxm" IS '账户人姓名'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."ccxh" IS '账户序号'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."zzhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."xh" IS '序号'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."sjly_id" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qlje" IS '权利金额'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qlrdz" IS '权利人通讯地址'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."bankcode" IS '反馈数据用户代码'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qlrxm" IS '权利人姓名'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."qlr" IS '权利人'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."zzlxdm" IS '证件类型代码'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."cxsqid" IS '申请号'; 
-         COMMENT ON COLUMN "ff_person_gyyxq"."zjhm" IS '账户人证件号'; 
-         COMMENT ON TABLE "ff_person_gyyxq" IS '涉案对象查询-共有优先权'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."id" IS '自增ID'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qlrlxfs" IS '权利人联系方式'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qllx" IS '权利类型'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."khzh" IS '开户账号'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."zh" IS '账号'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."zhrxm" IS '账户人姓名'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."ccxh" IS '账户序号'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."zzhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."xh" IS '序号'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."sjly_id" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qlje" IS '权利金额'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qlrdz" IS '权利人通讯地址'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."bankcode" IS '反馈数据用户代码'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qlrxm" IS '权利人姓名'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."qlr" IS '权利人'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."zzlxdm" IS '证件类型代码'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."cxsqid" IS '申请号'; 
+         COMMENT ON COLUMN "mz_person_gyyxq"."zjhm" IS '账户人证件号'; 
+         COMMENT ON TABLE "mz_person_gyyxq" IS '涉案对象查询-共有优先权'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_person_pic 
+         -- Table structure for mz_person_pic 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_person_pic" CASCADE; 
-         CREATE TABLE "ff_person_pic" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_person_pic_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_person_pic" CASCADE; 
+         CREATE TABLE "mz_person_pic" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_person_pic_shard_id_seq'::regclass), 
            "ryid" varchar(50) COLLATE "pg_catalog"."default", 
            "picture" bytea, 
            "sjlyid" int4 NOT NULL, 
            "ajid" int4 NOT NULL 
          ) 
          ; 
-         COMMENT ON TABLE "ff_person_pic" IS '人员信息-附件图片'; 
+         COMMENT ON TABLE "mz_person_pic" IS '人员信息-附件图片'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_person_qzcs 
+         -- Table structure for mz_person_qzcs 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_person_qzcs" CASCADE; 
-         CREATE TABLE "ff_person_qzcs" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_person_qzcs_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_person_qzcs" CASCADE; 
+         CREATE TABLE "mz_person_qzcs" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_person_qzcs_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "id" varchar(100) COLLATE "pg_catalog"."default" NOT NULL, 
            "djje" float8, 
@@ -4361,32 +4361,32 @@ export default {
            "csxh" varchar(100) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_person_qzcs"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."id" IS '自增ID'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."djje" IS '冻结金额'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."djjgmc" IS '动机机关名称'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."ckztlb" IS '查控主体类别'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."djjzrq" IS '冻结截止日期'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."beiz" IS '备注'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."hzsj" IS '回执时间'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."zh" IS '账号'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."rwlsh" IS '任务流水号'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."djksrq" IS '冻结开始日期'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."sjly_id" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."bankcode" IS '银行编号'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."djcslx" IS '冻结措施类型'; 
-         COMMENT ON COLUMN "ff_person_qzcs"."csxh" IS '措施序号'; 
-         COMMENT ON TABLE "ff_person_qzcs" IS '强制措施'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."id" IS '自增ID'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."djje" IS '冻结金额'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."djjgmc" IS '动机机关名称'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."ckztlb" IS '查控主体类别'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."djjzrq" IS '冻结截止日期'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."beiz" IS '备注'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."hzsj" IS '回执时间'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."zh" IS '账号'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."rwlsh" IS '任务流水号'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."djksrq" IS '冻结开始日期'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."sjly_id" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."bankcode" IS '银行编号'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."djcslx" IS '冻结措施类型'; 
+         COMMENT ON COLUMN "mz_person_qzcs"."csxh" IS '措施序号'; 
+         COMMENT ON TABLE "mz_person_qzcs" IS '强制措施'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_phone_call_info 
+         -- Table structure for mz_phone_call_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_phone_call_info" CASCADE; 
-         CREATE TABLE "ff_phone_call_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_phone_call_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_phone_call_info" CASCADE; 
+         CREATE TABLE "mz_phone_call_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_phone_call_info_shard_id_seq'::regclass), 
            "thjlid" varchar(100) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4 NOT NULL, 
            "ddfzsxm" varchar(100) COLLATE "pg_catalog"."default", 
@@ -4446,73 +4446,73 @@ export default {
            "dfthdzw" varchar(100) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_phone_call_info"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."thjlid" IS '通话记录ID'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfzsxm" IS '调单方真实姓名'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfdhgsd" IS '调单方电话归属地'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."sfsc" IS '是否删除，0没删，1已删'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."thjlbh" IS '通话记录编号'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfimei" IS '对方IMEI'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfdhthd" IS '调单方电话通话地'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfzjhm" IS '调单方证件号码'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfthd" IS '对方通话地'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."fx" IS '通话（短信）方向'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."cxsj" IS '通话的持续时间'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfhm" IS '调单方电话号码'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfhm" IS '对方电话号码'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."hjrq" IS '呼叫日期'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfimei" IS '调单方IMEI'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."thlx" IS '通话的类型'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfdhgsd" IS '对方电话归属地'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."thsj" IS '通话（短信）时间'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfimsi" IS '调单方IMSI'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."hjsj" IS '呼叫时间'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dxnr" IS '短信的具体内容'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfzjhm" IS '对方证件号码'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfimsi" IS '对方IMSI'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfzsxm" IS '对方真实姓名'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取，查控技侦)'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."qqdh" IS '请求单号'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."requestid" IS '任务唯一编号'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."privodercode" IS '运营商标识'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."serveidentifier" IS '业务标识'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."serveidentifiermc" IS '业务标识名称'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."operateresult" IS '操作结果'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."calltype" IS '呼叫类型代码'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."calltypemc" IS '呼叫类型名称'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."othernumber" IS '第三方号码'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."lac" IS '大区'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ci" IS '小区'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."rlgtime" IS '释放时间'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."cause" IS '释放原因'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."oldlaititude" IS '上一个基站纬度'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."addr" IS '地址'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."oldlongitude" IS '上一个基站经度'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."longitude" IS '经度'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."latitude" IS '纬度'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."cgi" IS 'cgi'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."spcode" IS '运营商'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."thjlid" IS '通话记录ID'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfzsxm" IS '调单方真实姓名'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfdhgsd" IS '调单方电话归属地'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."sfsc" IS '是否删除，0没删，1已删'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."thjlbh" IS '通话记录编号'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfimei" IS '对方IMEI'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfdhthd" IS '调单方电话通话地'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfzjhm" IS '调单方证件号码'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfthd" IS '对方通话地'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."fx" IS '通话（短信）方向'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."cxsj" IS '通话的持续时间'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfhm" IS '调单方电话号码'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfhm" IS '对方电话号码'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."hjrq" IS '呼叫日期'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfimei" IS '调单方IMEI'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."thlx" IS '通话的类型'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfdhgsd" IS '对方电话归属地'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."thsj" IS '通话（短信）时间'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfimsi" IS '调单方IMSI'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."hjsj" IS '呼叫时间'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dxnr" IS '短信的具体内容'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfzjhm" IS '对方证件号码'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfimsi" IS '对方IMSI'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfzsxm" IS '对方真实姓名'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取，查控技侦)'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."qqdh" IS '请求单号'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."requestid" IS '任务唯一编号'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."privodercode" IS '运营商标识'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."serveidentifier" IS '业务标识'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."serveidentifiermc" IS '业务标识名称'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."operateresult" IS '操作结果'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."calltype" IS '呼叫类型代码'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."calltypemc" IS '呼叫类型名称'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."othernumber" IS '第三方号码'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."lac" IS '大区'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ci" IS '小区'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."rlgtime" IS '释放时间'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."cause" IS '释放原因'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."oldlaititude" IS '上一个基站纬度'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."addr" IS '地址'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."oldlongitude" IS '上一个基站经度'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."longitude" IS '经度'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."latitude" IS '纬度'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."cgi" IS 'cgi'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."spcode" IS '运营商'; 
          COMMENT ON
-          COLUMN "ff_phone_call_info"."disconnecttime" IS '挂段时间'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfdhgsdzw" IS '调单方电话归属地(中文)'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfdhgsdzw" IS '对方电话归属地(中文)'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."ddfdhthdzw" IS '调单方电话通话地(中文)'; 
-         COMMENT ON COLUMN "ff_phone_call_info"."dfthdzw" IS '对方电话通话地(中文)'; 
-         COMMENT ON TABLE "ff_phone_call_info" IS '资金分析通话记录表'; 
+          COLUMN "mz_phone_call_info"."disconnecttime" IS '挂段时间'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfdhgsdzw" IS '调单方电话归属地(中文)'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfdhgsdzw" IS '对方电话归属地(中文)'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."ddfdhthdzw" IS '调单方电话通话地(中文)'; 
+         COMMENT ON COLUMN "mz_phone_call_info"."dfthdzw" IS '对方电话通话地(中文)'; 
+         COMMENT ON TABLE "mz_phone_call_info" IS '资金分析通话记录表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_safe_trading 
+         -- Table structure for mz_safe_trading 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_safe_trading" CASCADE; 
-         CREATE TABLE "ff_safe_trading" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_safe_trading_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_safe_trading" CASCADE; 
+         CREATE TABLE "mz_safe_trading" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_safe_trading_shard_id_seq'::regclass), 
            "ajid" int4, 
            "sfbz" varchar(2) COLLATE "pg_catalog"."default", 
            "xjbz" char(1) COLLATE "pg_catalog"."default", 
@@ -4553,66 +4553,66 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_safe_trading"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_safe_trading"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfbz" IS '收付标志 
+         COMMENT ON COLUMN "mz_safe_trading"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_safe_trading"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sfbz" IS '收付标志 
           收，付'; 
-         COMMENT ON COLUMN "ff_safe_trading"."xjbz" IS '现金标志'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfkrq" IS '收付款日期'; 
-         COMMENT ON COLUMN "ff_safe_trading"."ztmc" IS '主体名称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."ztlx" IS '主体类型 
+         COMMENT ON COLUMN "mz_safe_trading"."xjbz" IS '现金标志'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sfkrq" IS '收付款日期'; 
+         COMMENT ON COLUMN "mz_safe_trading"."ztmc" IS '主体名称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."ztlx" IS '主体类型 
          对公：1 
          对私：2'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfkrzzjgdm" IS '收付款人组织机构代码'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfkrkhhjrjgmc" IS '收付款人开户行金融机构名称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfkrczgjdm" IS '收付款人常驻国家（地区）代码'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfkrgjzwqc" IS '收付款人国家（地区）中文全称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sfkrwhzh" IS '收付款人外汇账号'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrmc" IS '对方收付款人名称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrlx" IS '对方收付款人类型'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrzzjgdm" IS '对方收付款人组织机构代码'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrkhhjrjgmc" IS '对方收付款人开户行金融机构名称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrczgjdm" IS '对方收付款人常驻国家（地区）代码'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrgjzwmc" IS '对方收付款人国家（地区）中文全称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."dfsfkrwhzh" IS '对方收付款人外汇账号'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jybm" IS '交易编码'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jyjezmy" IS '交易金额（折美元）'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jybzdm" IS '交易币种代码'; 
-         COMMENT ON COLUMN "ff_safe_trading"."hbms" IS '货币描述'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jyfy" IS '交易附言'; 
-         COMMENT ON COLUMN "ff_safe_trading"."whjmc" IS '外汇局名称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."yhywbh" IS '银行业务编号'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sbtbrmc" IS '申报填报人名称'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sbtbrdh" IS '申报填报人电话'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sbrq" IS '申报日期'; 
-         COMMENT ON COLUMN "ff_safe_trading"."gjszztlxms" IS '国际收支主体类型描述'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jyms" IS '交易描述'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sjlx" IS '数据类型 
+         COMMENT ON COLUMN "mz_safe_trading"."sfkrzzjgdm" IS '收付款人组织机构代码'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sfkrkhhjrjgmc" IS '收付款人开户行金融机构名称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sfkrczgjdm" IS '收付款人常驻国家（地区）代码'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sfkrgjzwqc" IS '收付款人国家（地区）中文全称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sfkrwhzh" IS '收付款人外汇账号'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrmc" IS '对方收付款人名称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrlx" IS '对方收付款人类型'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrzzjgdm" IS '对方收付款人组织机构代码'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrkhhjrjgmc" IS '对方收付款人开户行金融机构名称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrczgjdm" IS '对方收付款人常驻国家（地区）代码'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrgjzwmc" IS '对方收付款人国家（地区）中文全称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."dfsfkrwhzh" IS '对方收付款人外汇账号'; 
+         COMMENT ON COLUMN "mz_safe_trading"."jybm" IS '交易编码'; 
+         COMMENT ON COLUMN "mz_safe_trading"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_safe_trading"."jyjezmy" IS '交易金额（折美元）'; 
+         COMMENT ON COLUMN "mz_safe_trading"."jybzdm" IS '交易币种代码'; 
+         COMMENT ON COLUMN "mz_safe_trading"."hbms" IS '货币描述'; 
+         COMMENT ON COLUMN "mz_safe_trading"."jyfy" IS '交易附言'; 
+         COMMENT ON COLUMN "mz_safe_trading"."whjmc" IS '外汇局名称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."yhywbh" IS '银行业务编号'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sbtbrmc" IS '申报填报人名称'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sbtbrdh" IS '申报填报人电话'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sbrq" IS '申报日期'; 
+         COMMENT ON COLUMN "mz_safe_trading"."gjszztlxms" IS '国际收支主体类型描述'; 
+         COMMENT ON COLUMN "mz_safe_trading"."jyms" IS '交易描述'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sjlx" IS '数据类型 
          对公收款：1 
          对公付款：2 
          对私收款：3 
          对私付款：4'; 
-         COMMENT ON COLUMN "ff_safe_trading"."jylx" IS '交易类型 
+         COMMENT ON COLUMN "mz_safe_trading"."jylx" IS '交易类型 
          对公收款：1 
          对公付款：2 
          对私收款：3 
          对私付款：4'; 
-         COMMENT ON COLUMN "ff_safe_trading"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_safe_trading"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_safe_trading"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_safe_trading"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_safe_trading" IS '外管交易表'; 
+         COMMENT ON COLUMN "mz_safe_trading"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_safe_trading"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_safe_trading"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_safe_trading"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_safe_trading" IS '外管交易表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_sjdx 
+         -- Table structure for mz_sjdx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_sjdx" CASCADE; 
-         CREATE TABLE "ff_sjdx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_sjdx_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_sjdx" CASCADE; 
+         CREATE TABLE "mz_sjdx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_sjdx_shard_id_seq'::regclass), 
            "ajid" int4, 
-           "ch_id" int8 NOT NULL DEFAULT nextval('ff_sjdx_ch_id_seq'::regclass), 
+           "ch_id" int8 NOT NULL DEFAULT nextval('mz_sjdx_ch_id_seq'::regclass), 
            "rybh" varchar(32) COLLATE "pg_catalog"."default", 
            "person_name" varchar(60) COLLATE "pg_catalog"."default", 
            "idcard" varchar(18) COLLATE "pg_catalog"."default", 
@@ -4634,39 +4634,39 @@ export default {
            "maxid" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_sjdx"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_sjdx"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_sjdx"."ch_id" IS '主键'; 
-         COMMENT ON COLUMN "ff_sjdx"."rybh" IS '采集编号'; 
-         COMMENT ON COLUMN "ff_sjdx"."person_name" IS '姓名'; 
-         COMMENT ON COLUMN "ff_sjdx"."idcard" IS '身份证号'; 
-         COMMENT ON COLUMN "ff_sjdx"."content" IS '短信内容'; 
-         COMMENT ON COLUMN "ff_sjdx"."telephone_y" IS '姓名'; 
-         COMMENT ON COLUMN "ff_sjdx"."time" IS '时间'; 
-         COMMENT ON COLUMN "ff_sjdx"."isdel" IS '是否删除'; 
-         COMMENT ON COLUMN "ff_sjdx"."adddatatime" IS '录入日期'; 
-         COMMENT ON COLUMN "ff_sjdx"."lrr" IS '录入人'; 
-         COMMENT ON COLUMN "ff_sjdx"."lrdw" IS '录入单位'; 
-         COMMENT ON COLUMN "ff_sjdx"."lrsj" IS '录入时间'; 
-         COMMENT ON COLUMN "ff_sjdx"."telphone" IS '电话号码'; 
-         COMMENT ON COLUMN "ff_sjdx"."status" IS '短信收件箱关键字：收件箱，发件箱，已发件箱，草稿箱，存档箱分别为：‘收件箱’，‘发件箱’，‘已发件箱’，‘草稿箱’，‘存档箱’'; 
-         COMMENT ON COLUMN "ff_sjdx"."sjlylx" IS '数据来源类型(手工
+         COMMENT ON COLUMN "mz_sjdx"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_sjdx"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_sjdx"."ch_id" IS '主键'; 
+         COMMENT ON COLUMN "mz_sjdx"."rybh" IS '采集编号'; 
+         COMMENT ON COLUMN "mz_sjdx"."person_name" IS '姓名'; 
+         COMMENT ON COLUMN "mz_sjdx"."idcard" IS '身份证号'; 
+         COMMENT ON COLUMN "mz_sjdx"."content" IS '短信内容'; 
+         COMMENT ON COLUMN "mz_sjdx"."telephone_y" IS '姓名'; 
+         COMMENT ON COLUMN "mz_sjdx"."time" IS '时间'; 
+         COMMENT ON COLUMN "mz_sjdx"."isdel" IS '是否删除'; 
+         COMMENT ON COLUMN "mz_sjdx"."adddatatime" IS '录入日期'; 
+         COMMENT ON COLUMN "mz_sjdx"."lrr" IS '录入人'; 
+         COMMENT ON COLUMN "mz_sjdx"."lrdw" IS '录入单位'; 
+         COMMENT ON COLUMN "mz_sjdx"."lrsj" IS '录入时间'; 
+         COMMENT ON COLUMN "mz_sjdx"."telphone" IS '电话号码'; 
+         COMMENT ON COLUMN "mz_sjdx"."status" IS '短信收件箱关键字：收件箱，发件箱，已发件箱，草稿箱，存档箱分别为：‘收件箱’，‘发件箱’，‘已发件箱’，‘草稿箱’，‘存档箱’'; 
+         COMMENT ON COLUMN "mz_sjdx"."sjlylx" IS '数据来源类型(手工
          录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_sjdx"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_sjdx"."jsfsjh" IS '接收方手机号'; 
-         COMMENT ON COLUMN "ff_sjdx"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_sjdx"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_sjdx"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_sjdx" IS '手机短信'; 
+         COMMENT ON COLUMN "mz_sjdx"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_sjdx"."jsfsjh" IS '接收方手机号'; 
+         COMMENT ON COLUMN "mz_sjdx"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_sjdx"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_sjdx"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_sjdx" IS '手机短信'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_sjtxl 
+         -- Table structure for mz_sjtxl 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_sjtxl" CASCADE; 
-         CREATE TABLE "ff_sjtxl" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_sjtxl_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_sjtxl" CASCADE; 
+         CREATE TABLE "mz_sjtxl" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_sjtxl_shard_id_seq'::regclass), 
            "ajid" int4 NOT NULL, 
-           "id" int8 NOT NULL DEFAULT nextval('ff_sjtxl_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_sjtxl_id_seq'::regclass), 
            "lymc" varchar(100) COLLATE "pg_catalog"."default", 
            "lydh" varchar(50) COLLATE "pg_catalog"."default", 
            "lyzjhm" varchar(50) COLLATE "pg_catalog"."default", 
@@ -4690,37 +4690,37 @@ export default {
            "maxid" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_sjtxl"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_sjtxl"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_sjtxl"."id" IS '自增ID'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lymc" IS '来源名称'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lydh" IS '来源电话'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lyzjhm" IS '来源证件号码'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lxrmc" IS '联系人名称'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lxrzsxm" IS '联系人真实姓名'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lxrdhhm" IS '联系人电话号码'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lxrgs" IS '联系人公司'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lxrjsms" IS '联系人角色描述'; 
-         COMMENT ON COLUMN "ff_sjtxl"."rybh" IS '采集编号'; 
-         COMMENT ON COLUMN "ff_sjtxl"."shch" IS '用户IMEI码'; 
-         COMMENT ON COLUMN "ff_sjtxl"."addrtype" IS '通讯录关键字：手机为：''''CELL'''' SIM卡为：’SIM‘'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lrr" IS '录入人'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lrdw" IS '录入单位'; 
-         COMMENT ON COLUMN "ff_sjtxl"."lrsj" IS '录入时间'; 
-         COMMENT ON COLUMN "ff_sjtxl"."isdel" IS '是否删除'; 
-         COMMENT ON COLUMN "ff_sjtxl"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_sjtxl"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_sjtxl"."batch" IS '批次ID'; 
-         COMMENT ON COLUMN "ff_sjtxl"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_sjtxl"."maxid" IS '最大ID'; 
-         COMMENT ON TABLE "ff_sjtxl" IS '手机通讯录'; 
+         COMMENT ON COLUMN "mz_sjtxl"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_sjtxl"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_sjtxl"."id" IS '自增ID'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lymc" IS '来源名称'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lydh" IS '来源电话'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lyzjhm" IS '来源证件号码'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lxrmc" IS '联系人名称'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lxrzsxm" IS '联系人真实姓名'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lxrdhhm" IS '联系人电话号码'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lxrgs" IS '联系人公司'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lxrjsms" IS '联系人角色描述'; 
+         COMMENT ON COLUMN "mz_sjtxl"."rybh" IS '采集编号'; 
+         COMMENT ON COLUMN "mz_sjtxl"."shch" IS '用户IMEI码'; 
+         COMMENT ON COLUMN "mz_sjtxl"."addrtype" IS '通讯录关键字：手机为：''''CELL'''' SIM卡为：’SIM‘'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lrr" IS '录入人'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lrdw" IS '录入单位'; 
+         COMMENT ON COLUMN "mz_sjtxl"."lrsj" IS '录入时间'; 
+         COMMENT ON COLUMN "mz_sjtxl"."isdel" IS '是否删除'; 
+         COMMENT ON COLUMN "mz_sjtxl"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_sjtxl"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_sjtxl"."batch" IS '批次ID'; 
+         COMMENT ON COLUMN "mz_sjtxl"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_sjtxl"."maxid" IS '最大ID'; 
+         COMMENT ON TABLE "mz_sjtxl" IS '手机通讯录'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_taobao_info 
+         -- Table structure for mz_taobao_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_taobao_info" CASCADE; 
-         CREATE TABLE "ff_taobao_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_taobao_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_taobao_info" CASCADE; 
+         CREATE TABLE "mz_taobao_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_taobao_info_shard_id_seq'::regclass), 
            "id" varchar(100) COLLATE "pg_catalog"."default" NOT NULL, 
            "cardstatus" varchar(100) COLLATE "pg_catalog"."default", 
            "dh" varchar(100) COLLATE "pg_catalog"."default", 
@@ -4778,69 +4778,69 @@ export default {
            "batch" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_taobao_info"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cardstatus" IS '卡状态'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dh" IS '电话'; 
-         COMMENT ON COLUMN "ff_taobao_info"."tbkid" IS '淘宝真实卡ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."yb" IS '余号'; 
-         COMMENT ON COLUMN "ff_taobao_info"."decdlsf" IS '第二次登录省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sjkzryid" IS '实际控制人员ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sf" IS '省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."tbzhid" IS 'ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dz" IS '地址'; 
-         COMMENT ON COLUMN "ff_taobao_info"."yhzccs" IS '用户注册城市'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dlzdsfcs" IS '登录最多省份的登录次数'; 
-         COMMENT ON COLUMN "ff_taobao_info"."ssryid" IS '所属人员ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dlcs" IS '登录次数'; 
-         COMMENT ON COLUMN "ff_taobao_info"."bz" IS '备注'; 
-         COMMENT ON COLUMN "ff_taobao_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cardphonestatus" IS '卡电话状态'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sfydj" IS '是否已调集'; 
-         COMMENT ON COLUMN "ff_taobao_info"."yx" IS '邮箱'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dllssfs" IS '登录历史省份数'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cardno" IS '卡号'; 
-         COMMENT ON COLUMN "ff_taobao_info"."yhzcip" IS '用户注册IP'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cardapplystatus" IS '卡申请状态'; 
-         COMMENT ON COLUMN "ff_taobao_info"."zhdlsf" IS '最后一次登录省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sfzh" IS '身份证号'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dlts" IS '登录天数'; 
-         COMMENT ON COLUMN "ff_taobao_info"."zhdlsj" IS '最后登录时间'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dlzdsf" IS '登录最多的省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_taobao_info"."statusmodify" IS '状态修改'; 
-         COMMENT ON COLUMN "ff_taobao_info"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dlslsf" IS '登陆历史省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cardemailstatus" IS '卡邮件状态'; 
-         COMMENT ON COLUMN "ff_taobao_info"."company" IS '公司名称'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cs" IS '城市'; 
-         COMMENT ON COLUMN "ff_taobao_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_taobao_info"."yhzcsf" IS '用户注册省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."nc" IS '昵称'; 
-         COMMENT ON COLUMN "ff_taobao_info"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sjhm" IS '手机号码'; 
-         COMMENT ON COLUMN "ff_taobao_info"."tbzh" IS '淘宝账号'; 
-         COMMENT ON COLUMN "ff_taobao_info"."cardtype" IS '卡类型'; 
-         COMMENT ON COLUMN "ff_taobao_info"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_taobao_info"."dycdlsf" IS '第一次登录省份'; 
-         COMMENT ON COLUMN "ff_taobao_info"."pwdstatus" IS '密码状态'; 
-         COMMENT ON COLUMN "ff_taobao_info"."zjllx" IS '证件类型'; 
-         COMMENT ON COLUMN "ff_taobao_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_taobao_info"."gsmc" IS '公司名称'; 
-         COMMENT ON COLUMN "ff_taobao_info"."hykhyh" IS '会员开户银行'; 
-         COMMENT ON COLUMN "ff_taobao_info"."txkh" IS '最近一次提现卡号'; 
-         COMMENT ON COLUMN "ff_taobao_info"."zhye" IS '日切账户余额信息'; 
-         COMMENT ON COLUMN "ff_taobao_info"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_taobao_info" IS '资金分析淘宝账户信息表'; 
+         COMMENT ON COLUMN "mz_taobao_info"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cardstatus" IS '卡状态'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dh" IS '电话'; 
+         COMMENT ON COLUMN "mz_taobao_info"."tbkid" IS '淘宝真实卡ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."yb" IS '余号'; 
+         COMMENT ON COLUMN "mz_taobao_info"."decdlsf" IS '第二次登录省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sjkzryid" IS '实际控制人员ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sf" IS '省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."tbzhid" IS 'ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dz" IS '地址'; 
+         COMMENT ON COLUMN "mz_taobao_info"."yhzccs" IS '用户注册城市'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dlzdsfcs" IS '登录最多省份的登录次数'; 
+         COMMENT ON COLUMN "mz_taobao_info"."ssryid" IS '所属人员ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dlcs" IS '登录次数'; 
+         COMMENT ON COLUMN "mz_taobao_info"."bz" IS '备注'; 
+         COMMENT ON COLUMN "mz_taobao_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cardphonestatus" IS '卡电话状态'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sfydj" IS '是否已调集'; 
+         COMMENT ON COLUMN "mz_taobao_info"."yx" IS '邮箱'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dllssfs" IS '登录历史省份数'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cardno" IS '卡号'; 
+         COMMENT ON COLUMN "mz_taobao_info"."yhzcip" IS '用户注册IP'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cardapplystatus" IS '卡申请状态'; 
+         COMMENT ON COLUMN "mz_taobao_info"."zhdlsf" IS '最后一次登录省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sfzh" IS '身份证号'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dlts" IS '登录天数'; 
+         COMMENT ON COLUMN "mz_taobao_info"."zhdlsj" IS '最后登录时间'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dlzdsf" IS '登录最多的省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_taobao_info"."statusmodify" IS '状态修改'; 
+         COMMENT ON COLUMN "mz_taobao_info"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dlslsf" IS '登陆历史省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cardemailstatus" IS '卡邮件状态'; 
+         COMMENT ON COLUMN "mz_taobao_info"."company" IS '公司名称'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cs" IS '城市'; 
+         COMMENT ON COLUMN "mz_taobao_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_taobao_info"."yhzcsf" IS '用户注册省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."nc" IS '昵称'; 
+         COMMENT ON COLUMN "mz_taobao_info"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sjhm" IS '手机号码'; 
+         COMMENT ON COLUMN "mz_taobao_info"."tbzh" IS '淘宝账号'; 
+         COMMENT ON COLUMN "mz_taobao_info"."cardtype" IS '卡类型'; 
+         COMMENT ON COLUMN "mz_taobao_info"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_taobao_info"."dycdlsf" IS '第一次登录省份'; 
+         COMMENT ON COLUMN "mz_taobao_info"."pwdstatus" IS '密码状态'; 
+         COMMENT ON COLUMN "mz_taobao_info"."zjllx" IS '证件类型'; 
+         COMMENT ON COLUMN "mz_taobao_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_taobao_info"."gsmc" IS '公司名称'; 
+         COMMENT ON COLUMN "mz_taobao_info"."hykhyh" IS '会员开户银行'; 
+         COMMENT ON COLUMN "mz_taobao_info"."txkh" IS '最近一次提现卡号'; 
+         COMMENT ON COLUMN "mz_taobao_info"."zhye" IS '日切账户余额信息'; 
+         COMMENT ON COLUMN "mz_taobao_info"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_taobao_info" IS '资金分析淘宝账户信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_taobao_log 
+         -- Table structure for mz_taobao_log 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_taobao_log" CASCADE; 
-         CREATE TABLE "ff_taobao_log" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_taobao_log_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_taobao_log" CASCADE; 
+         CREATE TABLE "mz_taobao_log" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_taobao_log_shard_id_seq'::regclass), 
            "id" varchar(100) COLLATE "pg_catalog"."default" NOT NULL, 
            "crrq" varchar(50) COLLATE "pg_catalog"."default", 
            "tbdlrzid" varchar(100) COLLATE "pg_catalog"."default", 
@@ -4857,29 +4857,29 @@ export default {
            "batch" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_taobao_log"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_taobao_log"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_taobao_log"."crrq" IS '查询日期'; 
-         COMMENT ON COLUMN "ff_taobao_log"."tbdlrzid" IS '淘宝登录日志id'; 
-         COMMENT ON COLUMN "ff_taobao_log"."xm" IS '用户名字'; 
-         COMMENT ON COLUMN "ff_taobao_log"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_taobao_log"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_taobao_log"."ajcjsj" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_taobao_log"."tbyhid" IS '淘宝用户id'; 
-         COMMENT ON COLUMN "ff_taobao_log"."tbzh" IS '淘宝登录账号'; 
-         COMMENT ON COLUMN "ff_taobao_log"."ssdqid" IS '所属地区id'; 
-         COMMENT ON COLUMN "ff_taobao_log"."yhip" IS '用户ip'; 
-         COMMENT ON COLUMN "ff_taobao_log"."dlsj" IS '登录时间'; 
-         COMMENT ON COLUMN "ff_taobao_log"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_taobao_log"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_taobao_log" IS '资金分析淘宝登录日志信息表'; 
+         COMMENT ON COLUMN "mz_taobao_log"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_taobao_log"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_taobao_log"."crrq" IS '查询日期'; 
+         COMMENT ON COLUMN "mz_taobao_log"."tbdlrzid" IS '淘宝登录日志id'; 
+         COMMENT ON COLUMN "mz_taobao_log"."xm" IS '用户名字'; 
+         COMMENT ON COLUMN "mz_taobao_log"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_taobao_log"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_taobao_log"."ajcjsj" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_taobao_log"."tbyhid" IS '淘宝用户id'; 
+         COMMENT ON COLUMN "mz_taobao_log"."tbzh" IS '淘宝登录账号'; 
+         COMMENT ON COLUMN "mz_taobao_log"."ssdqid" IS '所属地区id'; 
+         COMMENT ON COLUMN "mz_taobao_log"."yhip" IS '用户ip'; 
+         COMMENT ON COLUMN "mz_taobao_log"."dlsj" IS '登录时间'; 
+         COMMENT ON COLUMN "mz_taobao_log"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_taobao_log"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_taobao_log" IS '资金分析淘宝登录日志信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_taobao_trade_info 
+         -- Table structure for mz_taobao_trade_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_taobao_trade_info" CASCADE; 
-         CREATE TABLE "ff_taobao_trade_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_taobao_trade_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_taobao_trade_info" CASCADE; 
+         CREATE TABLE "mz_taobao_trade_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_taobao_trade_info_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "bjtbzhid" varchar(100) COLLATE "pg_catalog"."default", 
            "bjdldh" varchar(100) COLLATE "pg_catalog"."default", 
@@ -4920,53 +4920,53 @@ export default {
            "batch" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjtbzhid" IS '买家淘宝账号ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjdldh" IS '买家登录电话'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."wbjyh" IS '外部交易号'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."zhxgsj" IS '最后修改时间'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sksj" IS '收款时间'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."shdz" IS '收货地址'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."hzid" IS '合作编号'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."mxlx" IS '明细类型，0为买家，1为卖家'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."spmc" IS '商品名称'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."lyd" IS '来源地'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."tbjyjlid" IS 'ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjxx" IS '买家信息'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."jyh" IS '交易号'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."shlxdh" IS '收货联系电话'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."cjsj" IS '创建时间'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjxm" IS '买家姓名'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjnc" IS '买家昵称'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."shlxr" IS '收货联系人'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjzh" IS '卖家账号'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjzh" IS '买家账号'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjxm" IS '卖家姓名'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjnc" IS '卖家昵称'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjdlyx" IS '卖家登录邮箱'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."jyzt" IS '交易状态'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjxx" IS '卖家信息'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjdldh" IS '卖家登录电话'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."jylx" IS '交易类型'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."bjdlyx" IS '买家登录邮箱'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjtbzhid" IS '卖家淘宝账号ID'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_taobao_trade_info"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_taobao_trade_info" IS '资金分析淘宝交易明细信息表'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjtbzhid" IS '买家淘宝账号ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjdldh" IS '买家登录电话'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."wbjyh" IS '外部交易号'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."zhxgsj" IS '最后修改时间'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sksj" IS '收款时间'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."shdz" IS '收货地址'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."hzid" IS '合作编号'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."mxlx" IS '明细类型，0为买家，1为卖家'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."spmc" IS '商品名称'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."lyd" IS '来源地'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."tbjyjlid" IS 'ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjxx" IS '买家信息'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."jyh" IS '交易号'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."shlxdh" IS '收货联系电话'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."cjsj" IS '创建时间'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjxm" IS '买家姓名'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjnc" IS '买家昵称'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."shlxr" IS '收货联系人'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjzh" IS '卖家账号'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjzh" IS '买家账号'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjxm" IS '卖家姓名'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjnc" IS '卖家昵称'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjdlyx" IS '卖家登录邮箱'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."jyzt" IS '交易状态'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjxx" IS '卖家信息'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjdldh" IS '卖家登录电话'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."jylx" IS '交易类型'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."bjdlyx" IS '买家登录邮箱'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjtbzhid" IS '卖家淘宝账号ID'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_taobao_trade_info"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_taobao_trade_info" IS '资金分析淘宝交易明细信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_bgd 
+         -- Table structure for mz_tax_bgd 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_bgd" CASCADE; 
-         CREATE TABLE "ff_tax_bgd" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_bgd_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_bgd" CASCADE; 
+         CREATE TABLE "mz_tax_bgd" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_bgd_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4, 
            "sjly" varchar(30) COLLATE "pg_catalog"."default", 
@@ -5029,75 +5029,75 @@ export default {
            "batch" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_bgd"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jzxhgbh" IS 'jzx海关编号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jzxh" IS '集装箱号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."bdghgbh" IS 'bgd.海关编号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jckbz" IS '进出口标志'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jckadm" IS '进出口岸代码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jckrq" IS '进出口日期'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbrq" IS '申报日期'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."zyg" IS '指运港(抵运港)'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."ysgjmc" IS '运输工具名称'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."ysgjhbch" IS '运输工具航次(班)号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."ysfsdm" IS '运输方式代码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jydwbh" IS '经营单位编号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jydwmc" IS '经营单位名称'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."hzdwdqdm" IS '货主单位地区代码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."hzdwdm" IS '货主单位代码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."hzdwmc" IS '货主单位名称'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbdwdm" IS '申报单位代码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbdwmc" IS '申报单位名称'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."tydhm" IS '提运单号码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."mygb" IS '贸易国别（起/抵运地)'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jgfs" IS '监管方式'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jzxbzxs" IS '集装箱标准箱数'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."js" IS '件数'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."mz" IS '毛重'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jz" IS '净重'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."bzzl" IS '包装种类'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."xkzh" IS '许可证编号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."jhzh" IS '结汇证号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."bz" IS '备注'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."xgcs" IS '修改次数'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbfsvz" IS '申报方式标志'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sjgms" IS '审核（状态字）结果描述'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."mtdm" IS '码头/货场代码'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."spxh" IS '商品序号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."spbh" IS '商品编号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."spmc" IS '商品名称'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."spgg" IS '商品规格、型号'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."ccg" IS '产销国'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."cjbz" IS '成交币制'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."bjbzhl" IS '成交币制汇率'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbdw" IS '申报单价'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbzj" IS '申报总价'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbsl" IS '申报数量'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sbjldw" IS '申报计量单位'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."dysl" IS '第一（法定）数量'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."dyjldw" IS '第一(法定)计量单位'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."drsl" IS '第二数量'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."drjldw" IS '第二计量单位'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."cjzj" IS '成交总价'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."tjmyj" IS '统计美元价'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."gsj" IS '关税完税价'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_tax_bgd"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_tax_bgd" IS '报关单'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jzxhgbh" IS 'jzx海关编号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jzxh" IS '集装箱号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."bdghgbh" IS 'bgd.海关编号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jckbz" IS '进出口标志'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jckadm" IS '进出口岸代码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jckrq" IS '进出口日期'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbrq" IS '申报日期'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."zyg" IS '指运港(抵运港)'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."ysgjmc" IS '运输工具名称'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."ysgjhbch" IS '运输工具航次(班)号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."ysfsdm" IS '运输方式代码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jydwbh" IS '经营单位编号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jydwmc" IS '经营单位名称'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."hzdwdqdm" IS '货主单位地区代码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."hzdwdm" IS '货主单位代码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."hzdwmc" IS '货主单位名称'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbdwdm" IS '申报单位代码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbdwmc" IS '申报单位名称'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."tydhm" IS '提运单号码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."mygb" IS '贸易国别（起/抵运地)'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jgfs" IS '监管方式'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jzxbzxs" IS '集装箱标准箱数'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."js" IS '件数'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."mz" IS '毛重'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jz" IS '净重'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."bzzl" IS '包装种类'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."xkzh" IS '许可证编号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."jhzh" IS '结汇证号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."bz" IS '备注'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."xgcs" IS '修改次数'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbfsvz" IS '申报方式标志'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sjgms" IS '审核（状态字）结果描述'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."mtdm" IS '码头/货场代码'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."spxh" IS '商品序号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."spbh" IS '商品编号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."spmc" IS '商品名称'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."spgg" IS '商品规格、型号'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."ccg" IS '产销国'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."cjbz" IS '成交币制'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."bjbzhl" IS '成交币制汇率'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbdw" IS '申报单价'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbzj" IS '申报总价'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbsl" IS '申报数量'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sbjldw" IS '申报计量单位'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."dysl" IS '第一（法定）数量'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."dyjldw" IS '第一(法定)计量单位'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."drsl" IS '第二数量'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."drjldw" IS '第二计量单位'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."cjzj" IS '成交总价'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."tjmyj" IS '统计美元价'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."gsj" IS '关税完税价'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_tax_bgd"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_tax_bgd" IS '报关单'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_bgh 
+         -- Table structure for mz_tax_bgh 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_bgh" CASCADE; 
-         CREATE TABLE "ff_tax_bgh" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_bgh_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_bgh" CASCADE; 
+         CREATE TABLE "mz_tax_bgh" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_bgh_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4, 
            "sjly" varchar(30) COLLATE "pg_catalog"."default", 
@@ -5129,44 +5129,44 @@ export default {
            "batch" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_bgh"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."qyzch" IS '企业注册号?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."qyzcmc" IS '企业注册名称(全)'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."zchgdm" IS '注册海关代码?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."qyjb" IS '企业级别?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."yxrq" IS '有效日期?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."khyh" IS '开户银行?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."khzh" IS '开户帐号?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."zcrq" IS '注册日期?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."yyzzh" IS '营业执照号?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."qyzwdz" IS '企业中文地址?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."lxr" IS '联系人?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."lxrdh" IS '联系人电话?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."frdb" IS '法人代表?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."frdh" IS '法人电话?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."tzze" IS '投资总额?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."jlzhm" IS '居留证号码?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."zczb" IS '注册资本(万)'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."zczjbz" IS '注册资金币制?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."swdjh" IS '税务登记号?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."nsrq" IS '年审日期?'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_tax_bgh"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_tax_bgh" IS '报关行'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."qyzch" IS '企业注册号?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."qyzcmc" IS '企业注册名称(全)'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."zchgdm" IS '注册海关代码?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."qyjb" IS '企业级别?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."yxrq" IS '有效日期?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."khyh" IS '开户银行?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."khzh" IS '开户帐号?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."zcrq" IS '注册日期?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."yyzzh" IS '营业执照号?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."qyzwdz" IS '企业中文地址?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."lxr" IS '联系人?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."lxrdh" IS '联系人电话?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."frdb" IS '法人代表?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."frdh" IS '法人电话?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."tzze" IS '投资总额?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."jlzhm" IS '居留证号码?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."zczb" IS '注册资本(万)'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."zczjbz" IS '注册资金币制?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."swdjh" IS '税务登记号?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."nsrq" IS '年审日期?'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_tax_bgh"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_tax_bgh" IS '报关行'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_hgjkshbd 
+         -- Table structure for mz_tax_hgjkshbd 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_hgjkshbd" CASCADE; 
-         CREATE TABLE "ff_tax_hgjkshbd" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_hgjkshbd_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_hgjkshbd" CASCADE; 
+         CREATE TABLE "mz_tax_hgjkshbd" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_hgjkshbd_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4, 
            "sjly" varchar(30) COLLATE "pg_catalog"."default", 
@@ -5185,31 +5185,31 @@ export default {
            "batch" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."jkdwmc" IS '缴款单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."hzdwmc" IS '货主单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."jydwmc" IS '经营单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."sbdwmc" IS '申报单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."hgjksh" IS '海关缴款书号'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."dkdwmc" IS '抵扣单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."skje" IS '税款金额'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshbd"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_tax_hgjkshbd" IS '海关和国税通过海关缴款书号比对表'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."jkdwmc" IS '缴款单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."hzdwmc" IS '货主单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."jydwmc" IS '经营单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."sbdwmc" IS '申报单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."hgjksh" IS '海关缴款书号'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."dkdwmc" IS '抵扣单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."skje" IS '税款金额'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshbd"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_tax_hgjkshbd" IS '海关和国税通过海关缴款书号比对表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_hgjkshxx 
+         -- Table structure for mz_tax_hgjkshxx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_hgjkshxx" CASCADE; 
-         CREATE TABLE "ff_tax_hgjkshxx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_hgjkshxx_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_hgjkshxx" CASCADE; 
+         CREATE TABLE "mz_tax_hgjkshxx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_hgjkshxx_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4, 
            "sjly" varchar(30) COLLATE "pg_catalog"."default", 
@@ -5228,31 +5228,31 @@ export default {
            "batch" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."jkdwmc" IS '缴款单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."hzdwmc" IS '货主单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."jydwmc" IS '经营单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."sbdwmc" IS '申报单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."hgjksh" IS '海关缴款书号'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."skje" IS '税款金额'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."tjrmbj" IS '统计人民币价'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_tax_hgjkshxx"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_tax_hgjkshxx" IS '海关缴款书号信息表'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."jkdwmc" IS '缴款单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."hzdwmc" IS '货主单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."jydwmc" IS '经营单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."sbdwmc" IS '申报单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."hgjksh" IS '海关缴款书号'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."skje" IS '税款金额'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."tjrmbj" IS '统计人民币价'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_tax_hgjkshxx"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_tax_hgjkshxx" IS '海关缴款书号信息表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_hgjkzzs 
+         -- Table structure for mz_tax_hgjkzzs 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_hgjkzzs" CASCADE; 
-         CREATE TABLE "ff_tax_hgjkzzs" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_hgjkzzs_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_hgjkzzs" CASCADE; 
+         CREATE TABLE "mz_tax_hgjkzzs" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_hgjkzzs_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4, 
            "sjly" varchar(30) COLLATE "pg_catalog"."default", 
@@ -5277,37 +5277,37 @@ export default {
            "batch" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."jkdwmc" IS '缴款单位名称-Customs '; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."hzdwmc" IS '货主单位名称-Customs'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."jydwmc" IS '经营单位名称-Customs'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."sbdwmc" IS '申报单位名称-Customs'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."dkdwmc" IS '抵扣单位名称-Tax'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."hgjksh" IS '海关缴款书号-Both'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."szsk" IS '实征税款-Tax'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."skje" IS '税款金额-Customs'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."tjrmbj" IS '统计人民币价-Customs'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."bsrq" IS '报送日期-Tax'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."jkkamc" IS '进口口岸名称-Customs'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."dkdwsbh" IS '抵扣单位识别号-Tax'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."jhjg" IS '稽核结果-Tax'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_tax_hgjkzzs"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_tax_hgjkzzs" IS '海关进口增值税'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."jkdwmc" IS '缴款单位名称-Customs '; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."hzdwmc" IS '货主单位名称-Customs'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."jydwmc" IS '经营单位名称-Customs'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."sbdwmc" IS '申报单位名称-Customs'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."dkdwmc" IS '抵扣单位名称-Tax'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."hgjksh" IS '海关缴款书号-Both'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."szsk" IS '实征税款-Tax'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."skje" IS '税款金额-Customs'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."tjrmbj" IS '统计人民币价-Customs'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."bsrq" IS '报送日期-Tax'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."jkkamc" IS '进口口岸名称-Customs'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."dkdwsbh" IS '抵扣单位识别号-Tax'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."jhjg" IS '稽核结果-Tax'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_tax_hgjkzzs"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_tax_hgjkzzs" IS '海关进口增值税'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_hgwspzjhbd 
+         -- Table structure for mz_tax_hgwspzjhbd 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_hgwspzjhbd" CASCADE; 
-         CREATE TABLE "ff_tax_hgwspzjhbd" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_hgwspzjhbd_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_hgwspzjhbd" CASCADE; 
+         CREATE TABLE "mz_tax_hgwspzjhbd" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_hgwspzjhbd_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "sjly" varchar(30) COLLATE "pg_catalog"."default", 
            "ajid" int4, 
@@ -5326,31 +5326,31 @@ export default {
            "batch" int8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."hgjks" IS '海关缴款书'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."jkkamc" IS '进口口岸名称'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."dkdwsbh" IS '抵扣单位识别号'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."dkdwmc" IS '抵扣单位名称'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."skje" IS '税款金额'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."bsrq" IS '报送日期'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."jhjg" IS '稽核结果'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_tax_hgwspzjhbd"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_tax_hgwspzjhbd" IS '国家税务局海关完税凭证稽核比对数据表'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."hgjks" IS '海关缴款书'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."jkkamc" IS '进口口岸名称'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."dkdwsbh" IS '抵扣单位识别号'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."dkdwmc" IS '抵扣单位名称'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."skje" IS '税款金额'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."bsrq" IS '报送日期'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."jhjg" IS '稽核结果'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_tax_hgwspzjhbd"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_tax_hgwspzjhbd" IS '国家税务局海关完税凭证稽核比对数据表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_records 
+         -- Table structure for mz_tax_records 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_records" CASCADE; 
-         CREATE TABLE "ff_tax_records" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_records_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_records" CASCADE; 
+         CREATE TABLE "mz_tax_records" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_records_shard_id_seq'::regclass), 
            "ajid" int4, 
            "batch" int4, 
            "swmxid" varchar(50) COLLATE "pg_catalog"."default", 
@@ -5404,66 +5404,66 @@ export default {
            "mac" varchar(100) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_records"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_tax_records"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_tax_records"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_tax_records"."swmxid" IS '税务明细ID'; 
-         COMMENT ON COLUMN "ff_tax_records"."bh" IS '编号'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfsh" IS '购方税号'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfgsmc" IS '购方公司名称'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfyhzh" IS '购方银行账号'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfyhmc" IS '购方银行名称'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfshsssf" IS '购方税号所属省份'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfshsscs" IS '购方税号所属城市'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfshssdq" IS '购方税号所属地区'; 
-         COMMENT ON COLUMN "ff_tax_records"."gfdzdh" IS '购方地址电话'; 
-         COMMENT ON COLUMN "ff_tax_records"."je" IS '金额'; 
-         COMMENT ON COLUMN "ff_tax_records"."dj" IS '单价'; 
-         COMMENT ON COLUMN "ff_tax_records"."se" IS '税额'; 
-         COMMENT ON COLUMN "ff_tax_records"."sl" IS '税率'; 
-         COMMENT ON COLUMN "ff_tax_records"."jshj" IS '价税合计'; 
-         COMMENT ON COLUMN "ff_tax_records"."zs" IS '张数'; 
-         COMMENT ON COLUMN "ff_tax_records"."kpyf" IS '开票月份'; 
-         COMMENT ON COLUMN "ff_tax_records"."kpr" IS '开票人'; 
-         COMMENT ON COLUMN "ff_tax_records"."fphm" IS '发票号码'; 
-         COMMENT ON COLUMN "ff_tax_records"."fpdm" IS '发票代码'; 
-         COMMENT ON COLUMN "ff_tax_records"."hwsl" IS '货物数量'; 
-         COMMENT ON COLUMN "ff_tax_records"."hwmc" IS '货物名称'; 
-         COMMENT ON COLUMN "ff_tax_records"."hwxh" IS '货物序号'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfsh" IS '销方税号'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfgsmc" IS '销方公司名称'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfyhzh" IS '销方银行账号'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfyhmc" IS '销方银行名称'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfshsssf" IS '销方税号所属省份'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfshsscs" IS '销方税号所属城市'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfshssdq" IS '销方税号所属地区'; 
-         COMMENT ON COLUMN "ff_tax_records"."xfdzdh" IS '销房地址电话'; 
-         COMMENT ON COLUMN "ff_tax_records"."dw" IS '单位'; 
-         COMMENT ON COLUMN "ff_tax_records"."cyrsbh" IS '承运人识别号'; 
-         COMMENT ON COLUMN "ff_tax_records"."cyrmc" IS '承运人名称'; 
-         COMMENT ON COLUMN "ff_tax_records"."qdbz" IS '清单标志'; 
-         COMMENT ON COLUMN "ff_tax_records"."zfbz" IS '作废标志'; 
-         COMMENT ON COLUMN "ff_tax_records"."swlx" IS '税务类型,进项税0,销项税1'; 
-         COMMENT ON COLUMN "ff_tax_records"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_tax_records"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_tax_records"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_records"."lytype" IS '来源类型'; 
-         COMMENT ON COLUMN "ff_tax_records"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_records"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_records"."md5" IS '文件名的MD5加密'; 
-         COMMENT ON COLUMN "ff_tax_records"."sfzf" IS '是否作废'; 
-         COMMENT ON COLUMN "ff_tax_records"."fplx" IS '发票类型'; 
-         COMMENT ON COLUMN "ff_tax_records"."kprq" IS '开票日期'; 
-         COMMENT ON COLUMN "ff_tax_records"."ip" IS 'IP'; 
-         COMMENT ON COLUMN "ff_tax_records"."mac" IS 'MAC'; 
-         COMMENT ON TABLE "ff_tax_records" IS '资金分析税务明细表'; 
+         COMMENT ON COLUMN "mz_tax_records"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_tax_records"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_tax_records"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_tax_records"."swmxid" IS '税务明细ID'; 
+         COMMENT ON COLUMN "mz_tax_records"."bh" IS '编号'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfsh" IS '购方税号'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfgsmc" IS '购方公司名称'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfyhzh" IS '购方银行账号'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfyhmc" IS '购方银行名称'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfshsssf" IS '购方税号所属省份'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfshsscs" IS '购方税号所属城市'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfshssdq" IS '购方税号所属地区'; 
+         COMMENT ON COLUMN "mz_tax_records"."gfdzdh" IS '购方地址电话'; 
+         COMMENT ON COLUMN "mz_tax_records"."je" IS '金额'; 
+         COMMENT ON COLUMN "mz_tax_records"."dj" IS '单价'; 
+         COMMENT ON COLUMN "mz_tax_records"."se" IS '税额'; 
+         COMMENT ON COLUMN "mz_tax_records"."sl" IS '税率'; 
+         COMMENT ON COLUMN "mz_tax_records"."jshj" IS '价税合计'; 
+         COMMENT ON COLUMN "mz_tax_records"."zs" IS '张数'; 
+         COMMENT ON COLUMN "mz_tax_records"."kpyf" IS '开票月份'; 
+         COMMENT ON COLUMN "mz_tax_records"."kpr" IS '开票人'; 
+         COMMENT ON COLUMN "mz_tax_records"."fphm" IS '发票号码'; 
+         COMMENT ON COLUMN "mz_tax_records"."fpdm" IS '发票代码'; 
+         COMMENT ON COLUMN "mz_tax_records"."hwsl" IS '货物数量'; 
+         COMMENT ON COLUMN "mz_tax_records"."hwmc" IS '货物名称'; 
+         COMMENT ON COLUMN "mz_tax_records"."hwxh" IS '货物序号'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfsh" IS '销方税号'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfgsmc" IS '销方公司名称'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfyhzh" IS '销方银行账号'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfyhmc" IS '销方银行名称'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfshsssf" IS '销方税号所属省份'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfshsscs" IS '销方税号所属城市'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfshssdq" IS '销方税号所属地区'; 
+         COMMENT ON COLUMN "mz_tax_records"."xfdzdh" IS '销房地址电话'; 
+         COMMENT ON COLUMN "mz_tax_records"."dw" IS '单位'; 
+         COMMENT ON COLUMN "mz_tax_records"."cyrsbh" IS '承运人识别号'; 
+         COMMENT ON COLUMN "mz_tax_records"."cyrmc" IS '承运人名称'; 
+         COMMENT ON COLUMN "mz_tax_records"."qdbz" IS '清单标志'; 
+         COMMENT ON COLUMN "mz_tax_records"."zfbz" IS '作废标志'; 
+         COMMENT ON COLUMN "mz_tax_records"."swlx" IS '税务类型,进项税0,销项税1'; 
+         COMMENT ON COLUMN "mz_tax_records"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_tax_records"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_tax_records"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_records"."lytype" IS '来源类型'; 
+         COMMENT ON COLUMN "mz_tax_records"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_records"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_records"."md5" IS '文件名的MD5加密'; 
+         COMMENT ON COLUMN "mz_tax_records"."sfzf" IS '是否作废'; 
+         COMMENT ON COLUMN "mz_tax_records"."fplx" IS '发票类型'; 
+         COMMENT ON COLUMN "mz_tax_records"."kprq" IS '开票日期'; 
+         COMMENT ON COLUMN "mz_tax_records"."ip" IS 'IP'; 
+         COMMENT ON COLUMN "mz_tax_records"."mac" IS 'MAC'; 
+         COMMENT ON TABLE "mz_tax_records" IS '资金分析税务明细表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_records_source 
+         -- Table structure for mz_tax_records_source 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_records_source" CASCADE; 
-         CREATE TABLE "ff_tax_records_source" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_records_source_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_records_source" CASCADE; 
+         CREATE TABLE "mz_tax_records_source" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_records_source_shard_id_seq'::regclass), 
            "ajid" int4 NOT NULL, 
            "batch" int4, 
            "swmxid" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
@@ -5517,66 +5517,66 @@ export default {
            "mac" varchar(100) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_records_source"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."swmxid" IS '税务明细ID'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."bh" IS '编号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfsh" IS '购方税号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfgsmc" IS '购方公司名称'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfyhzh" IS '购方银行账号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfyhmc" IS '购方银行名称'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfshsssf" IS '购方税号所属省份'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfshsscs" IS '购方税号所属城市'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfshssdq" IS '购方税号所属地区'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."gfdzdh" IS '购方地址电话'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."je" IS '金额'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."dj" IS '单价'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."se" IS '税额'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."sl" IS '税率'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."jshj" IS '价税合计'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."zs" IS '张数'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."kpyf" IS '开票月份'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."kpr" IS '开票人'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."fphm" IS '发票号码'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."fpdm" IS '发票代码'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."hwsl" IS '货物数量'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."hwmc" IS '货物名称'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."hwxh" IS '货物序号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfsh" IS '销方税号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfgsmc" IS '销方公司名称'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfyhzh" IS '销方银行账号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfyhmc" IS '销方银行名称'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfshsssf" IS '销方税号所属省份'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfshsscs" IS '销方税号所属城市'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfshssdq" IS '销方税号所属地区'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."xfdzdh" IS '销房地址电话'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."dw" IS '单位'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."cyrsbh" IS '承运人识别号'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."cyrmc" IS '承运人名称'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."qdbz" IS '清单标志'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."zfbz" IS '作废标志'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."swlx" IS '税务类型,进项税0,销项税1'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."lytype" IS '来源类型'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."md5" IS '文件名的MD5加密'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."sfzf" IS '是否作废'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."fplx" IS '发票类型'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."kprq" IS '开票日期'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."ip" IS 'IP'; 
-         COMMENT ON COLUMN "ff_tax_records_source"."mac" IS 'MAC'; 
-         COMMENT ON TABLE "ff_tax_records_source" IS '资金分析税务明细表'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."swmxid" IS '税务明细ID'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."bh" IS '编号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfsh" IS '购方税号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfgsmc" IS '购方公司名称'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfyhzh" IS '购方银行账号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfyhmc" IS '购方银行名称'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfshsssf" IS '购方税号所属省份'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfshsscs" IS '购方税号所属城市'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfshssdq" IS '购方税号所属地区'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."gfdzdh" IS '购方地址电话'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."je" IS '金额'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."dj" IS '单价'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."se" IS '税额'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."sl" IS '税率'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."jshj" IS '价税合计'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."zs" IS '张数'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."kpyf" IS '开票月份'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."kpr" IS '开票人'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."fphm" IS '发票号码'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."fpdm" IS '发票代码'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."hwsl" IS '货物数量'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."hwmc" IS '货物名称'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."hwxh" IS '货物序号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfsh" IS '销方税号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfgsmc" IS '销方公司名称'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfyhzh" IS '销方银行账号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfyhmc" IS '销方银行名称'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfshsssf" IS '销方税号所属省份'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfshsscs" IS '销方税号所属城市'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfshssdq" IS '销方税号所属地区'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."xfdzdh" IS '销房地址电话'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."dw" IS '单位'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."cyrsbh" IS '承运人识别号'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."cyrmc" IS '承运人名称'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."qdbz" IS '清单标志'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."zfbz" IS '作废标志'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."swlx" IS '税务类型,进项税0,销项税1'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."lytype" IS '来源类型'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."md5" IS '文件名的MD5加密'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."sfzf" IS '是否作废'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."fplx" IS '发票类型'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."kprq" IS '开票日期'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."ip" IS 'IP'; 
+         COMMENT ON COLUMN "mz_tax_records_source"."mac" IS 'MAC'; 
+         COMMENT ON TABLE "mz_tax_records_source" IS '资金分析税务明细表'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_tax_swdj 
+         -- Table structure for mz_tax_swdj 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_tax_swdj" CASCADE; 
-         CREATE TABLE "ff_tax_swdj" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_tax_swdj_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_tax_swdj" CASCADE; 
+         CREATE TABLE "mz_tax_swdj" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_tax_swdj_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "ajid" int4, 
            "batch" int4, 
@@ -5629,66 +5629,66 @@ export default {
            "sl" float8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_tax_swdj"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."id" IS '主键'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."ajid" IS '线索ID'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."sjly" IS '数据来源'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."nssbh" IS '纳税识别号'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."nsrmc" IS '纳税人名称'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."djzclxdm" IS '登记注册类型代码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."nsrztdm" IS '纳税人状态代码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."hydm"
+         COMMENT ON COLUMN "mz_tax_swdj"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."id" IS '主键'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."ajid" IS '线索ID'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."sjly" IS '数据来源'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."nssbh" IS '纳税识别号'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."nsrmc" IS '纳税人名称'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."djzclxdm" IS '登记注册类型代码'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."nsrztdm" IS '纳税人状态代码'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."hydm"
           IS '行业代码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."zgswjdm" IS '主管税务局代码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."gsdjdz" IS '公司登记地址'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."gsdjdh" IS '公司登记电话'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."zcdyzbm" IS '注册地邮政编码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."scjydz" IS '生产经营地址'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."scjydzxzqhdm" IS '生产经营地址行政区划代码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."scjydlxdh" IS '生产经营地联系电话'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."tzze" IS '投资总额'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."fddbrmc" IS '法定代表人姓名'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."fddbrsfzh" IS '法定代表人身份证号'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."frlxfs" IS '法人联系方式'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."skjip" IS '税控机IP地址'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."zczb" IS '注册资本'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."cwxm" IS '财务姓名'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."cwsfzh" IS '财务身份证号'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."cwlxfs" IS '财务联系方式'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."bsrxm" IS '报税人姓名'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."bsrsfzh" IS '报税人身份证号'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."bsrlxfs" IS '报税人联系方式'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."jyfw" IS '经营范围'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."qtdjxx" IS '其他登记人员姓名、身份证号、联系方式'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."crr" IS '插入人'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."rdfzcrq" IS '认定非正常日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."zxrq" IS '注销日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."djrq" IS '登记日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."djxh" IS '登记序号'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."shxydm" IS '社会信用代码'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."kyslrq" IS '开业设立日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."xgrq" IS '修改日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."yxbz" IS '有效标志'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."tyrq" IS '停业日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."fddbrzjlx" IS '法定代表人证件类型'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."fddbrgddh" IS '法定代表人固定电话'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."cwfzrzjlx" IS '财务负责人证件类型'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."cwfzrgddh" IS '财务负责人固定电话'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."bsrzjlx" IS '报税人证件类型'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."bsrgddh" IS '报税人固定电话'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_tax_swdj"."sl" IS '税率'; 
-         COMMENT ON TABLE "ff_tax_swdj" IS '企业税务登记'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."zgswjdm" IS '主管税务局代码'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."gsdjdz" IS '公司登记地址'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."gsdjdh" IS '公司登记电话'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."zcdyzbm" IS '注册地邮政编码'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."scjydz" IS '生产经营地址'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."scjydzxzqhdm" IS '生产经营地址行政区划代码'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."scjydlxdh" IS '生产经营地联系电话'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."tzze" IS '投资总额'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."fddbrmc" IS '法定代表人姓名'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."fddbrsfzh" IS '法定代表人身份证号'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."frlxfs" IS '法人联系方式'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."skjip" IS '税控机IP地址'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."zczb" IS '注册资本'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."cwxm" IS '财务姓名'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."cwsfzh" IS '财务身份证号'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."cwlxfs" IS '财务联系方式'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."bsrxm" IS '报税人姓名'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."bsrsfzh" IS '报税人身份证号'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."bsrlxfs" IS '报税人联系方式'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."jyfw" IS '经营范围'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."qtdjxx" IS '其他登记人员姓名、身份证号、联系方式'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."crr" IS '插入人'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."rdfzcrq" IS '认定非正常日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."zxrq" IS '注销日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."djrq" IS '登记日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."djxh" IS '登记序号'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."shxydm" IS '社会信用代码'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."kyslrq" IS '开业设立日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."xgrq" IS '修改日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."yxbz" IS '有效标志'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."tyrq" IS '停业日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."fddbrzjlx" IS '法定代表人证件类型'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."fddbrgddh" IS '法定代表人固定电话'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."cwfzrzjlx" IS '财务负责人证件类型'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."cwfzrgddh" IS '财务负责人固定电话'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."bsrzjlx" IS '报税人证件类型'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."bsrgddh" IS '报税人固定电话'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_tax_swdj"."sl" IS '税率'; 
+         COMMENT ON TABLE "mz_tax_swdj" IS '企业税务登记'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_crjjl 
+         -- Table structure for mz_ys_crjjl 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_crjjl" CASCADE; 
-         CREATE TABLE "ff_ys_crjjl" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_crjjl_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_crjjl" CASCADE; 
+         CREATE TABLE "mz_ys_crjjl" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_crjjl_shard_id_seq'::regclass), 
            "userid" varchar(50) COLLATE "pg_catalog"."default", 
            "ajid" int4, 
            "xm" varchar(100) COLLATE "pg_catalog"."default", 
@@ -5705,7 +5705,7 @@ export default {
            "xb" varchar(2) COLLATE "pg_catalog"."default", 
            "csrq" timestamp(0), 
            "sjlyid" int4, 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_crjjl_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_crjjl_id_seq'::regclass), 
            "nl" varchar(20) COLLATE "pg_catalog"."default", 
            "qfrq" varchar(50) COLLATE "pg_catalog"."default", 
            "spjg" varchar(50) COLLATE "pg_catalog"."default", 
@@ -5718,41 +5718,41 @@ export default {
          ) 
          ;
           
-         COMMENT ON COLUMN "ff_ys_crjjl"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."sfzh" IS '公民身份证号'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."zjlx" IS '证件类型'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."gj" IS '国籍'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."crka" IS '出入口岸'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."crsj" IS '出入时间'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."jtfs" IS '交通方式'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."rylb" IS '人员类别'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."qwgj" IS '前往国家或地区'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."crjsy" IS '出(入)境事由'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."csrq" IS '出生日期'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."qfrq" IS '签发日期'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."spjg" IS '审批机关'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."yxq" IS '有效期至'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."sjlylx" IS '数据来源类型'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."maxid" IS '最大ID'; 
-         COMMENT ON COLUMN "ff_ys_crjjl"."ccrq" IS '出入日期'; 
-         COMMENT ON TABLE "ff_ys_crjjl" IS '云搜-分析模型大情报出入境记录'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."sfzh" IS '公民身份证号'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."zjlx" IS '证件类型'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."gj" IS '国籍'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."crka" IS '出入口岸'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."crsj" IS '出入时间'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."jtfs" IS '交通方式'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."rylb" IS '人员类别'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."qwgj" IS '前往国家或地区'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."crjsy" IS '出(入)境事由'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."csrq" IS '出生日期'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."qfrq" IS '签发日期'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."spjg" IS '审批机关'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."yxq" IS '有效期至'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."sjlylx" IS '数据来源类型'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."maxid" IS '最大ID'; 
+         COMMENT ON COLUMN "mz_ys_crjjl"."ccrq" IS '出入日期'; 
+         COMMENT ON TABLE "mz_ys_crjjl" IS '云搜-分析模型大情报出入境记录'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_dbq_ldzs 
+         -- Table structure for mz_ys_dbq_ldzs 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_dbq_ldzs" CASCADE; 
-         CREATE TABLE "ff_ys_dbq_ldzs" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_dbq_ldzs_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_dbq_ldzs" CASCADE; 
+         CREATE TABLE "mz_ys_dbq_ldzs" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_dbq_ldzs_shard_id_seq'::regclass), 
            "userid" varchar(50) COLLATE "pg_catalog"."default", 
            "ajid" int4, 
            "xm" varchar(50) COLLATE "pg_catalog"."default", 
@@ -5771,42 +5771,42 @@ export default {
            "lgbm" varchar(50) COLLATE "pg_catalog"."default", 
            "ldxz" varchar(50) COLLATE "pg_catalog"."default", 
            "cyzjdm" varchar(50) COLLATE "pg_catalog"."default", 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_dbq_ldzs_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_dbq_ldzs_id_seq'::regclass), 
            "crrq" timestamp(0), 
            "batch" int4, 
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."zydy" IS '资源地域'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lzsj" IS '入住时间'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lzfh" IS '入住房号'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."tfsj" IS '退房时间'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lgdzqhmc" IS '旅馆地址区划名称'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lgmc" IS '旅馆名称'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lgdz" IS '旅馆地址'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."csrq" IS '出生日期'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."mz" IS '民族'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lkbh" IS '旅客编号'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."lgbm" IS '旅馆编码'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."ldxz" IS '旅店详细地址'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."cyzjdm" IS '证件类型'; 
-         COMMENT ON COLUMN "ff_ys_dbq_ldzs"."id" IS '
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."zydy" IS '资源地域'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lzsj" IS '入住时间'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lzfh" IS '入住房号'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."tfsj" IS '退房时间'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lgdzqhmc" IS '旅馆地址区划名称'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lgmc" IS '旅馆名称'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lgdz" IS '旅馆地址'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."csrq" IS '出生日期'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."mz" IS '民族'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lkbh" IS '旅客编号'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."lgbm" IS '旅馆编码'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."ldxz" IS '旅店详细地址'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."cyzjdm" IS '证件类型'; 
+         COMMENT ON COLUMN "mz_ys_dbq_ldzs"."id" IS '
          ID'; 
-         COMMENT ON TABLE "ff_ys_dbq_ldzs" IS '云搜-分析模型旅店住宿'; 
+         COMMENT ON TABLE "mz_ys_dbq_ldzs" IS '云搜-分析模型旅店住宿'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_hyzk 
+         -- Table structure for mz_ys_hyzk 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_hyzk" CASCADE; 
-         CREATE TABLE "ff_ys_hyzk" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_hyzk_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_hyzk_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_hyzk" CASCADE; 
+         CREATE TABLE "mz_ys_hyzk" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_hyzk_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_hyzk_id_seq'::regclass), 
            "ajid" int4, 
            "nfxm" varchar(20) COLLATE "pg_catalog"."default", 
            "nfgmsfzh" varchar(50) COLLATE "pg_catalog"."default", 
@@ -5827,33 +5827,33 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nfxm" IS '男方姓名'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nfgmsfzh" IS '男方公民身份号码'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nvxm" IS '女方姓名'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nvgmsfzh" IS '女方公民身份号码'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."djrq" IS '登记日期'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."djlx" IS '登记类型'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."ngj" IS '男方国籍'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nmz" IS '男方民族'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nvgj" IS '女方国籍'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."nvmz" IS '女方民族'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."djjgmc" IS '登记机关名称'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."djjgqh" IS '登记机关区划'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_hyzk"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON TABLE "ff_ys_hyzk" IS '云搜-婚姻状况'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nfxm" IS '男方姓名'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nfgmsfzh" IS '男方公民身份号码'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nvxm" IS '女方姓名'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nvgmsfzh" IS '女方公民身份号码'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."djrq" IS '登记日期'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."djlx" IS '登记类型'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."ngj" IS '男方国籍'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nmz" IS '男方民族'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nvgj" IS '女方国籍'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."nvmz" IS '女方民族'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."djjgmc" IS '登记机关名称'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."djjgqh" IS '登记机关区划'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_hyzk"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON TABLE "mz_ys_hyzk" IS '云搜-婚姻状况'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_jsr 
+         -- Table structure for mz_ys_jsr 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_jsr" CASCADE; 
-         CREATE TABLE "ff_ys_jsr" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_jsr_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_jsr_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_jsr" CASCADE; 
+         CREATE TABLE "mz_ys_jsr" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_jsr_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_jsr_id_seq'::regclass), 
            "ajid" int4, 
            "sjlyid" int4, 
            "sjlylx" varchar(20) COLLATE "pg_catalog"."default", 
@@ -5887,44 +5887,44 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_jsr"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."sfzmmc" IS '身份证明名称'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."sfzmhm" IS '身份证明号码'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."csrq" IS '出生日期'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."gj" IS '国籍'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."zjcx" IS '准驾车型'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."cclzrq" IS '初次领证日期'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."fzjg" IS '发证机关'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."yxqsrq" IS '有效起始日期'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."yxq" IS '有效期'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."jszzt" IS '驾驶证状态'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."yzjcx" IS '原准驾车型'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."djzsxz" IS '登记住所详细地址'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."lxzsxz" IS '联系住所详细地址'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."ljjf" IS '累计积分'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."cfqr" IS '超分日期'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."dabh" IS '档案编号'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."jzzzzm" IS '居住暂住证明'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."sgcs" IS '事故次数'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."jzqx" IS '驾证期限'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."xzqh" IS '行政区划'; 
-         COMMENT ON COLUMN "ff_ys_jsr"."sfzh" IS '身份证号'; 
-         COMMENT ON TABLE "ff_ys_jsr" IS '云搜-全国驾驶人'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."sfzmmc" IS '身份证明名称'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."sfzmhm" IS '身份证明号码'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."csrq" IS '出生日期'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."gj" IS '国籍'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."zjcx" IS '准驾车型'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."cclzrq" IS '初次领证日期'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."fzjg" IS '发证机关'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."yxqsrq" IS '有效起始日期'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."yxq" IS '有效期'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."jszzt" IS '驾驶证状态'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."yzjcx" IS '原准驾车型'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."djzsxz" IS '登记住所详细地址'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."lxzsxz" IS '联系住所详细地址'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."ljjf" IS '累计积分'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."cfqr" IS '超分日期'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."dabh" IS '档案编号'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."jzzzzm" IS '居住暂住证明'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."sgcs" IS '事故次数'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."jzqx" IS '驾证期限'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."xzqh" IS '行政区划'; 
+         COMMENT ON COLUMN "mz_ys_jsr"."sfzh" IS '身份证号'; 
+         COMMENT ON TABLE "mz_ys_jsr" IS '云搜-全国驾驶人'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_jyxx 
+         -- Table structure for mz_ys_jyxx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_jyxx" CASCADE; 
-         CREATE TABLE "ff_ys_jyxx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_jyxx_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_jyxx" CASCADE; 
+         CREATE TABLE "mz_ys_jyxx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_jyxx_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "xm" varchar(20) COLLATE "pg_catalog"."default" NOT NULL, 
            "xb" varchar(10) COLLATE "pg_catalog"."default", 
@@ -5944,30 +5944,30 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."mz" IS '民族'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."sfzh" IS '身份证号'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."zj" IS '职级'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."jh" IS '警号'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."zw" IS '职务'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."hjszd" IS '户籍所在地'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."dwmc" IS '单位名称'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_jyxx"."crrq" IS '插入日期'; 
-         COMMENT ON TABLE "ff_ys_jyxx" IS '云搜-警员信息'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."mz" IS '民族'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."sfzh" IS '身份证号'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."zj" IS '职级'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."jh" IS '警号'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."zw" IS '职务'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."hjszd" IS '户籍所在地'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."dwmc" IS '单位名称'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_jyxx"."crrq" IS '插入日期'; 
+         COMMENT ON TABLE "mz_ys_jyxx" IS '云搜-警员信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_mhlg 
+         -- Table structure for mz_ys_mhlg 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_mhlg" CASCADE; 
-         CREATE TABLE "ff_ys_mhlg" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_mhlg_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_mhlg" CASCADE; 
+         CREATE TABLE "mz_ys_mhlg" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_mhlg_shard_id_seq'::regclass), 
            "userid" varchar(50) COLLATE "pg_catalog"."default", 
            "ajid" int4, 
            "zwxm" varchar(50) COLLATE "pg_catalog"."default", 
@@ -6004,7 +6004,7 @@ export default {
            "zxzjczbgs" varchar(30) COLLATE "pg_catalog"."default", 
            "zxzjdlh" varchar(30) COLLATE "pg_catalog"."default", 
            "zxzjrq" varchar(30) COLLATE "pg_catalog"."default", 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_mhlg_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_mhlg_id_seq'::regclass), 
            "nl" varchar(20) COLLATE "pg_catalog"."default", 
            "mz" varchar(20) COLLATE "pg_catalog"."default", 
            "sjlx" varchar(20) COLLATE "pg_catalog"."default", 
@@ -6015,59 +6015,59 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zwxm" IS '中文姓名'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."ywxm" IS '英文姓名'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."sfzh" IS '公民身份证号'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zjlx" IS '证件类型'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."cyhkgs" IS '承运航空公司'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."hbh" IS '航班号'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lgsj" IS '离港时间'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."qfhz" IS '起飞航站'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."jgsj" IS '进港时间'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."ddhz" IS '到达航站'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lkzwxx" IS '旅客座位信息'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."xlh" IS '序列号'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lkcrjbs" IS '旅客出入境标识'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."hkgszzjgdm" IS '航空公司代码'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."hbhz" IS '航班后缀'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."hbrq" IS '航班日期'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."qfhzszdm" IS '起飞航站三字代码'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."dahzszdm" IS '到达航站三字代码'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lkx" IS '旅客姓'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lkzjm" IS '旅客中间名'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lkm" IS '旅客名'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."csrq" IS '出生日期'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."csdgjhdqdm" IS '出生地'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."gqrq" IS '过期日期'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."fzrq" IS '发证日起期'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."fzgjhdqdm" IS '发证国家或城市'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."lkgjhdqdm" IS '旅客国家代码'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."icszjlxx" IS 'ICS中记录信息'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zxlkczzdh" IS '执行旅客操作的终端号'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zxzjczbgs" IS '执行执机操作的办公室'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zxzjdlh" IS '执行执机的代理号'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."zxzjrq" IS '执行执机时间信息'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."mz" IS '民族'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."sjlx" IS '数据类型(民航订票、民航离岗)'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_mhlg"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON TABLE "ff_ys_mhlg" IS '云搜-分析模型民航离港
+         COMMENT ON COLUMN "mz_ys_mhlg"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zwxm" IS '中文姓名'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."ywxm" IS '英文姓名'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."sfzh" IS '公民身份证号'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zjlx" IS '证件类型'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."cyhkgs" IS '承运航空公司'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."hbh" IS '航班号'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lgsj" IS '离港时间'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."qfhz" IS '起飞航站'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."jgsj" IS '进港时间'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."ddhz" IS '到达航站'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lkzwxx" IS '旅客座位信息'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."xlh" IS '序列号'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lkcrjbs" IS '旅客出入境标识'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."hkgszzjgdm" IS '航空公司代码'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."hbhz" IS '航班后缀'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."hbrq" IS '航班日期'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."qfhzszdm" IS '起飞航站三字代码'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."dahzszdm" IS '到达航站三字代码'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lkx" IS '旅客姓'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lkzjm" IS '旅客中间名'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lkm" IS '旅客名'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."csrq" IS '出生日期'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."csdgjhdqdm" IS '出生地'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."gqrq" IS '过期日期'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."fzrq" IS '发证日起期'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."fzgjhdqdm" IS '发证国家或城市'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."lkgjhdqdm" IS '旅客国家代码'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."icszjlxx" IS 'ICS中记录信息'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zxlkczzdh" IS '执行旅客操作的终端号'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zxzjczbgs" IS '执行执机操作的办公室'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zxzjdlh" IS '执行执机的代理号'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."zxzjrq" IS '执行执机时间信息'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."mz" IS '民族'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."sjlx" IS '数据类型(民航订票、民航离岗)'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_mhlg"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON TABLE "mz_ys_mhlg" IS '云搜-分析模型民航离港
          '; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_qgjdc 
+         -- Table structure for mz_ys_qgjdc 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_qgjdc" CASCADE; 
-         CREATE TABLE "ff_ys_qgjdc" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_qgjdc_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_qgjdc_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_qgjdc" CASCADE; 
+         CREATE TABLE "mz_ys_qgjdc" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_qgjdc_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_qgjdc_id_seq'::regclass), 
            "crrq" varchar(50) COLLATE "pg_catalog"."default", 
            "hdzr" varchar(20) COLLATE "pg_catalog"."default", 
            "ccrq" varchar(50) COLLATE "pg_catalog"."default", 
@@ -6106,51 +6106,51 @@ export default {
            "hdzzl" varchar(50) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."hdzr" IS '核定载客'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."ccrq" IS '出厂日期'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."sfzmmc" IS '身份证明名称'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."sfzmhm" IS '身份证明号码'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."zzjzzm" IS '暂住居住证明'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."xzgh" IS '行政区划'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."dabh" IS '档案编号'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."zzl" IS '总质量'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."zqyzzl" IS '准牵引总质量'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."jdcsyr" IS '机动车所有人'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."sfzhm" IS '身份证号码'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."hphm" IS '号牌号码'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."clpp" IS '车辆品牌'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."cpzl" IS '号牌种类'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."csys" IS '车身颜色'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."clsbdh" IS '车辆识别代号'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."fdjh" IS '发动机号'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."jdczt" IS '机动车状态'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."cllx" IS '车辆类型'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."ccdjrq" IS '初次登记日期'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."fzjg" IS '发证机关'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."zsxz" IS '住所详细地址'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."zzxz" IS '暂住详细地址'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."dybj" IS '抵押标记'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."fdjxh" IS '发动机型号'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."rlzl" IS '燃料种类'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."pl" IS '排量'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."gl" IS '功率'; 
-         COMMENT ON COLUMN "ff_ys_qgjdc"."hdzzl" IS '核定载质量'; 
-         COMMENT ON TABLE "ff_ys_qgjdc" IS '云搜-全国机动车'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."hdzr" IS '核定载客'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."ccrq" IS '出厂日期'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."sfzmmc" IS '身份证明名称'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."sfzmhm" IS '身份证明号码'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."zzjzzm" IS '暂住居住证明'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."xzgh" IS '行政区划'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."dabh" IS '档案编号'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."zzl" IS '总质量'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."zqyzzl" IS '准牵引总质量'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."jdcsyr" IS '机动车所有人'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."sfzhm" IS '身份证号码'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."hphm" IS '号牌号码'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."clpp" IS '车辆品牌'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."cpzl" IS '号牌种类'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."csys" IS '车身颜色'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."clsbdh" IS '车辆识别代号'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."fdjh" IS '发动机号'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."jdczt" IS '机动车状态'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."cllx" IS '车辆类型'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."ccdjrq" IS '初次登记日期'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."fzjg" IS '发证机关'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."zsxz" IS '住所详细地址'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."zzxz" IS '暂住详细地址'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."dybj" IS '抵押标记'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."fdjxh" IS '发动机型号'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."rlzl" IS '燃料种类'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."pl" IS '排量'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."gl" IS '功率'; 
+         COMMENT ON COLUMN "mz_ys_qgjdc"."hdzzl" IS '核定载质量'; 
+         COMMENT ON TABLE "mz_ys_qgjdc" IS '云搜-全国机动车'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_qgjdcwzxx 
+         -- Table structure for mz_ys_qgjdcwzxx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_qgjdcwzxx" CASCADE; 
-         CREATE TABLE "ff_ys_qgjdcwzxx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_qgjdcwzxx_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_qgjdcwzxx_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_qgjdcwzxx" CASCADE; 
+         CREATE TABLE "mz_ys_qgjdcwzxx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_qgjdcwzxx_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_qgjdcwzxx_id_seq'::regclass), 
            "xm" varchar(20) COLLATE "pg_catalog"."default" NOT NULL, 
            "xb" varchar(10) COLLATE "pg_catalog"."default", 
            "nl" int4, 
@@ -6171,33 +6171,33 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."mz" IS '民族'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."sfzh" IS '身份证号'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."jszh" IS '驾驶证号'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."hphm" IS '号牌号码'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."hpzl" IS '号牌种类'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."wfsj" IS '违法时间'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."wfdd" IS '违法地点'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."clsj" IS '处理时间'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."cljgmc" IS '处理机关名称'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_qgjdcwzxx"."crrq" IS '插入日期'; 
-         COMMENT ON TABLE "ff_ys_qgjdcwzxx" IS '云搜-全国机动车违章信息'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."mz" IS '民族'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."sfzh" IS '身份证号'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."jszh" IS '驾驶证号'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."hphm" IS '号牌号码'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."hpzl" IS '号牌种类'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."wfsj" IS '违法时间'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."wfdd" IS '违法地点'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."clsj" IS '处理时间'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."cljgmc" IS '处理机关名称'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_qgjdcwzxx"."crrq" IS '插入日期'; 
+         COMMENT ON TABLE "mz_ys_qgjdcwzxx" IS '云搜-全国机动车违章信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_sjhb 
+         -- Table structure for mz_ys_sjhb 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_sjhb" CASCADE; 
-         CREATE TABLE "ff_ys_sjhb" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_sjhb_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_sjhb_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_sjhb" CASCADE; 
+         CREATE TABLE "mz_ys_sjhb" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_sjhb_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_sjhb_id_seq'::regclass), 
            "sjlx" varchar(20) COLLATE "pg_catalog"."default", 
            "ypdxmc" varchar(100) COLLATE "pg_catalog"."default", 
            "ypdxzjhm" varchar(100) COLLATE "pg_catalog"."default", 
@@ -6230,9 +6230,9 @@ export default {
            "batch" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."id" IS '自增ID'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."sjlx" IS '类别 
+         COMMENT ON COLUMN "mz_ys_sjhb"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."id" IS '自增ID'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."sjlx" IS '类别 
          0:婚姻 
          1:邻居 
          2:民航同订票 
@@ -6244,44 +6244,44 @@ export default {
          8:同住址 
          9：分布式 
          10:同机构'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."ypdxmc" IS '研判对象名称'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."ypdxzjhm" IS '研判对象证件号码'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."lkywx" IS '旅客英文姓'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."lkywm" IS '旅客英文名'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."lkywxm" IS '旅客英文姓名 '; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."zjlx" IS '证件类型'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."mz" IS '民族'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."zzhi" IS '住址'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."fwcs" IS '服务处所'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."xzqh" IS '行政区划'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."cs" IS '次数'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."jg" IS '籍贯'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."hkszd" IS '户口所在地'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."bjmc" IS '背景名称'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."djjgmc" IS '登记机关名称'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."djrq" IS '登记日期'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."djlx" IS '登记类型'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."sfzh" IS '公民身份证号'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."del" IS '删除标记'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."maxid" IS '最大ID'; 
-         COMMENT ON COLUMN "ff_ys_sjhb"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_ys_sjhb" IS '云搜-云搜数据合并'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."ypdxmc" IS '研判对象名称'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."ypdxzjhm" IS '研判对象证件号码'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."lkywx" IS '旅客英文姓'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."lkywm" IS '旅客英文名'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."lkywxm" IS '旅客英文姓名 '; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."zjlx" IS '证件类型'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."mz" IS '民族'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."zzhi" IS '住址'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."fwcs" IS '服务处所'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."xzqh" IS '行政区划'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."cs" IS '次数'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."jg" IS '籍贯'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."hkszd" IS '户口所在地'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."bjmc" IS '背景名称'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."djjgmc" IS '登记机关名称'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."djrq" IS '登记日期'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."djlx" IS '登记类型'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."sfzh" IS '公民身份证号'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."del" IS '删除标记'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."maxid" IS '最大ID'; 
+         COMMENT ON COLUMN "mz_ys_sjhb"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_ys_sjhb" IS '云搜-云搜数据合并'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_sxrxx 
+         -- Table structure for mz_ys_sxrxx 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_sxrxx" CASCADE; 
-         CREATE TABLE "ff_ys_sxrxx" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_sxrxx_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_sxrxx_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_sxrxx" CASCADE; 
+         CREATE TABLE "mz_ys_sxrxx" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_sxrxx_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_sxrxx_id_seq'::regclass), 
            "ajbh" varchar(50) COLLATE "pg_catalog"."default", 
            "xm" varchar(20) COLLATE "pg_catalog"."default" NOT NULL, 
            "zzhm" varchar(20) COLLATE "pg_catalog"."default" NOT NULL, 
@@ -6311,40 +6311,40 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."ajbh" IS '案件编号'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."zzhm" IS '身份证号码／组织机构代码'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."qyfrmc" IS '企业法人名称'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."fymc" IS '法院名称'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."ssdy" IS '所属地域'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."dyid" IS '地域ID'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."bsxm" IS '标识姓名'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."zxyjws" IS '执行依据文书'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."zxdw" IS '执行单位'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."lxqk" IS '被执行人履行情况'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."jtqk" IS '失信被执行人行为具体情况'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."fbrq" IS '发布日期'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."larq" IS '立案日期'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."ylxbf" IS '已履行部分'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."wlxbf" IS '未履行部分'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."rksj" IS '入库时间'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."xh" IS '序号'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."yxbs" IS '有效标识'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."flyw" IS '法律义务'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_sxrxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON TABLE "ff_ys_sxrxx" IS '失信被执行人信息'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."ajbh" IS '案件编号'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."zzhm" IS '身份证号码／组织机构代码'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."qyfrmc" IS '企业法人名称'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."fymc" IS '法院名称'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."ssdy" IS '所属地域'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."dyid" IS '地域ID'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."bsxm" IS '标识姓名'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."zxyjws" IS '执行依据文书'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."zxdw" IS '执行单位'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."lxqk" IS '被执行人履行情况'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."jtqk" IS '失信被执行人行为具体情况'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."fbrq" IS '发布日期'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."larq" IS '立案日期'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."ylxbf" IS '已履行部分'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."wlxbf" IS '未履行部分'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."rksj" IS '入库时间'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."xh" IS '序号'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."yxbs" IS '有效标识'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."flyw" IS '法律义务'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_sxrxx"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON TABLE "mz_ys_sxrxx" IS '失信被执行人信息'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_tlsp 
+         -- Table structure for mz_ys_tlsp 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_tlsp" CASCADE; 
-         CREATE TABLE "ff_ys_tlsp" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_tlsp_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_tlsp_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_tlsp" CASCADE; 
+         CREATE TABLE "mz_ys_tlsp" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_tlsp_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_tlsp_id_seq'::regclass), 
            "xm" varchar(20) COLLATE "pg_catalog"."default", 
            "xb" varchar(20) COLLATE "pg_catalog"."default", 
            "nl" varchar(20) COLLATE "pg_catalog"."default", 
@@ -6367,35 +6367,35 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."sfzh" IS '身份号码'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."cc" IS '车次'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."cx" IS '车厢'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."zt" IS '状态'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."fz" IS '发站'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."dz" IS '到站'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."zjlx" IS '证件类型'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."ccrq" IS '乘车日期'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."ph" IS '票号'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."zw" IS '座位'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_tlsp"."crrq" IS '插入日期'; 
-         COMMENT ON TABLE "ff_ys_tlsp" IS '全国铁路售票(云搜)'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."sfzh" IS '身份号码'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."cc" IS '车次'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."cx" IS '车厢'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."zt" IS '状态'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."fz" IS '发站'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."dz" IS '到站'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."zjlx" IS '证件类型'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."ccrq" IS '乘车日期'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."ph" IS '票号'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."zw" IS '座位'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_tlsp"."crrq" IS '插入日期'; 
+         COMMENT ON TABLE "mz_ys_tlsp" IS '全国铁路售票(云搜)'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_ys_yhhc 
+         -- Table structure for mz_ys_yhhc 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_ys_yhhc" CASCADE; 
-         CREATE TABLE "ff_ys_yhhc" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_ys_yhhc_shard_id_seq'::regclass), 
-           "id" int8 NOT NULL DEFAULT nextval('ff_ys_yhhc_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_ys_yhhc" CASCADE; 
+         CREATE TABLE "mz_ys_yhhc" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_ys_yhhc_shard_id_seq'::regclass), 
+           "id" int8 NOT NULL DEFAULT nextval('mz_ys_yhhc_id_seq'::regclass), 
            "xm" varchar(20) COLLATE "pg_catalog"."default", 
            "xb" varchar(20) COLLATE "pg_catalog"."default", 
            "nl" varchar(20) COLLATE "pg_catalog"."default", 
@@ -6415,31 +6415,31 @@ export default {
            "maxid" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."shard_id" IS '分片id'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."id" IS 'ID'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."xm" IS '姓名'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."xb" IS '性别'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."nl" IS '年龄'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."sfzh" IS '身份证号'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."hcsj" IS '核查时间'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."hcjg" IS '核查结果'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."yhjgdm" IS '银行机构代码'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."yhmc" IS '银行名称'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."yhszd" IS '银行所在地'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."lxdh" IS '联系电话'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."ywlx" IS '业务类型'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_ys_yhhc"."crrq" IS '插入日期'; 
-         COMMENT ON TABLE "ff_ys_yhhc" IS '全国银行核查(云搜)'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."shard_id" IS '分片id'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."id" IS 'ID'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."xm" IS '姓名'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."xb" IS '性别'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."nl" IS '年龄'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."sfzh" IS '身份证号'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."hcsj" IS '核查时间'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."hcjg" IS '核查结果'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."yhjgdm" IS '银行机构代码'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."yhmc" IS '银行名称'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."yhszd" IS '银行所在地'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."lxdh" IS '联系电话'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."ywlx" IS '业务类型'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_ys_yhhc"."crrq" IS '插入日期'; 
+         COMMENT ON TABLE "mz_ys_yhhc" IS '全国银行核查(云搜)'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_zhifubao_trade 
+         -- Table structure for mz_zhifubao_trade 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_zhifubao_trade" CASCADE; 
-         CREATE TABLE "ff_zhifubao_trade" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_zhifubao_trade_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_zhifubao_trade" CASCADE; 
+         CREATE TABLE "mz_zhifubao_trade" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_zhifubao_trade_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "lsh" varchar(100) COLLATE "pg_catalog"."default", 
            "yhclrq" varchar(100) COLLATE "pg_catalog"."default", 
@@ -6468,41 +6468,41 @@ export default {
            "jkje" float8 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."id" IS 'id'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."lsh" IS '流水号'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."yhclrq" IS '银行处理日期'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."ywlx" IS '业务类型'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyfx" IS '交易方向'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyddh" IS '交易订单号/外部流水号'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyje" IS '交易金额'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."zhxm" IS '真实姓名'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyrq" IS '交易发生日期'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."yhmc" IS '银行名称'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."sendaddress" IS '发送地址'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyfsd" IS '交易发生地'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."bz" IS '备注'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyye" IS '交易余额'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."ssdqid" IS '所属地区ID'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."dszh" IS '对手账号'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jyzh" IS '交易账号'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."zjhm" IS '证件号码'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."dkje" IS '贷款金额'; 
-         COMMENT ON COLUMN "ff_zhifubao_trade"."jkje" IS '借款金额'; 
-         COMMENT ON TABLE "ff_zhifubao_trade" IS '淘宝-支付宝账户'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."id" IS 'id'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."lsh" IS '流水号'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."yhclrq" IS '银行处理日期'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."ywlx" IS '业务类型'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyfx" IS '交易方向'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyddh" IS '交易订单号/外部流水号'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyje" IS '交易金额'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."zhxm" IS '真实姓名'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyrq" IS '交易发生日期'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."yhmc" IS '银行名称'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."sendaddress" IS '发送地址'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyfsd" IS '交易发生地'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."bz" IS '备注'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyye" IS '交易余额'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."ssdqid" IS '所属地区ID'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."dszh" IS '对手账号'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jyzh" IS '交易账号'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."zjhm" IS '证件号码'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."dkje" IS '贷款金额'; 
+         COMMENT ON COLUMN "mz_zhifubao_trade"."jkje" IS '借款金额'; 
+         COMMENT ON TABLE "mz_zhifubao_trade" IS '淘宝-支付宝账户'; 
           
          -- ---------------------------- 
-         -- Table structure for ff_zhifubao_transfer 
+         -- Table structure for mz_zhifubao_transfer 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_zhifubao_transfer" CASCADE; 
-         CREATE TABLE "ff_zhifubao_transfer" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_zhifubao_transfer_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_zhifubao_transfer" CASCADE; 
+         CREATE TABLE "mz_zhifubao_transfer" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_zhifubao_transfer_shard_id_seq'::regclass), 
            "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL, 
            "orginname" varchar(100) COLLATE "pg_catalog"."default", 
            "crrq" varchar(100) COLLATE "pg_catalog"."default", 
@@ -6526,29 +6526,29 @@ export default {
            "batch" varchar(30) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."id" IS 'id'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."orginname" IS '收款机构'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."sjly_id" IS '数据来源id'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."ajcjrq" IS '案件创建日期'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."makeaccount" IS '收款账户'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."sendersourcename" IS '付款协查账号多个以英文“,”分隔'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."transfer" IS '转账金额'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."areaname" IS '交易发生地'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."receiversourcename" IS '收款协查账号多个以英文“,”分隔'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."ajid" IS '案件id'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."transoutorderno" IS '流水号'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."cashno" IS '提现流水号'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."ssdqid" IS '提现流水号'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."remark" IS '备注'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."payaccount" IS '付款账户'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."paytime" IS '付款时间(时间毫秒数)'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."zzcpmc" IS '转账产品名称'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."sjlyid" IS '数据来源ID'; 
-         COMMENT ON COLUMN "ff_zhifubao_transfer"."batch" IS '批次'; 
-         COMMENT ON TABLE "ff_zhifubao_transfer" IS '淘宝-支付宝转账'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."id" IS 'id'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."orginname" IS '收款机构'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."sjly_id" IS '数据来源id'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."ajcjrq" IS '案件创建日期'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."makeaccount" IS '收款账户'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."sendersourcename" IS '付款协查账号多个以英文“,”分隔'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."transfer" IS '转账金额'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."areaname" IS '交易发生地'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."receiversourcename" IS '收款协查账号多个以英文“,”分隔'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."ajid" IS '案件id'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."transoutorderno" IS '流水号'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."cashno" IS '提现流水号'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."ssdqid" IS '提现流水号'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."remark" IS '备注'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."payaccount" IS '付款账户'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."paytime" IS '付款时间(时间毫秒数)'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."zzcpmc" IS '转账产品名称'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."sjlyid" IS '数据来源ID'; 
+         COMMENT ON COLUMN "mz_zhifubao_transfer"."batch" IS '批次'; 
+         COMMENT ON TABLE "mz_zhifubao_transfer" IS '淘宝-支付宝转账'; 
           
          -- ---------------------------- 
          -- Table structure for mark_detail 
@@ -6689,10 +6689,10 @@ export default {
          COMMIT; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_antimoney_core 
+         -- Table structure for result_mz_antimoney_core 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_antimoney_core" CASCADE; 
-         CREATE TABLE "result_ff_antimoney_core" ( 
+         DROP TABLE IF EXISTS "result_mz_antimoney_core" CASCADE; 
+         CREATE TABLE "result_mz_antimoney_core" ( 
            "id" varchar(255) COLLATE "pg_catalog"."default", 
            "stepindex" int4, 
            "sqlindex" int4, 
@@ -6715,30 +6715,30 @@ export default {
            "pm" int4 
          ) 
          ; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."id" IS '批次'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."stepindex" IS '步骤'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."sqlindex" IS 'sql索引'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."jymc" IS '交易名称'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."jydfmc" IS '交易对方名称'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."jydfzjhm" IS '交易对方证件号码'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."hxzs" IS '核心指数'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."fcs" IS '付次数'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."scs" IS '收次数'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."jyzcs" IS '交易总次数'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."jczcsb" IS '进出总次数比'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."fje" IS '付金额'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."sje" IS '收金额'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."sfzje" IS '收付总金额'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."sfjeb" IS '收付金额比'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."tdqk" IS '调单情况'; 
-         COMMENT ON COLUMN "result_ff_antimoney_core"."jyzjhm" IS '交易证件号码'; 
-         COMMENT ON TABLE "result_ff_antimoney_core" IS '反洗钱核心指数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."id" IS '批次'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."stepindex" IS '步骤'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."sqlindex" IS 'sql索引'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."jymc" IS '交易名称'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."jydfmc" IS '交易对方名称'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."jydfzjhm" IS '交易对方证件号码'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."hxzs" IS '核心指数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."fcs" IS '付次数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."scs" IS '收次数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."jyzcs" IS '交易总次数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."jczcsb" IS '进出总次数比'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."fje" IS '付金额'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."sje" IS '收金额'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."sfzje" IS '收付总金额'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."sfjeb" IS '收付金额比'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."tdqk" IS '调单情况'; 
+         COMMENT ON COLUMN "result_mz_antimoney_core"."jyzjhm" IS '交易证件号码'; 
+         COMMENT ON TABLE "result_mz_antimoney_core" IS '反洗钱核心指数'; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_antimoney_loop 
+         -- Table structure for result_mz_antimoney_loop 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_antimoney_loop" CASCADE; 
-         CREATE TABLE "result_ff_antimoney_loop" ( 
+         DROP TABLE IF EXISTS "result_mz_antimoney_loop" CASCADE; 
+         CREATE TABLE "result_mz_antimoney_loop" ( 
            "batchid" varchar(50) COLLATE "pg_catalog"."default", 
            "stepid" int2, 
            "jymc" varchar(255) COLLATE "pg_catalog"."default", 
@@ -6775,15 +6775,15 @@ export default {
            "gd_jyzkh" varchar(255) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "result_ff_antimoney_loop"."batchid" IS '闭环查找批次ID'; 
-         COMMENT ON COLUMN "result_ff_antimoney_loop"."stepid" IS '步骤ID'; 
-         COMMENT ON TABLE "result_ff_antimoney_loop" IS '反洗钱闭环查找工具'; 
+         COMMENT ON COLUMN "result_mz_antimoney_loop"."batchid" IS '闭环查找批次ID'; 
+         COMMENT ON COLUMN "result_mz_antimoney_loop"."stepid" IS '步骤ID'; 
+         COMMENT ON TABLE "result_mz_antimoney_loop" IS '反洗钱闭环查找工具'; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_antimoney_person 
+         -- Table structure for result_mz_antimoney_person 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_antimoney_person" CASCADE; 
-         CREATE TABLE "result_ff_antimoney_person" ( 
+         DROP TABLE IF EXISTS "result_mz_antimoney_person" CASCADE; 
+         CREATE TABLE "result_mz_antimoney_person" ( 
            "batchid" varchar(50) COLLATE "pg_catalog"."default", 
            "stepid" int2, 
            "jymc" varchar(255) COLLATE "pg_catalog"."default", 
@@ -6811,38 +6811,38 @@ export default {
            "dqdm" varchar(1000) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."batchid" IS '穿透编号'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."stepid" IS '步骤号'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."jymc" IS '交易名称'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."jyzjhm" IS '交易证件号码'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."jydfzjhm" IS '交易对方证件号码'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."jydfmc" IS '交易对方名称'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."zch" IS '注册号'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."gsmc" IS '公司名称'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."dwzt" IS '企业状态'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."zczb" IS '注册资本'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."sjzb" IS '实缴资本'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."clrq" IS '注册日期'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."zzjgdm" IS '组织机构代码'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."frxm" IS '法人姓名'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."gdxm" IS '股东姓名'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."zycy" IS '主要成员'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."zwxx" IS '职务信息'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."ssdq" IS '所属地区'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."xxdz" IS '详细地址'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."tdqk" IS '调单情况'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."ifsaved" IS '是否保存'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."jykhh" IS '交易开户行'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."jydfzhkhh" IS '交易对方账户开户行'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."ifjyf" IS '是否交易方数据 0:交易方 1:交易对手方'; 
-         COMMENT ON COLUMN "result_ff_antimoney_person"."dqdm" IS '所在地区代码'; 
-         COMMENT ON TABLE "result_ff_antimoney_person" IS '反洗钱人企穿透表'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."batchid" IS '穿透编号'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."stepid" IS '步骤号'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."jymc" IS '交易名称'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."jyzjhm" IS '交易证件号码'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."jydfzjhm" IS '交易对方证件号码'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."jydfmc" IS '交易对方名称'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."zch" IS '注册号'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."gsmc" IS '公司名称'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."dwzt" IS '企业状态'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."zczb" IS '注册资本'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."sjzb" IS '实缴资本'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."clrq" IS '注册日期'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."zzjgdm" IS '组织机构代码'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."frxm" IS '法人姓名'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."gdxm" IS '股东姓名'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."zycy" IS '主要成员'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."zwxx" IS '职务信息'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."ssdq" IS '所属地区'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."xxdz" IS '详细地址'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."tdqk" IS '调单情况'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."ifsaved" IS '是否保存'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."jykhh" IS '交易开户行'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."jydfzhkhh" IS '交易对方账户开户行'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."ifjyf" IS '是否交易方数据 0:交易方 1:交易对手方'; 
+         COMMENT ON COLUMN "result_mz_antimoney_person"."dqdm" IS '所在地区代码'; 
+         COMMENT ON TABLE "result_mz_antimoney_person" IS '反洗钱人企穿透表'; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_antimoney_point 
+         -- Table structure for result_mz_antimoney_point 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_antimoney_point" CASCADE; 
-         CREATE TABLE "result_ff_antimoney_point" ( 
+         DROP TABLE IF EXISTS "result_mz_antimoney_point" CASCADE; 
+         CREATE TABLE "result_mz_antimoney_point" ( 
            "batchid" varchar(50) COLLATE "pg_catalog"."default", 
            "stepid" int2, 
            "roundid" int8, 
@@ -6852,21 +6852,21 @@ export default {
            "ifsaved" int2 DEFAULT 0 
          ) 
          ; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."batchid" IS '点爆编号'; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."stepid" IS '步骤号'; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."roundid" IS '轮数'; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."dfsfkrmc" IS '交易对方名称'; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."jymcnum" IS '共同收付汇公司个数'; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."dfsfkrzzjgdm" IS '对方收付款人组织机构代码'; 
-         COMMENT ON COLUMN "result_ff_antimoney_point"."ifsaved" IS '是否保存'; 
-         COMMENT ON TABLE "result_ff_antimoney_point" IS '反洗钱点爆算法'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."batchid" IS '点爆编号'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."stepid" IS '步骤号'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."roundid" IS '轮数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."dfsfkrmc" IS '交易对方名称'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."jymcnum" IS '共同收付汇公司个数'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."dfsfkrzzjgdm" IS '对方收付款人组织机构代码'; 
+         COMMENT ON COLUMN "result_mz_antimoney_point"."ifsaved" IS '是否保存'; 
+         COMMENT ON TABLE "result_mz_antimoney_point" IS '反洗钱点爆算法'; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_model_xs_info 
+         -- Table structure for result_mz_model_xs_info 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_model_xs_info" CASCADE; 
-         CREATE TABLE "result_ff_model_xs_info" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('result_ff_model_xs_info_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "result_mz_model_xs_info" CASCADE; 
+         CREATE TABLE "result_mz_model_xs_info" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('result_mz_model_xs_info_shard_id_seq'::regclass), 
            "userid" int4, 
            "caseid" int4, 
            "rid" int4, 
@@ -6894,40 +6894,40 @@ export default {
            "zbljgx" varchar(2) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."caseid" IS '案件ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."rid" IS '结果ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."batchid" IS '批次ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."historyid" IS '历史ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."mid" IS '模型ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."modelname" IS '模型名称'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."parentid" IS '模型父类ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."lbdm" IS '类别代码'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."zbdm" IS '指标代码'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."zzhm" IS '证照号码'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."mc" IS '主体名称'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."ztlx" IS '主体类型(01个人 02公司 )'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."roleid" IS '角色ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."role" IS '角色'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."ssdq" IS '所属地区'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."score" IS '分值'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."zhsl" IS '账户数量'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."zsl" IS '总次数'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."zje" IS '总金额'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."jysjd" IS '交易时间段'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."xsgs" IS '线索概述'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."crrq" IS '插入时间'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."runstatus" IS '运行状态'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info"."zbljgx" IS '指标逻辑关系'; 
-         COMMENT ON TABLE "result_ff_model_xs_info" IS '上游模型指标线索结果表'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."caseid" IS '案件ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."rid" IS '结果ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."batchid" IS '批次ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."historyid" IS '历史ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."mid" IS '模型ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."modelname" IS '模型名称'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."parentid" IS '模型父类ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."lbdm" IS '类别代码'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."zbdm" IS '指标代码'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."zzhm" IS '证照号码'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."mc" IS '主体名称'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."ztlx" IS '主体类型(01个人 02公司 )'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."roleid" IS '角色ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."role" IS '角色'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."ssdq" IS '所属地区'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."score" IS '分值'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."zhsl" IS '账户数量'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."zsl" IS '总次数'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."zje" IS '总金额'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."jysjd" IS '交易时间段'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."xsgs" IS '线索概述'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."crrq" IS '插入时间'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."runstatus" IS '运行状态'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info"."zbljgx" IS '指标逻辑关系'; 
+         COMMENT ON TABLE "result_mz_model_xs_info" IS '上游模型指标线索结果表'; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_model_xs_info_tmp 
+         -- Table structure for result_mz_model_xs_info_tmp 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_model_xs_info_tmp" CASCADE; 
-         CREATE TABLE "result_ff_model_xs_info_tmp" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('result_ff_model_xs_info_tmp_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "result_mz_model_xs_info_tmp" CASCADE; 
+         CREATE TABLE "result_mz_model_xs_info_tmp" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('result_mz_model_xs_info_tmp_shard_id_seq'::regclass), 
            "userid" int4, 
            "caseid" int4, 
            "rid" int4, 
@@ -6955,39 +6955,39 @@ export default {
            "zbljgx" varchar(2) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."userid" IS '用户ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."caseid" IS '案件ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."rid" IS '结果ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."batchid" IS '批次ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."historyid" IS '历史ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."mid" IS '模型ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."modelname" IS '模型名称'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."parentid" IS '模型父类ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."lbdm" IS '类别代码'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."zbdm" IS '指标代码'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."zzhm" IS '证照号码'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."mc" IS '主体名称'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."ztlx" IS '主体类型(01个人 02公司 )'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."roleid" IS '角色ID'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."role" IS '角色'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."ssdq" IS '所属地区'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."score" IS '分值'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."zhsl" IS '账户数量'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."zsl" IS '总次数'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."zje" IS '总金额'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."jysjd" IS '交易时间段'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."xsgs" IS '线索概述'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."crrq" IS '插入时间'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."runstatus" IS '运行状态'; 
-         COMMENT ON COLUMN "result_ff_model_xs_info_tmp"."zbljgx" IS '指标逻辑关系'; 
-         COMMENT ON TABLE "result_ff_model_xs_info_tmp" IS '上游模型指标线索结果临时表'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."userid" IS '用户ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."caseid" IS '案件ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."rid" IS '结果ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."batchid" IS '批次ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."historyid" IS '历史ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."mid" IS '模型ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."modelname" IS '模型名称'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."parentid" IS '模型父类ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."lbdm" IS '类别代码'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."zbdm" IS '指标代码'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."zzhm" IS '证照号码'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."mc" IS '主体名称'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."ztlx" IS '主体类型(01个人 02公司 )'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."roleid" IS '角色ID'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."role" IS '角色'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."ssdq" IS '所属地区'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."score" IS '分值'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."zhsl" IS '账户数量'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."zsl" IS '总次数'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."zje" IS '总金额'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."jysjd" IS '交易时间段'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."xsgs" IS '线索概述'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."crrq" IS '插入时间'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."runstatus" IS '运行状态'; 
+         COMMENT ON COLUMN "result_mz_model_xs_info_tmp"."zbljgx" IS '指标逻辑关系'; 
+         COMMENT ON TABLE "result_mz_model_xs_info_tmp" IS '上游模型指标线索结果临时表'; 
           
          -- ---------------------------- 
-         -- Table structure for result_ff_phone_call_info_model_tmp 
+         -- Table structure for result_mz_phone_call_info_model_tmp 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "result_ff_phone_call_info_model_tmp" CASCADE; 
-         CREATE TABLE "result_ff_phone_call_info_model_tmp" ( 
+         DROP TABLE IF EXISTS "result_mz_phone_call_info_model_tmp" CASCADE; 
+         CREATE TABLE "result_mz_phone_call_info_model_tmp" ( 
            "dhhm" varchar(255) COLLATE "pg_catalog"."default", 
            "zsxm" varchar(255) COLLATE "pg_catalog"."default", 
            "zzthsj" varchar(255) COLLATE "pg_catalog"."default", 
@@ -6997,7 +6997,7 @@ export default {
            "sjjg" varchar(255) COLLATE "pg_catalog"."default" 
          ) 
          ; 
-         COMMENT ON TABLE "result_ff_phone_call_info_model_tmp" IS '话单分析结果临时表'; 
+         COMMENT ON TABLE "result_mz_phone_call_info_model_tmp" IS '话单分析结果临时表'; 
           
          -- ---------------------------- 
          -- Table structure for result_model_fxq_dxqz 
@@ -7400,11 +7400,11 @@ export default {
           
           
          -- ---------------------------- 
-         -- Table structure for ff_rmb_exrate_midprice 
+         -- Table structure for mz_rmb_exrate_midprice 
          -- ---------------------------- 
-         DROP TABLE IF EXISTS "ff_rmb_exrate_midprice"; 
-         CREATE TABLE "ff_rmb_exrate_midprice" ( 
-           "shard_id" int8 NOT NULL DEFAULT nextval('ff_rmb_exrate_midprice_shard_id_seq'::regclass), 
+         DROP TABLE IF EXISTS "mz_rmb_exrate_midprice"; 
+         CREATE TABLE "mz_rmb_exrate_midprice" ( 
+           "shard_id" int8 NOT NULL DEFAULT nextval('mz_rmb_exrate_midprice_shard_id_seq'::regclass), 
            "ajid" int8 NOT NULL, 
            "rq" varchar(20) COLLATE "pg_catalog"."default", 
            "my" numeric(22,4), 
@@ -7437,38 +7437,38 @@ export default {
            "sjlyid" numeric(32) NOT NULL DEFAULT NULL::numeric 
          ) 
          ; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."shard_id" IS '分片ID'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."ajid" IS '案件ID'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."rq" IS '日期'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."my" IS '美元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."oy" IS '欧元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."ry" IS '日元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."gy" IS '港元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."yb" IS '英镑'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."ljt" IS '林吉特'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."lb" IS '卢布'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."lt" IS '兰特'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."hy" IS '韩元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."dlm" IS '迪拉姆'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."lye" IS '里亚尔'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."fl" IS '福林'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."clt" IS '兹罗提'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."dmkl" IS '丹麦克朗'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."rdkl" IS '瑞典克朗'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."lwkl" IS '挪威克朗'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."ll" IS '里拉'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."bs" IS '比索'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."tz" IS '泰铢'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."ay" IS '澳元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."jy" IS '加元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."xxly" IS '新西兰元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."xjpy" IS '新加坡元'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."rsfl" IS '瑞士法郎'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."batch" IS '批次'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."crrq" IS '插入日期'; 
-         COMMENT ON COLUMN "ff_rmb_exrate_midprice"."sjlyid" IS '数据来源id'; 
-         COMMENT ON TABLE "ff_rmb_exrate_midprice" IS '人民币汇率中间价表'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."shard_id" IS '分片ID'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."ajid" IS '案件ID'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."rq" IS '日期'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."my" IS '美元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."oy" IS '欧元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."ry" IS '日元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."gy" IS '港元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."yb" IS '英镑'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."ljt" IS '林吉特'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."lb" IS '卢布'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."lt" IS '兰特'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."hy" IS '韩元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."dlm" IS '迪拉姆'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."lye" IS '里亚尔'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."fl" IS '福林'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."clt" IS '兹罗提'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."dmkl" IS '丹麦克朗'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."rdkl" IS '瑞典克朗'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."lwkl" IS '挪威克朗'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."ll" IS '里拉'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."bs" IS '比索'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."tz" IS '泰铢'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."ay" IS '澳元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."jy" IS '加元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."xxly" IS '新西兰元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."xjpy" IS '新加坡元'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."rsfl" IS '瑞士法郎'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."sjlylx" IS '数据来源类型(手工录入,采集录入,数据抽取)'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."batch" IS '批次'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."crrq" IS '插入日期'; 
+         COMMENT ON COLUMN "mz_rmb_exrate_midprice"."sjlyid" IS '数据来源id'; 
+         COMMENT ON TABLE "mz_rmb_exrate_midprice" IS '人民币汇率中间价表'; 
           
           
           
@@ -7513,213 +7513,213 @@ export default {
          ALTER SEQUENCE "ck_cbrc_return_jjzf_id_seq" 
          OWNED BY "ck_cbrc_return_jjzf"."id"; 
          SELECT setval('"ck_cbrc_return_jjzf_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_account_info_chakong_shard_id_seq" 
-         OWNED BY "ff_account_info_chakong"."shard_id"; 
-         SELECT setval('"ff_account_info_chakong_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_account_info_shard_id_seq" 
-         OWNED BY "ff_account_info"."shard_id"; 
-         SELECT setval('"ff_account_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_analysis_record_id_seq" 
-         OWNED BY "ff_analysis_record"."id"; 
-         SELECT setval('"ff_analysis_record_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_analysis_record_visual_id_seq" 
-         OWNED BY "ff_analysis_record_visual"."id"; 
-         SELECT setval('"ff_analysis_record_visual_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_awaittask_id_seq" 
-         OWNED BY "ff_awaittask"."id"; 
-         SELECT setval('"ff_awaittask_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_bank_records_shard_id_seq" 
-         OWNED BY "ff_bank_records"."shard_id"; 
-         SELECT setval('"ff_bank_records_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_bank_records_source_shard_id_seq" 
-         OWNED BY "ff_bank_records_source"."shard_id"; 
-         SELECT setval('"ff_bank_records_source_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_cft_accountinfo_shard_id_seq" 
-         OWNED BY "ff_cft_accountinfo"."shard_id"; 
-         SELECT setval('"ff_cft_accountinfo_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_cft_zjxx_shard_id_seq" 
-         OWNED BY "ff_cft_zjxx"."shard_id"; 
-         SELECT setval('"ff_cft_zjxx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_dsf_dlip_shard_id_seq" 
-         OWNED BY "ff_dsf_dlip"."shard_id"; 
-         SELECT setval('"ff_dsf_dlip_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_dsf_jbxx_shard_id_seq" 
-         OWNED BY "ff_dsf_jbxx"."shard_id"; 
-         SELECT setval('"ff_dsf_jbxx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_dsf_jyjl_shard_id_seq" 
-         OWNED BY "ff_dsf_jyjl"."shard_id"; 
-         SELECT setval('"ff_dsf_jyjl_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_dsf_records_shard_id_seq" 
-         OWNED BY "ff_dsf_records"."shard_id"; 
-         SELECT setval('"ff_dsf_records_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_im_msg_imltjlid_seq" 
-         OWNED BY "ff_im_msg"."imltjlid"; 
-         SELECT setval('"ff_im_msg_imltjlid_seq"', 3, false); 
-         ALTER SEQUENCE "ff_im_msg_shard_id_seq" 
-         OWNED BY "ff_im_msg"."shard_id"; 
-         SELECT setval('"ff_im_msg_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_jass_info_shard_id_seq" 
-         OWNED BY "ff_jass_info"."shard_id"; 
-         SELECT setval('"ff_jass_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_jstxhy_info_id_seq" 
-         OWNED BY "ff_jstxhy_info"."id"; 
-         SELECT setval('"ff_jstxhy_info_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_jstxhy_info_shard_id_seq" 
-         OWNED BY "ff_jstxhy_info"."shard_id"; 
-         SELECT setval('"ff_jstxhy_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_logistics_info_id_seq" 
-         OWNED BY "ff_logistics_info"."id"; 
-         SELECT setval('"ff_logistics_info_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_logistics_info_shard_id_seq" 
-         OWNED BY "ff_logistics_info"."shard_id"; 
-         SELECT setval('"ff_logistics_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_person_chakong_shard_id_seq" 
-         OWNED BY "ff_person_chakong"."shard_id"; 
-         SELECT setval('"ff_person_chakong_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_person_glzzh_shard_id_seq" 
-         OWNED BY "ff_person_glzzh"."shard_id"; 
-         SELECT setval('"ff_person_glzzh_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_person_gyyxq_shard_id_seq" 
-         OWNED BY "ff_person_gyyxq"."shard_id"; 
-         SELECT setval('"ff_person_gyyxq_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_person_pic_shard_id_seq" 
-         OWNED BY "ff_person_pic"."shard_id"; 
-         SELECT setval('"ff_person_pic_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_person_qzcs_shard_id_seq" 
-         OWNED BY "ff_person_qzcs"."shard_id"; 
-         SELECT setval('"ff_person_qzcs_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_person_shard_id_seq" 
-         OWNED BY "ff_person"."shard_id"; 
-         SELECT setval('"ff_person_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_phone_call_info_shard_id_seq" 
-         OWNED BY "ff_phone_call_info"."shard_id"; 
-         SELECT setval('"ff_phone_call_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_safe_trading_shard_id_seq" 
-         OWNED BY "ff_safe_trading"."shard_id"; 
-         SELECT setval('"ff_safe_trading_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_sjdx_ch_id_seq" 
-         OWNED BY "ff_sjdx"."ch_id"; 
-         SELECT setval('"ff_sjdx_ch_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_sjdx_shard_id_seq" 
-         OWNED BY "ff_sjdx"."shard_id"; 
-         SELECT setval('"ff_sjdx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_sjtxl_id_seq" 
-         OWNED BY "ff_sjtxl"."id"; 
-         SELECT setval('"ff_sjtxl_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_sjtxl_shard_id_seq" 
-         OWNED BY "ff_sjtxl"."shard_id"; 
-         SELECT setval('"ff_sjtxl_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_taobao_info_shard_id_seq" 
-         OWNED BY "ff_taobao_info"."shard_id"; 
-         SELECT setval('"ff_taobao_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_taobao_log_shard_id_seq" 
-         OWNED BY "ff_taobao_log"."shard_id"; 
-         SELECT setval('"ff_taobao_log_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_taobao_trade_info_shard_id_seq" 
-         OWNED BY "ff_taobao_trade_info"."shard_id"; 
-         SELECT setval('"ff_taobao_trade_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_bgd_shard_id_seq" 
-         OWNED BY "ff_tax_bgd"."shard_id"; 
-         SELECT setval('"ff_tax_bgd_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_bgh_shard_id_seq" 
-         OWNED BY "ff_tax_bgh"."shard_id"; 
-         SELECT setval('"ff_tax_bgh_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_hgjkshbd_shard_id_seq" 
-         OWNED BY "ff_tax_hgjkshbd"."shard_id"; 
-         SELECT setval('"ff_tax_hgjkshbd_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_hgjkshxx_shard_id_seq" 
-         OWNED BY "ff_tax_hgjkshxx"."shard_id"; 
-         SELECT setval('"ff_tax_hgjkshxx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_hgjkzzs_shard_id_seq" 
-         OWNED BY "ff_tax_hgjkzzs"."shard_id"; 
-         SELECT setval('"ff_tax_hgjkzzs_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_hgwspzjhbd_shard_id_seq" 
-         OWNED BY "ff_tax_hgwspzjhbd"."shard_id"; 
-         SELECT setval('"ff_tax_hgwspzjhbd_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_records_shard_id_seq" 
-         OWNED BY "ff_tax_records"."shard_id"; 
-         SELECT setval('"ff_tax_records_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_records_source_shard_id_seq" 
-         OWNED BY "ff_tax_records_source"."shard_id"; 
-         SELECT setval('"ff_tax_records_source_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_tax_swdj_shard_id_seq" 
-         OWNED BY "ff_tax_swdj"."shard_id"; 
-         SELECT setval('"ff_tax_swdj_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_crjjl_id_seq" 
-         OWNED BY "ff_ys_crjjl"."id"; 
-         SELECT setval('"ff_ys_crjjl_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_crjjl_shard_id_seq" 
-         OWNED BY "ff_ys_crjjl"."shard_id"; 
-         SELECT setval('"ff_ys_crjjl_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_dbq_ldzs_id_seq" 
-         OWNED BY "ff_ys_dbq_ldzs"."id"; 
-         SELECT setval('"ff_ys_dbq_ldzs_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_dbq_ldzs_shard_id_seq" 
-         OWNED BY "ff_ys_dbq_ldzs"."shard_id"; 
-         SELECT setval('"ff_ys_dbq_ldzs_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_hyzk_id_seq" 
-         OWNED BY "ff_ys_hyzk"."id"; 
-         SELECT setval('"ff_ys_hyzk_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_hyzk_shard_id_seq" 
-         OWNED BY "ff_ys_hyzk"."shard_id"; 
-         SELECT setval('"ff_ys_hyzk_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_jsr_id_seq" 
-         OWNED BY "ff_ys_jsr"."id"; 
-         SELECT setval('"ff_ys_jsr_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_jsr_shard_id_seq" 
-         OWNED BY "ff_ys_jsr"."shard_id"; 
-         SELECT setval('"ff_ys_jsr_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_jyxx_shard_id_seq" 
-         OWNED BY "ff_ys_jyxx"."shard_id"; 
-         SELECT setval('"ff_ys_jyxx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_mhlg_id_seq" 
-         OWNED BY "ff_ys_mhlg"."id"; 
-         SELECT setval('"ff_ys_mhlg_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_mhlg_shard_id_seq" 
-         OWNED BY "ff_ys_mhlg"."shard_id"; 
-         SELECT setval('"ff_ys_mhlg_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_qgjdc_id_seq" 
-         OWNED BY "ff_ys_qgjdc"."id"; 
-         SELECT setval('"ff_ys_qgjdc_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_qgjdc_shard_id_seq" 
-         OWNED BY "ff_ys_qgjdc"."shard_id"; 
-         SELECT setval('"ff_ys_qgjdc_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_qgjdcwzxx_id_seq" 
-         OWNED BY "ff_ys_qgjdcwzxx"."id"; 
-         SELECT setval('"ff_ys_qgjdcwzxx_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_qgjdcwzxx_shard_id_seq" 
-         OWNED BY "ff_ys_qgjdcwzxx"."shard_id"; 
-         SELECT setval('"ff_ys_qgjdcwzxx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_sjhb_id_seq" 
-         OWNED BY "ff_ys_sjhb"."id"; 
-         SELECT setval('"ff_ys_sjhb_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_sjhb_shard_id_seq" 
-         OWNED BY "ff_ys_sjhb"."shard_id"; 
-         SELECT setval('"ff_ys_sjhb_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_sxrxx_id_seq" 
-         OWNED BY "ff_ys_sxrxx"."id"; 
-         SELECT setval('"ff_ys_sxrxx_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_sxrxx_shard_id_seq" 
-         OWNED BY "ff_ys_sxrxx"."shard_id"; 
-         SELECT setval('"ff_ys_sxrxx_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_tlsp_id_seq" 
-         OWNED BY "ff_ys_tlsp"."id"; 
-         SELECT setval('"ff_ys_tlsp_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_tlsp_shard_id_seq" 
-         OWNED BY "ff_ys_tlsp"."shard_id"; 
-         SELECT setval('"ff_ys_tlsp_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_yhhc_id_seq" 
-         OWNED BY "ff_ys_yhhc"."id"; 
-         SELECT setval('"ff_ys_yhhc_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_ys_yhhc_shard_id_seq" 
-         OWNED BY "ff_ys_yhhc"."shard_id"; 
-         SELECT setval('"ff_ys_yhhc_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_zhifubao_trade_shard_id_seq" 
-         OWNED BY "ff_zhifubao_trade"."shard_id"; 
-         SELECT setval('"ff_zhifubao_trade_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_zhifubao_transfer_shard_id_seq" 
-         OWNED BY "ff_zhifubao_transfer"."shard_id"; 
-         SELECT setval('"ff_zhifubao_transfer_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_account_info_chakong_shard_id_seq" 
+         OWNED BY "mz_account_info_chakong"."shard_id"; 
+         SELECT setval('"mz_account_info_chakong_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_account_info_shard_id_seq" 
+         OWNED BY "mz_account_info"."shard_id"; 
+         SELECT setval('"mz_account_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_analysis_record_id_seq" 
+         OWNED BY "mz_analysis_record"."id"; 
+         SELECT setval('"mz_analysis_record_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_analysis_record_visual_id_seq" 
+         OWNED BY "mz_analysis_record_visual"."id"; 
+         SELECT setval('"mz_analysis_record_visual_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_awaittask_id_seq" 
+         OWNED BY "mz_awaittask"."id"; 
+         SELECT setval('"mz_awaittask_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_bank_records_shard_id_seq" 
+         OWNED BY "mz_bank_records"."shard_id"; 
+         SELECT setval('"mz_bank_records_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_bank_records_source_shard_id_seq" 
+         OWNED BY "mz_bank_records_source"."shard_id"; 
+         SELECT setval('"mz_bank_records_source_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_cft_accountinfo_shard_id_seq" 
+         OWNED BY "mz_cft_accountinfo"."shard_id"; 
+         SELECT setval('"mz_cft_accountinfo_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_cft_zjxx_shard_id_seq" 
+         OWNED BY "mz_cft_zjxx"."shard_id"; 
+         SELECT setval('"mz_cft_zjxx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_dsf_dlip_shard_id_seq" 
+         OWNED BY "mz_dsf_dlip"."shard_id"; 
+         SELECT setval('"mz_dsf_dlip_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_dsf_jbxx_shard_id_seq" 
+         OWNED BY "mz_dsf_jbxx"."shard_id"; 
+         SELECT setval('"mz_dsf_jbxx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_dsf_jyjl_shard_id_seq" 
+         OWNED BY "mz_dsf_jyjl"."shard_id"; 
+         SELECT setval('"mz_dsf_jyjl_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_dsf_records_shard_id_seq" 
+         OWNED BY "mz_dsf_records"."shard_id"; 
+         SELECT setval('"mz_dsf_records_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_im_msg_imltjlid_seq" 
+         OWNED BY "mz_im_msg"."imltjlid"; 
+         SELECT setval('"mz_im_msg_imltjlid_seq"', 3, false); 
+         ALTER SEQUENCE "mz_im_msg_shard_id_seq" 
+         OWNED BY "mz_im_msg"."shard_id"; 
+         SELECT setval('"mz_im_msg_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_jass_info_shard_id_seq" 
+         OWNED BY "mz_jass_info"."shard_id"; 
+         SELECT setval('"mz_jass_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_jstxhy_info_id_seq" 
+         OWNED BY "mz_jstxhy_info"."id"; 
+         SELECT setval('"mz_jstxhy_info_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_jstxhy_info_shard_id_seq" 
+         OWNED BY "mz_jstxhy_info"."shard_id"; 
+         SELECT setval('"mz_jstxhy_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_logistics_info_id_seq" 
+         OWNED BY "mz_logistics_info"."id"; 
+         SELECT setval('"mz_logistics_info_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_logistics_info_shard_id_seq" 
+         OWNED BY "mz_logistics_info"."shard_id"; 
+         SELECT setval('"mz_logistics_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_person_chakong_shard_id_seq" 
+         OWNED BY "mz_person_chakong"."shard_id"; 
+         SELECT setval('"mz_person_chakong_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_person_glzzh_shard_id_seq" 
+         OWNED BY "mz_person_glzzh"."shard_id"; 
+         SELECT setval('"mz_person_glzzh_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_person_gyyxq_shard_id_seq" 
+         OWNED BY "mz_person_gyyxq"."shard_id"; 
+         SELECT setval('"mz_person_gyyxq_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_person_pic_shard_id_seq" 
+         OWNED BY "mz_person_pic"."shard_id"; 
+         SELECT setval('"mz_person_pic_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_person_qzcs_shard_id_seq" 
+         OWNED BY "mz_person_qzcs"."shard_id"; 
+         SELECT setval('"mz_person_qzcs_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_person_shard_id_seq" 
+         OWNED BY "mz_person"."shard_id"; 
+         SELECT setval('"mz_person_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_phone_call_info_shard_id_seq" 
+         OWNED BY "mz_phone_call_info"."shard_id"; 
+         SELECT setval('"mz_phone_call_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_safe_trading_shard_id_seq" 
+         OWNED BY "mz_safe_trading"."shard_id"; 
+         SELECT setval('"mz_safe_trading_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_sjdx_ch_id_seq" 
+         OWNED BY "mz_sjdx"."ch_id"; 
+         SELECT setval('"mz_sjdx_ch_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_sjdx_shard_id_seq" 
+         OWNED BY "mz_sjdx"."shard_id"; 
+         SELECT setval('"mz_sjdx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_sjtxl_id_seq" 
+         OWNED BY "mz_sjtxl"."id"; 
+         SELECT setval('"mz_sjtxl_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_sjtxl_shard_id_seq" 
+         OWNED BY "mz_sjtxl"."shard_id"; 
+         SELECT setval('"mz_sjtxl_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_taobao_info_shard_id_seq" 
+         OWNED BY "mz_taobao_info"."shard_id"; 
+         SELECT setval('"mz_taobao_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_taobao_log_shard_id_seq" 
+         OWNED BY "mz_taobao_log"."shard_id"; 
+         SELECT setval('"mz_taobao_log_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_taobao_trade_info_shard_id_seq" 
+         OWNED BY "mz_taobao_trade_info"."shard_id"; 
+         SELECT setval('"mz_taobao_trade_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_bgd_shard_id_seq" 
+         OWNED BY "mz_tax_bgd"."shard_id"; 
+         SELECT setval('"mz_tax_bgd_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_bgh_shard_id_seq" 
+         OWNED BY "mz_tax_bgh"."shard_id"; 
+         SELECT setval('"mz_tax_bgh_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_hgjkshbd_shard_id_seq" 
+         OWNED BY "mz_tax_hgjkshbd"."shard_id"; 
+         SELECT setval('"mz_tax_hgjkshbd_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_hgjkshxx_shard_id_seq" 
+         OWNED BY "mz_tax_hgjkshxx"."shard_id"; 
+         SELECT setval('"mz_tax_hgjkshxx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_hgjkzzs_shard_id_seq" 
+         OWNED BY "mz_tax_hgjkzzs"."shard_id"; 
+         SELECT setval('"mz_tax_hgjkzzs_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_hgwspzjhbd_shard_id_seq" 
+         OWNED BY "mz_tax_hgwspzjhbd"."shard_id"; 
+         SELECT setval('"mz_tax_hgwspzjhbd_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_records_shard_id_seq" 
+         OWNED BY "mz_tax_records"."shard_id"; 
+         SELECT setval('"mz_tax_records_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_records_source_shard_id_seq" 
+         OWNED BY "mz_tax_records_source"."shard_id"; 
+         SELECT setval('"mz_tax_records_source_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_tax_swdj_shard_id_seq" 
+         OWNED BY "mz_tax_swdj"."shard_id"; 
+         SELECT setval('"mz_tax_swdj_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_crjjl_id_seq" 
+         OWNED BY "mz_ys_crjjl"."id"; 
+         SELECT setval('"mz_ys_crjjl_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_crjjl_shard_id_seq" 
+         OWNED BY "mz_ys_crjjl"."shard_id"; 
+         SELECT setval('"mz_ys_crjjl_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_dbq_ldzs_id_seq" 
+         OWNED BY "mz_ys_dbq_ldzs"."id"; 
+         SELECT setval('"mz_ys_dbq_ldzs_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_dbq_ldzs_shard_id_seq" 
+         OWNED BY "mz_ys_dbq_ldzs"."shard_id"; 
+         SELECT setval('"mz_ys_dbq_ldzs_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_hyzk_id_seq" 
+         OWNED BY "mz_ys_hyzk"."id"; 
+         SELECT setval('"mz_ys_hyzk_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_hyzk_shard_id_seq" 
+         OWNED BY "mz_ys_hyzk"."shard_id"; 
+         SELECT setval('"mz_ys_hyzk_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_jsr_id_seq" 
+         OWNED BY "mz_ys_jsr"."id"; 
+         SELECT setval('"mz_ys_jsr_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_jsr_shard_id_seq" 
+         OWNED BY "mz_ys_jsr"."shard_id"; 
+         SELECT setval('"mz_ys_jsr_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_jyxx_shard_id_seq" 
+         OWNED BY "mz_ys_jyxx"."shard_id"; 
+         SELECT setval('"mz_ys_jyxx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_mhlg_id_seq" 
+         OWNED BY "mz_ys_mhlg"."id"; 
+         SELECT setval('"mz_ys_mhlg_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_mhlg_shard_id_seq" 
+         OWNED BY "mz_ys_mhlg"."shard_id"; 
+         SELECT setval('"mz_ys_mhlg_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_qgjdc_id_seq" 
+         OWNED BY "mz_ys_qgjdc"."id"; 
+         SELECT setval('"mz_ys_qgjdc_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_qgjdc_shard_id_seq" 
+         OWNED BY "mz_ys_qgjdc"."shard_id"; 
+         SELECT setval('"mz_ys_qgjdc_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_qgjdcwzxx_id_seq" 
+         OWNED BY "mz_ys_qgjdcwzxx"."id"; 
+         SELECT setval('"mz_ys_qgjdcwzxx_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_qgjdcwzxx_shard_id_seq" 
+         OWNED BY "mz_ys_qgjdcwzxx"."shard_id"; 
+         SELECT setval('"mz_ys_qgjdcwzxx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_sjhb_id_seq" 
+         OWNED BY "mz_ys_sjhb"."id"; 
+         SELECT setval('"mz_ys_sjhb_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_sjhb_shard_id_seq" 
+         OWNED BY "mz_ys_sjhb"."shard_id"; 
+         SELECT setval('"mz_ys_sjhb_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_sxrxx_id_seq" 
+         OWNED BY "mz_ys_sxrxx"."id"; 
+         SELECT setval('"mz_ys_sxrxx_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_sxrxx_shard_id_seq" 
+         OWNED BY "mz_ys_sxrxx"."shard_id"; 
+         SELECT setval('"mz_ys_sxrxx_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_tlsp_id_seq" 
+         OWNED BY "mz_ys_tlsp"."id"; 
+         SELECT setval('"mz_ys_tlsp_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_tlsp_shard_id_seq" 
+         OWNED BY "mz_ys_tlsp"."shard_id"; 
+         SELECT setval('"mz_ys_tlsp_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_yhhc_id_seq" 
+         OWNED BY "mz_ys_yhhc"."id"; 
+         SELECT setval('"mz_ys_yhhc_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_ys_yhhc_shard_id_seq" 
+         OWNED BY "mz_ys_yhhc"."shard_id"; 
+         SELECT setval('"mz_ys_yhhc_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_zhifubao_trade_shard_id_seq" 
+         OWNED BY "mz_zhifubao_trade"."shard_id"; 
+         SELECT setval('"mz_zhifubao_trade_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_zhifubao_transfer_shard_id_seq" 
+         OWNED BY "mz_zhifubao_transfer"."shard_id"; 
+         SELECT setval('"mz_zhifubao_transfer_shard_id_seq"', 3, false); 
          ALTER SEQUENCE "mark_detail_shard_id_seq" 
          OWNED BY "mark_detail"."shard_id"; 
          SELECT setval('"mark_detail_shard_id_seq"', 3, false); 
@@ -7732,12 +7732,12 @@ export default {
          ALTER SEQUENCE "mark_info_shard_id_seq" 
          OWNED BY "mark_info"."shard_id"; 
          SELECT setval('"mark_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "result_ff_model_xs_info_shard_id_seq" 
-         OWNED BY "result_ff_model_xs_info"."shard_id"; 
-         SELECT setval('"result_ff_model_xs_info_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "result_ff_model_xs_info_tmp_shard_id_seq" 
-         OWNED BY "result_ff_model_xs_info_tmp"."shard_id"; 
-         SELECT setval('"result_ff_model_xs_info_tmp_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "result_mz_model_xs_info_shard_id_seq" 
+         OWNED BY "result_mz_model_xs_info"."shard_id"; 
+         SELECT setval('"result_mz_model_xs_info_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "result_mz_model_xs_info_tmp_shard_id_seq" 
+         OWNED BY "result_mz_model_xs_info_tmp"."shard_id"; 
+         SELECT setval('"result_mz_model_xs_info_tmp_shard_id_seq"', 3, false); 
          ALTER SEQUENCE "result_model_fxq_dxqz_shard_id_seq" 
          OWNED BY "result_model_fxq_dxqz"."shard_id"; 
          SELECT setval('"result_model_fxq_dxqz_shard_id_seq"', 3, false); 
@@ -7765,9 +7765,9 @@ export default {
          ALTER SEQUENCE "result_model_fxq_dxqzrjzh_1_shard_id_seq" 
          OWNED BY "result_model_fxq_dxqzrjzh_1"."shard_id"; 
          SELECT setval('"result_model_fxq_dxqzrjzh_1_shard_id_seq"', 3, false); 
-         ALTER SEQUENCE "ff_rmb_exrate_midprice_shard_id_seq" 
-         OWNED BY "ff_rmb_exrate_midprice"."shard_id"; 
-         SELECT setval('"ff_rmb_exrate_midprice_shard_id_seq"', 3, false); 
+         ALTER SEQUENCE "mz_rmb_exrate_midprice_shard_id_seq" 
+         OWNED BY "mz_rmb_exrate_midprice"."shard_id"; 
+         SELECT setval('"mz_rmb_exrate_midprice_shard_id_seq"', 3, false); 
           
          -- ---------------------------- 
          -- Indexes structure for table bk_fk_dtcx 
@@ -7854,441 +7854,441 @@ export default {
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_account_info 
+         -- Indexes structure for table mz_account_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_account_info_ajid_index" ON "ff_account_info" USING btree ( 
+         CREATE INDEX "mz_account_info_ajid_index" ON "mz_account_info" USING btree ( 
            "ajid" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
-         CREATE INDEX "ff_account_info_index" ON "ff_account_info" USING btree ( 
+         CREATE INDEX "mz_account_info_index" ON "mz_account_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------
-         -- Indexes structure for table ff_account_info_chakong 
+         -- Indexes structure for table mz_account_info_chakong 
          -- ---------------------------- 
-         CREATE INDEX "ff_account_info_chakong_index" ON "ff_account_info_chakong" USING btree ( 
+         CREATE INDEX "mz_account_info_chakong_index" ON "mz_account_info_chakong" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_analysis_record 
+         -- Indexes structure for table mz_analysis_record 
          -- ---------------------------- 
-         CREATE INDEX "ff_analysis_record_index" ON "ff_analysis_record" USING btree ( 
+         CREATE INDEX "mz_analysis_record_index" ON "mz_analysis_record" USING btree ( 
            "id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_analysis_record_visual 
+         -- Indexes structure for table mz_analysis_record_visual 
          -- ---------------------------- 
-         CREATE INDEX "ff_analysis_record_visual_index" ON "ff_analysis_record_visual" USING btree ( 
+         CREATE INDEX "mz_analysis_record_visual_index" ON "mz_analysis_record_visual" USING btree ( 
            "id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_awaittask 
+         -- Indexes structure for table mz_awaittask 
          -- ---------------------------- 
-         CREATE INDEX "ff_awaittask_index" ON "ff_awaittask" USING btree ( 
+         CREATE INDEX "mz_awaittask_index" ON "mz_awaittask" USING btree ( 
            "id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_bank_records 
+         -- Indexes structure for table mz_bank_records 
          -- ---------------------------- 
-         CREATE INDEX "ff_bank_records_collection_index" ON "ff_bank_records" USING btree ( 
+         CREATE INDEX "mz_bank_records_collection_index" ON "mz_bank_records" USING btree ( 
            "ajid" "pg_catalog"."int4_ops" ASC NULLS LAST, 
            "batch" "pg_catalog"."int4_ops" ASC NULLS LAST, 
            "sjlyid" "pg_catalog"."numeric_ops" ASC NULLS LAST 
          ); 
-         CREATE INDEX "ff_bank_records_index" ON "ff_bank_records" USING btree ( 
+         CREATE INDEX "mz_bank_records_index" ON "mz_bank_records" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_bank_records_source 
+         -- Indexes structure for table mz_bank_records_source 
          -- ---------------------------- 
-         CREATE INDEX "ff_bank_records_collection_source_index" ON "ff_bank_records_source" USING btree ( 
+         CREATE INDEX "mz_bank_records_collection_source_index" ON "mz_bank_records_source" USING btree ( 
            "ajid" "pg_catalog"."int4_ops" ASC NULLS LAST, 
            "batch" "pg_catalog"."int4_ops" ASC NULLS LAST, 
            "sjlyid" "pg_catalog"."numeric_ops" ASC NULLS LAST 
          ); 
-         CREATE INDEX "ff_bank_records_source_index" ON "ff_bank_records_source" USING btree ( 
+         CREATE INDEX "mz_bank_records_source_index" ON "mz_bank_records_source" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_cft_accountinfo 
+         -- Indexes structure for table mz_cft_accountinfo 
          -- ---------------------------- 
-         CREATE INDEX "ff_cft_accountinfo_index" ON "ff_cft_accountinfo" USING btree ( 
+         CREATE INDEX "mz_cft_accountinfo_index" ON "mz_cft_accountinfo" USING btree ( 
            "ajid" "pg_catalog"."int4_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_cft_zjxx 
+         -- Indexes structure for table mz_cft_zjxx 
          -- ---------------------------- 
-         CREATE INDEX "ff_cft_zjxx_index" ON "ff_cft_zjxx" USING btree ( 
+         CREATE INDEX "mz_cft_zjxx_index" ON "mz_cft_zjxx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_dsf_dlip 
+         -- Indexes structure for table mz_dsf_dlip 
          -- ---------------------------- 
-         CREATE INDEX "ff_dsf_dlip_index" ON "ff_dsf_dlip" USING btree ( 
+         CREATE INDEX "mz_dsf_dlip_index" ON "mz_dsf_dlip" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_dsf_dlip 
+         -- Primary Key structure for table mz_dsf_dlip 
          -- ---------------------------- 
-         ALTER TABLE "ff_dsf_dlip" ADD CONSTRAINT "ff_dsf_dlip_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_dsf_dlip" ADD CONSTRAINT "mz_dsf_dlip_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_dsf_jbxx 
+         -- Indexes structure for table mz_dsf_jbxx 
          -- ---------------------------- 
-         CREATE INDEX "ff_dsf_jbxx_index" ON "ff_dsf_jbxx" USING btree ( 
+         CREATE INDEX "mz_dsf_jbxx_index" ON "mz_dsf_jbxx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_dsf_jbxx 
+         -- Primary Key structure for table mz_dsf_jbxx 
          -- ---------------------------- 
-         ALTER TABLE "ff_dsf_jbxx" ADD CONSTRAINT "ff_dsf_jbxx_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_dsf_jbxx" ADD CONSTRAINT "mz_dsf_jbxx_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_dsf_jyjl 
+         -- Indexes structure for table mz_dsf_jyjl 
          -- ---------------------------- 
-         CREATE INDEX "ff_dsf_jyjl_index" ON "ff_dsf_jyjl" USING btree ( 
+         CREATE INDEX "mz_dsf_jyjl_index" ON "mz_dsf_jyjl" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_dsf_jyjl 
+         -- Primary Key structure for table mz_dsf_jyjl 
          -- ---------------------------- 
-         ALTER TABLE "ff_dsf_jyjl" ADD CONSTRAINT "ff_dsf_jyjl_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_dsf_jyjl" ADD CONSTRAINT "mz_dsf_jyjl_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_dsf_records 
+         -- Indexes structure for table mz_dsf_records 
          -- ---------------------------- 
-         CREATE INDEX "ff_dsf_records_index" ON "ff_dsf_records" USING btree ( 
+         CREATE INDEX "mz_dsf_records_index" ON "mz_dsf_records" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- -----------------
          ----------- 
-         -- Primary Key structure for table ff_dsf_records 
+         -- Primary Key structure for table mz_dsf_records 
          -- ---------------------------- 
-         ALTER TABLE "ff_dsf_records" ADD CONSTRAINT "ff_dsf_records_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_dsf_records" ADD CONSTRAINT "mz_dsf_records_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_im_msg 
+         -- Indexes structure for table mz_im_msg 
          -- ---------------------------- 
-         CREATE INDEX "ff_im_msg_index" ON "ff_im_msg" USING btree ( 
+         CREATE INDEX "mz_im_msg_index" ON "mz_im_msg" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_jass_info 
+         -- Indexes structure for table mz_jass_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_jass_info_index" ON "ff_jass_info" USING btree ( 
+         CREATE INDEX "mz_jass_info_index" ON "mz_jass_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_jass_info 
+         -- Primary Key structure for table mz_jass_info 
          -- ---------------------------- 
-         ALTER TABLE "ff_jass_info" ADD CONSTRAINT "ff_jass_info_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_jass_info" ADD CONSTRAINT "mz_jass_info_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_jstxhy_info 
+         -- Indexes structure for table mz_jstxhy_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_jstxhy_info_index" ON "ff_jstxhy_info" USING btree ( 
+         CREATE INDEX "mz_jstxhy_info_index" ON "mz_jstxhy_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_jstxhy_info 
+         -- Primary Key structure for table mz_jstxhy_info 
          -- ---------------------------- 
-         ALTER TABLE "ff_jstxhy_info" ADD CONSTRAINT "ff_jstxhy_info_pkey" PRIMARY KEY ("id"); 
+         ALTER TABLE "mz_jstxhy_info" ADD CONSTRAINT "mz_jstxhy_info_pkey" PRIMARY KEY ("id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_logistics_info 
+         -- Indexes structure for table mz_logistics_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_logistics_info_index" ON "ff_logistics_info" USING btree ( 
+         CREATE INDEX "mz_logistics_info_index" ON "mz_logistics_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_logistics_info 
+         -- Primary Key structure for table mz_logistics_info 
          -- ---------------------------- 
-         ALTER TABLE "ff_logistics_info" ADD CONSTRAINT "ff_logistics_info_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_logistics_info" ADD CONSTRAINT "mz_logistics_info_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_person 
+         -- Indexes structure for table mz_person 
          -- ---------------------------- 
-         CREATE INDEX "ff_person_ajid_index" ON "ff_person" USING btree ( 
+         CREATE INDEX "mz_person_ajid_index" ON "mz_person" USING btree ( 
            "ajid" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
-         CREATE INDEX "ff_person_index" ON "ff_person" USING btree ( 
+         CREATE INDEX "mz_person_index" ON "mz_person" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_person_chakong 
+         -- Indexes structure for table mz_person_chakong 
          -- ---------------------------- 
-         CREATE INDEX "ff_person_chakong_index" ON "ff_person_chakong" USING btree ( 
+         CREATE INDEX "mz_person_chakong_index" ON "mz_person_chakong" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_person_glzzh 
+         -- Indexes structure for table mz_person_glzzh 
          -- ---------------------------- 
-         CREATE INDEX "ff_person_glzzh_index" ON "ff_person_glzzh" USING btree ( 
+         CREATE INDEX "mz_person_glzzh_index" ON "mz_person_glzzh" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_person_gyyxq 
+         -- Indexes structure for table mz_person_gyyxq 
          -- ---------------------------- 
-         CREATE INDEX "ff_person_gyyxq_index" ON "ff_person_gyyxq" USING btree ( 
+         CREATE INDEX "mz_person_gyyxq_index" ON "mz_person_gyyxq" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_person_pic 
+         -- Indexes structure for table mz_person_pic 
          -- ---------------------------- 
-         CREATE INDEX "ff_person_pic_index" ON "ff_person_pic" USING btree ( 
+         CREATE INDEX "mz_person_pic_index" ON "mz_person_pic" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_person_pic 
+         -- Primary Key structure for table mz_person_pic 
          -- ---------------------------- 
-         ALTER TABLE "ff_person_pic" ADD CONSTRAINT "ff_person_pic_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_person_pic" ADD CONSTRAINT "mz_person_pic_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_person_qzcs 
+         -- Indexes structure for table mz_person_qzcs 
          -- ---------------------------- 
-         CREATE INDEX "ff_person_qzcs_index" ON "ff_person_qzcs" USING btree ( 
+         CREATE INDEX "mz_person_qzcs_index" ON "mz_person_qzcs" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_phone_call_info 
+         -- Indexes structure for table mz_phone_call_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_phone_call_info_index" ON "ff_phone_call_info" USING btree ( 
+         CREATE INDEX "mz_phone_call_info_index" ON "mz_phone_call_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_safe_trading 
+         -- Indexes structure for table mz_safe_trading 
          -- ---------------------------- 
-         CREATE INDEX "ff_safe_trading_index" ON "ff_safe_trading" USING btree ( 
+         CREATE INDEX "mz_safe_trading_index" ON "mz_safe_trading" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_sjdx 
+         -- Indexes structure for table mz_sjdx 
          -- ---------------------------- 
-         CREATE INDEX "ff_sjdx_index" ON "ff_sjdx" USING btree ( 
+         CREATE INDEX "mz_sjdx_index" ON "mz_sjdx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_sjdx 
+         -- Primary Key structure for table mz_sjdx 
          -- ---------------------------- 
-         ALTER TABLE "ff_sjdx" ADD CONSTRAINT "ff_sjdx_pkey" PRIMARY KEY ("ch_id"); 
+         ALTER TABLE "mz_sjdx" ADD CONSTRAINT "mz_sjdx_pkey" PRIMARY KEY ("ch_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_sjtxl 
+         -- Indexes structure for table mz_sjtxl 
          -- ---------------------------- 
-         CREATE INDEX "ff_sjtxl_index" ON "ff_sjtxl" USING btree ( 
+         CREATE INDEX "mz_sjtxl_index" ON "mz_sjtxl" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Primary Key structure for table ff_sjtxl 
+         -- Primary Key structure for table mz_sjtxl 
          -- ---------------------------- 
-         ALTER TABLE "ff_sjtxl" ADD CONSTRAINT "ff_sjtxl_pkey" PRIMARY KEY ("shard_id"); 
+         ALTER TABLE "mz_sjtxl" ADD CONSTRAINT "mz_sjtxl_pkey" PRIMARY KEY ("shard_id"); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_taobao_info 
+         -- Indexes structure for table mz_taobao_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_taobao_info_index" ON "ff_taobao_info" USING btree ( 
+         CREATE INDEX "mz_taobao_info_index" ON "mz_taobao_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_taobao_log 
+         -- Indexes structure for table mz_taobao_log 
          -- ---------------------------- 
-         CREATE INDEX "ff_taobao_log_index" ON "ff_taobao_log" USING btree ( 
+         CREATE INDEX "mz_taobao_log_index" ON "mz_taobao_log" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_taobao_trade_info 
+         -- Indexes structure for table mz_taobao_trade_info 
          -- ---------------------------- 
-         CREATE INDEX "ff_taobao_trade_info_index" ON "ff_taobao_trade_info" USING btree ( 
+         CREATE INDEX "mz_taobao_trade_info_index" ON "mz_taobao_trade_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_bgd 
+         -- Indexes structure for table mz_tax_bgd 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_bgd_index" ON "ff_tax_bgd" USING btree ( 
+         CREATE INDEX "mz_tax_bgd_index" ON "mz_tax_bgd" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_bgh 
+         -- Indexes structure for table mz_tax_bgh 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_bgh_index" ON "ff_tax_bgh" USING btree ( 
+         CREATE INDEX "mz_tax_bgh_index" ON "mz_tax_bgh" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_hgjkshbd 
+         -- Indexes structure for table mz_tax_hgjkshbd 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_hgjkshbd_index" ON "ff_tax_hgjkshbd" USING btree ( 
+         CREATE INDEX "mz_tax_hgjkshbd_index" ON "mz_tax_hgjkshbd" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_hgjkshxx 
+         -- Indexes structure for table mz_tax_hgjkshxx 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_hgjkshxx_index" ON "ff_tax_hgjkshxx" USING btree ( 
+         CREATE INDEX "mz_tax_hgjkshxx_index" ON "mz_tax_hgjkshxx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_hgjkzzs 
+         -- Indexes structure for table mz_tax_hgjkzzs 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_hgjkzzs_index" ON "ff_tax_hgjkzzs" USING btree ( 
+         CREATE INDEX "mz_tax_hgjkzzs_index" ON "mz_tax_hgjkzzs" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_hgwspzjhbd 
+         -- Indexes structure for table mz_tax_hgwspzjhbd 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_hgwspzjhbd_index" ON "ff_tax_hgwspzjhbd" USING btree ( 
+         CREATE INDEX "mz_tax_hgwspzjhbd_index" ON "mz_tax_hgwspzjhbd" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_records 
+         -- Indexes structure for table mz_tax_records 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_records_index" ON "ff_tax_records" USING btree ( 
+         CREATE INDEX "mz_tax_records_index" ON "mz_tax_records" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_records_source 
+         -- Indexes structure for table mz_tax_records_source 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_records_source_index" ON "ff_tax_records_source" USING btree ( 
+         CREATE INDEX "mz_tax_records_source_index" ON "mz_tax_records_source" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_tax_swdj 
+         -- Indexes structure for table mz_tax_swdj 
          -- ---------------------------- 
-         CREATE INDEX "ff_tax_swdj_index" ON "ff_tax_swdj" USING btree ( 
+         CREATE INDEX "mz_tax_swdj_index" ON "mz_tax_swdj" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_crjjl 
+         -- Indexes structure for table mz_ys_crjjl 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_crjjl_index" ON "ff_ys_crjjl" USING btree ( 
+         CREATE INDEX "mz_ys_crjjl_index" ON "mz_ys_crjjl" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------
          ------------------- 
-         -- Indexes structure for table ff_ys_dbq_ldzs 
+         -- Indexes structure for table mz_ys_dbq_ldzs 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_dbq_ldzs_index" ON "ff_ys_dbq_ldzs" USING btree ( 
+         CREATE INDEX "mz_ys_dbq_ldzs_index" ON "mz_ys_dbq_ldzs" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_hyzk 
+         -- Indexes structure for table mz_ys_hyzk 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_hyzk_index" ON "ff_ys_hyzk" USING btree ( 
+         CREATE INDEX "mz_ys_hyzk_index" ON "mz_ys_hyzk" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_jsr 
+         -- Indexes structure for table mz_ys_jsr 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_jsr_index" ON "ff_ys_jsr" USING btree ( 
+         CREATE INDEX "mz_ys_jsr_index" ON "mz_ys_jsr" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_jyxx 
+         -- Indexes structure for table mz_ys_jyxx 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_jyxx_index" ON "ff_ys_jyxx" USING btree ( 
+         CREATE INDEX "mz_ys_jyxx_index" ON "mz_ys_jyxx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_mhlg 
+         -- Indexes structure for table mz_ys_mhlg 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_mhlg_index" ON "ff_ys_mhlg" USING btree ( 
+         CREATE INDEX "mz_ys_mhlg_index" ON "mz_ys_mhlg" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_qgjdc 
+         -- Indexes structure for table mz_ys_qgjdc 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_qgjdc_index" ON "ff_ys_qgjdc" USING btree ( 
+         CREATE INDEX "mz_ys_qgjdc_index" ON "mz_ys_qgjdc" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_qgjdcwzxx 
+         -- Indexes structure for table mz_ys_qgjdcwzxx 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_qgjdcwzxx_index" ON "ff_ys_qgjdcwzxx" USING btree ( 
+         CREATE INDEX "mz_ys_qgjdcwzxx_index" ON "mz_ys_qgjdcwzxx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_sjhb 
+         -- Indexes structure for table mz_ys_sjhb 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_sjhb_index" ON "ff_ys_sjhb" USING btree ( 
+         CREATE INDEX "mz_ys_sjhb_index" ON "mz_ys_sjhb" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_sxrxx 
+         -- Indexes structure for table mz_ys_sxrxx 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_sxrxx_index" ON "ff_ys_sxrxx" USING btree ( 
+         CREATE INDEX "mz_ys_sxrxx_index" ON "mz_ys_sxrxx" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_tlsp 
+         -- Indexes structure for table mz_ys_tlsp 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_tlsp_index" ON "ff_ys_tlsp" USING btree ( 
+         CREATE INDEX "mz_ys_tlsp_index" ON "mz_ys_tlsp" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_ys_yhhc 
+         -- Indexes structure for table mz_ys_yhhc 
          -- ---------------------------- 
-         CREATE INDEX "ff_ys_yhhc_index" ON "ff_ys_yhhc" USING btree ( 
+         CREATE INDEX "mz_ys_yhhc_index" ON "mz_ys_yhhc" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_zhifubao_trade 
+         -- Indexes structure for table mz_zhifubao_trade 
          -- ---------------------------- 
-         CREATE INDEX "ff_zhifubao_trade_index" ON "ff_zhifubao_trade" USING btree ( 
+         CREATE INDEX "mz_zhifubao_trade_index" ON "mz_zhifubao_trade" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_zhifubao_transfer 
+         -- Indexes structure for table mz_zhifubao_transfer 
          -- ---------------------------- 
-         CREATE INDEX "ff_zhifubao_transfer_index" ON "ff_zhifubao_transfer" USING btree ( 
+         CREATE INDEX "mz_zhifubao_transfer_index" ON "mz_zhifubao_transfer" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
@@ -8322,51 +8322,51 @@ export default {
           
          -- --------------------
          -------- 
-         -- Indexes structure for table result_ff_antimoney_core 
+         -- Indexes structure for table result_mz_antimoney_core 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_antimoney_core_index" ON "result_ff_antimoney_core" USING btree ( 
+         CREATE INDEX "result_mz_antimoney_core_index" ON "result_mz_antimoney_core" USING btree ( 
            "id" COLLATE "pg_catalog"."default" "pg_catalog"."varchar_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table result_ff_antimoney_loop 
+         -- Indexes structure for table result_mz_antimoney_loop 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_antimoney_loop_index" ON "result_ff_antimoney_loop" USING btree ( 
+         CREATE INDEX "result_mz_antimoney_loop_index" ON "result_mz_antimoney_loop" USING btree ( 
            "batchid" COLLATE "pg_catalog"."default" "pg_catalog"."varchar_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table result_ff_antimoney_person 
+         -- Indexes structure for table result_mz_antimoney_person 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_antimoney_person_index" ON "result_ff_antimoney_person" USING btree ( 
+         CREATE INDEX "result_mz_antimoney_person_index" ON "result_mz_antimoney_person" USING btree ( 
            "batchid" COLLATE "pg_catalog"."default" "pg_catalog"."varchar_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table result_ff_antimoney_point 
+         -- Indexes structure for table result_mz_antimoney_point 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_antimoney_point_index" ON "result_ff_antimoney_point" USING btree ( 
+         CREATE INDEX "result_mz_antimoney_point_index" ON "result_mz_antimoney_point" USING btree ( 
            "batchid" COLLATE "pg_catalog"."default" "pg_catalog"."varchar_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table result_ff_model_xs_info 
+         -- Indexes structure for table result_mz_model_xs_info 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_model_xs_info_index" ON "result_ff_model_xs_info" USING btree ( 
+         CREATE INDEX "result_mz_model_xs_info_index" ON "result_mz_model_xs_info" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table result_ff_model_xs_info_tmp 
+         -- Indexes structure for table result_mz_model_xs_info_tmp 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_model_xs_info_tmp_index" ON "result_ff_model_xs_info_tmp" USING btree ( 
+         CREATE INDEX "result_mz_model_xs_info_tmp_index" ON "result_mz_model_xs_info_tmp" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           
          -- ---------------------------- 
-         -- Indexes structure for table result_ff_phone_call_info_model_tmp 
+         -- Indexes structure for table result_mz_phone_call_info_model_tmp 
          -- ---------------------------- 
-         CREATE INDEX "result_ff_phone_call_info_model_tmp_index" ON "result_ff_phone_call_info_model_tmp" USING btree ( 
+         CREATE INDEX "result_mz_phone_call_info_model_tmp_index" ON "result_mz_phone_call_info_model_tmp" USING btree ( 
            "dhhm" COLLATE "pg_catalog"."default" "pg_catalog"."varchar_ops" ASC NULLS LAST 
          ); 
           
@@ -8443,9 +8443,9 @@ export default {
           
           
          -- ---------------------------- 
-         -- Indexes structure for table ff_rmb_exrate_midprice 
+         -- Indexes structure for table mz_rmb_exrate_midprice 
          -- ---------------------------- 
-         CREATE INDEX "ff_rmb_exrate_midprice_index" ON "ff_rmb_exrate_midprice" USING btree ( 
+         CREATE INDEX "mz_rmb_exrate_midprice_index" ON "mz_rmb_exrate_midprice" USING btree ( 
            "shard_id" "pg_catalog"."int8_ops" ASC NULLS LAST 
          ); 
           `;
@@ -8493,11 +8493,11 @@ export default {
       await this.SwitchCase(client, ajid);
       let sql = `select sum(count)::int 
       from ( 
-         SELECT count(*) FROM  ff_person  WHERE (ckztlb='02' OR ZZLX='dz1') AND ajid = ${ajid}    
+         SELECT count(*) FROM  mz_person  WHERE (ckztlb='02' OR ZZLX='dz1') AND ajid = ${ajid}    
          union all 
-         SELECT count(*) FROM  ff_person  WHERE (ckztlb='01' OR ZZLX='z1') AND ajid = ${ajid}      
+         SELECT count(*) FROM  mz_person  WHERE (ckztlb='01' OR ZZLX='z1') AND ajid = ${ajid}      
           ) 
-       as ff_person_ 
+       as mz_person_ 
      `;
       const res = await client.query(sql);
       return res.rows[0].sum;
@@ -8521,7 +8521,7 @@ export default {
     const client = await global.pool.connect();
     try {
       await this.SwitchCase(client, ajid);
-      let sql = `select count(id)::int count from ff_awaittask`;
+      let sql = `select count(id)::int count from mz_awaittask`;
       const res = await client.query(sql);
       return res.rows[0].count;
     } finally {

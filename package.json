@@ -8,7 +8,7 @@
   "name": "analysis-system",
   "version": "5.1.17",
   "author": "Panda",
-  "description": "Fanfu-资金流分析系统",
+  "description": "觅踪-资金分析系统",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "publish": [
@@ -30,7 +30,6 @@
   },
   "build": {
     "afterSign": "./vmpack/afterSign.js",
-    "productName": "analysis-system",
     "appId": "com.ff.panda",
     "directories": {
       "output": "build"
@@ -61,7 +60,8 @@
       ]
     },
     "nsis": {
-      "artifactName": "${productName}-Setup-${version}.${ext}"
+      "artifactName": "${name}-Setup-${version}.${ext}",
+      "shortcutName": "${description}"
     },
     "win": {
       "asarUnpack": [

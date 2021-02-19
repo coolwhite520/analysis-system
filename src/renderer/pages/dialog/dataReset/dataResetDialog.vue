@@ -158,7 +158,7 @@ export default {
   methods: {
     async getBakSourceSjlyids() {
       try {
-        let sql = `SELECT DISTINCT sjlyid from ff_bank_records_source;`;
+        let sql = `SELECT DISTINCT sjlyid from mz_bank_records_source;`;
         let ret = await Base.QueryCustom(sql, this.caseBase.ajid);
         return ret.rows.map((row) => row.sjlyid);
       } catch (e) {
@@ -232,38 +232,38 @@ export default {
             // 清理抽取的数据
             for (let sjlyid of sjlyidsAll) {
               await cases.DeleteCollectionRecords(this.caseBase.ajid, sjlyid, [
-                "ff_bank_records",
-                "ff_bank_records_source",
+                "mz_bank_records",
+                "mz_bank_records_source",
                 "st_data_source",
               ]);
             }
             // 清理抽取的数据
             for (let sjlyid of sjlyidsAll) {
               await cases.DeleteCollectionRecords(this.caseBase.ajid, sjlyid, [
-                "ff_bank_records",
-                "ff_bank_records_source",
+                "mz_bank_records",
+                "mz_bank_records_source",
                 "st_data_source",
               ]);
             }
-            // 清理ff_bank_records，并导入备份数据
-            let sql = `DELETE from ff_bank_records;`;
+            // 清理mz_bank_records，并导入备份数据
+            let sql = `DELETE from mz_bank_records;`;
             await Base.QueryCustom(sql, this.caseBase.ajid);
           } else {
             for (let sjlyid of sjlyidsAll) {
               await cases.DeleteCollectionRecords(this.caseBase.ajid, sjlyid, [
-                "ff_bank_records",
-                "ff_bank_records_source",
+                "mz_bank_records",
+                "mz_bank_records_source",
                 "st_data_source",
               ]);
             }
-            // 清理ff_bank_records，并导入备份数据
-            let sql = `DELETE from ff_bank_records;
-                INSERT into ff_bank_records SELECT * from ff_bank_records_source 
+            // 清理mz_bank_records，并导入备份数据
+            let sql = `DELETE from mz_bank_records;
+                INSERT into mz_bank_records SELECT * from mz_bank_records_source 
                 WHERE sjlyid in (${sjlyids});`;
             await Base.QueryCustom(sql, this.caseBase.ajid);
             // 从导入的表格中抽取数据
             sql = await dataImport.getDataResetExtractSqlByGasbankrecords(
-              "ff_bank_records",
+              "mz_bank_records",
               uuid.v1(),
               sjlyids
             );

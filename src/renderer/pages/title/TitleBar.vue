@@ -16,7 +16,7 @@
         </el-col>
         <el-col class="colum" :span="18">
           <div class="titleContent">
-            <span style="font-size: 25px"><b>FanFu</b>-资金流分析系统</span>
+            <span style="font-size: 25px">{{ defaultTitle }}</span>
           </div>
           <div
             v-if="currentViewName === 'main-page'"
@@ -178,6 +178,7 @@ export default {
   data() {
     return {
       oemname: require("../../../../package.json").oemname, // 是否是fanfu产品
+      defaultTitle: require("../../../../package.json").description,
       showStar: false,
       softVersion: this.$electron.remote.getGlobal("softVersion"),
     };

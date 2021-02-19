@@ -131,7 +131,7 @@ export default {
     async handleChangeChecked(val) {
       if (val) {
         for (let index = this.data.length - 1; index >= 0; index--) {
-          let sql = `select count(*)::int count from ff_bank_records where ${this.data[index].key} is not null`;
+          let sql = `select count(*)::int count from mz_bank_records where ${this.data[index].key} is not null`;
           let res = await Base.QueryCustom(sql, this.caseBase.ajid);
           console.log(res);
           if (res.success && res.rows[0].count === 0) {

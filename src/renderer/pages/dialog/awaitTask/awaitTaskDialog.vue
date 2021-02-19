@@ -765,7 +765,7 @@ export default {
             break;
         }
         let ids = selectedRows.map((row) => row.id);
-        let exportSql = `select * from ff_awaittask where id in (${ids})`;
+        let exportSql = `select * from mz_awaittask where id in (${ids})`;
         let args = {
           ajid: this.caseBase.ajid,
           exportSql,

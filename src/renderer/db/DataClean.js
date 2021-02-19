@@ -10,7 +10,7 @@ export default {
     let client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
-      let sql = `SELECT * FROM ff_datarules WHERE rule_type='${rule_type}' AND rule_datatype ='${tableename}'`;
+      let sql = `SELECT * FROM mz_datarules WHERE rule_type='${rule_type}' AND rule_datatype ='${tableename}'`;
       if (SelectDataSourceType == 1) {
         //DataSourceType.Person
         sql += " and tid>=2000 AND tid<3000 ";

@@ -218,11 +218,11 @@ export default {
       let text8 = pgsqlTemplate
         .replace(
           /\$MODEL_FILTER_GROUP\$/g,
-          GetBankDetailTableSql("ff_bank_records") //.replace(/\$/g,"$$$$")
+          GetBankDetailTableSql("mz_bank_records") //.replace(/\$/g,"$$$$")
         )
         .replace(
           /\$MODEL_FILTER_GROUP_SUM\$/g,
-          GetBankDetailTableSumSql("ff_bank_records")
+          GetBankDetailTableSumSql("mz_bank_records")
         )
         .replace(/\$AJID\$/g, caseId)
         .replace(/\${AJID}\$/g, caseId)

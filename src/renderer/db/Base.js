@@ -63,7 +63,7 @@ export default {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
-      let createTableName = "ff_match_file_record";
+      let createTableName = "mz_match_file_record";
       let createFields = [
         "md5",
         "matchedmbdm",
@@ -101,8 +101,8 @@ export default {
       let sqlSelect = `select count(*)::int count from st_data_template_field where id in (122800, 122801)`;
       let ret = await client.query(sqlSelect);
       if (ret.rows[0].count === 0) {
-        let sql = `INSERT INTO "st_data_template_field" ("id", "mbdm", "tableename", "fieldcname", "fieldename", "fieldtype", "fieldlength") VALUES (122800, '220001', 'ff_PHONE_CALL_INFO', '调单方真实姓名', 'DDFZSXM', 1, 100);
-        INSERT INTO "st_data_template_field" ("id", "mbdm", "tableename", "fieldcname", "fieldename", "fieldtype", "fieldlength") VALUES (122801, '220001', 'ff_PHONE_CALL_INFO', '对方真实姓名', 'DFZSXM', 1, 100);
+        let sql = `INSERT INTO "st_data_template_field" ("id", "mbdm", "tableename", "fieldcname", "fieldename", "fieldtype", "fieldlength") VALUES (122800, '220001', 'mz_PHONE_CALL_INFO', '调单方真实姓名', 'DDFZSXM', 1, 100);
+        INSERT INTO "st_data_template_field" ("id", "mbdm", "tableename", "fieldcname", "fieldename", "fieldtype", "fieldlength") VALUES (122801, '220001', 'mz_PHONE_CALL_INFO', '对方真实姓名', 'DFZSXM', 1, 100);
          `;
         await client.query(sql);
       }
