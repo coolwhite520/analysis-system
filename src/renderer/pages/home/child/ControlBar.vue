@@ -39,6 +39,24 @@
             round
             >&#xe652; 清空所有案件</el-button
           >
+          <el-button
+            v-if="false"
+            class="iconfont"
+            type="danger"
+            size="mini"
+            @click="handleClickModifydatarules"
+            round
+            >&#xe652; 修改datarules加密字段中包含gas前缀</el-button
+          >
+          <el-button
+            v-if="false"
+            class="iconfont"
+            type="danger"
+            size="mini"
+            @click="handleClickModifyTemplate"
+            round
+            >&#xe652; 修改Template加密字段中包含gas前缀</el-button
+          >
         </el-button-group>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
@@ -63,7 +81,9 @@ const uuid = require("uuid");
 import { mapState } from "vuex";
 
 import cases from "@/db/Cases";
+import base from "@/db/Base";
 const log = require("@/utils/log");
+import aes from "@/utils/aes";
 export default {
   data() {
     return {
@@ -86,6 +106,54 @@ export default {
     shell.config.execPath = shell.which("node").toString();
   },
   methods: {
+    async handleClickModifydatarules() {
+      try {
+        let sql = `SELECT tid, gpsqltemplate_select, gpsqltemplate_update from mz_datarules;`;
+        let ret = await base.QueryCustom(sql);
+        for (let row of ret.rows) {
+          if (row.gpsqltemplate_select) {
+            let dec = aes.decrypt(row.gpsqltemplate_select);
+            dec = dec.replace(/gas_/gi, "mz_");
+            let newValue = aes.encrypt(dec);
+            let update = `update mz_datarules set gpsqltemplate_select='${newValue}' where tid=${row.tid}`;
+            await base.QueryCustom(update);
+          }
+          if (row.gpsqltemplate_update) {
+            let dec = aes.decrypt(row.gpsqltemplate_update);
+            dec = dec.replace(/gas_/gi, "mz_");
+            let newValue = aes.encrypt(dec);
+            let update = `update mz_datarules set gpsqltemplate_update='${newValue}' where tid=${row.tid}`;
+            await base.QueryCustom(update);
+          }
+        }
+        console.log("ok");
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async handleClickModifyTemplate() {
+      try {
+        let sql = `SELECT mid, gpsqltemplate from layout_model_info;`;
+        let ret = await base.QueryCustom(sql);
+        console.log("sum:", ret.rows.length);
+        let count = 0;
+        for (let row of ret.rows) {
+          if (row.gpsqltemplate) {
+            let dec = aes.decrypt(row.gpsqltemplate);
+            if (/gas_/i.test(dec)) {
+              count++;
+              dec = dec.replace(/gas_/gi, "mz_");
+              let newValue = aes.encrypt(dec);
+              let update = `update layout_model_info set gpsqltemplate='${newValue}' where mid=${row.mid}`;
+              await base.QueryCustom(update);
+            }
+          }
+        }
+        console.log("ok count:", count);
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async handleClickDeleteAllCase() {
       let parent = this.$electron.remote.getGlobal("mainWindow");
       let result = await this.$electron.remote.dialog.showMessageBox(parent, {
