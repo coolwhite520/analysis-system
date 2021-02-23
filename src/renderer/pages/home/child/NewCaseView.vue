@@ -183,10 +183,10 @@ export default {
       asjfsddxzqmc: "",
       ruleForm: {
         ajlbArr: [], // element 返回的是一个数组类型
-        ajbh: "",
-        ajmc: "",
-        cjsj: "",
-        jjsj: "",
+        ajbh: new Date().Format("yyyyMMddhhmmss"),
+        ajmc: new Date().Format("yyyyMMddhhmmss"),
+        cjsj: new Date().Format("yyyy-MM-dd"),
+        jjsj: new Date().Format("yyyy-MM-dd"),
         zcjddm: "",
         jyaq: "",
         zhaq: "",
@@ -203,9 +203,9 @@ export default {
         ajbh: [
           { required: true, message: "请输入案件编号", trigger: "blur" },
           {
-            min: 6,
-            max: 12,
-            message: "长度在 6 到 12 个字符",
+            min: 2,
+            max: 18,
+            message: "长度在 2 到 18 个字符",
             trigger: "blur",
           },
         ],
@@ -213,8 +213,8 @@ export default {
           { required: true, message: "请输入案件名称", trigger: "blur" },
           {
             min: 2,
-            max: 12,
-            message: "长度在 2 到 12 个字符",
+            max: 18,
+            message: "长度在 2 到 18 个字符",
             trigger: "blur",
           },
         ],

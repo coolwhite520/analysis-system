@@ -125,6 +125,7 @@
     "secure-ls": "^1.2.6",
     "shelljs": "^0.8.4",
     "through2": "^4.0.2",
+    "transliteration": "^2.2.0",
     "uuid": "^8.3.0",
     "vue": "^2.6.11",
     "vue-electron": "^1.0.6",

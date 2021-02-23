@@ -193,7 +193,6 @@ export default {
     },
 
     handleClickNewCase() {
-      //this.currentViewName = "new-case-view";
       if (!global.pool) {
         this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", true);
       } else {

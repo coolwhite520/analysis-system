@@ -200,7 +200,7 @@ export default {
   InsertNewAwaitTaskToTable: async function(ajid, cxzh, jyhm, tid) {
     let sql;
     switch (tid) {
-      case "251":
+      case 251:
         sql = `INSERT INTO mz_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET)
         VALUES ('${ajid}','${cxzh}','','','','','01','个人','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
@@ -208,7 +208,7 @@ export default {
           "yyyy-MM-dd hh:mm:ss"
         )}','00000000','账卡号','3','${jyhm}','主要人员未调单对手账户'); `;
         break;
-      case "252":
+      case 252:
         sql = `INSERT INTO mz_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
         VALUES ('${ajid}','${cxzh}','','','','','01','个人','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
@@ -216,7 +216,7 @@ export default {
           "yyyy-MM-dd hh:mm:ss"
         )}','00000000','账卡号','3','${jyhm}','大额交易对手未调单账户'); `;
         break;
-      case "253":
+      case 253:
         sql = `INSERT INTO mz_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
         VALUES ('${ajid}','${cxzh}','','','','','02','单位','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
@@ -224,7 +224,7 @@ export default {
           "yyyy-MM-dd hh:mm:ss"
         )}','00000000','账卡号','3','${jyhm}','大额获利对手未调单账户'); `;
         break;
-      case "254":
+      case 254:
         sql = `INSERT INTO mz_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET) 
         VALUES ('${ajid}','${cxzh}','','','','','01','个人','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"
@@ -232,7 +232,7 @@ export default {
           "yyyy-MM-dd hh:mm:ss"
         )}','00000000','账卡号','3','${jyhm}','主要关联对手未调单账户'); `;
         break;
-      case "255":
+      case 255:
         sql = `INSERT INTO mz_awaittask (ajid, CXZH, YH_CODE, YH_NAME, ZZ_CODE, ZZ_NAME,ZH_ZTLB,ZH_ZTLB_NAME, TJSJ,XGSJ, TJRW,TASK_TYPE,TYPE_ID, JYHM, TARGET)
          VALUES ('${ajid}','${cxzh}','','','','','02','单位','${new Date().Format(
           "yyyy-MM-dd hh:mm:ss"

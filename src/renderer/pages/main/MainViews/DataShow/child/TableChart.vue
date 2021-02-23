@@ -114,6 +114,16 @@
           ></el-option>
         </el-select>
       </el-col>
+      <!-- <el-col :span="1" style="text-align: right">
+        <el-button
+          type="text"
+          size="mini"
+          class="iconfont"
+          style="margin-right: 10px"
+          @click="handleClickFullScreen"
+          >{{ !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button
+        >
+      </el-col> -->
     </el-row>
   </div>
 </template>
@@ -181,7 +191,7 @@ export default {
     async handleRightClickRow(row, column, event) {
       let value = row[column.property].value || row[column.property];
       console.log(row);
-      if (value) {
+      if (typeof value === "string") {
         clipboard.writeText(value + "");
         this.$message({
           type: "success",
@@ -234,6 +244,7 @@ export default {
         console.log(newRow);
         // 资金用途
         let tid = this.tableData.tid;
+        console.log({ tid });
         let selectedCNColumnName = "";
         if (tid === 901) {
           for (let item of this.tableData.showHeaders) {
@@ -253,7 +264,7 @@ export default {
         });
       } else if (showrightbtn_type === "button") {
         console.log(row);
-        if (["251", "252", "253", "254", "255"].includes(this.tableData.tid)) {
+        if ([251, 252, 253, 254, 255].includes(this.tableData.tid)) {
           try {
             let {
               success,
@@ -268,7 +279,7 @@ export default {
               });
               return;
             }
-            awaitTask.InsertNewAwaitTaskToTable(
+            await awaitTask.InsertNewAwaitTaskToTable(
               this.caseBase.ajid,
               row["zh"].value,
               row["mc"].value,

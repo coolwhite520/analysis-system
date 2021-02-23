@@ -48,7 +48,6 @@ import SaveProjectView from "@/pages/dialog/save/SaveCurrentProject.vue";
 import levelDb from "../../level/leveldb";
 import { Pool, Client } from "pg";
 import base from "@/db/Base.js";
-import { promises, resolve } from "dns";
 const log = require("electron-log");
 const fs = require("fs");
 const path = require("path");
@@ -56,18 +55,11 @@ const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
 import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
+
 // const html2canvas = require("html2canvas");
 export default {
   async mounted() {
     let _this = this;
-    // setInterval(() => {
-    //   if (global.pool && process.env.NODE_ENV === "development")
-    //     log.info({
-    //       totalCount: global.pool.totalCount,
-    //       idleCount: global.pool.idleCount,
-    //       waitingCount: global.pool.waitingCount,
-    //     });
-    // }, 1000 * 5);
     this.$electron.ipcRenderer.on("save-state", async (event, data) => {
       if (this.currentViewName === "home-page") {
         this.$message({
@@ -124,6 +116,9 @@ export default {
     this.stateBarTop = height;
     try {
       let configPath = this.$electron.remote.getGlobal("configPath");
+      global.configPath = configPath;
+      let vendorPath = this.$electron.remote.getGlobal("vendorPath");
+      global.vendorPath = vendorPath;
       let dbconfig = new DbConfig(configPath);
       let dbCon = dbconfig.readDbConfig();
       log.info(dbCon);

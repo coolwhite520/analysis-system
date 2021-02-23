@@ -56,7 +56,7 @@ import { DbConfig } from "@/utils/config";
 export default {
   mounted() {
     shell.config.execPath = shell.which("node").toString();
-    let configPath = this.$electron.remote.getGlobal("configPath");
+    let configPath = global.configPath;
     let config = new DbConfig(configPath);
     this.form = config.readDbConfig();
   },
@@ -94,7 +94,7 @@ export default {
           if (result.response === 0) {
             try {
               let { user, password, database, port, host } = this.form;
-              let configPath = this.$electron.remote.getGlobal("configPath");
+              let configPath = global.configPath;
               let config = new DbConfig(configPath);
               config.writeDbConfig({ user, host, database, password, port });
               this.$store.commit("DialogPopWnd/SET_DBCONFIGVISIBLE", false);

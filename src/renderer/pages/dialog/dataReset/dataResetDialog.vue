@@ -268,6 +268,12 @@ export default {
               sjlyids
             );
             await Base.QueryCustom(sql, this.caseBase.ajid);
+            // 更新ipsf、ipcs、ipdq 为空字符，便于排序
+            await dataImport.UpdateIpFields(
+              this.caseBase.ajid,
+              sjlyids,
+              "110002"
+            );
           }
           this.loading = false;
           await this.freshUI();

@@ -236,9 +236,9 @@ export default {
         ajbh: [
           { required: true, message: "请输入案件编号", trigger: "blur" },
           {
-            min: 6,
-            max: 12,
-            message: "长度在 6 到 12 个字符",
+            min: 2,
+            max: 18,
+            message: "长度在 2 到 18 个字符",
             trigger: "blur",
           },
         ],
@@ -246,8 +246,8 @@ export default {
           { required: true, message: "请输入案件名称", trigger: "blur" },
           {
             min: 2,
-            max: 12,
-            message: "长度在 2 到 12 个字符",
+            max: 18,
+            message: "长度在 2 到 18 个字符",
             trigger: "blur",
           },
         ],

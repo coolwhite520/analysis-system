@@ -23,7 +23,7 @@ CA_PageItemDetail为详细参数：
 交易日期规律    id= 305，设置交易日期 CA_PageItemDetail.jysj
 交易方式规律    id=  351，设置摘要说明 CA_PageItemDetail.zysm
 交易金额区间规律   id=352，设置交易区间 CA_PageItemDetail.jyqj
-交易地区分布    id= 353，设置省份名称 CA_PageItemDetail.sfmc
+交易地区分布    id= 353，设置国家名称 CA_PageItemDetail.gjmc
 交易金额特征     id=354，设置交易金额 CA_PageItemDetail.jyje
 交易时间规律     id=357，设置交易时间 CA_PageItemDetail.jysj
 交易时段分析     id=358，设置交易区间 CA_PageItemDetail.jyqj,设置最早最晚时间CA_PageItemDetail.mindate,CA_PageItemDetail.maxdate(模型参数)
@@ -941,37 +941,17 @@ function Get352DetailCondition(PageItemDetail, ColumnName) {
 }
 function Get353DetailCondition(PageItemDetail, ColumnName) {
   let list = [];
-  if (PageItemDetail.sfmc.replace(/'/g, "") == "未知") {
+  // gjmc 相当于国家名称
+  if (PageItemDetail.gjmc.replace(/'/g, "") == "未知") {
     list.push({
-      name: "JYFSD",
-      type: Default.FiltrateLogicID.NotContains,
-      value: "自治区",
-    });
-    list.push({
-      name: "JYFSD",
-      type: Default.FiltrateLogicID.NotContains,
-      value: "省",
-    });
-    list.push({
-      name: "JYFSD",
-      type: Default.FiltrateLogicID.NotContains,
-      value: "市",
-    });
-  } else if (
-    !PageItemDetail.sfmc.endsWith("自治区'") &&
-    !PageItemDetail.sfmc.endsWith("省'") &&
-    !PageItemDetail.sfmc.endsWith("市'")
-  ) {
-    list.push({
-      name: "JYFSD",
-      type: Default.FiltrateLogicID.Contains,
-      value: PageItemDetail.sfmc.replace(/'/g, ""),
+      name: "IPGJ",
+      type: Default.FiltrateLogicID.IsEmpty,
     });
   } else {
     list.push({
-      name: "JYFSD",
+      name: "IPGJ",
       type: Default.FiltrateLogicID.EqualTo,
-      value: PageItemDetail.sfmc.replace(/'/g, ""),
+      value: PageItemDetail.gjmc.replace(/'/g, ""),
     });
   }
   if (ColumnName == "INCOUNT") {
@@ -989,6 +969,87 @@ function Get353DetailCondition(PageItemDetail, ColumnName) {
   }
   //return list
   //return (" AND "+ GetListCondition(list));
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
+}
+
+function Get359DetailCondition(PageItemDetail, ColumnName) {
+  let list = [];
+  list.push({
+    name: "IPGJ",
+    type: Default.FiltrateLogicID.EqualTo,
+    value: PageItemDetail.gjmc.replace(/'/g, ""),
+  });
+  if (PageItemDetail.sfmc.replace(/'/g, "") == "未知") {
+    list.push({
+      name: "IPSF",
+      type: Default.FiltrateLogicID.IsEmpty,
+    });
+  } else {
+    list.push({
+      name: "IPSF",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: PageItemDetail.sfmc.replace(/'/g, ""),
+    });
+  }
+  if (ColumnName == "INCOUNT") {
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
+  } else if (ColumnName == "OUTCOUNT") {
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
+  }
+  return {
+    str: " AND " + GetListCondition(list),
+    obj: GetDataFilterFromList(list),
+  };
+}
+
+function Get360DetailCondition(PageItemDetail, ColumnName) {
+  let list = [];
+  list.push({
+    name: "IPGJ",
+    type: Default.FiltrateLogicID.EqualTo,
+    value: PageItemDetail.gjmc.replace(/'/g, ""),
+  });
+  list.push({
+    name: "IPSF",
+    type: Default.FiltrateLogicID.EqualTo,
+    value: PageItemDetail.sfmc.replace(/'/g, ""),
+  });
+  if (PageItemDetail.csmc.replace(/'/g, "") == "未知") {
+    list.push({
+      name: "IPCS",
+      type: Default.FiltrateLogicID.IsEmpty,
+    });
+  } else {
+    list.push({
+      name: "IPCS",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: PageItemDetail.csmc.replace(/'/g, ""),
+    });
+  }
+  if (ColumnName == "INCOUNT") {
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "进",
+    });
+  } else if (ColumnName == "OUTCOUNT") {
+    list.push({
+      name: "JDBZ",
+      type: Default.FiltrateLogicID.EqualTo,
+      value: "出",
+    });
+  }
   return {
     str: " AND " + GetListCondition(list),
     obj: GetDataFilterFromList(list),
@@ -1286,6 +1347,21 @@ function Get824CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
     "'" + _CA_PageItemDetail.ddfhm + "'"
   ).replace(/\$DFHM\$/g, "'" + _CA_PageItemDetail.dfhm + "'");
 }
+
+function Get359CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
+  return _CA_PageItemDetail.CurrentExeSql.replace(
+    /\$IPGJ\$/g,
+    `'${_CA_PageItemDetail.gjmc}'`
+  );
+}
+
+function Get360CA_PageItem(_CA_PageItemDetail, CurrTabItem) {
+  return _CA_PageItemDetail.CurrentExeSql.replace(
+    /\$IPGJ\$/g,
+    `'${_CA_PageItemDetail.gjmc}'`
+  ).replace(/\$IPSF\$/g, `'${_CA_PageItemDetail.sfmc}'`);
+}
+
 function Get333CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   let field = CurrTabItem.M_TYPE == 90014 ? "IP" : "MAC";
   if (ColumnName == "GLDDZHS") {
@@ -1303,6 +1379,7 @@ function Get333CA_PageItem(_CA_PageItemDetail, CurrTabItem, ColumnName) {
   }
   return "";
 }
+
 function Get333DetailCondition(cA_PageItemDetail, ColumnName) {
   let list = [];
   let field = cA_PageItemDetail.hasOwnProperty("ip") ? "ip" : "mac";
@@ -1517,9 +1594,35 @@ function AnalysePageGrid_OnLinkClick(
         msg: Get351DetailCondition(cA_PageItemDetail, ColumnName),
       };
     case 353:
+      return ColumnName.toUpperCase() === "GJMC"
+        ? {
+            type: "359",
+            msg: {
+              str: Get359CA_PageItem(cA_PageItemDetail, CurrTabItem),
+              obj: null,
+            },
+          }
+        : {
+            type: "4",
+            msg: Get353DetailCondition(cA_PageItemDetail, ColumnName),
+          };
+    case 359:
+      return ColumnName.toUpperCase() === "SFMC"
+        ? {
+            type: "360",
+            msg: {
+              str: Get360CA_PageItem(cA_PageItemDetail, CurrTabItem),
+              obj: null,
+            },
+          }
+        : {
+            type: "4",
+            msg: Get359DetailCondition(cA_PageItemDetail, ColumnName),
+          };
+    case 360:
       return {
         type: "4",
-        msg: Get353DetailCondition(cA_PageItemDetail, ColumnName),
+        msg: Get360DetailCondition(cA_PageItemDetail, ColumnName),
       };
     case 305:
       return {
@@ -1875,7 +1978,9 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
     jysj: "", //交易时间
     zzlxmc: "", //证照类型名称
     zysm: "", //摘要说明
+    gjmc: "", //国家名称
     sfmc: "", //省份名称
+    csmc: "", //城市名称
     jyqj: "", //交易区间;时段区间
     groupname: "", //分组值
     groupid: "", //分组ID名称
@@ -1936,7 +2041,16 @@ function OnLinkClick(CA_PageItem, item, parm, ColumnName) {
       CA_PageItemDetail.jyqj = item["jyqj"].trim();
       break;
     case 353:
+      CA_PageItemDetail.gjmc = item["gjmc"].trim();
+      break;
+    case 359:
+      CA_PageItemDetail.gjmc = item["gjmc"].trim();
       CA_PageItemDetail.sfmc = item["sfmc"].trim();
+      break;
+    case 360:
+      CA_PageItemDetail.gjmc = item["gjmc"].trim();
+      CA_PageItemDetail.sfmc = item["sfmc"].trim();
+      CA_PageItemDetail.csmc = item["csmc"].trim();
       break;
     case 354:
       CA_PageItemDetail.jyje = item["jyje"].trim();

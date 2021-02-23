@@ -7,7 +7,6 @@ const DB_FILE_NAME = "dbconfig.cfg";
 const OTHER_FILE_NAME = "others.cfg";
 class DbConfig {
   constructor(configPath) {
-    // let configPath = remote.getGlobal("configPath");
     this.configFilePath = path.join(configPath, DB_FILE_NAME);
     log.info(this.configFilePath);
     if (!fs.existsSync(this.configFilePath)) {

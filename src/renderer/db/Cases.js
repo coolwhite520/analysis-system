@@ -329,6 +329,18 @@ export default {
       client.release();
     }
   },
+  // 查询ajid是否存在
+  QueryAjidExist: async function(ajid) {
+    const client = await global.pool.connect();
+    try {
+      let sql = `SELECT count(*)::int count FROM icap_base.st_case where ajid=${ajid}`;
+      console.log(sql);
+      const res = await client.query(sql);
+      return res.rows[0].count === 0 ? false : true;
+    } finally {
+      client.release();
+    }
+  },
   // 查询最大案件编号
   QueryCaseMaxCount: async function() {
     const client = await global.pool.connect();
@@ -392,6 +404,23 @@ export default {
       client.release();
     }
   },
+  createNewAjid: async function() {
+    function GetRandomNum(Min, Max) {
+      var Range = Max - Min;
+      var Rand = Math.random();
+      return Min + Math.round(Rand * Range);
+    }
+    let ajid = 0;
+    do {
+      ajid = GetRandomNum(1, 2147483647);
+      console.log({ ajid });
+      if (!(await this.QueryAjidExist(ajid))) {
+        break;
+      }
+    } while (true);
+    console.log({ ajid });
+    return ajid;
+  },
   // 创建一个新的案件
   CreateNewCase: async function(
     ajbh,
@@ -413,12 +442,14 @@ export default {
     sjlx
   ) {
     const client = await global.pool.connect();
+
     try {
       // 获取配置文件
-      let configPath = remote.getGlobal("configPath");
+      let configPath = global.configPath;
       let conf = new DbConfig(configPath);
       let obj = await conf.readDbConfig();
-      let ajid = (await this.QueryCaseMaxCount()) + 1;
+      // let ajid = (await this.QueryCaseMaxCount()) + 1;
+      let ajid = await this.createNewAjid();
       let scheamName = await this.CreateNewCaseSchema(ajid, obj.user);
       if (scheamName) {
         let content = ` -- ---------------------------- 
@@ -2732,9 +2763,12 @@ export default {
            "bgjg" varchar(100) COLLATE "pg_catalog"."default", 
            "swszfl" varchar(100) COLLATE "pg_catalog"."default", 
            "wyipdz" varchar(30) COLLATE "pg_catalog"."default", 
+           "ipgj" varchar(200) COLLATE "pg_catalog"."default",
            "ipsf" varchar(200) COLLATE "pg_catalog"."default", 
            "ipcs" varchar(200) COLLATE "pg_catalog"."default", 
-           "ipdq" varchar(200) COLLATE "pg_catalog"."default" 
+           "ipdq" varchar(200) COLLATE "pg_catalog"."default", 
+           "iplong" numeric, 
+           "iplati" numeric 
          ) 
          ; 
          COMMENT ON COLUMN "mz_bank_records"."shard_id" IS '分片ID'; 
@@ -2871,9 +2905,12 @@ export default {
          COMMENT ON COLUMN "mz_bank_records"."bgjg" IS '报告机构'; 
          COMMENT ON COLUMN "mz_bank_records"."swszfl" IS '涉外收支分类'; 
          COMMENT ON COLUMN "mz_bank_records"."wyipdz" IS '网银IP地址'; 
+         COMMENT ON COLUMN "mz_bank_records"."ipgj" IS 'ip所属国家'; 
          COMMENT ON COLUMN "mz_bank_records"."ipsf" IS 'ip所属省份'; 
          COMMENT ON COLUMN "mz_bank_records"."ipcs" IS 'ip所属城市'; 
          COMMENT ON COLUMN "mz_bank_records"."ipdq" IS 'ip所属地区'; 
+         COMMENT ON COLUMN "mz_bank_records"."iplong" IS 'ip所属经度'; 
+         COMMENT ON COLUMN "mz_bank_records"."iplati" IS 'ip所属纬度'; 
          COMMENT ON TABLE "mz_bank_records" IS '资金分析账户交易明细表'; 
           
          -- ---------------------------- 

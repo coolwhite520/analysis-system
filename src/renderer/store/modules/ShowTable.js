@@ -687,6 +687,7 @@ const actions = {
 
     if (typeof pgsqlTemplateDecode === "undefined") {
       pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+      console.log(pgsqlTemplateDecode);
       // 过滤结构体转sql字符串
     }
     let filterChildStr = convertSql.convertDataFilterToSqlStr(
@@ -924,12 +925,15 @@ const actions = {
           linkMid
         );
         let pgsqlTemplateDecode = aes.decrypt(pgsqltemplate);
+        console.log(pgsqlTemplateDecode);
+
         let { msg, type } = linkSqlFormat.format(
           { M_TYPE: parseInt(tid), Sql_Detail: pgsqlTemplateDecode },
           row,
           selectCondition,
           fieldename.toUpperCase()
         );
+        console.log("@@@", msg, type);
         let filterChildStr = state.currentTableData.modelFilterStr;
         await dispatch("showModelTable", {
           tid: parseInt(type),

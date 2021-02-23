@@ -1707,6 +1707,22 @@ export default {
       client.release();
     }
   },
+  UpdateIpFields: async function(ajid, sjlyids, mbdm) {
+    if (mbdm === "110002") {
+      const client = await global.pool.connect();
+      await cases.SwitchCase(client, ajid);
+      try {
+        let sql = `update mz_bank_records set ipgj='', ipsf='', ipcs='', ipdq='' WHERE ajid=${ajid} and sjlyid in ('${sjlyids}')
+         and (ipgj is NULL or ipsf is NULL or ipcs is NULL or ipdq is NULL);`;
+        console.log(sql);
+        await client.query(sql);
+        return { success: true };
+      } finally {
+        client.release();
+      }
+    }
+  },
+
   // 展示目标表的结构
   showTableStruct: async function(ajid, tableName) {
     const client = await global.pool.connect();

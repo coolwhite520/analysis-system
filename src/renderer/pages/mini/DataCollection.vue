@@ -1244,6 +1244,9 @@ export default {
               matchedMbdm,
               sjlyid
             );
+            // 更新ipsf、ipcs、ipdq 为空字符，便于排序
+            await dataImport.UpdateIpFields(ajid, sjlyid, matchedMbdm);
+
             await dataImport.deleteTempTable(ajid, tempTableName);
             this.$electron.ipcRenderer.send("import-one-table-complete", {
               id,

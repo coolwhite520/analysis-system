@@ -788,12 +788,26 @@
                 ></el-input>
               </div>
             </div>
-
+            <!-- 44 是交易地区分布模型 -->
+            <div
+              v-show="currentTableData.mpids.includes('44')"
+              class="selectionItem"
+            >
+              <div style="text-align: center">
+                <el-button
+                  size="mini"
+                  type="primary"
+                  @click="handleClickLocationVis"
+                  >数据可视化</el-button
+                >
+              </div>
+            </div>
             <div
               v-show="
                 currentTableData.mpids.length > 0 &&
                 !currentTableData.mpids.includes('30') &&
-                !currentTableData.mpids.includes('33')
+                !currentTableData.mpids.includes('33') &&
+                !currentTableData.mpids.includes('44')
               "
               style="margin-top: 40px; text-align: center"
             >
@@ -823,18 +837,20 @@
     </el-row>-->
     <money-dalog v-if="showMoneySectionDialog"></money-dalog>
     <weidu-dialog v-if="showWeiSettingVisible"></weidu-dialog>
+    <trans-loc v-if="showTransLocationDialogVisible"></trans-loc>
   </div>
 </template>
 
 <script>
-import aes from "@/utils/aes";
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import MoneyDialog from "@/pages/dialog/moneySectionSetting/moneySectionDialog.vue";
 import WeiDuDialog from "@/pages/dialog/zjTouShiModel/weiduSetting.vue";
+import TransLocationDialog from "@/pages/dialog/visible/transLocationDialog.vue";
 export default {
   components: {
     "money-dalog": MoneyDialog,
     "weidu-dialog": WeiDuDialog,
+    "trans-loc": TransLocationDialog,
   },
   data() {
     return {
@@ -984,6 +1000,7 @@ export default {
     ...mapState("DialogPopWnd", [
       "showMoneySectionDialog",
       "showWeiSettingVisible",
+      "showTransLocationDialogVisible",
     ]),
     MoneyIntervalDes() {
       let text = "";
@@ -1097,6 +1114,13 @@ export default {
     },
     handleClickMoneySection() {
       this.$store.commit("DialogPopWnd/SET_SHOWMONEYSECTIONDIALOG", true);
+    },
+    // 交易地区分布可视化
+    handleClickLocationVis() {
+      this.$store.commit(
+        "DialogPopWnd/SET_SHOWTRANSLOCATIONDIALOGVISIBLE",
+        true
+      );
     },
     handleClickClose() {
       this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {

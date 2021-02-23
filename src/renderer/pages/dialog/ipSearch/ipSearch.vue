@@ -23,14 +23,22 @@
           v-if="result"
         >
           <!-- <div><h3>查询结果</h3></div> -->
-          <div style="font-size: 12px; color: green">
-            IP地址：{{ result.ip }}
+          <div style="font-size: 12px">
+            IP地址：<span style="color: green">{{ result.ip }}</span>
           </div>
-          <div style="font-size: 12px; color: green">
-            归属地：{{ result.Country }}
+          <div style="font-size: 12px">
+            国家：<span style="color: green">{{ result.Country }}</span>
           </div>
-          <div style="font-size: 12px; color: green">
-            所在区域：{{ result.Area }}
+          <div style="font-size: 12px">
+            省份：<span style="color: green">{{ result.Province }}</span>
+          </div>
+          <div style="font-size: 12px">
+            城市：<span style="color: green">{{ result.City }}</span>
+          </div>
+          <div style="font-size: 12px">
+            区、县、地级市：<span style="color: green">{{
+              result.Region
+            }}</span>
           </div>
         </el-row>
         <el-row style="text-align: center">
@@ -102,18 +110,10 @@
 <script>
 import { mapState } from "vuex";
 import Base from "@/db/Base";
-import { table } from "console";
 const fs = require("fs");
 const path = require("path");
-let citys = "北京市，天津市，上海市，重庆市，香港特别行政区，澳门特别行政区".split(
-  "，"
-);
-let provinces = "河北省，山西省，辽宁省，吉林省，黑龙江省，江苏省，浙江省，安徽省，福建省，江西省，山东省，河南省，湖北省，湖南省，广东省，海南省，四川省，贵州省，云南省，陕西省，甘肃省，青海省，台湾省".split(
-  "，"
-);
-let zzq = "内蒙古自治区，广西壮族自治区，西藏自治区，宁夏回族自治区，新疆维吾尔自治区".split(
-  "，"
-);
+import IpDataBase from "@/utils/ip/ipp";
+
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showIpDialogVisible"]),
@@ -123,7 +123,7 @@ export default {
   data() {
     return {
       title: "IP归属地查询",
-      ip: "",
+      ip: "60.14.35.199",
       result: null,
       activeName: "first",
       countIP: 0,
@@ -135,6 +135,18 @@ export default {
     };
   },
   async mounted() {
+    if (!this.$ipsearch) {
+      try {
+        // 初始化ip解析库
+        let baseDbFilePath = path.join(global.vendorPath, "base", "ips.dat");
+        await IpDataBase.initIPDataBase(baseDbFilePath);
+        this.$ipsearch = IpDataBase;
+      } catch (e) {
+        this.$message.error({
+          message: "ip解析库初始化失败，请查看ip库是否存在." + e.message,
+        });
+      }
+    }
     await this.fresh();
   },
   methods: {
@@ -177,7 +189,7 @@ export default {
         this.existIpRows = res.rows.filter((row) => this.isValidIP(row.ip));
         this.countIP = this.existIpRows.length;
 
-        let sql2 = `select shard_id,ip from mz_bank_records where length(ip)>0 and length(jyfsd)=0 order by shard_id`;
+        let sql2 = `select shard_id,ip from mz_bank_records where length(ip)>0 and length(ipgj)=0 order by shard_id`;
         res = await Base.QueryCustom(sql2, this.caseBase.ajid);
         this.notAnalysisIpRows = res.rows.filter((row) =>
           this.isValidIP(row.ip)
@@ -195,17 +207,37 @@ export default {
           if (!this.showIpDialogVisible) return;
           let ip = item.ip.replace(/^\s+|\s+$/g, "");
           if (this.isValidIP(ip)) {
-            let result = this.$qqwry.searchIP(ip);
-            let Country = result ? result.Country : "";
-            let allArea = citys.concat(provinces).concat(zzq);
-            let findCountry = allArea.find((value) => value.includes(Country));
-            if (findCountry) {
-              Country = findCountry;
+            let strLocation = this.$ipsearch.FindLocationByIp(ip);
+            if (strLocation.length > 0) {
+              // 亚洲|中国|北京|北京|丰台||110106|China|CN|116.28625|39.8585
+              let arr = strLocation.split("|");
+              let result = {
+                ip,
+                Continent: arr[0], // 大洲
+                Country: arr[1], // 国家
+                Province: arr[2], // 省份直辖市
+                City: arr[3], // 城市
+                Region: arr[4], // 区
+                X: arr[5], // 运营商
+                PostNo: arr[6],
+                EnName: arr[7], //英文名
+                EnJianCheng: arr[8], // 简称
+                Longitude: arr[9], // 经度
+                Latitude: arr[10], // 纬度
+              };
+              let updateSql = `update mz_bank_records set ipgj='${result.Country}', 
+              ipsf='${result.Province}', 
+              ipcs='${result.City}', 
+              ipdq='${result.Region}',
+              iplong=${result.Longitude},
+              iplati=${result.Latitude}
+               where shard_id=${item.shard_id};`;
+              await Base.QueryCustom(updateSql, this.caseBase.ajid);
+              index++;
+              this.percentage = parseInt(
+                (index / this.countIPNoAnalysis) * 100
+              );
             }
-            let updateSql = `update mz_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
-            await Base.QueryCustom(updateSql, this.caseBase.ajid);
-            index++;
-            this.percentage = parseInt((index / this.countIP) * 100);
           }
         }
       } catch (e) {
@@ -224,17 +256,37 @@ export default {
           if (!this.showIpDialogVisible) return;
           let ip = item.ip.replace(/^\s+|\s+$/g, "");
           if (this.isValidIP(ip)) {
-            let result = this.$qqwry.searchIP(ip);
-            let Country = result ? result.Country : "";
-            let allArea = citys.concat(provinces).concat(zzq);
-            let findCountry = allArea.find((value) => value.includes(Country));
-            if (findCountry) {
-              Country = findCountry;
+            let strLocation = this.$ipsearch.FindLocationByIp(ip);
+            if (strLocation.length > 0) {
+              // 亚洲|中国|北京|北京|丰台||110106|China|CN|116.28625|39.8585
+              let arr = strLocation.split("|");
+              let result = {
+                ip,
+                Continent: arr[0], // 大洲
+                Country: arr[1], // 国家
+                Province: arr[2], // 省份直辖市
+                City: arr[3], // 城市
+                Region: arr[4], // 区
+                X: arr[5], // 运营商
+                PostNo: arr[6],
+                EnName: arr[7], //英文名
+                EnJianCheng: arr[8], // 简称
+                Longitude: arr[9], // 经度
+                Latitude: arr[10], // 纬度
+              };
+              let updateSql = `update mz_bank_records set ipgj='${result.Country}', 
+              ipsf='${result.Province}', 
+              ipcs='${result.City}', 
+              ipdq='${result.Region}',
+              iplong=${result.Longitude},
+              iplati=${result.Latitude}
+               where shard_id=${item.shard_id};`;
+              await Base.QueryCustom(updateSql, this.caseBase.ajid);
+              index++;
+              this.percentage = parseInt(
+                (index / this.countIPNoAnalysis) * 100
+              );
             }
-            let updateSql = `update mz_bank_records set jyfsd='${Country}' where shard_id=${item.shard_id};`;
-            await Base.QueryCustom(updateSql, this.caseBase.ajid);
-            index++;
-            this.percentage = parseInt((index / this.countIPNoAnalysis) * 100);
           } else {
             console.log(ip);
           }
@@ -252,32 +304,38 @@ export default {
       return reg.test(ip);
     },
     handleClickSearch() {
-      if (this.ip === "") {
+      let ip = this.ip;
+      if (ip === "") {
         this.$message({
           message: "ip输入框为空，请输入内容",
         });
         return;
       }
-      if (!this.isValidIP(this.ip)) {
+      if (!this.isValidIP(ip)) {
         this.$message({
           message: "您输入的ip地址格式错误。例如：0.0.0.0",
         });
         return;
       }
-      this.result = this.$qqwry.searchIP(this.ip);
-      console.log(this.result);
-      var reg = /.+?(省|市|自治区|自治州|县|区)/g;
-      let Country = this.result.Country;
-      let res = Country.match(reg);
-      if (res.length > 1) {
-        this.result.Country = "";
-        for (let item of res) {
-          this.result.Country += item + ",";
-        }
-        this.result.Country = this.result.Country.slice(
-          0,
-          this.result.Country.length - 1
-        );
+      let strLocation = this.$ipsearch.FindLocationByIp(ip);
+      if (strLocation.length > 0) {
+        // 亚洲|中国|北京|北京|丰台||110106|China|CN|116.28625|39.8585
+        let arr = strLocation.split("|");
+        this.result = {
+          ip,
+          Continent: arr[0], // 大洲
+          Country: arr[1], // 国家
+          Province: arr[2], // 省份直辖市
+          City: arr[3], // 城市
+          Region: arr[4], // 区
+          X: arr[5], // 运营商
+          PostNo: arr[6],
+          EnName: arr[7], //英文名
+          EnJianCheng: arr[8], // 简称
+          Longitude: arr[9], // 经度
+          Latitude: arr[10], // 纬度
+        };
+        console.log(this.result);
       }
     },
     handleClose() {

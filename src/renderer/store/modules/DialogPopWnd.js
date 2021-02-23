@@ -31,6 +31,7 @@ const state = {
   showZjytLinkVisible: false,
   showDataComplementVisible: false,
   showDataResetVisible: false,
+  showTransLocationDialogVisible: false,
 };
 
 const mutations = {
@@ -128,6 +129,9 @@ const mutations = {
   },
   SET_SHOWDATARESETVISIBLE(state, showDataResetVisible) {
     state.showDataResetVisible = showDataResetVisible;
+  },
+  SET_SHOWTRANSLOCATIONDIALOGVISIBLE(state, showTransLocationDialogVisible) {
+    state.showTransLocationDialogVisible = showTransLocationDialogVisible;
   },
 };
 
