@@ -123,7 +123,7 @@ export default {
   data() {
     return {
       title: "IP归属地查询",
-      ip: "60.14.35.199",
+      ip: "119.15.84.78",
       result: null,
       activeName: "first",
       countIP: 0,
@@ -139,6 +139,9 @@ export default {
       try {
         // 初始化ip解析库
         let baseDbFilePath = path.join(global.vendorPath, "base", "ips.dat");
+        if (process.env.NODE_ENV !== "production") {
+          baseDbFilePath = "/Users/baiyang/Desktop/ips.dat";
+        }
         await IpDataBase.initIPDataBase(baseDbFilePath);
         this.$ipsearch = IpDataBase;
       } catch (e) {
@@ -319,6 +322,7 @@ export default {
       }
       let strLocation = this.$ipsearch.FindLocationByIp(ip);
       if (strLocation.length > 0) {
+        console.log(strLocation);
         // 亚洲|中国|北京|北京|丰台||110106|China|CN|116.28625|39.8585
         let arr = strLocation.split("|");
         this.result = {

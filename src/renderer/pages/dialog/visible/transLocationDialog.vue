@@ -15,11 +15,14 @@
       <div class="button-right">
         <span class="title-close" @click="handleClose"></span>
       </div>
-    </div>
-    <div style="background-color: #aad6f8">
       <div style="text-align: right">
-        <el-button v-if="unKnowCount > 0" size="mini" @click="handleClickUnKnow"
-          >未知：{{ unKnowCount }}</el-button
+        <el-button
+          style="color: white; margin-right: 10px"
+          v-if="unKnowCount > 0"
+          size="mini"
+          @click="handleClickUnKnow"
+          type="text"
+          ><u>未知：{{ unKnowCount }}</u></el-button
         >
         <el-select
           v-model="selectedValue"
@@ -36,7 +39,8 @@
           </el-option>
         </el-select>
       </div>
-
+    </div>
+    <div v-loading="loading">
       <div :id="id" style="height: 400px; width: 100%"></div>
     </div>
   </el-dialog>
@@ -46,7 +50,7 @@
 import { mapState } from "vuex";
 import { slugify } from "transliteration";
 const uuid = require("uuid");
-let nameMap = {
+let nameMapWorld = {
   Afghanistan: "阿富汗",
   Singapore: "新加坡",
   Angola: "安哥拉",
@@ -263,7 +267,61 @@ let nameMap = {
   "Turks and Caicos Is.": "特克斯和凯科斯群岛",
   "St. Vin. and Gren.": "圣文森特和格林纳丁斯",
 };
-
+var selfnameMap = {
+  Iran: "Islamic Republic of Iran",
+  "United States": "USA",
+  "Democratic Republic of the Congo": "Congo-Brazzaville",
+  "Republic of the Congo": "Congo-Kinshasa",
+};
+var specialAreas = {
+  USA: {
+    Alaska: {
+      // 把阿拉斯加移到美国主大陆左下方
+      left: -131,
+      top: 25,
+      width: 15,
+    },
+    Hawaii: {
+      left: -110, // 夏威夷
+      top: 28,
+      width: 5,
+    },
+    "Puerto Rico": {
+      // 波多黎各
+      left: -76,
+      top: 26,
+      width: 2,
+    },
+  },
+  France: {
+    Guadeloupe: {
+      left: -4.8,
+      top: 37,
+      width: 1,
+    },
+    Martinique: {
+      left: -1,
+      top: 37,
+      width: 1,
+    },
+    "French Guiana": {
+      left: 3.2,
+      top: 37,
+      width: 2,
+    },
+    Mayotte: {
+      left: 9,
+      top: 37,
+      width: 1,
+    },
+    Réunion: {
+      left: 11,
+      top: 37,
+      width: 1.5,
+    },
+  },
+};
+import Base from "@/db/Base.js";
 export default {
   mounted() {
     this.$nextTick(() => {
@@ -280,18 +338,22 @@ export default {
       handler(newValue, oldValue) {
         this.makeData(this.selectedValue);
         this.draw();
+        this.loading = false;
       },
       deep: true,
     },
   },
   data() {
     return {
+      loading: false,
       unKnowCount: 0,
       id: uuid.v1(),
       data: [],
       minValue: 0,
       maxValue: 0,
       title: "交易地区分布 - 国家",
+      currentCountry: "",
+      currentProvince: "",
       tipTitle: "",
       myChart: null,
       selectedValue: "allcount",
@@ -351,7 +413,7 @@ export default {
         }
       }
     },
-    makeDataForChina(type) {
+    makeDataForCountry(type) {
       this.tipTitle = this.selectList.find((el) => el.value === type).cname;
       this.data = this.currentTableData.rows.map((row) => {
         return {
@@ -421,12 +483,14 @@ export default {
       this.maxValue = 0;
       this.minValue = 0;
       this.unKnowCount = 0;
-
       if (this.currentTableData.tid === 353) {
         this.makeDataForWorld(type);
       } else if (this.currentTableData.tid === 359) {
-        this.makeDataForChina(type);
+        this.currentCountry = this.currentTableData.rows[0].gjmc.value;
+        this.makeDataForCountry(type);
       } else if (this.currentTableData.tid === 360) {
+        this.currentCountry = this.currentTableData.rows[0].gjmc.value;
+        this.currentProvince = this.currentTableData.rows[0].sfmc.value;
         this.makeDataForProvince(type);
       }
     },
@@ -461,8 +525,7 @@ export default {
           text: ["最大值", "最小值"], // 文本，默认为数值文本
           calculable: true,
         },
-        nameMap: nameMap,
-        roam: true,
+        nameMap: nameMapWorld,
         toolbox: {
           show: true,
           orient: "horizontal",
@@ -482,10 +545,11 @@ export default {
         },
         series: [
           {
+            coordinateSystem: "geo",
             name: _this.tipTitle,
             type: "map",
             mapType: "world",
-            roam: false,
+            roam: true,
             label: {
               show: false, // 这里就不在地图上显示名字了，200多个会晕的
               color: "gray",
@@ -496,9 +560,113 @@ export default {
       };
       this.myChart.setOption(option);
     },
+    findENNameByCNname(cnname) {
+      for (let k in nameMapWorld) {
+        if (nameMapWorld[k] === cnname) {
+          return k;
+        }
+      }
+      return "";
+    },
+    // 根据国家的中文名称从数据库获取省份、州的英文和中文信息
+    async getNamedMapByCnCountry(cnCountry) {
+      let sql = `SELECT DISTINCT "state", cn_state from city_en_cn WHERE cn_country='${cnCountry}';`;
+      let { success, rows } = await Base.QueryCustom(sql);
+      if (success) {
+        let namedMap = {};
+        rows.forEach((element) => {
+          namedMap[element.state] = element.cn_state;
+        });
+        return namedMap;
+      }
+    },
+    async drawCountryMap() {
+      let _this = this;
+      let enName = this.findENNameByCNname(this.currentCountry);
+      if (enName === "") {
+        this.$message({
+          message: `未找到【${this.currentCountry}】国家的地图。`,
+        });
+        return;
+      }
+      if (selfnameMap[enName]) {
+        enName = selfnameMap[enName];
+      }
+      enName = enName.split(" ").join("_");
+      let geoJson = require("./json/" + enName + ".json");
+      this.$echarts.registerMap(enName, geoJson, specialAreas[enName]);
+      let nameMapCoutry = {};
+      // let nameMapCoutry = await this.getNamedMapByCnCountry(
+      //   this.currentCountry
+      // );
+      // let nameMapCoutry = require("./output/" + enName + "_en_cn.json");
+      this.title = `交易地区分布 - ${this.currentCountry}`;
+      let option = {
+        backgroundColor: "#aad6f8",
+        tooltip: {
+          trigger: "item",
+        },
+        visualMap: {
+          left: "right",
+          min: _this.minValue,
+          max: _this.maxValue,
+          inRange: {
+            color: [
+              "#313695",
+              "#4575b4",
+              "#74add1",
+              "#abd9e9",
+              "#e0f3f8",
+              "#ffffbf",
+              "#fee090",
+              "#fdae61",
+              "#f46d43",
+              "#d73027",
+              "#a50026",
+            ],
+          },
+          text: ["最大值", "最小值"], // 文本，默认为数值文本
+          calculable: true,
+        },
+        nameMap: nameMapCoutry,
+        toolbox: {
+          show: true,
+          orient: "horizontal",
+          left: "left",
+          top: "bottom",
+          feature: {
+            mark: { show: true },
+            saveAsImage: { show: true, name: "交易地区分布图" },
+          },
+        },
+        roamController: {
+          show: true,
+          left: "right",
+          mapTypeControl: {
+            world: true,
+          },
+        },
+        series: [
+          {
+            coordinateSystem: "geo",
+            name: _this.tipTitle,
+            type: "map",
+            mapType: enName,
+            roam: true,
+            label: {
+              show: true, // 这里就不在地图上显示名字了，200多个会晕的
+              color: "gray",
+              fontSize: 8,
+            },
+            data: _this.data,
+          },
+        ],
+      };
+      this.myChart.setOption(option);
+    },
     drawChinaMap() {
       require("echarts/map/js/" + "china");
-      this.title = "交易地区分布 - 中国省份";
+      this.title = `交易地区分布 - 中国`;
       let _this = this;
       let option = {
         backgroundColor: "#aad6f8",
@@ -527,7 +695,6 @@ export default {
           text: ["最大值", "最小值"], // 文本，默认为数值文本
           calculable: true,
         },
-        roam: true,
         toolbox: {
           show: true,
           orient: "horizontal",
@@ -547,10 +714,11 @@ export default {
         },
         series: [
           {
+            coordinateSystem: "geo",
             name: _this.tipTitle,
             type: "map",
             mapType: "china",
-            roam: false,
+            roam: true,
             label: {
               show: true, // 这里就不在地图上显示名字了，200多个会晕的
               color: "gray",
@@ -562,7 +730,7 @@ export default {
       };
       this.myChart.setOption(option);
     },
-    drawProvinceMap() {
+    drawProvinceMapForChina() {
       let sfmc = this.currentTableData.rows[0].sfmc.value;
       let sfmcPinyin = slugify(sfmc).replace(/-/g, "");
       require("echarts/map/js/province/" + sfmcPinyin);
@@ -595,7 +763,6 @@ export default {
           text: ["最大值", "最小值"], // 文本，默认为数值文本
           calculable: true,
         },
-        roam: true,
         toolbox: {
           show: true,
           orient: "horizontal",
@@ -615,10 +782,11 @@ export default {
         },
         series: [
           {
+            coordinateSystem: "geo",
             name: _this.tipTitle,
             type: "map",
             mapType: sfmc,
-            roam: false,
+            roam: true,
             label: {
               show: true, // 这里就不在地图上显示名字了，200多个会晕的
               color: "gray",
@@ -630,13 +798,25 @@ export default {
       };
       this.myChart.setOption(option);
     },
-    draw() {
+    async draw() {
+      this.myChart.dispatchAction({
+        type: "restore",
+      });
       if (this.currentTableData.tid === 353) {
         this.drawWorldMap();
       } else if (this.currentTableData.tid === 359) {
-        this.drawChinaMap();
+        if (this.currentCountry === "中国") this.drawChinaMap();
+        else {
+          this.handleClose();
+          return;
+          // await this.drawCountryMap();
+        }
       } else if (this.currentTableData.tid === 360) {
-        this.drawProvinceMap();
+        if (this.currentCountry === "中国") this.drawProvinceMapForChina();
+        else {
+          this.handleClose();
+          return;
+        }
       }
     },
     changedValue(type) {
@@ -651,13 +831,13 @@ export default {
         };
       } else if (this.currentTableData.tid === 359) {
         newRow = {
-          gjmc: "中国",
+          gjmc: this.currentCountry,
           sfmc: "",
         };
       } else if (this.currentTableData.tid === 360) {
         newRow = {
-          gjmc: "中国",
-          sfmc: this.currentTableData.rows[0].sfmc.value,
+          gjmc: this.currentCountry,
+          sfmc: this.currentProvince,
           csmc: "",
         };
       }
@@ -676,15 +856,11 @@ export default {
         return;
       }
       if (this.currentTableData.tid === 353) {
-        if (params.name !== "中国") {
-          this.$message({
-            message: "当前国家不支持省份交易分布查看功能。",
-          });
-          return;
-        }
         let newRow = {
-          gjmc: "中国",
+          gjmc: params.name,
         };
+        this.currentCountry = params.name;
+        this.loading = true;
         this.$store.dispatch("ShowTable/showLinkTable", {
           tid: this.currentTableData.tid,
           linkMid: 359,
@@ -694,10 +870,12 @@ export default {
         });
       } else if (this.currentTableData.tid === 359) {
         let sfmc = params.name;
+        this.currentProvince = sfmc;
         let newRow = {
-          gjmc: "中国",
+          gjmc: this.currentCountry,
           sfmc,
         };
+        this.loading = true;
         this.$store.dispatch("ShowTable/showLinkTable", {
           tid: this.currentTableData.tid,
           linkMid: 360,
@@ -705,7 +883,11 @@ export default {
           row: newRow,
           fieldename: "SFMC", // 注意列名需要传递大写
         });
+        if (this.currentCountry !== "中国") {
+          this.handleClose();
+        }
       } else if (this.currentTableData.tid === 360) {
+        this.loading = true;
         let csmc = params.name;
         let newRow = {
           gjmc: "中国",
@@ -736,6 +918,9 @@ export default {
 <style scoped>
 /deep/.el-dialog__body {
   padding: 0;
+}
+/deep/.el-dialog__header {
+  height: 80px;
 }
 </style>
 
