@@ -1,6 +1,6 @@
 @echo off
 
-start C:\WinLicense\WinLicense64.exe  /protect analysis-system
+start /w C:\WinLicense\WinLicense64.exe  /protect analysis-system
 
 if errorlevel 3 goto 3
 if errorlevel 2 goto 2
