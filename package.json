@@ -8,7 +8,7 @@
   "name": "analysis-system",
   "version": "6.1.6",
   "author": "Panda",
-  "description": "资金分析系统",
+  "description": "鹰迹 - 资金分析系统",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "publish": [
