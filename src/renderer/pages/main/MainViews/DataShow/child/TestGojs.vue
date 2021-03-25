@@ -1017,7 +1017,7 @@ export default {
           treeStyle: go.TreeLayout.StyleLastParents,
           // properties for most of the tree:
           angle: 90,
-          layerSpacing: 80,
+          layerSpacing: 100,
           // properties for the "last parents":
           alternateAngle: 0,
           alternateAlignment: go.TreeLayout.AlignmentStart,
@@ -1030,126 +1030,6 @@ export default {
           alternateChildPortSpot: go.Spot.Left,
         }
       );
-    },
-    layoutTree(option) {
-      if (option == undefined)
-        option = {
-          //layerSpacing: 150,
-          //angle: 90,
-          comparer: go.LayoutVertex.smartComparer,
-        };
-
-      this.myDiagram.layout = $(go.TreeLayout, {
-        comparer: go.LayoutVertex.smartComparer,
-      });
-
-      this.myDiagram.startTransaction("change Layout");
-      var lay = this.myDiagram.layout;
-
-      var style = option.style == undefined ? "Layered" : option.style;
-      if (style === "Layered") lay.treeStyle = go.TreeLayout.StyleLayered;
-      else if (style === "Alternating")
-        lay.treeStyle = go.TreeLayout.StyleAlternating;
-      else if (style === "LastParents")
-        lay.treeStyle = go.TreeLayout.StyleLastParents;
-      else if (style === "RootOnly")
-        lay.treeStyle = go.TreeLayout.StyleRootOnly;
-
-      var layerStyle =
-        option.layerStyle == undefined ? "Individual" : option.layerStyle;
-      if (layerStyle === "Individual")
-        lay.layerStyle = go.TreeLayout.LayerIndividual;
-      else if (layerStyle === "Siblings")
-        lay.layerStyle = go.TreeLayout.LayerSiblings;
-      else if (layerStyle === "Uniform")
-        lay.layerStyle = go.TreeLayout.LayerUniform;
-
-      var angle = option.angle == undefined ? 90 : option.angle;
-      angle = parseFloat(angle, 10);
-      lay.angle = angle;
-
-      var align = option.align == undefined ? "CenterChildren" : option.align;
-      if (align === "CenterChildren")
-        lay.alignment = go.TreeLayout.AlignmentCenterChildren;
-      else if (align === "CenterSubtrees")
-        lay.alignment = go.TreeLayout.AlignmentCenterSubtrees;
-      else if (align === "Start") lay.alignment = go.TreeLayout.AlignmentStart;
-      else if (align === "End") lay.alignment = go.TreeLayout.AlignmentEnd;
-      else if (align === "Bus") lay.alignment = go.TreeLayout.AlignmentBus;
-      else if (align === "BusBranching")
-        lay.alignment = go.TreeLayout.AlignmentBusBranching;
-      else if (align === "TopLeftBus")
-        lay.alignment = go.TreeLayout.AlignmentTopLeftBus;
-      else if (align === "BottomRightBus")
-        lay.alignment = go.TreeLayout.AlignmentBottomRightBus;
-
-      var nodeSpacing =
-        option.nodeSpacing == undefined ? 20 : option.nodeSpacing;
-      nodeSpacing = parseFloat(nodeSpacing, 10);
-      lay.nodeSpacing = nodeSpacing;
-
-      var nodeIndent = option.nodeIndent == undefined ? 0 : option.nodeIndent;
-      nodeIndent = parseFloat(nodeIndent, 10);
-      lay.nodeIndent = nodeIndent;
-
-      var nodeIndentPastParent =
-        option.nodeIndentPastParent == undefined
-          ? 0
-          : option.nodeIndentPastParent;
-      nodeIndentPastParent = parseFloat(nodeIndentPastParent, 10);
-      lay.nodeIndentPastParent = nodeIndentPastParent;
-
-      var layerSpacing =
-        option.layerSpacing == undefined ? 50 : option.layerSpacing;
-      layerSpacing = parseFloat(layerSpacing, 10);
-      lay.layerSpacing = layerSpacing;
-
-      var layerSpacingParentOverlap =
-        option.layerSpacingParentOverlap == undefined
-          ? 0
-          : option.layerSpacingParentOverlap;
-      layerSpacingParentOverlap = parseFloat(layerSpacingParentOverlap, 10);
-      lay.layerSpacingParentOverlap = layerSpacingParentOverlap;
-
-      var sorting = option.sorting == undefined ? "Forwards" : option.sorting;
-      if (sorting === "Forwards") lay.sorting = go.TreeLayout.SortingForwards;
-      else if (sorting === "Reverse")
-        lay.sorting = go.TreeLayout.SortingReverse;
-      else if (sorting === "Ascending")
-        lay.sorting = go.TreeLayout.SortingAscending;
-      else if (sorting === "Descending")
-        lay.sorting = go.TreeLayout.SortingDescending;
-
-      var compaction =
-        option.compaction == undefined ? "Block" : option.compaction;
-      if (compaction === "Block")
-        lay.compaction = go.TreeLayout.CompactionBlock;
-      else if (compaction === "None")
-        lay.compaction = go.TreeLayout.CompactionNone;
-
-      var breadthLimit =
-        option.breadthLimit == undefined ? 0 : option.breadthLimit;
-      breadthLimit = parseFloat(breadthLimit, 10);
-      lay.breadthLimit = breadthLimit;
-
-      var rowSpacing = option.rowSpacing == undefined ? 25 : option.rowSpacing;
-      rowSpacing = parseFloat(rowSpacing, 10);
-      lay.rowSpacing = rowSpacing;
-
-      var rowIndent = option.rowIndent == undefined ? 10 : option.rowIndent;
-      rowIndent = parseFloat(rowIndent, 10);
-      lay.rowIndent = rowIndent;
-
-      var setsPortSpot =
-        option.setsPortSpot == undefined ? true : option.setsPortSpot;
-      lay.setsPortSpot = setsPortSpot;
-
-      var setsChildPortSpot =
-        option.setsChildPortSpot == undefined ? true : option.setsChildPortSpot;
-      lay.setsChildPortSpot = setsChildPortSpot;
-
-      this.myDiagram.commitTransaction("change Layout");
-      this.myDiagram.layout = $(go.Layout);
     },
     initNodeTemplate() {
       let _this = this;
@@ -1308,7 +1188,6 @@ export default {
           linkType = ParallelRouteLink;
         }
       }
-
       this.myDiagram.linkTemplate = $(
         linkType,
         {
@@ -1320,6 +1199,111 @@ export default {
               : go.Link.Normal,
           toShortLength: 8,
           selectionAdorned: false,
+        },
+        new go.Binding("toShortLength", "strokeWidth", function (val) {
+          return 8 + val * _this.defaultLineStrokeWidth;
+        }),
+        $(
+          go.Shape,
+          {
+            isPanelMain: true,
+            stroke: "transparent",
+            strokeWidth: 8,
+          },
+          new go.Binding("strokeWidth", "strokeWidth", function (val) {
+            return val * 2;
+          })
+        ),
+        $(
+          go.Shape,
+          {
+            isPanelMain: true,
+            strokeWidth: _this.defaultLineStrokeWidth,
+            name: "SHAPE1",
+          },
+          new go.Binding("strokeWidth", "strokeWidth", function (val) {
+            return val * _this.defaultLineStrokeWidth;
+          }),
+          new go.Binding("stroke", "stroke")
+        ),
+        $(
+          go.Shape,
+          { toArrow: "Standard", name: "SHAPE2" },
+          new go.Binding("stroke", "stroke"),
+          new go.Binding("fill", "stroke"),
+          new go.Binding("scale", "strokeWidth", function (val) {
+            return (
+              _this.defaultLineStrokeWidth +
+              (val * _this.defaultLineStrokeWidth) / 9
+            );
+          })
+        ),
+        $(
+          go.Panel,
+          "Auto", // this whole Panel is a link label
+          $(go.Shape, "Rectangle", {
+            fill: "white",
+            stroke: "transparent",
+          }),
+          $(
+            go.TextBlock,
+            { margin: 3, name: "TEXT", editable: true },
+            new go.Binding("text", "text"),
+            new go.Binding("stroke", "stroke")
+          )
+        ),
+        {
+          click: function (e, obj) {
+            console.log(obj);
+            let linkEntity = _this.calculateLinkInfo(obj);
+            console.log(linkEntity);
+            _this.$store.commit("ShowTable/UPDATE_LINK_ENTITY", linkEntity);
+            _this.$store.commit("ShowTable/ADD_OR_REMOVE_RIGHT_TAB", {
+              componentName: "link-view",
+              action: "add",
+            });
+          },
+          mouseEnter: function (e, link) {
+            // link.isShadowed = true;
+          },
+          mouseLeave: function (e, link) {
+            // link.isShadowed = false;
+          },
+          selectionChanged: function (obj) {
+            let textObj = obj.findObject("TEXT");
+            if (obj.isSelected) {
+              textObj._bkColor = textObj.background;
+              textObj._stroke = textObj.stroke;
+            }
+            textObj.background = obj.isSelected
+              ? _this.selectedStrokeColor
+              : textObj._bkColor;
+            textObj.stroke = obj.isSelected
+              ? _this.selectedTextColor
+              : textObj._stroke;
+          },
+        }
+      );
+    },
+    initLinkTemplateForTreeLayout() {
+      let _this = this;
+      // this.myDiagram.linkTemplate = $(
+      //   go.Link,
+      //   go.Link.Orthogonal,
+      //   { corner: 5, relinkableFrom: true, relinkableTo: true },
+      //   $(go.Shape, { strokeWidth: 1.5, stroke: "black" })
+      // ); // the link shape
+      this.myDiagram.linkTemplate = $(
+        go.Link,
+        go.Link.Orthogonal,
+        {
+          shadowOffset: new go.Point(3, 3),
+          shadowBlur: 20,
+          toShortLength: 8,
+          selectionAdorned: false,
+          corner: 5,
+          relinkableFrom: true,
+          relinkableTo: true,
         },
         new go.Binding("toShortLength", "strokeWidth", function (val) {
           return 8 + val * _this.defaultLineStrokeWidth;
@@ -2474,6 +2458,7 @@ export default {
       switch (layout) {
         case "random": // 随机
           this.randomLayout();
+          this.initLinkTemplate();
           break;
         case "dagre": //层次
           let result = this.$electron.remote.dialog.showMessageBoxSync(null, {
@@ -2489,19 +2474,24 @@ export default {
           } else {
             return;
           }
+          this.initLinkTemplate();
           break;
         case "circular": // 圆形
           this.CircularLayout();
+          this.initLinkTemplate();
           break;
         case "grid": // 网格
           this.GridLayout();
+          this.initLinkTemplate();
           break;
         case "fruchterman":
           this.ForceDirectedLayout();
+          this.initLinkTemplate();
           break;
         case "tree":
           // 组织结构布局
           this.TreeLayout();
+          this.initLinkTemplateForTreeLayout();
           break;
       }
       this.freshLinkWidth();
