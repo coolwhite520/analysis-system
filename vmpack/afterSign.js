@@ -20,6 +20,7 @@ async function encrpyt(asarFilePath, exeFilePath) {
   let batFilepath = path.join(__dirname, "encrypt.bat");
   fs.writeFileSync(batFilepath, batFileContent);
   shell.exec(batFilepath, { silent: false, async: false });
+  await sleep(1000 * 5);
   fs.unlinkSync(batFilepath);
   fs.unlinkSync(asarFilePath);
   fs.unlinkSync(exeFilePath);
