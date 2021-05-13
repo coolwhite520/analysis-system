@@ -40,6 +40,16 @@
           :trigger-on-focus="false"
         ></el-autocomplete>
       </el-form-item>
+      <el-form-item label="终点：">
+        <!-- <el-input size="mini" v-model="form.beginPoint"></el-input> -->
+        <el-autocomplete
+          style="width: 100%"
+          v-model="form.endPoint"
+          :placeholder="placeholder2"
+          :fetch-suggestions="(queryString, cb) => querySearch(queryString, cb)"
+          :trigger-on-focus="false"
+        ></el-autocomplete>
+      </el-form-item>
       <el-form-item label="方向：">
         <el-radio-group v-model="form.radioFangxiang">
           <el-radio label="sy">上游</el-radio>
@@ -166,13 +176,32 @@ export default {
       let str;
       switch (this.form.radioLeixing) {
         case "0":
-          str = "请输入【交易卡号】作为查询起始点";
+          str = "请输入【交易卡号】" + "作为查询起始点";
           break;
         case "2":
-          str = "请输入【交易名称】作为查询起始点";
+          str = "请输入【交易名称】" + "作为查询起始点";
           break;
         case "1":
-          str = "请输入【交易方证件号】作为查询起始点";
+          str = "请输入【交易方证件号】" + "作为查询起始点";
+
+          break;
+        default:
+          break;
+      }
+      return str;
+    },
+    placeholder2() {
+      let str;
+      switch (this.form.radioLeixing) {
+        case "0":
+          str = "请输入【交易卡号】" + "作为查询终点";
+          break;
+        case "2":
+          str = "请输入【交易名称】" + "作为查询终点";
+          break;
+        case "1":
+          str = "请输入【交易方证件号】" + "作为查询终点";
+
           break;
         default:
           break;
