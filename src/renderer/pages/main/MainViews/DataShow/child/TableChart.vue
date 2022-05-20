@@ -189,6 +189,7 @@ export default {
       this.currentPage = 1;
     },
     async handleRightClickRow(row, column, event) {
+      console.log(row, column)
       let value = row[column.property].value || row[column.property];
       console.log(row);
       if (typeof value === "string") {
