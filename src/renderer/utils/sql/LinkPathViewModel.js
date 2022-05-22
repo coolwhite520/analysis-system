@@ -225,7 +225,7 @@ function RowData(fx, jyf, dsf, row) {
   this.Money = isNaN(parseFloat(row["jyje"])) ? 0.0 : parseFloat(row["jyje"]);
   this.Count = isNaN(parseInt(row["jybs"])) ? 0 : parseInt(row["jybs"]);
   this.IDS = row["ids"];
-  this.IsDownFlow = this.FX == "xy";
+  this.IsDownFlow = this.FX == "xy"; // 下游
   if (this.IsDownFlow) {
     this.FromKey = jyf;
     this.FromNode = new Node(row[jyf], row["cxkh"], row["jyzjhm"], row["jymc"]);
@@ -1581,7 +1581,7 @@ async function StartComputeInternal(Paras, IsMocking = false) {
   let dt = await baseDataProvider.GetDataTableInternal();
   let dt2 = baseDataProvider.DataTableToRowDataInternal(dt.rows); //Dictionary<string, RowData>
   //console.log( Object.keys(dt.rows).length,Object.keys(dt2).length )
-
+  console.log({dt2})
   let basePathFinder = new BasePathFinder(Paras);
   let res = basePathFinder.Run(dt2);
 
