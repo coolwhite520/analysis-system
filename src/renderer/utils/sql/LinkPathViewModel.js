@@ -240,7 +240,7 @@ class LinkParameters {
         MinRatio,
         MaxRatio,
         Condtion,
-        Ajid ) {
+        Ajid) {
         this.LinkType = LinkType;
         this.VisualType = VisualType; //查询类型0卡号，1证件号，2名称
         this.CxType = "kh";
@@ -670,7 +670,7 @@ class LinkModelCollection {
 
     Remove(link) {
         if (this.Items.hasOwnProperty(link.getUniqueKey())) {
-            delete Items[link.getUniqueKey()];
+            delete this.Items[link.getUniqueKey()];
         }
     }
 
@@ -697,11 +697,11 @@ class BaseChildModel {
         this.linkModelCollection = new LinkModelCollection();
         this.linkParameters = params;
         this.dictionary = dict;
-    };
+    }
 
     addNodeModelToCollection(nodeModel) {
         this.nodeModelCollection.Add(nodeModel);
-    };
+    }
 
     makeFromNodeModel(rowData) {
         let fromKeyValue = rowData.FromKeyValue;
@@ -717,7 +717,7 @@ class BaseChildModel {
             nodeModel.UniqueKey = rowData.FromKeyValue;
         }
         return nodeModel;
-    };
+    }
 
     makeToNodeModel(toRowData) {
         let toKeyValue = toRowData.ToKeyValue;
@@ -733,11 +733,11 @@ class BaseChildModel {
             nodeModel.UniqueKey = toRowData.ToKeyValue;
         }
         return nodeModel;
-    };
+    }
 
     isInLinkModelCollection(string_0) {
         return this.linkModelCollection.ContainsKey(string_0);
-    };
+    }
 
     generateInOutLinks(linkModel) {
         let from = linkModel.From;
@@ -745,7 +745,7 @@ class BaseChildModel {
         from.OutLinks.Add(linkModel);
         to.InLinks.Add(linkModel);
         this.linkModelCollection.Add(linkModel);
-    };
+    }
 
     NajXrfOjp8(linkModel_0, linkModel_1, bool_0 = false) {
         if (this.linkParameters.DataItemType !== DataItemType.Detail) {
@@ -775,7 +775,7 @@ class BaseChildModel {
             (this.linkParameters.MaxRatio <= 0.0 ||
                 tradeMoney / tradeMoney2 <= this.linkParameters.MaxRatio)
         );
-    };
+    }
 }
 
 ////////////////////////////childclass LinkChildModel///////////////////////////////////////////////////////
@@ -844,11 +844,11 @@ class LinkChildModel {
         }
         let stack = new Default.Stack();
         stack.push(this.base.Root);
-        this.method_16(this.base.Root, stack);
+        this.iteratorCheckDepth(this.base.Root, stack);
         stack.pop();
     };
 
-    method_16(nodeModel, stack) {
+    iteratorCheckDepth(nodeModel, stack) {
         let num = stack.size() - 1;
         if (num > 0 && nodeModel.IsRoot) {
             if (num >= this.base.linkParameters.Mindepth && num <= this.base.linkParameters.Depth) {
@@ -882,7 +882,7 @@ class LinkChildModel {
             let current2 = hashSet[i];
             if (stack.data.findIndex((node) => node.getUniqueKey() === current2.getUniqueKey()) < 0) {
                 stack.push(current2);
-                this.method_16(current2, stack);
+                this.iteratorCheckDepth(current2, stack);
                 stack.pop();
             }
         }
@@ -1035,11 +1035,11 @@ class CircleOrEndChildModel {
         }
         let stack = new Default.Stack();
         stack.push(this.base.Root);
-        this.method_16(this.base.Root, stack);
+        this.iteratorCheckDepth(this.base.Root, stack);
         stack.pop();
     };
 
-    method_16(nodeModel_1, stack_0) {
+    iteratorCheckDepth(nodeModel_1, stack_0) {
         let num = stack_0.size() - 1;
         if (num > 0 && nodeModel_1.IsRoot) {
             if (num >= this.base.linkParameters.Mindepth && num <= this.base.linkParameters.Depth) {
@@ -1094,7 +1094,7 @@ class CircleOrEndChildModel {
                 ) < 0
             ) {
                 stack_0.push(current2);
-                this.method_16(current2, stack_0);
+                this.iteratorCheckDepth(current2, stack_0);
                 stack_0.pop();
             }
         }
