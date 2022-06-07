@@ -150,7 +150,7 @@ function DataSupplementWinModel(ajid) {
   this.bool_0 = false;
   this.bool_1 = false;
   this.bool_3 = false;
-  this.dictionary_0 = {};
+  this.dictionary = {};
   this.dictionary_2 = {};
   this.AccountModelscan = [];
   this.InilaizeDataState = function() {
@@ -200,11 +200,11 @@ function DataSupplementWinModel(ajid) {
   this.RefreashUIDatasCan_DoWork = async function() {
     console.log("RefreashUIDatasCan_DoWork");
     this.bool_1 = true;
-    await this.method_2();
+    await this.addToCollection();
     this.bool_1 = false;
   };
-  this.method_2 = async function() {
-    console.log("method_2");
+  this.addToCollection = async function() {
+    console.log("addToCollection");
     await this.method_7();
   };
   this.GetAllEmptyRowCount = async function() {
@@ -342,13 +342,13 @@ function DataSupplementWinModel(ajid) {
           simpleAccountModel.Zzhm = Default.IsNullOrEmpty(dataRow["zzhm"])
             ? ""
             : dataRow["zzhm"];
-          if (this.dictionary_0.hasOwnProperty(simpleAccountModel.Zh)) {
+          if (this.dictionary.hasOwnProperty(simpleAccountModel.Zh)) {
             let flag = false;
             if (this.dictionary_1.hasOwnProperty(simpleAccountModel.Zh)) {
               flag = true;
             }
             if (Default.IsNullOrEmpty(simpleAccountModel.Zhmc)) {
-              let list = this.dictionary_0[simpleAccountModel.Zh][0];
+              let list = this.dictionary[simpleAccountModel.Zh][0];
               if (list.length > 0 && !flag) {
                 simpleAccountModel.ZhmcColor = true;
                 if (!Default.IsNullOrEmpty(list[list.length - 1])) {
@@ -360,7 +360,7 @@ function DataSupplementWinModel(ajid) {
               simpleAccountModel.ZhmcColor = false;
             }
             if (Default.IsNullOrEmpty(simpleAccountModel.Khyh)) {
-              let list2 = this.dictionary_0[simpleAccountModel.Zh][1];
+              let list2 = this.dictionary[simpleAccountModel.Zh][1];
               if (list2.length > 0 && !flag) {
                 simpleAccountModel.KhyhcColor = true;
                 if (!Default.IsNullOrEmpty(list2[list2.length - 1])) {
@@ -372,7 +372,7 @@ function DataSupplementWinModel(ajid) {
               simpleAccountModel.KhyhcColor = false;
             }
             if (Default.IsNullOrEmpty(simpleAccountModel.Zzhm)) {
-              let list3 = this.dictionary_0[simpleAccountModel.Zh][2];
+              let list3 = this.dictionary[simpleAccountModel.Zh][2];
               if (list3.length > 0 && !flag) {
                 simpleAccountModel.ZzhmColor = true;
                 if (!Default.IsNullOrEmpty(list3[list3.length - 1])) {
@@ -395,14 +395,14 @@ function DataSupplementWinModel(ajid) {
             array[1] = list5;
             array[2] = list6;
             this.dictionary_1[simpleAccountModel.Zh] = true;
-            this.dictionary_0[simpleAccountModel.Zh] = array;
-            simpleAccountModel.ZhmcList = this.dictionary_0[
+            this.dictionary[simpleAccountModel.Zh] = array;
+            simpleAccountModel.ZhmcList = this.dictionary[
               simpleAccountModel.Zh
             ][0];
-            simpleAccountModel.KhyhList = this.dictionary_0[
+            simpleAccountModel.KhyhList = this.dictionary[
               simpleAccountModel.Zh
             ][1];
-            simpleAccountModel.ZzhmList = this.dictionary_0[
+            simpleAccountModel.ZzhmList = this.dictionary[
               simpleAccountModel.Zh
             ][2];
           }
@@ -556,7 +556,7 @@ function DataSupplementWinModel(ajid) {
       return await new Promise(async (resolve, reject) => {
         let sql = this.GetSqlForBackDictionary(this.bool_4);
         if (sql != undefined && sql != null && sql != "") {
-          this.dictionary_0 = {};
+          this.dictionary = {};
           this.dictionary_2 = {};
           client = await cases.SwitchCase(client, this.ajid);
           const query = new Query(sql);
@@ -578,8 +578,8 @@ function DataSupplementWinModel(ajid) {
               ? ""
               : dataRow["jydd"];
             if (!Default.IsNullOrEmpty(text)) {
-              if (this.dictionary_0.hasOwnProperty(text)) {
-                let array = this.dictionary_0[text];
+              if (this.dictionary.hasOwnProperty(text)) {
+                let array = this.dictionary[text];
                 this.AddStr(array[0], str);
                 this.AddStr(array[1], str2);
                 this.AddStr(array[2], str3);
@@ -594,7 +594,7 @@ function DataSupplementWinModel(ajid) {
                 array2[0] = list;
                 array2[1] = list2;
                 array2[2] = list3;
-                this.dictionary_0[text] = array2;
+                this.dictionary[text] = array2;
               }
               let key = text + "_" + str4;
               if (!this.dictionary_2[key]) {

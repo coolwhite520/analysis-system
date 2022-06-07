@@ -530,7 +530,7 @@ function LinkModel(para) {
   this.int_0;
   this.bool_0;
   this.bool_1;
-  this.linkParameters_0 = para;
+  this.linkParameters = para;
   this.set_From = function(value) {
     if (this.From != undefined && this.From != null) {
       this.From.OutLinks.Remove(this);
@@ -562,13 +562,13 @@ function LinkModel(para) {
     ) {
       return "";
     }
-    if (this.linkParameters_0.DataItemType == DataItemType.Detail) {
+    if (this.linkParameters.DataItemType == DataItemType.Detail) {
       return (
         this.From.UniqueKey + "_" + this.To.UniqueKey + "_" + this.TradeTime
       );
     }
-    if (this.linkParameters_0.DataItemType != DataItemType.Diff) {
-      if (this.linkParameters_0.DataItemType != DataItemType.Sum) {
+    if (this.linkParameters.DataItemType != DataItemType.Diff) {
+      if (this.linkParameters.DataItemType != DataItemType.Sum) {
         return (
           this.From.UniqueKey +
           "_" +
@@ -583,7 +583,7 @@ function LinkModel(para) {
     return this.From.UniqueKey + "_" + this.To.UniqueKey;
   };
   this.get_IsTargetValid = function() {
-    return this.linkParameters_0.LinkType == LinkPathType.link || this.bool_1;
+    return this.linkParameters.LinkType == LinkPathType.link || this.bool_1;
   };
   this.set_IsTargetValid = function(value) {
     this.bool_1 = value;
@@ -605,7 +605,7 @@ function LinkModel(para) {
   };
   this.RET = function() {
     return {
-      dataType: this.linkParameters_0.DataItemType, // 单笔，汇总，差额
+      dataType: this.linkParameters.DataItemType, // 单笔，汇总，差额
       source: this.From.ToString(),
       target: this.To.ToString(),
       tradeMoney: this.TradeMoney,
@@ -614,7 +614,7 @@ function LinkModel(para) {
     };
   };
   this.dataTime = function() {
-    if (this.linkParameters_0.DataItemType == DataItemType.Detail) {
+    if (this.linkParameters.DataItemType == DataItemType.Detail) {
       return this.TradeTime;
     }
     return this.TradeCount + "笔交易";
@@ -636,7 +636,7 @@ function LinkModel(para) {
     return this.To.UniqueKey;
   };
   this.get_dataTime = function() {
-    if (this.linkParameters_0.DataItemType == DataItemType.Detail) {
+    if (this.linkParameters.DataItemType == DataItemType.Detail) {
       return this.TradeTime;
     }
     return this.TradeCount + "笔交易";
@@ -699,7 +699,7 @@ function BasePathFinder() {
   this.retData = {};
   this.nodeDictionary = new Default.Dictionary(); //string, NodeModel
   this.linkDictionary = new Default.Dictionary(); //string, LinkModel
-  this.linkParameters_0 = null;
+  this.linkParameters = null;
   this.Init = function(linkParameters) {
     this.Paras = linkParameters;
   };
@@ -995,11 +995,11 @@ function BasePathFinder() {
       return;
     }
 
-    let nodeModel = this.method_15(dt.datastore[source]); //将目标节点存入nodeDictionary，并返回该节点
+    let nodeModel = this.CheckMinDepth(dt.datastore[source]); //将目标节点存入nodeDictionary，并返回该节点
     nodeModel.IsRoot = true;
     let stack = new Default.Stack();
     stack.push(nodeModel.ToString()); //将当前节点入栈
-    this.method_2(dt, nodeModel, 1, stack);
+    this.addToCollection(dt, nodeModel, 1, stack);
     stack.pop();
     this.method_10(nodeModel);
   };
@@ -1035,7 +1035,7 @@ function BasePathFinder() {
       }
     }
   };
-  this.method_2 = function(dictionary_0, nodeModel_0, int_0, stack_0) {
+  this.addToCollection = function(dictionary_0, nodeModel_0, int_0, stack_0) {
     if (this.Paras.Depth > 0 && int_0 > this.Paras.Depth) {
       return;
     }
@@ -1051,7 +1051,7 @@ function BasePathFinder() {
       let to = nodeModel_0.OutLinks[i].To;
       if (!stack_0.data.includes(to.ToString())) {
         stack_0.push(to.ToString());
-        this.method_2(dictionary_0, to, int_0, stack_0);
+        this.addToCollection(dictionary_0, to, int_0, stack_0);
         stack_0.pop();
       }
     }
@@ -1137,7 +1137,7 @@ function BasePathFinder() {
     }
     return nodeModel;
   };
-  this.method_15 = function(rowData_0) {
+  this.CheckMinDepth = function(rowData_0) {
     let fromKeyValue = rowData_0.FromKeyValue;
     let nodeModel;
     if (this.nodeDictionary.ContainsKey(fromKeyValue)) {
