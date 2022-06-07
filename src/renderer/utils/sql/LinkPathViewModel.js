@@ -516,7 +516,7 @@ function SumDataProvider() {
             let valueOrDefault = parseFloat(dataRow["czje"]);
             let valueOrDefault2 = parseFloat(dataRow["jzje"]);
             let ids = "";
-            if (!isNaN(valueOrDefault) && valueOrDefault != 0.0) {
+            if (!isNaN(valueOrDefault) && valueOrDefault !== 0.0) {
                 ids = dataRow["cids"];
                 let dataRow2 = this.base.SetRowData(
                     dataRow,
@@ -527,7 +527,7 @@ function SumDataProvider() {
                 );
                 list.push(dataRow2);
             }
-            if (!isNaN(valueOrDefault2) && valueOrDefault2 != 0.0) {
+            if (!isNaN(valueOrDefault2) && valueOrDefault2 !== 0.0) {
                 ids = dataRow["jids"];
                 let dataRow3 = this.base.SetRowData(
                     dataRow,
@@ -575,7 +575,7 @@ function DiffDataProvider() {
         for (let i = 0; i < dt.length; i++) {
             let dataRow = dt[i];
             let valueOrDefault = parseFloat(dataRow["jczce"]);
-            if (!isNaN(valueOrDefault) && valueOrDefault != 0.0) {
+            if (!isNaN(valueOrDefault) && valueOrDefault !== 0.0) {
                 let valueOrDefault2 = parseInt(dataRow["czbs"]);
                 let valueOrDefault3 = parseInt(dataRow["jzbs"]);
                 let text = dataRow["cids"];
@@ -823,11 +823,12 @@ class LinkChildModel {
         let stackTopLinkModel = count === 0 ? null : stack.peek();
         // 获取某个账号、卡号、身份证所关联的所有交易并生成线条
         let links = this.generateLinkModelList(nodeModel, stackTopLinkModel);
+        console.log(links)
         for (let current of links) {
             if (!hashSet.includes(current.getUniqueKey())) {
                 hashSet.push(current.getUniqueKey());
                 stack.push(current);
-                this.iteratorGenerator(current.to, stack, hashSet);
+                this.iteratorGenerator(current.To, stack, hashSet);
                 stack.pop();
                 let index = hashSet.indexOf(current.getUniqueKey());
                 if (index >= 0) {
@@ -906,7 +907,7 @@ class LinkChildModel {
                 netlinkModel.TradeTime = current.Time;
                 netlinkModel.TradeCount = current.Count;
                 netlinkModel.IDS = current.IDS;
-                netlinkModel.UniqueKey = text;
+                netlinkModel.UniqueKey = linkedKey;
                 let flag = linkModel === undefined || linkModel === null || this.base.NajXrfOjp8(linkModel, netlinkModel, false);
                 if (flag) {
                     this.base.addNodeModelToCollection(netlinkModel.To);
