@@ -747,7 +747,7 @@ class BaseChildModel {
         this.linkModelCollection.Add(linkModel);
     }
 
-    NajXrfOjp8(linkModel_0, linkModel_1, bool_0 = false) {
+    isValidateLinkModel(linkModel_0, linkModel_1) {
         if (this.linkParameters.DataItemType !== DataItemType.Detail) {
             return true;
         }
@@ -770,10 +770,8 @@ class BaseChildModel {
             tradeMoney2 = linkModel_1.TradeMoney;
         }
         return (
-            (this.linkParameters.MinRatio <= 0.0 ||
-                tradeMoney / tradeMoney2 >= this.linkParameters.MinRatio) &&
-            (this.linkParameters.MaxRatio <= 0.0 ||
-                tradeMoney / tradeMoney2 <= this.linkParameters.MaxRatio)
+            (this.linkParameters.MinRatio <= 0.0 || tradeMoney / tradeMoney2 >= this.linkParameters.MinRatio) &&
+            (this.linkParameters.MaxRatio <= 0.0 || tradeMoney / tradeMoney2 <= this.linkParameters.MaxRatio)
         );
     }
 }
@@ -874,15 +872,15 @@ class LinkChildModel {
         }
 
         let hashSet = {}; //NodeModel
-        for (let i in nodeModel.OutLinks.Items) {
-            let current = nodeModel.OutLinks.Items[i];
+        for (let k in nodeModel.OutLinks.Items) {
+            let current = nodeModel.OutLinks.Items[k];
             hashSet[current.To.getUniqueKey()] = current.To;
         }
-        for (let i in hashSet) {
-            let current2 = hashSet[i];
-            if (stack.data.findIndex((node) => node.getUniqueKey() === current2.getUniqueKey()) < 0) {
-                stack.push(current2);
-                this.iteratorCheckDepth(current2, stack);
+        for (let k in hashSet) {
+            let current = hashSet[k];
+            if (stack.data.findIndex((node) => node.getUniqueKey() === current.getUniqueKey()) < 0) {
+                stack.push(current);
+                this.iteratorCheckDepth(current, stack);
                 stack.pop();
             }
         }
@@ -908,7 +906,7 @@ class LinkChildModel {
                 netlinkModel.TradeCount = current.Count;
                 netlinkModel.IDS = current.IDS;
                 netlinkModel.UniqueKey = linkedKey;
-                let flag = linkModel === undefined || linkModel === null || this.base.NajXrfOjp8(linkModel, netlinkModel, false);
+                let flag = linkModel === undefined || linkModel === null || this.base.isValidateLinkModel(linkModel, netlinkModel);
                 if (flag) {
                     this.base.addNodeModelToCollection(netlinkModel.To);
                     this.base.generateInOutLinks(netlinkModel);
@@ -920,9 +918,9 @@ class LinkChildModel {
     };
 
     GenerateResultData() {
-        let dictionary = {}; //string,NodeModel
-        let dictionary2 = {}; //string,LinkModel
-        let dictionary3 = {}; //string,LinkModel
+        let nodeDict = {};
+        let linkDict = {};
+        let tempLinkDict = {};
         for (let i in this.base.nodeModelCollection.Items) {
             let value = this.base.nodeModelCollection.Items[i];
             if (
@@ -930,33 +928,33 @@ class LinkChildModel {
                 value.IsMinDepth != null &&
                 value.IsMinDepth
             ) {
-                if (!dictionary.hasOwnProperty(value.getUniqueKey())) {
-                    dictionary[value.getUniqueKey()] = value;
+                if (!nodeDict.hasOwnProperty(value.getUniqueKey())) {
+                    nodeDict[value.getUniqueKey()] = value;
                 }
                 for (let j in value.InLinks.Items) {
-                    if (!dictionary3.hasOwnProperty(j)) {
-                        dictionary3[j] = value.InLinks.Items[j];
+                    if (!tempLinkDict.hasOwnProperty(j)) {
+                        tempLinkDict[j] = value.InLinks.Items[j];
                     }
                 }
                 for (let k in value.OutLinks.Items) {
-                    if (!dictionary3.hasOwnProperty(k)) {
-                        dictionary3[k] = value.OutLinks.Items[k];
+                    if (!tempLinkDict.hasOwnProperty(k)) {
+                        tempLinkDict[k] = value.OutLinks.Items[k];
                     }
                 }
             }
         }
-        for (let i in dictionary3) {
-            if (!dictionary2.hasOwnProperty(i)) {
-                let value2 = dictionary3[i];
+        for (let i in tempLinkDict) {
+            if (!linkDict.hasOwnProperty(i)) {
+                let value2 = tempLinkDict[i];
                 if (
-                    dictionary.hasOwnProperty(value2.From.getUniqueKey()) &&
-                    dictionary.hasOwnProperty(value2.To.getUniqueKey())
+                    nodeDict.hasOwnProperty(value2.From.getUniqueKey()) &&
+                    nodeDict.hasOwnProperty(value2.To.getUniqueKey())
                 ) {
-                    dictionary2[value2.getUniqueKey()] = value2;
+                    linkDict[value2.getUniqueKey()] = value2;
                 }
             }
         }
-        return {Nodedictionary: dictionary, Linkdictionary: dictionary2};
+        return {Nodedictionary: nodeDict, Linkdictionary: linkDict};
     };
 }
 
@@ -981,49 +979,46 @@ class CircleOrEndChildModel {
         nodeModel.IsRoot = true;
         this.base.Root = nodeModel;
         this.base.addNodeModelToCollection(nodeModel);
-        let stack_ = new Default.Stack();
-        let hashSet_ = [];
-        let string_ = this.base.linkParameters.LinkType === LinkPathType.circle ? source : this.base.linkParameters.Target;
-        this.method_14(nodeModel, string_, stack_, hashSet_);
+        let stack = new Default.Stack();
+        let hashSet = [];
+        let endPoint = this.base.linkParameters.LinkType === LinkPathType.circle ? source : this.base.linkParameters.Target;
+        this.iteratorGenerator(nodeModel, endPoint, stack, hashSet);
     };
 
-    method_14(nodeModel_1, string_0, stack_0, hashSet_0) {
-        let count = stack_0.size();
+    iteratorGenerator(nodeModel, endPoint, stack, hashSet) {
+        let count = stack.size();
         if (count > 0) {
-            if (nodeModel_1.getUniqueKey() === string_0) {
+            if (nodeModel.getUniqueKey() === endPoint) {
                 if (count >= this.base.linkParameters.Mindepth && count <= this.base.linkParameters.Depth) {
                     for (let i = 0; i < count; i++) {
-                        let expr_49 = stack_0.data[i];
-                        expr_49.From.IsToTarget = true;
-                        expr_49.To.IsToTarget = true;
-                        expr_49.IsTargetValid = true;
+                        stack.data[i].From.IsToTarget = true;
+                        stack.data[i].To.IsToTarget = true;
+                        stack.data[i].IsTargetValid = true;
                     }
                 }
                 return;
             }
-            if (nodeModel_1.IsRoot) {
+            if (nodeModel.IsRoot) {
                 return;
             }
         }
         if (this.base.linkParameters.Depth > 0 && count >= this.base.linkParameters.Depth) {
             return;
         }
-        if (!this.base.dictionary.hasOwnProperty(nodeModel_1.getUniqueKey())) {
+        if (!this.base.dictionary.hasOwnProperty(nodeModel.getUniqueKey())) {
             return;
         }
-        let linkModel_ = count === 0 ? null : stack_0.peek();
-        let m18_res = this.method_18(nodeModel_1, linkModel_);
-        for (let i = 0; i < m18_res.length; ++i) {
-            let current = m18_res[i];
-            if (!hashSet_0.includes(current.getUniqueKey())) {
-                hashSet_0.push(current.getUniqueKey());
-                let to = current.To;
-                stack_0.push(current);
-                this.method_14(to, string_0, stack_0, hashSet_0);
-                stack_0.pop();
-                let index = hashSet_0.indexOf(current.getUniqueKey());
+        let stackTopLinkModel = count === 0 ? null : stack.peek();
+        let links = this.generateLinkModelList(nodeModel, stackTopLinkModel);
+        for (let current of links) {
+            if (!hashSet.includes(current.getUniqueKey())) {
+                hashSet.push(current.getUniqueKey());
+                stack.push(current);
+                this.iteratorGenerator(current.To, endPoint, stack, hashSet);
+                stack.pop();
+                let index = hashSet.indexOf(current.getUniqueKey());
                 if (index >= 0) {
-                    hashSet_0.splice(index, 1);
+                    hashSet.splice(index, 1);
                 }
             }
         }
@@ -1039,68 +1034,57 @@ class CircleOrEndChildModel {
         stack.pop();
     };
 
-    iteratorCheckDepth(nodeModel_1, stack_0) {
-        let num = stack_0.size() - 1;
-        if (num > 0 && nodeModel_1.IsRoot) {
+    iteratorCheckDepth(nodeModel, stack) {
+        let num = stack.size() - 1;
+        if (num > 0 && nodeModel.IsRoot) {
             if (num >= this.base.linkParameters.Mindepth && num <= this.base.linkParameters.Depth) {
-                for (let i = 0; i < stack_0.size(); i++) {
-                    stack_0.data[i].IsMinDepth = true;
+                for (let i = 0; i < stack.size(); i++) {
+                    stack.data[i].IsMinDepth = true;
                 }
             }
             return;
         }
         if (num >= this.base.linkParameters.Depth) {
-            for (let i = 0; i < stack_0.size(); i++) {
-                stack_0.data[i].IsMinDepth = true;
+            for (let i = 0; i < stack.size(); i++) {
+                stack.data[i].IsMinDepth = true;
             }
             return;
         }
-        if (nodeModel_1.OutLinks.Count() === 0) {
+        if (nodeModel.OutLinks.Count() === 0) {
             if (num >= this.base.linkParameters.Mindepth) {
-                for (let i = 0; i < stack_0.size(); i++) {
-                    stack_0.data[i].IsMinDepth = true;
+                for (let i = 0; i < stack.size(); i++) {
+                    stack.data[i].IsMinDepth = true;
                 }
             }
             return;
         }
         let hashSet = {}; //NodeModel
-        for (let i in nodeModel_1.OutLinks.Items) {
-            let current = nodeModel_1.OutLinks.Items[i];
-            if (
-                current.IsTargetValid !== undefined &&
-                current.IsTargetValid !== null &&
-                current.IsTargetValid
-            ) {
+        for (let k in nodeModel.OutLinks.Items) {
+            let current = nodeModel.OutLinks.Items[k];
+            if (current.IsTargetValid) {
                 hashSet[current.To.getUniqueKey()] = current.To;
             }
         }
-        for (let i in hashSet) {
-            let current2 = hashSet[i];
-            if (current2.IsRoot) {
-                if (
-                    num < this.base.linkParameters.Mindepth ||
-                    num > this.base.linkParameters.Depth
-                ) {
+        for (let k in hashSet) {
+            let current = hashSet[k];
+            if (current.IsRoot) {
+                if (num < this.base.linkParameters.Mindepth || num > this.base.linkParameters.Depth) {
                     continue;
                 }
-                for (let j = 0; j < stack_0.size(); j++) {
-                    stack_0.data[j].IsMinDepth = true;
+                for (let j = 0; j < stack.size(); j++) {
+                    stack.data[j].IsMinDepth = true;
                 }
                 continue;
             }
-            if (
-                stack_0.data.findIndex(
-                    (node) => node.getUniqueKey() === current2.getUniqueKey()
-                ) < 0
-            ) {
-                stack_0.push(current2);
-                this.iteratorCheckDepth(current2, stack_0);
-                stack_0.pop();
+            if (stack.data.findIndex((node) => node.getUniqueKey() === current.getUniqueKey()) < 0) {
+                stack.push(current);
+                this.iteratorCheckDepth(current, stack);
+                stack.pop();
             }
         }
     };
 
-    method_18(nodeModel, linkModel_0) {
+    generateLinkModelList(nodeModel, linkModel) {
         let items = this.base.dictionary[nodeModel.getUniqueKey()].GroupedItems();
         let list = [];
         for (let current of items) {
@@ -1112,19 +1096,19 @@ class CircleOrEndChildModel {
                 current.Money
             );
             if (!this.base.isInLinkModelCollection(text)) {
-                let linkModel = new LinkModel(this.base.linkParameters);
-                linkModel.From = nodeModel;
-                linkModel.To = this.base.makeToNodeModel(current);
-                linkModel.TradeMoney = current.Money;
-                linkModel.TradeTime = current.Time;
-                linkModel.TradeCount = current.Count;
-                linkModel.IDS = current.IDS;
-                linkModel.UniqueKey = text;
-                let flag = linkModel_0 === undefined || linkModel_0 === null || this.base.NajXrfOjp8(linkModel_0, linkModel, false);
+                let newLinkModel = new LinkModel(this.base.linkParameters);
+                newLinkModel.From = nodeModel;
+                newLinkModel.To = this.base.makeToNodeModel(current);
+                newLinkModel.TradeMoney = current.Money;
+                newLinkModel.TradeTime = current.Time;
+                newLinkModel.TradeCount = current.Count;
+                newLinkModel.IDS = current.IDS;
+                newLinkModel.UniqueKey = text;
+                let flag = !linkModel || this.base.isValidateLinkModel(linkModel, newLinkModel);
                 if (flag) {
-                    this.base.addNodeModelToCollection(linkModel.To);
-                    this.base.generateInOutLinks(linkModel);
-                    list.push(linkModel);
+                    this.base.addNodeModelToCollection(newLinkModel.To);
+                    this.base.generateInOutLinks(newLinkModel);
+                    list.push(newLinkModel);
                 }
             }
         }
@@ -1132,42 +1116,38 @@ class CircleOrEndChildModel {
     };
 
     GenerateResultData() {
-        let dictionary = {}; //NodeModel
-        let dictionary2 = {}; //LinkModel
-        let dictionary3 = {}; //LinkModel
+        let nodeDict = {}; //NodeModel
+        let linkDict = {}; //LinkModel
+        let tempLinkDict = {}; //LinkModel
         for (let i in this.base.nodeModelCollection.Items) {
-            let value = this.base.nodeModelCollection.Items[i];
-            if (value.IsMinDepth && value.IsToTarget) {
-                if (!dictionary.hasOwnProperty(value.getUniqueKey())) {
-                    dictionary[value.getUniqueKey()] = value;
+            let item = this.base.nodeModelCollection.Items[i];
+            if (item.IsMinDepth && item.IsToTarget) {
+                if (!nodeDict.hasOwnProperty(item.getUniqueKey())) {
+                    nodeDict[item.getUniqueKey()] = item;
                 }
-                for (let j in value.InLinks.Items) {
-                    let current2 = value.InLinks.Items[j];
-                    if (current2.IsTargetValid && !dictionary3.hasOwnProperty(j)) {
-                        dictionary3[j] = current2;
+                for (let j in item.InLinks.Items) {
+                    let current = item.InLinks.Items[j];
+                    if (current.IsTargetValid && !tempLinkDict.hasOwnProperty(j)) {
+                        tempLinkDict[j] = current;
                     }
                 }
-                for (let k in value.OutLinks.Items) {
-                    let current3 = value.OutLinks.Items[k];
-                    if (current3.IsTargetValid && !dictionary3.hasOwnProperty(k)
-                    ) {
-                        dictionary3[k] = current3;
+                for (let k in item.OutLinks.Items) {
+                    let current = item.OutLinks.Items[k];
+                    if (current.IsTargetValid && !tempLinkDict.hasOwnProperty(k)) {
+                        tempLinkDict[k] = current;
                     }
                 }
             }
         }
-        for (let i in dictionary3) {
-            if (!dictionary2.hasOwnProperty(i)) {
-                let value2 = dictionary3[i];
-                if (
-                    dictionary.hasOwnProperty(value2.From.getUniqueKey()) &&
-                    dictionary.hasOwnProperty(value2.To.getUniqueKey())
-                ) {
-                    dictionary2[value2.getUniqueKey()] = value2;
+        for (let k in tempLinkDict) {
+            if (!linkDict.hasOwnProperty(k)) {
+                let item = tempLinkDict[k];
+                if (nodeDict.hasOwnProperty(item.From.getUniqueKey()) && nodeDict.hasOwnProperty(item.To.getUniqueKey())) {
+                    linkDict[item.getUniqueKey()] = item;
                 }
             }
         }
-        return {Nodedictionary: dictionary, Linkdictionary: dictionary2};
+        return {Nodedictionary: nodeDict, Linkdictionary: linkDict};
     };
 }
 
@@ -1270,7 +1250,7 @@ class LinkModel {
     };
 
     dataTime() {
-        if (this.linkParameters.DataItemType == DataItemType.Detail) {
+        if (this.linkParameters.DataItemType === DataItemType.Detail) {
             return this.TradeTime;
         }
         return this.TradeCount + "笔交易";
@@ -1297,7 +1277,6 @@ async function StartComputeInternal(Paras, IsMocking = false) {
             UniqueKey: current.UniqueKey,
             Username: current.Username,
         });
-        //console.log(key)
     }
     for (let key in res.Linkdictionary) {
         let current = res.Linkdictionary[key];
