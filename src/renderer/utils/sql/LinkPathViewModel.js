@@ -172,21 +172,12 @@ class RowData {
             this.FromKey = jyf;
             this.FromNode = new Node(row[jyf], row["cxkh"], row["jyzjhm"], row["jymc"]);
             this.ToKey = dsf;
-            this.ToNode = new Node(
-                row[dsf],
-                row["jydfzkh"],
-                row["jydfzjhm"],
-                row["jydfmc"]
-            );
+            this.ToNode = new Node(row[dsf], row["jydfzkh"], row["jydfzjhm"], row["jydfmc"]);
         } else {
             this.ToKey = jyf;
             this.ToNode = new Node(row[jyf], row["cxkh"], row["jyzjhm"], row["jymc"]);
             this.FromKey = dsf;
-            this.FromNode = new Node(
-                row[dsf],
-                row["jydfzkh"],
-                row["jydfzjhm"],
-                row["jydfmc"]
+            this.FromNode = new Node(row[dsf], row["jydfzkh"], row["jydfzjhm"], row["jydfmc"]
             );
         }
         this.ToKeyValue = this.ToNode.data;
@@ -195,7 +186,7 @@ class RowData {
     }
 
     ToString() {
-        return this.FromKeyValue + "->" + ToKeyValue + "," + this.Money;
+        return `${this.FromKeyValue} -> ${this.ToKeyValue}, ${this.Money}`;
     }
 
     GroupedItems() {
