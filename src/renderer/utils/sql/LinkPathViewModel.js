@@ -1032,7 +1032,7 @@ class CircleOrEnd2endChildModel {
             return;
         }
         let hashSet = {}; //NodeModel
-        for (let k in nodeModel.OutLinks.Items) {
+        for (let k in Object.keys(nodeModel.OutLinks.Items)) {
             let current = nodeModel.OutLinks.Items[k];
             if (current.IsTargetValid) {
                 hashSet[current.To.getUniqueKey()] = current.To;
