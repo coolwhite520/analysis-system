@@ -1,13 +1,11 @@
 import Default from "./Default";
-import dbbase from "../../db/Base";
+import dbBase from "../../db/Base";
 import Aes from "../aes";
 
 const LinkPathType = {
     link: 1,
     circle: 2,
-    endtoend: 3,
-    allpath: 4,
-    shortestpath: 5,
+    end2end: 3,
 };
 const DataItemType = {
     Detail: 0,
@@ -24,7 +22,7 @@ const SearchType = {
     mc: 2,
 };
 
-//string转时间
+//string转时间戳
 function stringToTime(string) {
     let f = string.split(" ", 2);
     let d = (f[0] ? f[0] : "").split("-", 3);
@@ -50,7 +48,7 @@ function dateDiff(date1, date2) {
     return (date1 - date2) / 1000; //结果是秒
 }
 
-function CreateProvider(paras) {
+function createProvider(paras) {
     let result;
     if (paras.DataItemType === DataItemType.Detail) {
         // 详情
@@ -71,21 +69,21 @@ async function GetVisualModelData(linkParameters, VisualParameters, Cond) {
     let filter = VisualParameters.TradeMoney + "," + VisualParameters.TradeCount;
     if (VisualParameters.VisualType === 0) {
         if (VisualParameters.GroupVisiual) {
-            res = await dbbase.GetModelSql(205);
+            res = await dbBase.GetModelSql(205);
         } else {
-            res = await dbbase.GetModelSql(202);
+            res = await dbBase.GetModelSql(202);
         }
     } else if (linkParameters.VisualType === 1) {
         if (linkParameters.GroupVisiual) {
-            res = await dbbase.GetModelSql(206);
+            res = await dbBase.GetModelSql(206);
         } else {
-            res = await dbbase.GetModelSql(204);
+            res = await dbBase.GetModelSql(204);
         }
     } else if (linkParameters.VisualType === 2) {
         if (linkParameters.GroupVisiual) {
-            res = await dbbase.GetModelSql(207);
+            res = await dbBase.GetModelSql(207);
         } else {
-            res = await dbbase.GetModelSql(203);
+            res = await dbBase.GetModelSql(203);
         }
     }
     let encodesql = res["gpsqltemplate"];
@@ -98,7 +96,7 @@ async function GetVisualModelData(linkParameters, VisualParameters, Cond) {
         filter
     );
     if (sql !== undefined && sql !== null && sql !== "") {
-        return await dbbase.QueryCustom(sql, linkParameters.Ajid);
+        return await dbBase.QueryCustom(sql, linkParameters.Ajid);
     }
     return null;
 }
@@ -361,7 +359,7 @@ class DetailDataProvider {
             .replace(/\$parm3\$/g, text)
             .replace(/\$parm4\$/g, text2);
         if (!Default.IsNullOrEmpty(sql)) {
-            return await dbbase.QueryCustom(sql, this.base.Paras.Ajid);
+            return await dbBase.QueryCustom(sql, this.base.Paras.Ajid);
         }
     }
     RowsToDict(dt) {
@@ -599,7 +597,7 @@ class BasePathFinder {
     Run(dict) {
         let source = this.Paras.Source;
         let instance = this.factory(source, dict);
-        return instance.DoDork()
+        return instance.doWork()
     };
 
     factory(source, dict) {
@@ -607,7 +605,7 @@ class BasePathFinder {
         if (this.Paras.LinkType === LinkPathType.link) {
             instance = new LinkChildModel(source, dict, this.Paras);
         } else {
-            instance = new CircleOrEndToEndChildModel(source, dict, this.Paras);
+            instance = new CircleOrend2endChildModel(source, dict, this.Paras);
         }
         return instance;
     };
@@ -764,13 +762,13 @@ class LinkChildModel {
         this.base.init(source, dict, params);
     }
 
-    DoDork() {
-        this.GenerateNetwork(this.base.linkParameters.Source);
-        this.CheckMinDepth();
-        return this.GenerateResultData();
+    doWork() {
+        this.generateNetwork(this.base.linkParameters.Source);
+        this.checkMinDepth();
+        return this.generateResultData();
     };
 
-    GenerateNetwork(source) {
+    generateNetwork(source) {
         if (!this.base.dictionary.hasOwnProperty(source)) {
             return;
         }
@@ -817,7 +815,7 @@ class LinkChildModel {
         }
     };
 
-    CheckMinDepth() {
+    checkMinDepth() {
         if (this.base.Root === undefined || this.base.Root === null) {
             return;
         }
@@ -898,7 +896,7 @@ class LinkChildModel {
         return list;
     };
 
-    GenerateResultData() {
+    generateResultData() {
         let nodeDict = {};
         let linkDict = {};
         let tempLinkDict = {};
@@ -939,20 +937,20 @@ class LinkChildModel {
     };
 }
 
-////////////////////////////childclass CircleOrEndToEndChildModel///////////////////////////////////////////////////////
-class CircleOrEndToEndChildModel {
+////////////////////////////childclass CircleOrend2endChildModel///////////////////////////////////////////////////////
+class CircleOrend2endChildModel {
     constructor(source, dict, params) {
         this.base = new BaseChildModel();
         this.base.init(source, dict, params);
     }
 
-    DoDork() {
-        this.GenerateNetwork(this.base.linkParameters.Source);
-        this.CheckMinDepth();
-        return this.GenerateResultData();
+    doWork() {
+        this.generateNetwork(this.base.linkParameters.Source);
+        this.checkMinDepth();
+        return this.generateResultData();
     };
 
-    GenerateNetwork(source) {
+    generateNetwork(source) {
         if (!this.base.dictionary.hasOwnProperty(source)) {
             return;
         }
@@ -1005,7 +1003,7 @@ class CircleOrEndToEndChildModel {
         }
     };
 
-    CheckMinDepth() {
+    checkMinDepth() {
         if (this.base.Root === undefined || this.base.Root === null) {
             return;
         }
@@ -1096,7 +1094,7 @@ class CircleOrEndToEndChildModel {
         return list;
     };
 
-    GenerateResultData() {
+    generateResultData() {
         let nodeDict = {}; //NodeModel
         let linkDict = {}; //LinkModel
         let tempLinkDict = {}; //LinkModel
@@ -1184,13 +1182,13 @@ class NodeModel {
 ////////////////////////////LinkModel///////////////////////////////////////////////////////
 class LinkModel {
     constructor(linkParameters) {
-        this.IDS;
-        this.From;
-        this.To;
-        this.TradeMoney;
-        this.TradeTime;
-        this.TradeCount;
-        this.UniqueKey;
+        this.IDS = "";
+        this.From = null;
+        this.To = null;
+        this.TradeMoney = 0;
+        this.TradeTime = "";
+        this.TradeCount = 0;
+        this.UniqueKey = "";
         this.linkParameters = linkParameters;
     }
 
@@ -1239,7 +1237,7 @@ class LinkModel {
 }
 
 async function StartComputeInternal(Paras, IsMocking = false) {
-    let baseDataProvider = CreateProvider(Paras);
+    let baseDataProvider = createProvider(Paras);
     let ret = await baseDataProvider.GetDataTableInternal();
     let dict = baseDataProvider.RowsToDict(ret.rows);
 
@@ -1248,10 +1246,10 @@ async function StartComputeInternal(Paras, IsMocking = false) {
 
     let links = [];
     let nodes = [];
-    for (let key in res.Nodedictionary) {
-        let current = res.Nodedictionary[key];
+    for (let k in Object.keys(res.Nodedictionary)) {
+        let current = res.Nodedictionary[k];
         nodes.push({
-            CardNo: key,
+            CardNo: k,
             FieldName: current.FieldName,
             IdentityNo: current.IdentityNo,
             IsRoot: current.IsRoot,
@@ -1259,8 +1257,8 @@ async function StartComputeInternal(Paras, IsMocking = false) {
             Username: current.Username,
         });
     }
-    for (let key in res.Linkdictionary) {
-        let current = res.Linkdictionary[key];
+    for (let k in Object.keys(res.Linkdictionary)) {
+        let current = res.Linkdictionary[k];
         links.push({
             dataType: Paras.DataItemType,
             source: current.From.UniqueKey,
