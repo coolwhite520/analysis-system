@@ -4,13 +4,9 @@ import Aes from "../aes";
 
 const LinkPathType = {
     link: 1,
-    // Token: 0x04000CF6 RID: 3318
     circle: 2,
-    // Token: 0x04000CF7 RID: 3319
     endtoend: 3,
-    // Token: 0x04000CF8 RID: 3320
     allpath: 4,
-    // Token: 0x04000CF9 RID: 3321
     shortestpath: 5,
 };
 const DataItemType = {
@@ -20,7 +16,6 @@ const DataItemType = {
 };
 const VisualKind = {
     Original: 0,
-    // Token: 0x040007A0 RID: 1952
     Custom: 1,
 };
 const SearchType = {
@@ -31,9 +26,9 @@ const SearchType = {
 
 //string转时间
 function stringToTime(string) {
-    var f = string.split(" ", 2);
-    var d = (f[0] ? f[0] : "").split("-", 3);
-    var t = (f[1] ? f[1] : "").split(":", 3);
+    let f = string.split(" ", 2);
+    let d = (f[0] ? f[0] : "").split("-", 3);
+    let t = (f[1] ? f[1] : "").split(":", 3);
     return new Date(
         parseInt(d[0], 10) || null,
         (parseInt(d[1], 10) || 1) - 1,
@@ -46,21 +41,21 @@ function stringToTime(string) {
 
 //计算时间差 （秒）
 function dateDiff(date1, date2) {
-    var type1 = typeof date1,
+    let type1 = typeof date1,
         type2 = typeof date2;
-    if (type1 == "string") date1 = stringToTime(date1);
+    if (type1 === "string") date1 = stringToTime(date1);
     else if (date1.getTime) date1 = date1.getTime();
-    if (type2 == "string") date2 = stringToTime(date2);
+    if (type2 === "string") date2 = stringToTime(date2);
     else if (date2.getTime) date2 = date2.getTime();
     return (date1 - date2) / 1000; //结果是秒
 }
 
 function CreateProvider(paras) {
     let result;
-    if (paras.DataItemType == DataItemType.Detail) {
+    if (paras.DataItemType === DataItemType.Detail) {
         // 详情
         result = new DetailDataProvider();
-    } else if (paras.DataItemType == DataItemType.Sum) {
+    } else if (paras.DataItemType === DataItemType.Sum) {
         // 汇总
         result = new SumDataProvider();
     } else {
@@ -74,19 +69,19 @@ function CreateProvider(paras) {
 async function GetVisualModelData(linkParameters, VisualParameters, Cond) {
     let res;
     let filter = VisualParameters.TradeMoney + "," + VisualParameters.TradeCount;
-    if (VisualParameters.VisualType == 0) {
+    if (VisualParameters.VisualType === 0) {
         if (VisualParameters.GroupVisiual) {
             res = await dbbase.GetModelSql(205);
         } else {
             res = await dbbase.GetModelSql(202);
         }
-    } else if (linkParameters.VisualType == 1) {
+    } else if (linkParameters.VisualType === 1) {
         if (linkParameters.GroupVisiual) {
             res = await dbbase.GetModelSql(206);
         } else {
             res = await dbbase.GetModelSql(204);
         }
-    } else if (linkParameters.VisualType == 2) {
+    } else if (linkParameters.VisualType === 2) {
         if (linkParameters.GroupVisiual) {
             res = await dbbase.GetModelSql(207);
         } else {
@@ -95,7 +90,6 @@ async function GetVisualModelData(linkParameters, VisualParameters, Cond) {
     }
     let encodesql = res["gpsqltemplate"];
     let orderby = res["orderby"];
-    console.log({linkParameters});
     let sql = GetAnalysisOtherTable(
         Aes.decrypt(encodesql),
         orderby,
@@ -103,20 +97,14 @@ async function GetVisualModelData(linkParameters, VisualParameters, Cond) {
         Cond,
         filter
     );
-    if (sql != undefined && sql != null && sql != "") {
+    if (sql !== undefined && sql !== null && sql !== "") {
         return await dbbase.QueryCustom(sql, linkParameters.Ajid);
     }
     return null;
 }
 
 //模型sql格式化（资金穿透） condtion:过滤页面选择的时间，filter:TradeMoney + "," + TradeCount;或者MinPhoneNum+ "," + MinPhoneTime;
-function GetAnalysisOtherTable(
-    itemSql,
-    sql_OrderBy,
-    caseId,
-    condtion = "",
-    filter = ""
-) {
+function GetAnalysisOtherTable(itemSql, sql_OrderBy, caseId, condtion = "", filter = "") {
     try {
         let array2 = filter.replace(/，/g, ",").split(",");
         return itemSql
@@ -149,8 +137,8 @@ function GetAnalysisOtherTable(
 class ShowWindowParameter {
     constructor() {
         this.VisualType = null
-        this.IsHuiZhong = true; //ID7DVySXdb
-        this.IsExpand = true; //b7ND1m16cx
+        this.IsHuiZhong = true;
+        this.IsExpand = true;
         this.TradeCount = null;
         this.TradeMoney = null;
         this.IsFenShu = null;
@@ -161,6 +149,16 @@ class ShowWindowParameter {
         this.VisualKind = null;
     }
 }
+
+class Node{
+    constructor(dat, kh, zjhm, mc) {
+        this.data = dat;
+        this.kh = kh;
+        this.zjhm = zjhm;
+        this.mc = mc;
+    }
+}
+
 
 class RowData {
     constructor(fx, jyf, dsf, row) {
@@ -214,13 +212,6 @@ class RowData {
 
 }
 
-function Node(dat, kh1, zjhm1, mc1) {
-    this.data = dat;
-    this.kh = kh1;
-    this.zjhm = zjhm1;
-    this.mc = mc1;
-}
-
 class LinkParameters {
     constructor(
         LinkType,
@@ -264,7 +255,6 @@ class LinkParameters {
         this.MinRatio = MinRatio;
         this.MaxRatio = MaxRatio;
         this.Condtion = Condtion;
-        //this.Obj=Obj;
         this.Ajid = Ajid;
         this.Mindepth = Mindepth;
         this.DataItemType = DataItemType_;
@@ -334,13 +324,15 @@ class BaseDataProvider {
     };
 }
 
-function DetailDataProvider() {
-    this.base;
-    this.init = function (paras) {
+class DetailDataProvider {
+    constructor() {
+        this.base = null
+    }
+    init(paras) {
         this.base = new BaseDataProvider();
         this.base.init(paras);
-    };
-    this.GetGroupSqlTemplate = function () {
+    }
+    GetGroupSqlTemplate() {
         return (
             "select shard_id as ids, '出' as jdbz, to_char(jysj::timestamp, 'yyyy-MM-dd HH24:mi:ss') as jysj, jyje,'0' as istrue, case when jdbz = '出' then cxkhgroup else jydfzkhgroup end cxkh, case when jdbz = '出' then jymcgroup else jydfmcgroup end jymc, case WHEN jdbz = '出' THEN jyzjhmgroup ELSE jydfzjhmgroup END jyzjhm, case when jdbz = '出' then jydfzkhgroup else cxkhgroup end jydfzkh, case when jdbz = '出' then jydfmcgroup else jymcgroup end jydfmc, case WHEN jdbz = '出' THEN jydfzjhmgroup ELSE jyzjhmgroup END jydfzjhm from " +
             Default.GetBankDetailTableSumSql("mz_bank_records") +
@@ -348,29 +340,29 @@ function DetailDataProvider() {
             this.base.Paras.Ajid +
             " and jysj is not null $parm2$ $parm2$ $parm4$ ORDER BY jymc"
         ).replace(/\$AJID\$/g, this.base.Paras.Ajid);
-    };
-    this.GetSqlTemplate = function () {
+    }
+    GetSqlTemplate() {
         return (
             "select shard_id as ids, '出' as jdbz, to_char(jysj::timestamp, 'yyyy-MM-dd HH24:mi:ss') as jysj, jyje,'0' as istrue, case when jdbz = '出' then cxkh else jydfzkh end cxkh, case when jdbz = '出' then jymc else jydfmc end jymc, case WHEN jdbz = '出' THEN jyzjhm ELSE jydfzjhm END jyzjhm, case when jdbz = '出' then jydfzkh else cxkh end jydfzkh, case when jdbz = '出' then jydfmc else jymc end jydfmc, case WHEN jdbz = '出' THEN jydfzjhm ELSE jyzjhm END jydfzjhm from mz_bank_records  where ajid = " +
             this.base.Paras.Ajid +
             " and jysj is not null $parm2$ $parm3$ $parm4$ ORDER BY jymc "
         );
     };
-    this.GetDataTableInternal = async function () {
+    async GetDataTableInternal() {
         let arg_E0_0 = this.base.Paras.GroupVisiual
             ? this.GetGroupSqlTemplate()
             : this.GetSqlTemplate();
         let text = "";
         let text2 = "";
         let dateTimeFilter = this.base.GetDateTimeFilter();
-        if (this.base.Paras.MinJyje != undefined && this.base.Paras.MinJyje > 0.0) {
+        if (this.base.Paras.MinJyje !== undefined && this.base.Paras.MinJyje > 0.0) {
             text = "and jyje>=" + this.base.Paras.MinJyje;
         }
-        if (this.base.Paras.CxType == "kh") {
+        if (this.base.Paras.CxType === "kh") {
             text2 = "and COALESCE(cxkh,'')!='' and COALESCE(jydfzkh,'')!=''";
-        } else if (this.base.Paras.CxType == "mc") {
+        } else if (this.base.Paras.CxType === "mc") {
             text2 = "and COALESCE(jymc,'')!='' and COALESCE(jydfmc,'')!=''";
-        } else if (this.base.Paras.CxType == "zjhm") {
+        } else if (this.base.Paras.CxType === "zjhm") {
             text2 = "and COALESCE(jyzjhm,'')!='' and COALESCE(jydfzjhm,'')!=''";
         }
         let sql = arg_E0_0
@@ -380,8 +372,8 @@ function DetailDataProvider() {
         if (!Default.IsNullOrEmpty(sql)) {
             return await dbbase.QueryCustom(sql, this.base.Paras.Ajid);
         }
-    };
-    this.TableDataToDictionary = function (dt) {
+    }
+    TableDataToDictionary(dt) {
         let dictionary = {}; //new Default.Dictionary();//{string, RowData}
         for (let i = 0; i < dt.length; i++) {
             let rowData = new RowData(
@@ -400,17 +392,19 @@ function DetailDataProvider() {
     };
 }
 
-function BaseSumOrDiffDataProvider() {
-    this.base;
-    this.init = function (paras) {
+class BaseSumOrDiffDataProvider {
+    constructor() {
+        this.base = null
+    }
+    init(paras) {
         this.base = new BaseDataProvider();
         this.base.init(paras);
-    };
-    this.CreateShowWindowParameter = function () {
+    }
+    CreateShowWindowParameter() {
         let showWindowParameter = new ShowWindowParameter();
-        if (this.base.Paras.CxType == "kh") {
+        if (this.base.Paras.CxType === "kh") {
             showWindowParameter.VisualType = 0;
-        } else if (this.base.Paras.CxType == "mc") {
+        } else if (this.base.Paras.CxType === "mc") {
             showWindowParameter.VisualType = 2;
         } else {
             showWindowParameter.VisualType = 1;
@@ -419,8 +413,8 @@ function BaseSumOrDiffDataProvider() {
         showWindowParameter.TradeMoney = this.base.Paras.MinJyje;
         showWindowParameter.TradeCount = this.base.Paras.TradeCount;
         return showWindowParameter;
-    };
-    this.GetDataTableInternal = async function () {
+    }
+    async GetDataTableInternal() {
         let visualParameters = this.CreateShowWindowParameter();
         let dateTimeFilter = this.base.GetDateTimeFilter();
 
@@ -429,17 +423,17 @@ function BaseSumOrDiffDataProvider() {
             visualParameters,
             dateTimeFilter
         );
-    };
-    this.GetItem = function (dataRow_0, string_2) {
+    }
+    GetItem(dataRow_0, string_2) {
         if (!dataRow_0.hasOwnProperty(string_2)) {
             return "";
         }
-        if (dataRow_0[string_2] == null || dataRow_0[string_2] == undefined) {
+        if (dataRow_0[string_2] === null || dataRow_0[string_2] === undefined) {
             return "";
         }
         return dataRow_0[string_2];
     };
-    this.SetRowData = function (
+    SetRowData(
         sumordiffDBRow,
         needRevert,
         jyje,
@@ -464,9 +458,9 @@ function BaseSumOrDiffDataProvider() {
         let array2 = ["jydfzkh", "jydfmc", "jydfzjhm"];
         let num = -1;
         if (this.base.Paras.GroupVisiual) {
-            if (this.base.Paras.CxType == "kh") {
+            if (this.base.Paras.CxType === "kh") {
                 num = 0;
-            } else if (this.base.Paras.CxType == "mc") {
+            } else if (this.base.Paras.CxType === "mc") {
                 num = 1;
             } else {
                 num = 2;
@@ -478,14 +472,14 @@ function BaseSumOrDiffDataProvider() {
         outRow["ids"] = ids;
         for (let i = 0; i < array.length; i++) {
             let text = needRevert ? array2[i] : array[i];
-            if (i == num) {
+            if (i === num) {
                 text += "group";
             }
             outRow[array[i]] = this.GetItem(sumordiffDBRow, text);
         }
         for (let j = 0; j < array2.length; j++) {
             let text2 = needRevert ? array[j] : array2[j];
-            if (j == num) {
+            if (j === num) {
                 text2 += "group";
             }
             outRow[array2[j]] = this.GetItem(sumordiffDBRow, text2);
@@ -494,21 +488,20 @@ function BaseSumOrDiffDataProvider() {
     };
 }
 
-function SumDataProvider() {
-    this.base;
-    this.init = function (paras) {
+class SumDataProvider {
+    constructor() {
+        this.base = null
+    }
+
+    init(paras) {
         this.base = new BaseSumOrDiffDataProvider();
         this.base.init(paras);
-    };
-    this.CreateShowWindowParameter = function () {
-        let expr_06 = this.base.CreateShowWindowParameter();
-        expr_06.IsHuiZhong = true;
-        return expr_06;
-    };
-    this.GetDataTableInternal = async function () {
+    }
+
+    async GetDataTableInternal() {
         return await this.base.GetDataTableInternal();
-    };
-    this.TableDataToDictionary = function (dt) {
+    }
+    TableDataToDictionary(dt) {
         let dictionary = {}; //new Default.Dictionary();//{string, RowData}
         for (let i = 0; i < dt.length; i++) {
             let dataRow = dt[i];
@@ -556,21 +549,18 @@ function SumDataProvider() {
     };
 }
 
-function DiffDataProvider() {
-    this.base;
-    this.init = function (paras) {
+class DiffDataProvider {
+    constructor() {
+        this.base = null
+    }
+    init = function (paras) {
         this.base = new BaseSumOrDiffDataProvider();
         this.base.init(paras);
-    };
-    this.CreateShowWindowParameter = function () {
-        let expr_06 = this.base.CreateShowWindowParameter();
-        expr_06.IsHuiZhong = false;
-        return expr_06;
-    };
-    this.GetDataTableInternal = async function () {
+    }
+    async GetDataTableInternal() {
         return await this.base.GetDataTableInternal();
     };
-    this.TableDataToDictionary = function (dt) {
+    TableDataToDictionary(dt) {
         let dictionary = {}; //new Default.Dictionary();//{string, RowData}
         for (let i = 0; i < dt.length; i++) {
             let dataRow = dt[i];
@@ -626,7 +616,7 @@ class BasePathFinder {
         if (this.Paras.LinkType === LinkPathType.link) {
             instance = new LinkChildModel(source, dict, this.Paras);
         } else {
-            instance = new CircleOrEndChildModel(source, dict, this.Paras);
+            instance = new CircleOrEndToEndChildModel(source, dict, this.Paras);
         }
         return instance;
     };
@@ -958,8 +948,8 @@ class LinkChildModel {
     };
 }
 
-////////////////////////////childclass CircleOrEndChildModel///////////////////////////////////////////////////////
-class CircleOrEndChildModel {
+////////////////////////////childclass CircleOrEndToEndChildModel///////////////////////////////////////////////////////
+class CircleOrEndToEndChildModel {
     constructor(source, dict, params) {
         this.base = new BaseChildModel();
         this.base.init(source, dict, params);
@@ -1342,7 +1332,7 @@ export default {
             condition,
             ajid
         );
-        let retdata = await StartComputeInternal(linkParameters);
-        return retdata;
+        let ret = await StartComputeInternal(linkParameters);
+        return ret;
     },
 };
