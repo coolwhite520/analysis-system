@@ -364,7 +364,7 @@ class DetailDataProvider {
             return await dbbase.QueryCustom(sql, this.base.Paras.Ajid);
         }
     }
-    TableDataToDictionary(dt) {
+    RowsToDict(dt) {
         let dictionary = {}; //new Default.Dictionary();//{string, RowData}
         for (let i = 0; i < dt.length; i++) {
             let rowData = new RowData(
@@ -492,8 +492,8 @@ class SumDataProvider {
     async GetDataTableInternal() {
         return await this.base.GetDataTableInternal();
     }
-    TableDataToDictionary(dt) {
-        let dictionary = {}; //new Default.Dictionary();//{string, RowData}
+    RowsToDict(dt) {
+        let dict = {}; //new Default.Dictionary();//{string, RowData}
         for (let i = 0; i < dt.length; i++) {
             let dataRow = dt[i];
             let list = [];
@@ -529,14 +529,14 @@ class SumDataProvider {
                     this.base.base.DSF,
                     list[i]
                 );
-                if (dictionary.hasOwnProperty(rowData.FromKeyValue)) {
-                    dictionary[rowData.FromKeyValue].Group(rowData);
+                if (dict.hasOwnProperty(rowData.FromKeyValue)) {
+                    dict[rowData.FromKeyValue].Group(rowData);
                 } else {
-                    dictionary[rowData.FromKeyValue] = rowData;
+                    dict[rowData.FromKeyValue] = rowData;
                 }
             }
         }
-        return dictionary;
+        return dict;
     };
 }
 
@@ -551,8 +551,8 @@ class DiffDataProvider {
     async GetDataTableInternal() {
         return await this.base.GetDataTableInternal();
     };
-    TableDataToDictionary(dt) {
-        let dictionary = {}; //new Default.Dictionary();//{string, RowData}
+    RowsToDict(dt) {
+        let dictionary = {};
         for (let i = 0; i < dt.length; i++) {
             let dataRow = dt[i];
             let valueOrDefault = parseFloat(dataRow["jczce"]);
@@ -1240,8 +1240,8 @@ class LinkModel {
 
 async function StartComputeInternal(Paras, IsMocking = false) {
     let baseDataProvider = CreateProvider(Paras);
-    let dt = await baseDataProvider.GetDataTableInternal();
-    let dict = baseDataProvider.TableDataToDictionary(dt.rows);
+    let ret = await baseDataProvider.GetDataTableInternal();
+    let dict = baseDataProvider.RowsToDict(ret.rows);
 
     let basePathFinder = new BasePathFinder(Paras);
     let res = basePathFinder.Run(dict);
