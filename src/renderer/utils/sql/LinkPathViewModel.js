@@ -422,13 +422,7 @@ class BaseSumOrDiffDataProvider {
         }
         return dataRow_0[string_2];
     };
-    SetRowData(
-        sumordiffDBRow,
-        needRevert,
-        jyje,
-        tradeCount,
-        ids
-    ) {
+    SetRowData(sumordiffDBRow, needRevert, jyje, tradeCount, ids) {
         let outRow = {
             jdbz: "",
             jysj: "",
@@ -490,6 +484,7 @@ class SumDataProvider {
     async GetDataTableInternal() {
         return await this.base.GetDataTableInternal();
     }
+
     RowsToDict(dt) {
         let dict = {}; //new Default.Dictionary();//{string, RowData}
         for (let i = 0; i < dt.length; i++) {
@@ -605,7 +600,7 @@ class BasePathFinder {
         if (this.Paras.LinkType === LinkPathType.link) {
             instance = new LinkChildModel(source, dict, this.Paras);
         } else {
-            instance = new CircleOrend2endChildModel(source, dict, this.Paras);
+            instance = new CircleOrEnd2endChildModel(source, dict, this.Paras);
         }
         return instance;
     };
@@ -627,7 +622,7 @@ class NodeModelCollection {
         }
     };
 
-    ContainsKey(key) {
+    containsKey(key) {
         return this.Items.hasOwnProperty(key);
     };
 }
@@ -653,7 +648,7 @@ class LinkModelCollection {
         }
     }
 
-    ContainsKey(key) {
+    containsKey(key) {
         return this.Items.hasOwnProperty(key);
     }
 
@@ -685,7 +680,7 @@ class BaseChildModel {
     makeFromNodeModel(rowData) {
         let fromKeyValue = rowData.FromKeyValue;
         let nodeModel;
-        if (this.nodeModelCollection.ContainsKey(fromKeyValue)) {
+        if (this.nodeModelCollection.containsKey(fromKeyValue)) {
             nodeModel = this.nodeModelCollection.Items[fromKeyValue];
         } else {
             nodeModel = new NodeModel();
@@ -701,7 +696,7 @@ class BaseChildModel {
     makeToNodeModel(toRowData) {
         let toKeyValue = toRowData.ToKeyValue;
         let nodeModel;
-        if (this.nodeModelCollection.ContainsKey(toKeyValue)) {
+        if (this.nodeModelCollection.containsKey(toKeyValue)) {
             nodeModel = this.nodeModelCollection.Items[toKeyValue];
         } else {
             nodeModel = new NodeModel();
@@ -715,7 +710,7 @@ class BaseChildModel {
     }
 
     isInLinkModelCollection(string_0) {
-        return this.linkModelCollection.ContainsKey(string_0);
+        return this.linkModelCollection.containsKey(string_0);
     }
 
     generateInOutLinks(linkModel) {
@@ -800,7 +795,6 @@ class LinkChildModel {
         let stackTopLinkModel = count === 0 ? null : stack.peek();
         // 获取某个账号、卡号、身份证所关联的所有交易并生成线条
         let links = this.generateLinkModelList(nodeModel, stackTopLinkModel);
-        console.log(links)
         for (let current of links) {
             if (!hashSet.includes(current.getUniqueKey())) {
                 hashSet.push(current.getUniqueKey());
@@ -900,7 +894,7 @@ class LinkChildModel {
         let nodeDict = {};
         let linkDict = {};
         let tempLinkDict = {};
-        for (let i in this.base.nodeModelCollection.Items) {
+        for (let i in Object.keys( this.base.nodeModelCollection.Items)) {
             let value = this.base.nodeModelCollection.Items[i];
             if (
                 value.IsMinDepth !== undefined &&
@@ -910,12 +904,12 @@ class LinkChildModel {
                 if (!nodeDict.hasOwnProperty(value.getUniqueKey())) {
                     nodeDict[value.getUniqueKey()] = value;
                 }
-                for (let j in value.InLinks.Items) {
+                for (let j in Object.keys(value.InLinks.Items)) {
                     if (!tempLinkDict.hasOwnProperty(j)) {
                         tempLinkDict[j] = value.InLinks.Items[j];
                     }
                 }
-                for (let k in value.OutLinks.Items) {
+                for (let k in Object.keys(value.OutLinks.Items)) {
                     if (!tempLinkDict.hasOwnProperty(k)) {
                         tempLinkDict[k] = value.OutLinks.Items[k];
                     }
@@ -937,8 +931,8 @@ class LinkChildModel {
     };
 }
 
-////////////////////////////childclass CircleOrend2endChildModel///////////////////////////////////////////////////////
-class CircleOrend2endChildModel {
+////////////////////////////childclass CircleOrEnd2endChildModel///////////////////////////////////////////////////////
+class CircleOrEnd2endChildModel {
     constructor(source, dict, params) {
         this.base = new BaseChildModel();
         this.base.init(source, dict, params);
@@ -1098,19 +1092,19 @@ class CircleOrend2endChildModel {
         let nodeDict = {}; //NodeModel
         let linkDict = {}; //LinkModel
         let tempLinkDict = {}; //LinkModel
-        for (let i in this.base.nodeModelCollection.Items) {
+        for (let i in Object.keys(this.base.nodeModelCollection.Items)) {
             let item = this.base.nodeModelCollection.Items[i];
             if (item.IsMinDepth && item.IsToTarget) {
                 if (!nodeDict.hasOwnProperty(item.getUniqueKey())) {
                     nodeDict[item.getUniqueKey()] = item;
                 }
-                for (let j in item.InLinks.Items) {
+                for (let j in Object.keys(item.InLinks.Items)) {
                     let current = item.InLinks.Items[j];
                     if (current.IsTargetValid && !tempLinkDict.hasOwnProperty(j)) {
                         tempLinkDict[j] = current;
                     }
                 }
-                for (let k in item.OutLinks.Items) {
+                for (let k in Object.keys(item.OutLinks.Items)) {
                     let current = item.OutLinks.Items[k];
                     if (current.IsTargetValid && !tempLinkDict.hasOwnProperty(k)) {
                         tempLinkDict[k] = current;
@@ -1192,7 +1186,7 @@ class LinkModel {
         this.linkParameters = linkParameters;
     }
 
-    method_0() {
+    setUniqueKey() {
         this.UniqueKey = generateLinkedKey(
             this.linkParameters,
             this.From.getUniqueKey(),
@@ -1204,7 +1198,7 @@ class LinkModel {
 
     getUniqueKey() {
         if (Default.IsNullOrEmpty(this.UniqueKey)) {
-            this.method_0();
+            this.setUniqueKey();
         }
         return this.UniqueKey;
     };
@@ -1218,22 +1212,22 @@ class LinkModel {
             " " +
             this.TradeMoney
         );
-    };
+    }
 
     fromId() {
         return this.From.UniqueKey;
-    };
+    }
 
     toId() {
         return this.To.UniqueKey;
-    };
+    }
 
     dataTime() {
         if (this.linkParameters.DataItemType === DataItemType.Detail) {
             return this.TradeTime;
         }
         return this.TradeCount + "笔交易";
-    };
+    }
 }
 
 async function StartComputeInternal(Paras, IsMocking = false) {
@@ -1273,13 +1267,24 @@ async function StartComputeInternal(Paras, IsMocking = false) {
 
 export default {
     /**
-     *
-     *
      * @param {模型类型：包括链路、环路、两端} linkType
      * @param {维度类型：} weiDuType
      * @param {查询类型：} searchType
-     *
-     * @param {} ajid
+     * @param isGroup
+     * @param directrion
+     * @param searchMaxCeng
+     * @param searchMinCeng
+     * @param beginPoint
+     * @param endPoint
+     * @param beginDate
+     * @param endDate
+     * @param minJyje
+     * @param minBs
+     * @param timeSpan
+     * @param minJcb
+     * @param maxJcb
+     * @param condition
+     * @param ajid
      */
     async getCapitalPenetration(
         linkType,
@@ -1321,7 +1326,6 @@ export default {
             condition,
             ajid
         );
-        let ret = await StartComputeInternal(linkParameters);
-        return ret;
+        return await StartComputeInternal(linkParameters);
     },
 };
