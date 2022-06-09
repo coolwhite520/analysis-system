@@ -86,11 +86,11 @@ async function GetVisualModelData(linkParameters, VisualParameters, Cond) {
             res = await dbBase.GetModelSql(203);
         }
     }
-    let encodesql = res["gpsqltemplate"];
-    let orderby = res["orderby"];
+    let encodedSql = res["gpsqltemplate"];
+    let orderBy = res["orderby"];
     let sql = GetAnalysisOtherTable(
-        Aes.decrypt(encodesql),
-        orderby,
+        Aes.decrypt(encodedSql),
+        orderBy,
         linkParameters.Ajid,
         Cond,
         filter
