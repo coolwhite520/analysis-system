@@ -838,8 +838,11 @@ class LinkChildModel {
         }
 
         let hashSet = {}; //NodeModel
-        for (let k in Object.keys(nodeModel.OutLinks.Items)) {
+        for (let k of Object.keys(nodeModel.OutLinks.Items)) {
+            console.log({k})
+            console.log({nodeModel})
             let current = nodeModel.OutLinks.Items[k];
+            console.log({current})
             hashSet[current.To.getUniqueKey()] = current.To;
         }
         for (let k in hashSet) {
@@ -887,18 +890,18 @@ class LinkChildModel {
         let nodeDict = {};
         let linkDict = {};
         let tempLinkDict = {};
-        for (let i in Object.keys( this.base.nodeModelCollection.Items)) {
+        for (let i of Object.keys( this.base.nodeModelCollection.Items)) {
             let value = this.base.nodeModelCollection.Items[i];
             if (value.IsMinDepth) {
                 if (!nodeDict.hasOwnProperty(value.getUniqueKey())) {
                     nodeDict[value.getUniqueKey()] = value;
                 }
-                for (let j in Object.keys(value.InLinks.Items)) {
+                for (let j of Object.keys(value.InLinks.Items)) {
                     if (!tempLinkDict.hasOwnProperty(j)) {
                         tempLinkDict[j] = value.InLinks.Items[j];
                     }
                 }
-                for (let k in Object.keys(value.OutLinks.Items)) {
+                for (let k of Object.keys(value.OutLinks.Items)) {
                     if (!tempLinkDict.hasOwnProperty(k)) {
                         tempLinkDict[k] = value.OutLinks.Items[k];
                     }
@@ -1021,7 +1024,7 @@ class CircleOrEnd2endChildModel {
             return;
         }
         let hashSet = {}; //NodeModel
-        for (let k in Object.keys(nodeModel.OutLinks.Items)) {
+        for (let k of Object.keys(nodeModel.OutLinks.Items)) {
             let current = nodeModel.OutLinks.Items[k];
             if (current.IsTargetValid) {
                 hashSet[current.To.getUniqueKey()] = current.To;
@@ -1081,19 +1084,19 @@ class CircleOrEnd2endChildModel {
         let nodeDict = {}; //NodeModel
         let linkDict = {}; //LinkModel
         let tempLinkDict = {}; //LinkModel
-        for (let i in Object.keys(this.base.nodeModelCollection.Items)) {
+        for (let i of Object.keys(this.base.nodeModelCollection.Items)) {
             let item = this.base.nodeModelCollection.Items[i];
             if (item.IsMinDepth && item.IsToTarget) {
                 if (!nodeDict.hasOwnProperty(item.getUniqueKey())) {
                     nodeDict[item.getUniqueKey()] = item;
                 }
-                for (let j in Object.keys(item.InLinks.Items)) {
+                for (let j of Object.keys(item.InLinks.Items)) {
                     let current = item.InLinks.Items[j];
                     if (current.IsTargetValid && !tempLinkDict.hasOwnProperty(j)) {
                         tempLinkDict[j] = current;
                     }
                 }
-                for (let k in Object.keys(item.OutLinks.Items)) {
+                for (let k of Object.keys(item.OutLinks.Items)) {
                     let current = item.OutLinks.Items[k];
                     if (current.IsTargetValid && !tempLinkDict.hasOwnProperty(k)) {
                         tempLinkDict[k] = current;
@@ -1229,7 +1232,7 @@ async function StartComputeInternal(Paras) {
 
     let links = [];
     let nodes = [];
-    for (let k in Object.keys(res.Nodedictionary)) {
+    for (let k of Object.keys(res.Nodedictionary)) {
         let current = res.Nodedictionary[k];
         nodes.push({
             CardNo: k,
@@ -1240,7 +1243,7 @@ async function StartComputeInternal(Paras) {
             Username: current.Username,
         });
     }
-    for (let k in Object.keys(res.Linkdictionary)) {
+    for (let k of Object.keys(res.Linkdictionary)) {
         let current = res.Linkdictionary[k];
         links.push({
             dataType: Paras.DataItemType,
