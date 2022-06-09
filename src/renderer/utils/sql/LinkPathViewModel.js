@@ -551,9 +551,7 @@ class DiffDataProvider {
                 if (Default.IsNullOrEmpty(text)) {
                     text += dataRow["jids"];
                 } else {
-                    text += Default.IsNullOrEmpty(dataRow["jids"])
-                        ? ""
-                        : "," + dataRow["jids"];
+                    text += Default.IsNullOrEmpty(dataRow["jids"]) ? "" : "," + dataRow["jids"];
                 }
                 let dataRow2 = this.base.SetRowData(
                     dataRow,
