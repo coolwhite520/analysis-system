@@ -136,13 +136,8 @@ class ShowWindowParameter {
     constructor() {
         this.VisualType = null
         this.IsHuiZhong = true;
-        this.IsExpand = true;
         this.TradeCount = null;
         this.TradeMoney = null;
-        this.IsFenShu = null;
-        this.IsMinXi = null;
-        this.MinPhoneTime = null;
-        this.MinPhoneNum = null;
         this.GroupVisiual = null;
         this.VisualKind = null;
     }
@@ -362,22 +357,22 @@ class DetailDataProvider {
             return await dbBase.QueryCustom(sql, this.base.Paras.Ajid);
         }
     }
-    RowsToDict(dt) {
-        let dictionary = {}; //new Default.Dictionary();//{string, RowData}
-        for (let i = 0; i < dt.length; i++) {
+    RowsToDict(rows) {
+        let dict = {};
+        for (let i = 0; i < rows.length; i++) {
             let rowData = new RowData(
                 this.base.Paras.Fx,
                 this.base.JYF,
                 this.base.DSF,
-                dt[i]
+                rows[i]
             );
-            if (dictionary.hasOwnProperty(rowData.FromKeyValue)) {
-                dictionary[rowData.FromKeyValue].Group(rowData);
+            if (dict.hasOwnProperty(rowData.FromKeyValue)) {
+                dict[rowData.FromKeyValue].Group(rowData);
             } else {
-                dictionary[rowData.FromKeyValue] = rowData;
+                dict[rowData.FromKeyValue] = rowData;
             }
         }
-        return dictionary;
+        return dict;
     };
 }
 
@@ -845,7 +840,7 @@ class LinkChildModel {
         }
 
         let hashSet = {}; //NodeModel
-        for (let k in nodeModel.OutLinks.Items) {
+        for (let k in Object.keys(nodeModel.OutLinks.Items)) {
             let current = nodeModel.OutLinks.Items[k];
             hashSet[current.To.getUniqueKey()] = current.To;
         }
@@ -1230,7 +1225,7 @@ class LinkModel {
     }
 }
 
-async function StartComputeInternal(Paras, IsMocking = false) {
+async function StartComputeInternal(Paras) {
     let baseDataProvider = createProvider(Paras);
     let ret = await baseDataProvider.GetDataTableInternal();
     let dict = baseDataProvider.RowsToDict(ret.rows);
@@ -1267,9 +1262,9 @@ async function StartComputeInternal(Paras, IsMocking = false) {
 
 export default {
     /**
-     * @param {模型类型：包括链路、环路、两端} linkType
-     * @param {维度类型：} weiDuType
-     * @param {查询类型：} searchType
+     * @param linkType 模型类型：包括链路、环路、两端
+     * @param weiDuType 维度类型
+     * @param searchType 查询类型
      * @param isGroup
      * @param directrion
      * @param searchMaxCeng
