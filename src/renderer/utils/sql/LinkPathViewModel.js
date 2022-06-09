@@ -175,23 +175,19 @@ class RowData {
         }
         this.ToKeyValue = this.ToNode.data;
         this.FromKeyValue = this.FromNode.data;
-        this.list_0 = null
+        this.list = []
     }
 
-    ToString() {
+    toString() {
         return `${this.FromKeyValue} -> ${this.ToKeyValue}, ${this.Money}`;
     }
 
-    GroupedItems() {
-        if (this.list_0 === null || this.list_0 === undefined) {
-            this.list_0 = [];
-            this.list_0.push(this);
-        }
-        return this.list_0;
+    getGroupItems() {
+        return this.list;
     };
 
-    Group(data) {
-        this.GroupedItems().push(data);
+    addToGroup(data) {
+        this.list.push(data);
     };
 
 }
@@ -367,7 +363,7 @@ class DetailDataProvider {
                 rows[i]
             );
             if (dict.hasOwnProperty(rowData.FromKeyValue)) {
-                dict[rowData.FromKeyValue].Group(rowData);
+                dict[rowData.FromKeyValue].addToGroup(rowData);
             } else {
                 dict[rowData.FromKeyValue] = rowData;
             }
@@ -518,7 +514,7 @@ class SumDataProvider {
                     list[i]
                 );
                 if (dict.hasOwnProperty(rowData.FromKeyValue)) {
-                    dict[rowData.FromKeyValue].Group(rowData);
+                    dict[rowData.FromKeyValue].addToGroup(rowData);
                 } else {
                     dict[rowData.FromKeyValue] = rowData;
                 }
@@ -567,7 +563,7 @@ class DiffDataProvider {
                     dataRow2
                 );
                 if (dictionary.hasOwnProperty(rowData.FromKeyValue)) {
-                    dictionary[rowData.FromKeyValue].Group(rowData);
+                    dictionary[rowData.FromKeyValue].addToGroup(rowData);
                 } else {
                     dictionary[rowData.FromKeyValue] = rowData;
                 }
@@ -856,7 +852,7 @@ class LinkChildModel {
     };
 
     generateLinkModelList(nodeModel, linkModel) {
-        let items = this.base.dictionary[nodeModel.getUniqueKey()].GroupedItems();
+        let items = this.base.dictionary[nodeModel.getUniqueKey()].getGroupItems();
         let list = [];
         for (let current of items) {
             let linkedKey = generateLinkedKey(
@@ -1050,7 +1046,7 @@ class CircleOrEnd2endChildModel {
     };
 
     generateLinkModelList(nodeModel, linkModel) {
-        let items = this.base.dictionary[nodeModel.getUniqueKey()].GroupedItems();
+        let items = this.base.dictionary[nodeModel.getUniqueKey()].getGroupItems();
         let list = [];
         for (let current of items) {
             let text = generateLinkedKey(
@@ -1148,7 +1144,7 @@ class NodeModel {
         return this.UniqueKey;
     }
 
-    ToString() {
+    toString() {
         return this.UniqueKey + "(" + this.Username + ")";
     }
 
@@ -1195,11 +1191,11 @@ class LinkModel {
         return this.UniqueKey;
     };
 
-    ToString() {
+    toString() {
         return (
-            this.From.ToString() +
+            this.From.toString() +
             "->" +
-            this.To.ToString() +
+            this.To.toString() +
             this.dataTime() +
             " " +
             this.TradeMoney
