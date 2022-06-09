@@ -889,11 +889,7 @@ class LinkChildModel {
         let tempLinkDict = {};
         for (let i in Object.keys( this.base.nodeModelCollection.Items)) {
             let value = this.base.nodeModelCollection.Items[i];
-            if (
-                value.IsMinDepth !== undefined &&
-                value.IsMinDepth != null &&
-                value.IsMinDepth
-            ) {
+            if (value.IsMinDepth) {
                 if (!nodeDict.hasOwnProperty(value.getUniqueKey())) {
                     nodeDict[value.getUniqueKey()] = value;
                 }
