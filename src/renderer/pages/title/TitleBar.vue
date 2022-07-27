@@ -18,10 +18,7 @@
           <div class="titleContent">
             <span style="font-size: 25px">{{ defaultTitle }}</span>
           </div>
-          <div
-            v-if="currentViewName === 'main-page'"
-            style="font-size: 10px; margin-top: 5px; color: white"
-          >
+          <div v-if="currentViewName === 'main-page'" style="font-size: 10px; margin-top: 5px; color: white">
             <b>当前案件：</b>{{ caseBase.ajmc }}
           </div>
         </el-col>
@@ -29,49 +26,32 @@
           <div>
             <span class="opterationBtn iconfont">
               <el-tooltip content="待调单任务" placement="bottom">
-                <span
-                  @click="handleClickNewAwaitTask"
-                  class="dbconfig"
-                  v-if="currentViewName === 'main-page'"
-                  >&#xe748;</span
-                >
+                <span @click="handleClickNewAwaitTask" class="dbconfig"
+                  v-if="currentViewName === 'main-page'">&#xe748;</span>
               </el-tooltip>
               <el-tooltip content="数据库设置" placement="bottom">
-                <span @click="handleClickDbConfig" class="dbconfig"
-                  >&#xe64f;</span
-                >
+                <span @click="handleClickDbConfig" class="dbconfig">&#xe64f;</span>
               </el-tooltip>
               <el-tooltip content="返回首页" placement="bottom">
-                <span @click="handleClickGotoHome" class="gohome"
-                  >&#xe6fe;</span
-                >
+                <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
               </el-tooltip>
               <span @click="handleClickMin" class="min">&#xe60c;</span>
               <span @click="handleClickClose" class="close">&#xe634;</span>
             </span>
           </div>
-          <div
-            style="
+          <div style="
               float: right;
               margin-top: 20px;
               font-size: 10px;
               margin-right: 10px;
-            "
-          >
+            ">
             当前版本号：{{ softVersion }}
           </div>
           <div style="clear: both"></div>
-          <div
-            v-show="currentViewName === 'main-page'"
-            style="float: right; margin-right: 10px"
-          >
-            <el-button
-              style="color: white; padding: 0"
-              type="text"
-              @click="handleClickShowTabBar"
-              class="iconfont"
-              >{{ showTabBarView ? "&#xe6da;" : "&#xe6dd;" }}</el-button
-            >
+          <div v-show="currentViewName === 'main-page'" style="float: right; margin-right: 10px">
+            <el-button style="color: white; padding: 0" type="text" @click="handleClickShowTabBar" class="iconfont">{{
+                showTabBarView ? "&#xe6da;" : "&#xe6dd;"
+            }}</el-button>
           </div>
         </el-col>
       </el-row>
@@ -88,19 +68,10 @@
                 <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
               </div>
               <div>
-                <img
-                  class="logo"
-                  src="/static/logo/JD.png"
-                  alt=""
-                  height="50"
-                  @click="handleClickStar"
-                />
+                <img class="logo" src="/static/logo/JD.png" alt="" height="50" @click="handleClickStar" />
               </div>
             </el-tooltip>
-            <div
-              v-if="currentViewName === 'main-page'"
-              style="font-size: 10px; margin-top: 5px; color: #225ca6"
-            >
+            <div v-if="currentViewName === 'main-page'" style="font-size: 10px; margin-top: 5px; color: #225ca6">
               <b>当前案件：</b>{{ caseBase.ajmc }}
             </div>
           </div>
@@ -110,49 +81,32 @@
           <div>
             <span class="opterationBtn iconfont">
               <el-tooltip content="待调单任务" placement="bottom">
-                <span
-                  @click="handleClickNewAwaitTask"
-                  class="dbconfig"
-                  v-if="currentViewName === 'main-page'"
-                  >&#xe748;</span
-                >
+                <span @click="handleClickNewAwaitTask" class="dbconfig"
+                  v-if="currentViewName === 'main-page'">&#xe748;</span>
               </el-tooltip>
               <el-tooltip content="数据库设置" placement="bottom">
-                <span @click="handleClickDbConfig" class="dbconfig"
-                  >&#xe64f;</span
-                >
+                <span @click="handleClickDbConfig" class="dbconfig">&#xe64f;</span>
               </el-tooltip>
               <el-tooltip content="返回首页" placement="bottom">
-                <span @click="handleClickGotoHome" class="gohome"
-                  >&#xe6fe;</span
-                >
+                <span @click="handleClickGotoHome" class="gohome">&#xe6fe;</span>
               </el-tooltip>
               <span @click="handleClickMin" class="min">&#xe60c;</span>
               <span @click="handleClickClose" class="close">&#xe634;</span>
             </span>
           </div>
-          <div
-            style="
+          <div style="
               float: right;
               margin-top: 20px;
               font-size: 10px;
               margin-right: 10px;
-            "
-          >
+            ">
             当前版本号：{{ softVersion }}
           </div>
           <div style="clear: both"></div>
-          <div
-            v-show="currentViewName === 'main-page'"
-            style="float: right; margin-right: 10px"
-          >
-            <el-button
-              style="color: white; padding: 0"
-              type="text"
-              @click="handleClickShowTabBar"
-              class="iconfont"
-              >{{ showTabBarView ? "&#xe6da;" : "&#xe6dd;" }}</el-button
-            >
+          <div v-show="currentViewName === 'main-page'" style="float: right; margin-right: 10px">
+            <el-button style="color: white; padding: 0" type="text" @click="handleClickShowTabBar" class="iconfont">{{
+                showTabBarView ? "&#xe6da;" : "&#xe6dd;"
+            }}</el-button>
           </div>
         </el-col>
       </el-row>
@@ -183,7 +137,7 @@ export default {
       softVersion: this.$electron.remote.getGlobal("softVersion"),
     };
   },
-  mounted() {},
+  mounted() { },
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView"]),
     ...mapState("AppPageSwitch", ["currentViewName", "contentViewHeight"]),
@@ -248,6 +202,7 @@ export default {
       );
       this.$store.commit("ShowTable/CLEAR_TABLE_LIST");
       this.$store.commit("AppPageSwitch/SET_VIEW_NAME", "home-page");
+      this.$store.commit("DataCollection/RESET_DATA_LIST");
     },
     handleClickMin() {
       this.$electron.ipcRenderer.send("window-min");
@@ -360,6 +315,7 @@ export default {
   font-size: 20px;
   text-align: left;
 }
+
 .opterationBtn {
   display: block;
   font-size: 15px;
@@ -369,21 +325,25 @@ export default {
   color: white;
   -webkit-app-region: no-drag;
 }
+
 .dbconfig {
   font-size: 20px;
   margin-right: 10px;
   border-right: 1px solid gray;
   padding-right: 10px;
 }
+
 .dbconfig:hover {
   color: gray;
 }
+
 .gohome {
   font-size: 20px;
   margin-right: 10px;
   border-right: 1px solid gray;
   padding-right: 10px;
 }
+
 .min {
   margin-right: 5px;
 }
@@ -391,9 +351,11 @@ export default {
 .gohome:hover {
   color: gray;
 }
+
 .min:hover {
   color: green;
 }
+
 .close:hover {
   color: red;
 }

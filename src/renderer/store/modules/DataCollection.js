@@ -7,6 +7,9 @@ const state = {
   exampleDataList: [], //实例数组
 };
 const mutations = {
+  RESET_DATA_LIST(state) {
+    state.exampleDataList = [];
+  },
   // 添加数据到整体数组中
   ADD_CSV_DATA_TO_LIST(state, data) {
     state.exampleDataList.push(data);
@@ -33,6 +36,7 @@ const mutations = {
   SET_INOUT_FLAG_BY_ID(state, { id, inFlag, outFlag }) {
     for (let index = 0; index < state.exampleDataList.length; index++) {
       if (id === state.exampleDataList[index].id) {
+        console.log(inFlag, outFlag)
         Vue.set(state.exampleDataList[index], "inFlag", inFlag);
         Vue.set(state.exampleDataList[index], "outFlag", outFlag);
         break;
