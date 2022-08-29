@@ -726,7 +726,7 @@ export default {
         }
         this.$electron.ipcRenderer.send("read-all-file-over", {});
       } catch (e) {
-        log.info(e);
+        log.info("panda:", e);
       }
     },
     async sleep(ms) {
@@ -775,7 +775,13 @@ export default {
           await cases.SwitchCase(client, ajid);
           streamFrom = await client.query(copyFrom(sqlStr));
           streamFrom.on("error", function (e) {
-            log.info(e);
+            _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+              success: false,
+              fileName,
+              sheetName,
+              secondTitle: "出错了...",
+              msg: e,
+            });
             reject(e);
           });
           streamFrom.on("finish", function () {
@@ -852,6 +858,8 @@ export default {
                   cell = cell
                     .toString()
                     .replace(/\"/g, "")
+                    .replace(/\t/g, "")
+                    .replace(/\s/g, "")
                     .replace(/\'/g, "")
                     .replace(/\\/g, "\\\\")
                     .replace(/^\s+|\s+$/g, "");
@@ -892,45 +900,43 @@ export default {
                   values.push("");
                 }
               }
+
               let insertStr = values.join("\t") + "\n";
+              if (createFields.length !== values.length) {
+                console.log(values)
+              }
+
               // 写入流中
-              streamFrom.write(insertStr, function (err) {
-                ////console.log({ insertStr });
-                if (!err) {
-                  let percentage = parseInt(
-                    parseFloat(readSize / fileSize) * 100
-                  );
-                  let secondTitle = "";
-                  if (percentage >= 60) {
-                    secondTitle = "文件较大，正在加速载入...";
-                  }
-                  if (percentage >= 99) {
-                    percentage = 99;
-                    secondTitle = "距离加载完毕已经不远了，请耐心等待...";
-                  }
-                  _this.$electron.ipcRenderer.send("read-one-file-proccess", {
-                    success: true,
-                    fileName,
-                    sheetName,
-                    percentage,
-                    secondTitle,
-                    msg: `载入条目：${rownum} ${rowDataValues}`,
-                  });
-                } else {
-                  _this.$electron.ipcRenderer.send("read-one-file-proccess", {
-                    success: false,
-                    fileName,
-                    sheetName,
-                    secondTitle: "出错了...",
-                    msg: err,
-                  });
+              streamFrom.write(insertStr, function () {
+                let percentage = parseInt(
+                  parseFloat(readSize / fileSize) * 100
+                );
+                let secondTitle = "";
+                if (percentage >= 60) {
+                  secondTitle = "文件较大，正在加速载入...";
                 }
+                if (percentage >= 99) {
+                  percentage = 99;
+                  secondTitle = "距离加载完毕已经不远了，请耐心等待...";
+                }
+                _this.$electron.ipcRenderer.send("read-one-file-proccess", {
+                  success: true,
+                  fileName,
+                  sheetName,
+                  percentage,
+                  secondTitle,
+                  msg: `载入条目：${rownum} ${rowDataValues}`,
+                });
               });
             }
           }
           streamFrom.end();
         });
-      } finally {
+      }
+      // catch (err) {
+      //   console.log("parseExcelFile:", err)
+      // }
+      finally {
         client.release();
       }
     },

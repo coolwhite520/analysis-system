@@ -6,7 +6,7 @@ var crypto = require("crypto");
 
 export default {
   // 根据导入数据类型获取对应的匹配表
-  QueryMatchTableListByPdm: async function(pdm) {
+  QueryMatchTableListByPdm: async function (pdm) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
@@ -19,7 +19,7 @@ export default {
   },
 
   // 根据模版代码获取对应的列名称
-  QueryColsNameByMbdm: async function(mbdm) {
+  QueryColsNameByMbdm: async function (mbdm) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
@@ -32,7 +32,7 @@ export default {
     }
   },
   // 根据模版代码获取log表对应的列名称
-  QueryInfoFromLogMatchByMbdm: async function(mbdm) {
+  QueryInfoFromLogMatchByMbdm: async function (mbdm) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
@@ -45,7 +45,7 @@ export default {
   },
   // 自动匹配字段
   // ,账号开户银行,账号开户日期,账号开户名称,银行账号,通信地址,联系电话,开户人证件类型,开户人证件号码,开户人国籍,开户联系方式,代理人电话,代理人,,
-  QueryBestMatchMbdm: async function(pdm, fileFields) {
+  QueryBestMatchMbdm: async function (pdm, fileFields) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
@@ -87,7 +87,7 @@ export default {
     }
   },
   // fileExt --> 不包含.
-  insertBatch: async function(
+  insertBatch: async function (
     ajid,
     ajmc,
     fileExt,
@@ -113,12 +113,15 @@ export default {
        '小白', '${mbmc}', '${tablecname}', '${softVersion}') returning sjlyid;`;
       const res = await client.query(sql);
       return res.rows[0].sjlyid;
-    } finally {
+    } catch (err) {
+      console.log("insertBatch:", err)
+    }
+    finally {
       client.release();
     }
   },
   // 查询scheme下的所有表名称
-  showLikeTempTableCount: async function(ajid, like) {
+  showLikeTempTableCount: async function (ajid, like) {
     const client = await global.pool.connect();
     try {
       let sql = `SELECT count(table_name)::int count FROM information_schema.tables
@@ -132,7 +135,7 @@ export default {
     }
   },
   // 数据导入的时候创建临时表
-  createTempTable: async function(ajid, tablecname, mbdm, fields) {
+  createTempTable: async function (ajid, tablecname, mbdm, fields) {
     const client = await global.pool.connect();
     try {
       if (tablecname.endsWith("_source")) {
@@ -151,7 +154,7 @@ export default {
           createFields.push(fieldRow.fieldename.toLowerCase());
         }
       }
-      let newFields = createFields.map(function(item) {
+      let newFields = createFields.map(function (item) {
         return `"${item}" varchar(1000)`;
       });
       let fieldsStr = newFields.join(",");
@@ -160,11 +163,14 @@ export default {
       CREATE TABLE IF NOT EXISTS ${createTableName} (${fieldsStr})`;
       const res = await client.query(sql);
       return { createTableName, createFields };
-    } finally {
+    } catch (err) {
+      console.log("createTempTable: ", err)
+    }
+    finally {
       client.release();
     }
   },
-  deleteTempTable: async function(ajid, tempTableName) {
+  deleteTempTable: async function (ajid, tempTableName) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchCase(client, ajid);
@@ -176,7 +182,7 @@ export default {
   },
 
   // 查询temp表中的数据
-  queryDataFromTable: async function(
+  queryDataFromTable: async function (
     ajid,
     tableName,
     matchedFields,
@@ -393,7 +399,7 @@ export default {
     }
   },
   // 查询条目数量
-  queryRowsum: async function(ajid, tableName) {
+  queryRowsum: async function (ajid, tableName) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchCase(client, ajid);
@@ -405,7 +411,7 @@ export default {
     }
   },
   // 查询交易金额必须大于0
-  QueryJyjeMoreThanZero: async function(
+  QueryJyjeMoreThanZero: async function (
     ajid,
     tableName,
     matchedFields,
@@ -435,7 +441,7 @@ export default {
     }
   },
   // 查询不是数的条目
-  QueryFieldNotNumberRows: async function(
+  QueryFieldNotNumberRows: async function (
     ajid,
     tableName,
     matchedFields,
@@ -463,7 +469,7 @@ export default {
     }
   },
   // 查询字段的长度不合法的条目
-  QueryFieldExceedLengthRows: async function(
+  QueryFieldExceedLengthRows: async function (
     ajid,
     tableName,
     matchedFields,
@@ -487,7 +493,7 @@ export default {
     }
   },
   // 查询字段非日期的条目
-  QueryFieldNotDateRows: async function(
+  QueryFieldNotDateRows: async function (
     ajid,
     tableName,
     matchedFields,
@@ -516,7 +522,7 @@ export default {
     }
   },
   // 更新错误的数据
-  updateErrorRows: async function(ajid, tableName, field, newValue, rownums) {
+  updateErrorRows: async function (ajid, tableName, field, newValue, rownums) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchCase(client, ajid);
@@ -531,7 +537,7 @@ export default {
     }
   },
   // delete错误的数据
-  deleteErrorRows: async function(ajid, tableName, rownums) {
+  deleteErrorRows: async function (ajid, tableName, rownums) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchCase(client, ajid);
@@ -546,7 +552,7 @@ export default {
     }
   },
   // 根据通用模版抽取数据到别的表中。
-  extractSqlByGasbankrecords: async function(tempTableName, sjlyid) {
+  extractSqlByGasbankrecords: async function (tempTableName, sjlyid) {
     let sql = "";
     // 抽取到人员信息表中
     sql += `INSERT INTO mz_person ( batch, ryid, ajid, sjlylx, sjlyid, zzhm, khmc, zzlx, zzlxmc, ckztlb, sjlx, sfdd ) SELECT
@@ -1023,7 +1029,7 @@ export default {
   },
 
   // 数据重置的抽取逻辑
-  getDataResetExtractSqlByGasbankrecords: async function(
+  getDataResetExtractSqlByGasbankrecords: async function (
     tempTableName,
     ryid,
     sjlyids
@@ -1471,7 +1477,7 @@ export default {
   },
 
   // 根据反洗钱表中的temp数据抽取
-  extractDataByFanxiqianTable: async function(tempTableName, sjlyid) {
+  extractDataByFanxiqianTable: async function (tempTableName, sjlyid) {
     let sql = "";
     // 先抽取到account表
     sql += `INSERT into mz_account_info (batch,ryid,ajid,sjlylx,sjlyid,zh,kh,zhkhmc,khrzjhm,zhkhyh) 
@@ -1547,7 +1553,7 @@ export default {
     ;`;
     return sql;
   },
-  extractDataBymz_tax_swdj: async function(tempTableName, sjlyid) {
+  extractDataBymz_tax_swdj: async function (tempTableName, sjlyid) {
     let sql = "";
     //mz_person
     sql += `insert into mz_person(batch,ajid,sjlylx,sjlyid,zzhm,khmc,zcdz,jyd,frdbxm,frdbzjhm,zczb,jyfw,yyksqx,yyjsqx,frdbzjlx,ryid,zzlx,zzlxmc,ckztlb,sjlx,sfdd)
@@ -1653,7 +1659,7 @@ export default {
     where SJLYID IN('${sjlyid}') and bsrsfzh is not null and bsrsfzh!='';`;
     return sql;
   },
-  extractDataBymz_tax_records: async function(tempTableName, sjlyid) {
+  extractDataBymz_tax_records: async function (tempTableName, sjlyid) {
     let sql = "";
     sql += `insert into mz_person(batch,ryid,ajid,sjlylx,sjlyid,zzhm,khmc,zzlx,zzlxmc,sjlx,sfdd)
     SELECT case when TRIM(both '  ' FROM batch) is not null and TRIM(both '  ' FROM batch) !='' then TRIM(both '  ' FROM batch) else '0' end::bigint batch, 
@@ -1674,7 +1680,7 @@ export default {
     return sql;
   },
   // 数据抽取
-  extractDataFromTempTable: async function(ajid, tempTableName, mbdm, sjlyid) {
+  extractDataFromTempTable: async function (ajid, tempTableName, mbdm, sjlyid) {
     const client = await global.pool.connect();
     try {
       console.log(
@@ -1707,7 +1713,7 @@ export default {
       client.release();
     }
   },
-  UpdateIpFields: async function(ajid, sjlyids, mbdm) {
+  UpdateIpFields: async function (ajid, sjlyids, mbdm) {
     if (mbdm === "110002") {
       const client = await global.pool.connect();
       await cases.SwitchCase(client, ajid);
@@ -1724,7 +1730,7 @@ export default {
   },
 
   // 展示目标表的结构
-  showTableStruct: async function(ajid, tableName) {
+  showTableStruct: async function (ajid, tableName) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchCase(client, ajid);
@@ -1775,7 +1781,7 @@ export default {
     }
   },
   // 根据文件全列查找之前匹配的数据
-  QueryMatchedRecordByFileAllCols: async function(matchedmbdm, fileAllColList) {
+  QueryMatchedRecordByFileAllCols: async function (matchedmbdm, fileAllColList) {
     if (fileAllColList.length === 0 || matchedmbdm === "")
       return { success: false, rows: [] };
     const client = await global.pool.connect();
@@ -1802,7 +1808,7 @@ export default {
       client.release();
     }
   },
-  InsertOrUpdateMatchedRecord: async function(
+  InsertOrUpdateMatchedRecord: async function (
     matchedmbdm,
     filecolsList,
     matchfieldsList,
@@ -1852,8 +1858,10 @@ export default {
       outflag = excluded.outflag, 
       datetime = excluded.datetime`;
       await client.query(sql, values);
-      console.log(sql);
-    } finally {
+    } catch (err) {
+      console.log("InsertOrUpdateMatchedRecord:", err)
+    }
+    finally {
       client.release();
     }
   },
