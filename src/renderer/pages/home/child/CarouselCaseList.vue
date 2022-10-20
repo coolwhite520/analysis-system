@@ -3,20 +3,11 @@
     <el-col :span="4">
       <div style="color: white; margin-top: 35px; text-align: right">
         <!-- <h3>已有案件轮播列表：</h3> -->
-      </div></el-col
-    >
+      </div>
+    </el-col>
     <el-col :span="16" v-if="existCaseList.length > 0">
-      <el-carousel
-        :interval="100000"
-        type="card"
-        height="195px"
-        style="margin-top: 20px"
-        :initial-index="initialIndex"
-      >
-        <el-carousel-item
-          v-for="caseItem in existCaseList"
-          :key="caseItem.ajid"
-        >
+      <el-carousel :interval="100000" type="card" height="195px" style="margin-top: 20px" :initial-index="initialIndex">
+        <el-carousel-item v-for="caseItem in existCaseList" :key="caseItem.ajid">
           <el-card @click.native="handleClickCase(caseItem)" class="cardStyle">
             <el-row class="rowstyle">
               <span class="iconfont" style="font-size: 20px">&#xe6d1;</span>
@@ -43,20 +34,15 @@
               </el-col>
               <el-col :span="12">
                 <div>
-                  <el-button
-                    class="button"
-                    icon="el-icon-search"
-                    type="text"
-                    @click="handleClickAnalysis(caseItem)"
-                    >分析</el-button
-                  >
+                  <el-button class="button" icon="el-icon-search" type="text" @click="handleClickAnalysis(caseItem)">分析
+                  </el-button>
                 </div>
               </el-col>
             </el-row>
           </el-card>
         </el-carousel-item>
-      </el-carousel></el-col
-    >
+      </el-carousel>
+    </el-col>
     <el-col :span="16" v-else>
       <div style="height: 120px"></div>
     </el-col>
@@ -145,6 +131,7 @@ export default {
   color: #384e6e;
   background-color: white;
 }
+
 .cardStyle:hover {
   background-color: #d3dce6;
 }
@@ -152,6 +139,7 @@ export default {
 .time {
   font-size: 13px;
 }
+
 .location {
   font-size: 12px;
   float: right;
@@ -159,6 +147,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .caseName {
   color: #384e6e;
   font-size: 20px;
@@ -170,15 +159,18 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .rowstyle {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .state {
   font-size: 12px;
   margin-top: 12px;
 }
+
 .button {
   float: right;
 }

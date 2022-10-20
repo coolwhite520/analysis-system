@@ -1,5 +1,6 @@
 <template>
   <div class="titleBar" @dblclick="handleDbClick">
+    <!-- 非定制logo，使用默认logo -->
     <div v-if="oemname === 'ff'">
       <el-row>
         <el-col :span="2">
@@ -8,7 +9,7 @@
               <!-- <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-kaixin1"></use>
               </svg> -->
-              <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
+              <span style="font-size: 10px">放松一下眼睛</span>
             </div>
 
             <div class="logo iconfont" @click="handleClickStar">&#xe66a;</div>
@@ -50,12 +51,13 @@
           <div style="clear: both"></div>
           <div v-show="currentViewName === 'main-page'" style="float: right; margin-right: 10px">
             <el-button style="color: white; padding: 0" type="text" @click="handleClickShowTabBar" class="iconfont">{{
-                showTabBarView ? "&#xe6da;" : "&#xe6dd;"
+            showTabBarView ? "&#xe6da;" : "&#xe6dd;"
             }}</el-button>
           </div>
         </el-col>
       </el-row>
     </div>
+    <!-- 定制logo -->
     <div v-else-if="oemname === 'JD'">
       <el-row>
         <el-col :span="2">
@@ -65,7 +67,7 @@
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-kaixin1"></use>
                 </svg>
-                <span style="font-size: 10px">下雪模式，放松一下眼睛</span>
+                <span style="font-size: 10px">放松一下眼睛</span>
               </div>
               <div>
                 <img class="logo" src="/static/logo/JD.png" alt="" height="50" @click="handleClickStar" />
@@ -105,7 +107,7 @@
           <div style="clear: both"></div>
           <div v-show="currentViewName === 'main-page'" style="float: right; margin-right: 10px">
             <el-button style="color: white; padding: 0" type="text" @click="handleClickShowTabBar" class="iconfont">{{
-                showTabBarView ? "&#xe6da;" : "&#xe6dd;"
+            showTabBarView ? "&#xe6da;" : "&#xe6dd;"
             }}</el-button>
           </div>
         </el-col>
@@ -132,6 +134,7 @@ export default {
   data() {
     return {
       oemname: require("../../../../package.json").oemname, // 是否是fanfu产品
+      // oemname: "JD", // 是否是fanfu产品
       defaultTitle: require("../../../../package.json").description,
       showStar: false,
       softVersion: this.$electron.remote.getGlobal("softVersion"),
@@ -297,8 +300,8 @@ export default {
   left: 0px;
   top: 0px;
   /* background: #1b2735; */
-  /* border-bottom: 1px solid #404e69; */
-  box-shadow: 0px 15px 10px -15px #404e69;
+  border-bottom: 1px solid #232b3b;
+  /* box-shadow: 0px 1px 2px -1px #404e69; */
   /* background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%); */
 
   /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
@@ -327,7 +330,7 @@ export default {
 }
 
 .dbconfig {
-  font-size: 20px;
+  font-size: 16px;
   margin-right: 10px;
   border-right: 1px solid gray;
   padding-right: 10px;
@@ -338,7 +341,7 @@ export default {
 }
 
 .gohome {
-  font-size: 20px;
+  font-size: 16px;
   margin-right: 10px;
   border-right: 1px solid gray;
   padding-right: 10px;

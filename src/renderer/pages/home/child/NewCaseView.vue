@@ -1,32 +1,15 @@
 <template>
-  <div
-    class="newcaseForm"
-    v-loading.fullscreen.lock="loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-  >
+  <div class="newcaseForm" v-loading.fullscreen.lock="loading" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div style="text-align: center; margin-bottom: 20px">
       <h2>新增案件</h2>
     </div>
-    <el-form
-      :model="ruleForm"
-      :rules="rules"
-      ref="ruleForm"
-      label-width="100px"
-      class="demo-ruleForm"
-      size="mini"
-    >
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" size="mini">
       <el-row>
         <el-col :span="10">
           <el-form-item label="案件类型" prop="ajlbArr">
-            <el-cascader
-              @change="handleChangeAjlb(ruleForm.ajlbArr)"
-              style="width: 100%"
-              filterable
-              :show-all-levels="false"
-              v-model="ruleForm.ajlbArr"
-              :options="ajlbListWrapper"
-              :props="{ expandTrigger: 'hover' }"
-            ></el-cascader>
+            <el-cascader @change="handleChangeAjlb(ruleForm.ajlbArr)" style="width: 100%" filterable
+              :show-all-levels="false" v-model="ruleForm.ajlbArr" :options="ajlbListWrapper"
+              :props="{ expandTrigger: 'hover' }"></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -47,45 +30,24 @@
         <el-col :span="11">
           <el-form-item label="发生日期" required>
             <el-form-item prop="jjsj">
-              <el-date-picker
-                :editable="false"
-                type="date"
-                placeholder="选择案件发生的时间日期"
-                value-format="yyyy-MM-dd"
-                v-model="ruleForm.jjsj"
-                style="width: 100%"
-              ></el-date-picker>
+              <el-date-picker :editable="false" type="date" placeholder="选择案件发生的时间日期" value-format="yyyy-MM-dd"
+                v-model="ruleForm.jjsj" style="width: 100%"></el-date-picker>
             </el-form-item>
           </el-form-item>
         </el-col>
         <el-col :span="11">
           <el-form-item label="立案日期" required>
             <el-form-item prop="cjsj">
-              <el-date-picker
-                :editable="false"
-                value-format="yyyy-MM-dd"
-                type="date"
-                placeholder="选择立案日期"
-                v-model="ruleForm.cjsj"
-                style="width: 100%"
-              ></el-date-picker>
+              <el-date-picker :editable="false" value-format="yyyy-MM-dd" type="date" placeholder="选择立案日期"
+                v-model="ruleForm.cjsj" style="width: 100%"></el-date-picker>
             </el-form-item>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-form-item label="案件状态" prop="zcjddm">
-        <el-select
-          v-model="ruleForm.zcjddm"
-          placeholder="请选择案件状态"
-          @change="handleChangeState"
-        >
-          <el-option
-            v-for="item of zcjdmc_list"
-            :key="item.id"
-            :label="item.item_name"
-            :value="item.id"
-          ></el-option>
+        <el-select v-model="ruleForm.zcjddm" placeholder="请选择案件状态" @change="handleChangeState">
+          <el-option v-for="item of zcjdmc_list" :key="item.id" :label="item.item_name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
 
@@ -96,45 +58,20 @@
       </el-row>-->
       <el-form-item label="所属地区" prop="asjfsddxzqhdm">
         <el-col :span="5">
-          <el-select
-            v-model="ruleForm.province"
-            placeholder="请选择省份"
-            @change="handleChangeProvince(ruleForm.province)"
-          >
-            <el-option
-              v-for="province of province_list"
-              :key="province.id"
-              :label="province.name"
-              :value="province.id"
-            ></el-option>
+          <el-select v-model="ruleForm.province" placeholder="请选择省份" @change="handleChangeProvince(ruleForm.province)">
+            <el-option v-for="province of province_list" :key="province.id" :label="province.name" :value="province.id">
+            </el-option>
           </el-select>
         </el-col>
         <el-col :span="5">
-          <el-select
-            v-model="ruleForm.city"
-            placeholder="请选择城市"
-            @change="handleChangeCity(ruleForm.city)"
-          >
-            <el-option
-              v-for="city of city_list"
-              :key="city.id"
-              :label="city.name"
-              :value="city.id"
-            ></el-option>
+          <el-select v-model="ruleForm.city" placeholder="请选择城市" @change="handleChangeCity(ruleForm.city)">
+            <el-option v-for="city of city_list" :key="city.id" :label="city.name" :value="city.id"></el-option>
           </el-select>
         </el-col>
         <el-col :span="5">
-          <el-select
-            v-model="ruleForm.asjfsddxzqhdm"
-            placeholder="请选择区、镇"
-            @change="handleChangeTown(ruleForm.asjfsddxzqhdm)"
-          >
-            <el-option
-              v-for="town of town_list"
-              :key="town.id"
-              :label="town.name"
-              :value="town.id"
-            ></el-option>
+          <el-select v-model="ruleForm.asjfsddxzqhdm" placeholder="请选择区、镇"
+            @change="handleChangeTown(ruleForm.asjfsddxzqhdm)">
+            <el-option v-for="town of town_list" :key="town.id" :label="town.name" :value="town.id"></el-option>
           </el-select>
         </el-col>
       </el-form-item>
@@ -150,12 +87,8 @@
       <el-row>
         <el-col :span="8">&nbsp;</el-col>
         <el-col style="text-align: center">
-          <el-button type="primary" round @click="submitForm('ruleForm')"
-            >立即创建</el-button
-          >
-          <el-button @click="resetForm('ruleForm')" round
-            >&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</el-button
-          >
+          <el-button type="primary" round @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button @click="resetForm('ruleForm')" round>&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</el-button>
         </el-col>
         <el-col style="text-align: right">
           <el-button type="text" @click="handleClickGoHome">返回首页</el-button>
@@ -173,7 +106,7 @@ export default {
     ...mapGetters("PublicList", ["ajlbListWrapper"]),
     ...mapState("NewCase", ["city_list", "town_list", "createState"]),
   },
-  async mounted() {},
+  async mounted() { },
   data() {
     return {
       ajlb: 0,

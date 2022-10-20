@@ -2,11 +2,8 @@
   <div v-loading="loading" :element-loading-text="loadingText">
     <title-bar></title-bar>
     <!-- <el-image v-if="imgPath" class="table-td-thumb" :src="imgPath"></el-image> -->
-    <save-dialog
-      v-if="showSaveProjectVisible"
-      v-on:confirmSaveProject="confirmSaveProject"
-      :screenShotTmpFilePathName="screenShotTmpFilePathName"
-    ></save-dialog>
+    <save-dialog v-if="showSaveProjectVisible" v-on:confirmSaveProject="confirmSaveProject"
+      :screenShotTmpFilePathName="screenShotTmpFilePathName"></save-dialog>
     <div style="height: 100px"></div>
 
     <vue-lazy-component class="custom-transition">
@@ -15,20 +12,14 @@
     </vue-lazy-component>
 
     <div style="height: 20px"></div>
-    <div
-      class="state-bar"
-      :style="{ top: stateBarTop - 20 + 'px', zIndex: 9999 }"
-    >
-      <el-row v-if="exportProcessVisible">
-        <el-progress
-          v-if="percentage"
-          :percentage="percentage"
-          :color="customColor"
-        ></el-progress>
+    <div class="state-bar">
+      <el-row v-if=" exportProcessVisible">
+        <el-progress v-if="percentage" :percentage="percentage" :color="customColor"></el-progress>
       </el-row>
     </div>
     <dbconfig-view v-if="dbConfigVisible"></dbconfig-view>
     <await-task-view v-if="showAwaitTaskDialogVisible"></await-task-view>
+    <License v-if="showLicenseDialogVisible"></License>
   </div>
 </template>
 
@@ -44,6 +35,7 @@ import analysisSkeleton from "./analysisSkeleton.vue";
 // const MainPage = () => import("@/pages/main/MainPage");
 
 import { DbConfig } from "@/utils/config";
+import license from "@/utils/license"
 import SaveProjectView from "@/pages/dialog/save/SaveCurrentProject.vue";
 import levelDb from "../../level/leveldb";
 import { Pool, Client } from "pg";
@@ -55,6 +47,9 @@ const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
 import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
+
+import License from "./dialog/license/license.vue";
+
 
 // const html2canvas = require("html2canvas");
 export default {
@@ -163,6 +158,11 @@ export default {
       }, 1000);
       console.log(e);
     }
+
+    let ret = await license.parseLicense()
+    if (!ret.success) {
+      this.$store.commit("DialogPopWnd/SET_SHOWLICENSEDIALOGVISIBLE", true)
+    }
   },
   data() {
     return {
@@ -185,6 +185,7 @@ export default {
     "analysis-skeleton": analysisSkeleton,
     "dbconfig-view": dbConfigView,
     "await-task-view": awaitTaskView,
+    License
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
@@ -194,6 +195,7 @@ export default {
       "showSaveProjectVisible",
       "dbConfigVisible",
       "showAwaitTaskDialogVisible",
+      "showLicenseDialogVisible"
     ]),
   },
   methods: {
@@ -359,16 +361,17 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .state-bar {
   height: 20px;
-
   background: #2b374c;
-  box-shadow: 5px 0px 10px 1px #404e69;
+  /* box-shadow: 5px 0px 10px 1px #404e69; */
+  border-top: 1px solid #404e69;
   /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
   position: fixed;
   z-index: 999;
   width: 100%;
   left: 0px;
+  bottom: 0;
 }
 </style>

@@ -1,48 +1,22 @@
 <template>
-  <div
-    class="detailInfo"
-    v-loading.fullscreen.lock="loading"
-    :element-loading-text="loadingText"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-  >
+  <div class="detailInfo" v-loading.fullscreen.lock="loading" :element-loading-text="loadingText"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="baseInfo">
       <div class="title">
         <h2 style="float: left">基本信息</h2>
         <el-button-group style="float: right">
-          <el-button
-            round
-            type="primary"
-            icon="el-icon-edit"
-            size="mini"
-            @click="handleClickEdit"
-            >编辑</el-button
-          >
-          <el-button
-            round
-            type="primary"
-            icon="el-icon-share"
-            size="mini"
-            @click="handleClickExportScheme"
-            >导出</el-button
-          >
-          <el-button
-            round
-            type="primary"
-            icon="el-icon-delete"
-            size="mini"
-            @click="handleClickDelCase"
-            >删除</el-button
-          >
+          <el-button round type="primary" icon="el-icon-edit" size="mini" @click="handleClickEdit">编辑</el-button>
+          <el-button round type="primary" icon="el-icon-share" size="mini" @click="handleClickExportScheme">导出
+          </el-button>
+          <el-button round type="primary" icon="el-icon-delete" size="mini" @click="handleClickDelCase">删除</el-button>
         </el-button-group>
       </div>
       <div style="clear: both"></div>
-      <div
-        style="
+      <div style="
           border-top: 1px solid #404e69;
           margin-top: 10px;
           margin-bottom: 10px;
-        "
-      >
+        ">
         &nbsp;
       </div>
       <el-row>
@@ -112,56 +86,38 @@
       <div class="title">
         <h2 style="float: left">案件数据</h2>
         <el-button-group style="float: right">
-          <el-button
-            v-for="item in renderButtonGroupList"
-            :key="item.tid"
-            round
-            type="primary"
-            size="mini"
-            @click="handleClickBtnGroup(item)"
-            >{{ item.title }}</el-button
-          >
+          <el-button v-for="item in renderButtonGroupList" :key="item.tid" round type="primary" size="mini"
+            @click="handleClickBtnGroup(item)">{{ item.title }}</el-button>
         </el-button-group>
       </div>
       <div style="clear: both"></div>
       <!-- <el-divider></el-divider> -->
-      <div
-        style="
+      <div style="
           border-top: 1px solid #404e69;
           margin-top: 10px;
           margin-bottom: 10px;
-        "
-      >
+        ">
         &nbsp;
       </div>
       <div>
         <span>案件数据：</span>
         <span class="caseContent">共采集&nbsp;{{ batchCount }}&nbsp;批次</span>
         <span>
-          <el-button
-            type="text"
-            size="mini"
-            @click="handleClickCollectionRecord"
-            >采集记录</el-button
-          >
+          <el-button type="text" size="mini" @click="handleClickCollectionRecord">采集记录</el-button>
         </span>
       </div>
       <p>
         <span>数据总量：</span>
         <span class="caseContent">共&nbsp;{{ dataSum }}&nbsp;条</span>
         <span>
-          <el-button type="text" size="mini" @click="handleClickDataCollection"
-            >数据采集</el-button
-          >
+          <el-button type="text" size="mini" @click="handleClickDataCollection">数据采集</el-button>
         </span>
       </p>
       <p>
         待调单任务：
         <span class="caseContent">{{ awaitTaskCount }} 个</span>
         <span>
-          <el-button type="text" size="mini" @click="handleClickShowAwaitTask"
-            >查看待调单任务</el-button
-          >
+          <el-button type="text" size="mini" @click="handleClickShowAwaitTask">查看待调单任务</el-button>
         </span>
       </p>
       <p>
@@ -171,15 +127,8 @@
       <!-- <el-divider></el-divider> -->
       <el-row>
         <el-col style="text-align: center">
-          <el-button type="primary" @click="handleClickBeginAnalysis" round
-            >开始分析</el-button
-          >
-          <el-button
-            round
-            type="primary"
-            @click="handleClickBeginAnalysisReport"
-            >分析报告</el-button
-          >
+          <el-button type="primary" @click="handleClickBeginAnalysis" round>开始分析</el-button>
+          <el-button round type="primary" @click="handleClickBeginAnalysisReport">分析报告</el-button>
         </el-col>
         <el-col style="text-align: right">
           <el-button type="text" @click="handleClickGoHome">返回首页</el-button>
@@ -681,6 +630,7 @@ export default {
    */
   border: 1px solid #404e69;
 }
+
 .baseInfo {
   color: white;
   margin-bottom: 60px;

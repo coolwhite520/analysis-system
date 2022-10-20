@@ -1,17 +1,11 @@
 <template>
-  <div
-    :style="{
-      height: mainViewHeight - 140 + 'px',
-      padding: 15 + 'px',
-    }"
-  >
+  <div :style="{
+    height: mainViewHeight - 140 + 'px',
+    padding: 15 + 'px',
+  }">
     <el-row :gutter="40">
-      <el-col
-        :span="24 / columCount"
-        v-for="caseItem in existCasesFilter"
-        :key="caseItem.ajid"
-        style="margin-bottom: 20px"
-      >
+      <el-col :span="24 / columCount" v-for="caseItem in existCasesFilter" :key="caseItem.ajid"
+        style="margin-bottom: 20px">
         <!-- <div
           class="iconfont"
           style="color: #ddd; font-size: 30px; margin-bottom: -30px"
@@ -44,13 +38,8 @@
             </el-col>
             <el-col :span="12">
               <div>
-                <el-button
-                  class="button"
-                  icon="el-icon-search"
-                  type="text"
-                  @click="handleClickAnalysis(caseItem)"
-                  >分析</el-button
-                >
+                <el-button class="button" icon="el-icon-search" type="text" @click="handleClickAnalysis(caseItem)">分析
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -123,7 +112,7 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() { },
 };
 </script>
 
@@ -138,9 +127,11 @@ export default {
 .cardStyle:hover {
   box-shadow: 1px 1px 10px 5px #b6beca;
 }
+
 .time {
   font-size: 13px;
 }
+
 .location {
   font-size: 12px;
   float: right;
@@ -148,6 +139,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .caseName {
   color: #384e6e;
   font-size: 20px;
@@ -159,15 +151,18 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .rowstyle {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .state {
   font-size: 12px;
   margin-top: 12px;
 }
+
 .button {
   float: right;
 }

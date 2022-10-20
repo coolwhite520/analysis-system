@@ -1,20 +1,12 @@
 <template>
   <div>
-    <el-dialog
-      v-dialogDrag
-      :close-on-click-modal="false"
-      class="standard-data-dialog"
-      :append-to-body="true"
-      :visible="standardDataVisible"
-      :width="
+    <el-dialog v-dialogDrag :close-on-click-modal="false" class="standard-data-dialog" :append-to-body="true"
+      :visible="standardDataVisible" :width="
         standardViewSwitch === 'process-import' ||
         (standardViewSwitch === 'begin-import' && exampleDataList.length === 0)
           ? '30%'
           : '70%'
-      "
-      @close="handleClose"
-      :modal="true"
-    >
+      " @close="handleClose" :modal="true">
       <div slot="title" class="dialog-title">
         <i class="iconfont" style="color: white; font-size: 30px">&#xe6a1;</i>
         <span class="title-text" style="color: white">{{ title }}</span>
@@ -80,7 +72,7 @@ export default {
 <style >
 .standard-data-dialog .el-dialog {
   /* box-shadow: 5px 5px 10px 1px gray, -5px 5px 5px 2px rgba(255, 255, 255, 0.5); */
-  border: 1px solid gray;
+  border: 1px solid #2d3a4f;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -88,18 +80,22 @@ export default {
   transform: translate(-50%, -50%);
   max-height: calc(100% - 100px);
   max-width: calc(100% - 100px);
-  border-radius: 5px;
+  /* border-radius: 5px; */
+  /* box-shadow: 0 2px 8px 2px rgb(94, 93, 93); */
 }
+
 .standard-data-dialog .el-dialog__header {
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
+  /* border-top-right-radius: 3px;
+  border-top-left-radius: 3px; */
   height: 50px;
   background: radial-gradient(ellipse at bottom, #384e6e 0%, #090a0f 100%);
 }
+
 .standard-data-dialog .el-dialog__title {
   color: white;
   font-size: 16px;
 }
+
 .standard-data-dialog .dialog-title {
   margin-top: -10px;
   -webkit-user-select: none;

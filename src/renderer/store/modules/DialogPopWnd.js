@@ -32,6 +32,7 @@ const state = {
   showDataComplementVisible: false,
   showDataResetVisible: false,
   showTransLocationDialogVisible: false,
+  showLicenseDialogVisible: false,
 };
 
 const mutations = {
@@ -133,6 +134,9 @@ const mutations = {
   SET_SHOWTRANSLOCATIONDIALOGVISIBLE(state, showTransLocationDialogVisible) {
     state.showTransLocationDialogVisible = showTransLocationDialogVisible;
   },
+  SET_SHOWLICENSEDIALOGVISIBLE(state, showLicenseDialogVisible) {
+    state.showLicenseDialogVisible = showLicenseDialogVisible;
+  }
 };
 
 const actions = {};

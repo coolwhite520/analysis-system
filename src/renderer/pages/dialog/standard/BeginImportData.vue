@@ -75,15 +75,15 @@
                   ? item.label + '(' + item.ids.length + ')'
                   : item.label
               " :key="index" border @change="
-  (checked) => handleChangeCheckBox(item.matchedMbdm, checked)
-">
+                (checked) => handleChangeCheckBox(item.matchedMbdm, checked)
+              ">
               </el-checkbox-button>
             </el-checkbox-group>
           </el-col>
           <el-col :span="1" style="text-align: right">
             <el-button size="mini" type="text" @click="handleClickExpandMain">
               <span class="iconfont">{{
-                  isExpandMainTable ? "&#xe6db;" : "&#xe6cc;"
+              isExpandMainTable ? "&#xe6db;" : "&#xe6cc;"
               }}</span>
             </el-button>
           </el-col>
@@ -147,7 +147,7 @@
               </el-select>
               <el-button size="mini" class="iconfont" style="font-size: 15px" type="text"
                 @click="handleModify(scope.$index, scope.row)">{{
-                    !scope.row.enableModify ? "&#xe60d;" : "&#xe60e;"
+                !scope.row.enableModify ? "&#xe60d;" : "&#xe60e;"
                 }}</el-button>
             </template>
           </el-table-column>
@@ -179,7 +179,7 @@
           <el-col :span="2" style="text-align: right">
             <el-button size="mini" type="text" @click="handleClickExpandDetail">
               <span class="iconfont">{{
-                  isExpandDetailTable ? "&#xe6db;" : "&#xe6cc;"
+              isExpandDetailTable ? "&#xe6db;" : "&#xe6cc;"
               }}</span>
             </el-button>
           </el-col>

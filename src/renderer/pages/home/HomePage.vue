@@ -1,20 +1,8 @@
 <template>
-  <div
-    style="-webkit-user-select: none; margin-top: 0px"
-    ref="wrapper"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-  >
+  <div style="-webkit-user-select: none; margin-top: 0px" ref="wrapper" element-loading-background="rgba(0, 0, 0, 0.8)">
     <el-row>
       <el-col :span="isCollapseTimeLine ? 0 : 3">
-        <div
-          style="
-            margin-top: 10px;
-            padding: 10px;
-            text-align: center;
-            color: #3c4e6b;
-            box-shadow: 15px 0px 10px -15px #404e69;
-          "
-        >
+        <div class="left-time-line">
           <el-row>
             <el-col :span="21">
               <div class="iconfont" style="font-size: 20px; color: white">
@@ -22,16 +10,10 @@
               </div>
             </el-col>
             <el-col :span="1">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="点击收缩时间轴"
-                placement="top"
-              >
+              <el-tooltip class="item" effect="dark" content="点击收缩时间轴" placement="top">
                 <div class="CollapseTimeLineNormal" @click="handleClickHide">
                   <span class="iconfont">
-                    {{ isCollapseTimeLine ? "&#xe626;" : "&#xe668;" }}</span
-                  >
+                    {{ isCollapseTimeLine ? "&#xe626;" : "&#xe668;" }}</span>
                 </div>
               </el-tooltip>
             </el-col>
@@ -44,12 +26,8 @@
       </el-col>
       <el-col :span="isCollapseTimeLine ? 24 : 21">
         <div>
-          <control-bar-view
-            v-show="currentViewName === 'show-exist-case-view'"
-          ></control-bar-view>
-          <carousel-case-list
-            v-if="currentViewName !== 'show-exist-case-view'"
-          ></carousel-case-list>
+          <control-bar-view v-show="currentViewName === 'show-exist-case-view'"></control-bar-view>
+          <carousel-case-list v-if="currentViewName !== 'show-exist-case-view'"></carousel-case-list>
         </div>
         <div>
           <el-row>
@@ -63,15 +41,10 @@
       </el-col>
     </el-row>
     <div v-if="isCollapseTimeLine">
-      <el-tooltip
-        class="item"
-        effect="dark"
-        content="点击展开时间轴"
-        placement="right"
-        ><div class="CollapseTimeLine" @click="handleClickShowTimeLine">
+      <el-tooltip class="item" effect="dark" content="点击展开时间轴" placement="right">
+        <div class="CollapseTimeLine" @click="handleClickShowTimeLine">
           <span class="iconfont" style="font-size: 20px">
-            {{ isCollapseTimeLine ? "&#xe626;" : "&#xe668;" }}</span
-          >
+            {{ isCollapseTimeLine ? "&#xe626;" : "&#xe668;" }}</span>
         </div>
       </el-tooltip>
     </div>
@@ -108,7 +81,7 @@ export default {
     "control-bar-view": ControlBar,
     "carousel-case-list": carouselCaseList,
   },
-  async mounted() {},
+  async mounted() { },
   methods: {
     handleClickHide() {
       this.$store.commit("AppPageSwitch/SWITCH_ISCOLLAPSETIMELINE");
@@ -124,6 +97,7 @@ export default {
   font-size: 20px;
   color: white;
 }
+
 .CollapseTimeLine {
   position: absolute;
   width: 10px;
@@ -135,13 +109,23 @@ export default {
   color: white;
   font-size: 10px;
 }
+
 .CollapseTimeLineNormal:hover {
   color: gray;
 }
+
 .CollapseTimeLine:hover {
   color: gray;
   /* cursor: pointer; */
   /* background-color: #0a6e55; */
+}
+
+.left-time-line {
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
+  color: #3c4e6b;
+  border-right: 1px solid #2b3447;
 }
 </style>
 

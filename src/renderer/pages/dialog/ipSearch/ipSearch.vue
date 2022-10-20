@@ -1,14 +1,6 @@
 <template>
-  <el-dialog
-    v-dialogDrag
-    :close-on-click-modal="false"
-    class="standard-data-dialog"
-    :append-to-body="true"
-    :visible="showIpDialogVisible"
-    width="30%"
-    @close="handleClose"
-    :modal="true"
-  >
+  <el-dialog v-dialogDrag :close-on-click-modal="false" class="standard-data-dialog" :append-to-body="true"
+    :visible="showIpDialogVisible" width="30%" @close="handleClose" :modal="true">
     <div slot="title" class="dialog-title">
       <i class="iconfont" style="color: white; font-size: 30px">&#xe651;</i>
       <span class="title-text" style="color: white">{{ title }}</span>
@@ -17,11 +9,8 @@
       </div>
     </div>
     <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="IP归属地查询与解析" name="first"
-        ><el-row
-          style="margin-left: 20px; margin-bottom: 10px text-align: center"
-          v-if="result"
-        >
+      <el-tab-pane label="IP归属地查询与解析" name="first">
+        <el-row style="margin-left: 20px; margin-bottom: 10px text-align: center" v-if="result">
           <!-- <div><h3>查询结果</h3></div> -->
           <div style="font-size: 12px">
             IP地址：<span style="color: green">{{ result.ip }}</span>
@@ -37,72 +26,42 @@
           </div>
           <div style="font-size: 12px">
             区、县、地级市：<span style="color: green">{{
-              result.Region
+            result.Region
             }}</span>
           </div>
         </el-row>
         <el-row style="text-align: center">
-          <el-input
-            size="mini"
-            v-model="ip"
-            style="width: 90%"
-            placeholder="请输入待查IP"
-          ></el-input>
+          <el-input size="mini" v-model="ip" style="width: 90%" placeholder="请输入待查IP"></el-input>
         </el-row>
 
         <el-row style="text-align: center; margin-top: 20px">
-          <el-button
-            size="small"
-            style="width: 90%"
-            type="primary"
-            @click="handleClickSearch"
-            >查询</el-button
-          >
-        </el-row></el-tab-pane
-      >
+          <el-button size="small" style="width: 90%" type="primary" @click="handleClickSearch">查询</el-button>
+        </el-row>
+      </el-tab-pane>
       <el-tab-pane label="IP批量解析回写" name="second">
         <div style="font-size: 12px">
           <b>批量解析会解析资金明细中已存在的IP地址，并将解析结果重新入库。</b>
         </div>
         <div style="font-size: 10px">
-          当前资金明细表中存在有效IP的条目数量为：<span style="color: #efb041"
-            >{{ countIP }}
+          当前资金明细表中存在有效IP的条目数量为：<span style="color: #efb041">{{ countIP }}
           </span>
           (个)
         </div>
         <div style="font-size: 10px">解析所有IP会覆盖已有地区信息条目。</div>
         <div style="font-size: 10px">
-          当前资金明细表中未解析的有效IP的条目数量为：<span
-            style="color: #efb041"
-            >{{ countIPNoAnalysis }}
+          当前资金明细表中未解析的有效IP的条目数量为：<span style="color: #efb041">{{ countIPNoAnalysis }}
           </span>
           (个)
         </div>
         <div style="font-size: 10px">解析部分IP仅更新地区信息为空的条目。</div>
-        <el-progress
-          style="margin-top: 10px"
-          v-if="percentage > 0"
-          :percentage="percentage"
-          color="#85df70"
-        ></el-progress>
+        <el-progress style="margin-top: 10px" v-if="percentage > 0" :percentage="percentage" color="#85df70">
+        </el-progress>
         <el-row style="text-align: center; margin-top: 10px">
-          <el-button
-            size="mini"
-            type="primary"
-            style="width: 40%"
-            @click="handleClickAnalysis"
-            :loading="loading"
-            :disabled="countIPNoAnalysis === 0"
-            >解析部分IP（{{ countIPNoAnalysis }}）个</el-button
-          ><el-button
-            size="mini"
-            type="primary"
-            style="width: 40%"
-            @click="handleClickAnalysisAll"
-            :loading="loading"
-            >解析所有IP（{{ countIP }}）个</el-button
-          ></el-row
-        >
+          <el-button size="mini" type="primary" style="width: 40%" @click="handleClickAnalysis" :loading="loading"
+            :disabled="countIPNoAnalysis === 0">解析部分IP（{{ countIPNoAnalysis }}）个</el-button>
+          <el-button size="mini" type="primary" style="width: 40%" @click="handleClickAnalysisAll" :loading="loading">
+            解析所有IP（{{ countIP }}）个</el-button>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>

@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="main-page"
-    :style="{ height: mainViewHeight + 'px' }"
-    ref="MainPage"
-  >
+  <div class="main-page" :style="{ height: mainViewHeight + 'px' }" ref="MainPage">
     <el-row>
       <tab-bar v-show="showTabBarView"></tab-bar>
     </el-row>
@@ -11,53 +7,41 @@
       <el-col :span="isCollapseLeftBar ? 1 : 3">
         <data-center></data-center>
       </el-col>
-      <el-col
-        :span="
-          (currentTableData &&
-          currentTableData.isShowRightSlider &&
-          currentTableData.rightTabs &&
-          currentTableData.rightTabs.length > 0
-            ? 17
-            : 21) + (isCollapseLeftBar ? 2 : 0)
-        "
-      >
+      <el-col :span="
+        (currentTableData &&
+        currentTableData.isShowRightSlider &&
+        currentTableData.rightTabs &&
+        currentTableData.rightTabs.length > 0
+          ? 17
+          : 21) + (isCollapseLeftBar ? 2 : 0)
+      ">
         <main-center-view></main-center-view>
       </el-col>
 
-      <el-col
-        :span="
+      <el-col :span="
+        currentTableData &&
+        currentTableData.isShowRightSlider &&
+        currentTableData.rightTabs &&
+        currentTableData.rightTabs.length > 0
+          ? 4
+          : 0
+      ">
+        <right-slider v-if="
           currentTableData &&
           currentTableData.isShowRightSlider &&
           currentTableData.rightTabs &&
           currentTableData.rightTabs.length > 0
-            ? 4
-            : 0
-        "
-      >
-        <right-slider
-          v-if="
-            currentTableData &&
-            currentTableData.isShowRightSlider &&
-            currentTableData.rightTabs &&
-            currentTableData.rightTabs.length > 0
-          "
-        ></right-slider>
+        "></right-slider>
       </el-col>
 
-      <template
-        v-if="
-          currentTableData &&
-          !currentTableData.isShowRightSlider &&
-          currentTableData.rightTabs &&
-          currentTableData.rightTabs.length > 0
-        "
-      >
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="点击展开右边栏"
-          placement="left"
-          ><div class="CollapseRightBar" @click="handleClickShowRightBar"></div>
+      <template v-if="
+        currentTableData &&
+        !currentTableData.isShowRightSlider &&
+        currentTableData.rightTabs &&
+        currentTableData.rightTabs.length > 0
+      ">
+        <el-tooltip class="item" effect="dark" content="点击展开右边栏" placement="left">
+          <div class="CollapseRightBar" @click="handleClickShowRightBar"></div>
         </el-tooltip>
       </template>
     </el-row>
@@ -71,7 +55,7 @@ import DataCenter from "@/pages/main/LeftSlider/DataCenter";
 import MainCenterView from "@/pages/main/MainViews/MainCenterView";
 import RightSlider from "@/pages/main/RightSlider/RightSliderContainerView";
 export default {
-  mounted() {},
+  mounted() { },
   computed: {
     ...mapState("MainPageSwitch", ["showTabBarView", "showFieldsVisible"]),
     ...mapState("AppPageSwitch", ["mainViewHeight", "isCollapseLeftBar"]),
@@ -101,6 +85,7 @@ export default {
 .main-page {
   -webkit-user-select: none;
 }
+
 .CollapseRightBar {
   position: absolute;
   width: 10px;

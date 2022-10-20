@@ -1,71 +1,33 @@
 <template>
-  <div
-    :style="{ height: mainViewHeight - 120 + 'px', overflow: 'auto' }"
-    class="timeLine"
-  >
+  <div :style="{ height: mainViewHeight - 120 + 'px', overflow: 'auto' }" class="timeLine">
     <div style="margin: 10px" v-if="renderList.length > 0">
-      <el-button
-        class="iconfont"
-        style="font-size: 12px"
-        type="danger"
-        size="mini"
-        @click="handleClickDeleteAllTimeLineData"
-        round
-        >&#xe652; 清空所有时间轴数据</el-button
-      >
+      <el-button class="iconfont" style="font-size: 12px" type="danger" size="mini"
+        @click="handleClickDeleteAllTimeLineData" round>&#xe652; 清空所有时间轴数据</el-button>
     </div>
 
-    <el-collapse
-      v-model="activeNames"
-      @change="handleChange"
-      class="myCollapse"
-    >
+    <el-collapse v-model="activeNames" @change="handleChange" class="myCollapse">
       <div v-if="renderList.length == 0">
         <div style="font-size: 10px; color: gray">当前无分析记录</div>
       </div>
-      <el-collapse-item
-        :name="item.time"
-        v-for="item of renderList"
-        :key="item.key"
-      >
+      <el-collapse-item :name="item.time" v-for="item of renderList" :key="item.key">
         <template slot="title">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="'名称:' + item.title + '  保存时间：' + item.datetime"
-            placement="right"
-          >
-            <div
-              style="
+          <el-tooltip class="item" effect="dark" :content="'名称:' + item.title + '  保存时间：' + item.datetime"
+            placement="right">
+            <div style="
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-              "
-            >
-              <span class="iconfont" style="font-size: 10px"
-                >&nbsp;&nbsp;&#xe63d;&nbsp;&nbsp;{{ item.title }}</span
-              >
-              <span style="font-size: 10px"
-                >&nbsp;&nbsp;{{ item.datetime }}</span
-              >
+              ">
+              <span class="iconfont" style="font-size: 10px">&nbsp;&nbsp;&#xe63d;&nbsp;&nbsp;{{ item.title }}</span>
+              <span style="font-size: 10px">&nbsp;&nbsp;{{ item.datetime }}</span>
             </div>
           </el-tooltip>
         </template>
         <div style="margin-top: 10px">
           <el-popover trigger="click" placement="right">
-            <img
-              :height="popOverPicHeigth"
-              :width="popOverPicWidth"
-              :src="item.src"
-            />
-            <img
-              class="screenShotImage"
-              slot="reference"
-              :src="item.src"
-              :height="PicHeigth"
-              :width="PicWidth"
-              style="border-radius: 5px; border: 1px solid gray"
-            />
+            <img :height="popOverPicHeigth" :width="popOverPicWidth" :src="item.src" />
+            <img class="screenShotImage" slot="reference" :src="item.src" :height="PicHeigth" :width="PicWidth"
+              style="border-radius: 5px; border: 1px solid gray" />
           </el-popover>
         </div>
         <div class="item-tip"><b>名称：</b>{{ item.title }}</div>
@@ -74,16 +36,10 @@
         </div>
         <div class="item-tip"><b>保存时间：</b>{{ item.datetime }}</div>
         <el-row style="text-align: center; margin-top: 10px">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="handleClickRestore(item)"
-          >
-            加载记录</el-button
-          >
+          <el-button size="mini" type="primary" @click="handleClickRestore(item)">
+            加载记录</el-button>
           <el-button size="mini" @click="handleClickDelete(item)">
-            删除记录</el-button
-          >
+            删除记录</el-button>
         </el-row>
       </el-collapse-item>
     </el-collapse>
@@ -264,22 +220,26 @@ export default {
 </script>
 
 <style scoped>
-.timeLine {
-}
+.timeLine {}
+
 .item-tip {
   font-size: 10px;
   color: #384e6e;
 }
+
 .screenShotImage:hover {
   cursor: pointer;
 }
+
 /deep/.el-popover {
   box-shadow: #384e6e 10px 10px 20px 5px;
 }
+
 /deep/.el-collapse {
   border-radius: 5px;
   border: 0px;
 }
+
 /deep/.el-collapse-item__header {
   /* background-color: #1e2534; */
   /* background-color: #3c4e6b; */
@@ -288,6 +248,7 @@ export default {
   color: white;
   border-bottom: 0px;
 }
+
 /deep/.el-collapse-item__wrap {
   border-radius: 5px;
 }

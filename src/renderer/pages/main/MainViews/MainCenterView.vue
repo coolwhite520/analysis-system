@@ -1,103 +1,47 @@
 <template >
-  <div
-    class="view-style"
-    :style="{ height: contentViewHeight + 8 + 'px' }"
-    v-loading="loadingShowData"
-    element-loading-text="数据加载中..."
-    element-loading-background="rgba(0, 0, 0, 0)"
-  >
-    <ul
-      v-if="contextMenuVisible"
-      :style="{ position: 'fixed', left: left + 'px', top: top + 'px' }"
-      class="contextmenu"
-    >
+  <div class="view-style" :style="{ height: contentViewHeight + 8 + 'px' }" v-loading="loadingShowData"
+    element-loading-text="数据加载中..." element-loading-background="rgba(0, 0, 0, 0)">
+    <ul v-if="contextMenuVisible" :style="{ position: 'fixed', left: left + 'px', top: top + 'px' }"
+      class="contextmenu">
       <li class="menu__item" @click="closeCurrentTab">关闭当前</li>
       <li class="menu__item" @click="closeAllTabs">关闭所有</li>
-      <li
-        class="menu__item"
-        @click="closeOtherTabs('left')"
-        v-if="!isDisabledCloseLeftBtnFlag"
-      >
+      <li class="menu__item" @click="closeOtherTabs('left')" v-if="!isDisabledCloseLeftBtnFlag">
         关闭左边
       </li>
-      <li
-        class="menu__item"
-        @click="closeOtherTabs('right')"
-        v-if="!isDisabledCloseRightBtnFlag"
-      >
+      <li class="menu__item" @click="closeOtherTabs('right')" v-if="!isDisabledCloseRightBtnFlag">
         关闭右边
       </li>
-      <li
-        class="menu__item"
-        @click="closeOtherTabs('other')"
-        v-if="!isDisabledCloseOtherBtnFlag"
-      >
+      <li class="menu__item" @click="closeOtherTabs('other')" v-if="!isDisabledCloseOtherBtnFlag">
         关闭其他
       </li>
-      <li
-        class="menu__item"
-        @click="rename()"
-        v-if="!isDisabledCloseOtherBtnFlag"
-      >
+      <li class="menu__item" @click="rename()" v-if="!isDisabledCloseOtherBtnFlag">
         重命名标题
       </li>
     </ul>
-    <el-tabs
-      class="el-tabs"
-      v-model="activeIndex"
-      type="border-card"
-      closable
-      @tab-remove="removeTab"
-      @contextmenu.prevent.native="openContextMenu($event)"
-    >
-      <el-tab-pane
-        :key="item.pageIndex"
-        v-for="item in tableDataList"
-        :label="item.title"
-        :name="item.pageIndex"
-      >
+    <el-tabs class="el-tabs" v-model="activeIndex" type="border-card" closable @tab-remove="removeTab"
+      @contextmenu.prevent.native="openContextMenu($event)">
+      <el-tab-pane :key="item.pageIndex" v-for="item in tableDataList" :label="item.title" :name="item.pageIndex">
         <component :is="item.componentName" :tableData="item"></component>
       </el-tab-pane>
     </el-tabs>
 
     <zjyt-link-dialog v-if="showZjytLinkVisible"></zjyt-link-dialog>
     <div v-if="showRename">
-      <el-dialog
-        v-dialogDrag
-        :close-on-click-modal="false"
-        class="standard-data-dialog"
-        :append-to-body="true"
-        :visible="showRename"
-        width="25%"
-        @close="handleClose"
-        :modal="true"
-      >
+      <el-dialog v-dialogDrag :close-on-click-modal="false" class="standard-data-dialog" :append-to-body="true"
+        :visible="showRename" width="25%" @close="handleClose" :modal="true">
         <div slot="title" class="dialog-title">
           <i class="iconfont" style="color: white; font-size: 30px">&#xe645;</i>
           <span class="title-text" style="color: white">{{
-            "标题重命名"
+          "标题重命名"
           }}</span>
           <div class="button-right">
             <span class="title-close" @click="handleClose"></span>
           </div>
         </div>
-        <el-input
-          ref="inputName"
-          size="mini"
-          v-model="inputNewTitle"
-          placeholder="请输入新的名称"
-        ></el-input>
+        <el-input ref="inputName" size="mini" v-model="inputNewTitle" placeholder="请输入新的名称"></el-input>
         <el-row style="margin-top: 20px; text-align: center">
-          <el-button @click="handleClose" size="mini" style="width: 30%"
-            >取消</el-button
-          >
-          <el-button
-            @click="handleClickSureName"
-            size="mini"
-            style="width: 30%"
-            type="primary"
-            >确定</el-button
-          >
+          <el-button @click="handleClose" size="mini" style="width: 30%">取消</el-button>
+          <el-button @click="handleClickSureName" size="mini" style="width: 30%" type="primary">确定</el-button>
         </el-row>
       </el-dialog>
     </div>
@@ -302,6 +246,7 @@ export default {
 .el-tabs .el-tabs__content {
   padding: 0;
 }
+
 .el-tabs__item:focus.is-active.is-focus:not(:active) {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -309,10 +254,12 @@ export default {
 </style>
 <style scoped>
 .el-tabs {
-  overflow-x: scroll; /*横向滚动*/
+  overflow-x: scroll;
+  /*横向滚动*/
   width: 100%;
   height: 100%;
 }
+
 /deep/.el-tabs_item {
   box-shadow: none;
 }
@@ -331,12 +278,15 @@ export default {
   color: #3c4e6b;
   box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.2);
 }
+
 .menu__item:first-child {
   margin-top: 5px;
 }
+
 .menu__item:last-child {
   margin-bottom: 5px;
 }
+
 .menu__item {
   font-size: 12px;
   display: block;

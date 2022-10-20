@@ -1,72 +1,30 @@
 <template>
-  <div
-    style="margin-top: 20px; padding-bottom: 40px"
-    v-loading.fullscreen.lock="loading"
-    :element-loading-text="loadingText"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-  >
-    <div
-      class="iconfont"
-      style="font-size: 20px; text-align: center; color: white"
-    >
+  <div style="margin-top: 20px; padding-bottom: 40px" v-loading.fullscreen.lock="loading"
+    :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.8)">
+    <div class="iconfont" style="font-size: 20px; text-align: center; color: white">
       &#xe6ad;&nbsp;&nbsp;<b>案件面板</b>
     </div>
-    <el-row style="margin-top: 20px">
+    <el-row style="margin-top: 20px" class="ctrl-bar-style">
       <el-col :span="6"> &nbsp; </el-col>
       <el-col :span="12" style="text-align: center">
         <el-button-group>
-          <el-button
-            class="iconfont"
-            type="primary"
-            size="mini"
-            @click="handleClickNewCase"
-            round
-          >
+          <el-button class="iconfont" type="primary" size="mini" @click="handleClickNewCase">
             &#xe6a3; 新增案件
           </el-button>
-          <el-button
-            class="iconfont"
-            type="primary"
-            size="mini"
-            @click="handleClickImportCase"
-            >&#xe61a; 导入案件</el-button
-          >
-          <el-button
-            class="iconfont"
-            type="danger"
-            size="mini"
-            @click="handleClickDeleteAllCase"
-            round
-            >&#xe652; 清空所有案件</el-button
-          >
-          <el-button
-            v-if="false"
-            class="iconfont"
-            type="danger"
-            size="mini"
-            @click="handleClickModifydatarules"
-            round
-            >&#xe652; 修改datarules加密字段中包含gas前缀</el-button
-          >
-          <el-button
-            v-if="false"
-            class="iconfont"
-            type="danger"
-            size="mini"
-            @click="handleClickModifyTemplate"
-            round
-            >&#xe652; 修改Template加密字段中包含gas前缀</el-button
-          >
+          <el-button class="iconfont" type="primary" size="mini" @click="handleClickImportCase">&#xe61a; 导入案件
+          </el-button>
+          <el-button class="iconfont" type="danger" size="mini" @click="handleClickDeleteAllCase">&#xe652; 清空所有案件
+          </el-button>
+          <el-button v-if="false" class="iconfont" type="danger" size="mini" @click="handleClickModifydatarules">
+            &#xe652; 修改datarules加密字段中包含gas前缀</el-button>
+          <el-button v-if="false" class="iconfont" type="danger" size="mini" @click="handleClickModifyTemplate">
+            &#xe652; 修改Template加密字段中包含gas前缀</el-button>
         </el-button-group>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="4">
-        <el-input
-          size="mini"
-          placeholder="输入案件名称进行检索"
-          prefix-icon="el-icon-search"
-          v-model="inputAnjianName"
-        ></el-input>
+        <el-input size="small" placeholder="输入案件名称进行检索" prefix-icon="el-icon-search" v-model="inputAnjianName">
+        </el-input>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
     </el-row>
@@ -341,3 +299,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.ctrl-bar-style {
+  display: flex;
+  align-items: center;
+}
+</style>

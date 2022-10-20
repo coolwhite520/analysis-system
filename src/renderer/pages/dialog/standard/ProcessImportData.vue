@@ -8,27 +8,23 @@
       <span>表数据...</span>
     </div>
     <el-row>
-      <div
-        :style="{
-          fontSize: 10 + 'px',
-          textAlign: 'center',
-          color: percentage !== 99 ? '#96d558' : '#b75438',
-          marginBottom: 10 + 'px',
-        }"
-      >
+      <div :style="{
+        fontSize: 10 + 'px',
+        textAlign: 'center',
+        color: percentage !== 99 ? '#96d558' : '#b75438',
+        marginBottom: 10 + 'px',
+      }">
         {{ secondTitle }}
       </div>
     </el-row>
     <el-row>
       <el-col :span="12">
-        <div
-          style="
+        <div style="
             font-size: 8px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-          "
-        >
+          ">
           {{ tip }}
         </div>
       </el-col>
@@ -134,4 +130,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
