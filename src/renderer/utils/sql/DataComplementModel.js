@@ -10,7 +10,7 @@ function SimpleAccountModel() {
   this.Khyh = "";
   this.Zhmc = "";
   this.bool_0 = false;
-  this.get_IsHandUpdate = function() {
+  this.get_IsHandUpdate = function () {
     if (
       this.IsKHYHHandUpdate() ||
       this.IsZZHMHandUpdate() ||
@@ -21,16 +21,16 @@ function SimpleAccountModel() {
 
     return this.bool_0;
   };
-  this.set_IsHandUpdate = function(value) {
+  this.set_IsHandUpdate = function (value) {
     this.bool_0 = value;
   };
-  this.IsZZMCHandUpdate = function() {
+  this.IsZZMCHandUpdate = function () {
     return this.ZhmcList.length > 1 && this.Zhmc != this.ZhmcList[0];
   };
-  this.IsKHYHHandUpdate = function() {
+  this.IsKHYHHandUpdate = function () {
     return this.KhyhList.length > 1 && this.Khyh != this.KhyhList[0];
   };
-  this.IsZZHMHandUpdate = function() {
+  this.IsZZHMHandUpdate = function () {
     return this.ZzhmList.length > 1 && this.Zzhm != this.ZzhmList[0];
   };
   this.Zh; //this.string_0;
@@ -42,7 +42,7 @@ function SimpleAccountModel() {
   this.ZzhmIsenable = false; //this.bool_9;
   this.IsChecked = true; //this.bool_10;
   this.ZzhmList = [];
-  this.set_ZzhmList = function(value) {
+  this.set_ZzhmList = function (value) {
     this.ZzhmList = value;
     if (this.ZzhmList != null && this.ZzhmList != undefined) {
       if (this.ZzhmList.length == 0) {
@@ -57,14 +57,14 @@ function SimpleAccountModel() {
     }
     this.ZzhmIsenable = false;
   };
-  this.get_ZzhmSelected = function() {
+  this.get_ZzhmSelected = function () {
     return this.Zzhm;
   };
-  this.set_ZzhmSelected = function(value) {
+  this.set_ZzhmSelected = function (value) {
     this.Zzhm = value;
   };
   this.KhyhList = [];
-  this.set_KhyhList = function(value) {
+  this.set_KhyhList = function (value) {
     this.KhyhList = value;
     if (this.KhyhList != null && this.KhyhList != undefined) {
       if (this.KhyhList.length == 0) {
@@ -79,15 +79,15 @@ function SimpleAccountModel() {
     }
     this.KhyhIsenable = false;
   };
-  this.get_KhyhSelected = function() {
+  this.get_KhyhSelected = function () {
     return this.Khyh;
   };
-  this.set_KhyhSelected = function(value) {
+  this.set_KhyhSelected = function (value) {
     this.Khyh = value;
     // this.IsKHYHHandUpdate = true;
   };
   this.ZhmcList = [];
-  this.set_ZhmcList = function(value) {
+  this.set_ZhmcList = function (value) {
     this.ZhmcList = value;
     if (this.ZhmcList != undefined && this.ZhmcList != null) {
       if (this.ZhmcList.length == 0) {
@@ -102,10 +102,10 @@ function SimpleAccountModel() {
     }
     this.ZhmcIsenable = false;
   };
-  this.get_ZhmcSelected = function() {
+  this.get_ZhmcSelected = function () {
     return this.Zhmc;
   };
-  this.set_ZhmcSelected = function(value) {
+  this.set_ZhmcSelected = function (value) {
     this.Zhmc = value;
     //this.IsZZMCHandUpdate = true;
   };
@@ -113,7 +113,7 @@ function SimpleAccountModel() {
   this.IsRecord;
   this.RowNum;
   this.int_1 = 0;
-  this.get_RankNum = function() {
+  this.get_RankNum = function () {
     if (this.ZhmcColor || this.ZzhmColor || this.KhyhcColor) {
       this.int_1++;
       if (this.ZhmcList != undefined && this.ZhmcList != null) {
@@ -128,7 +128,7 @@ function SimpleAccountModel() {
     }
     return this.int_1;
   };
-  this.set_RankNum = function(value) {
+  this.set_RankNum = function (value) {
     this.int_1 = value;
   };
 }
@@ -153,7 +153,7 @@ function DataSupplementWinModel(ajid) {
   this.dictionary = {};
   this.dictionary_2 = {};
   this.AccountModelscan = [];
-  this.InilaizeDataState = function() {
+  this.InilaizeDataState = function () {
     this.bool_0 = false;
     this.bool_1 = false;
     this.notCheckedList = [];
@@ -163,7 +163,7 @@ function DataSupplementWinModel(ajid) {
     this.dictionary_1 = {};
   };
 
-  this.GetMasterData = async function() {
+  this.GetMasterData = async function () {
     this.bool_4 = true;
     await this.Initalize();
     //for(let item of this.AccountModelscan){
@@ -171,7 +171,7 @@ function DataSupplementWinModel(ajid) {
     //}
     return this.AccountModelscan;
   };
-  this.createTableIndex = async function() {
+  this.createTableIndex = async function () {
     const client = await global.pool.connect();
     try {
       // 创建索引
@@ -185,29 +185,29 @@ function DataSupplementWinModel(ajid) {
       client.release();
     }
   };
-  this.GetAllData = async function() {
+  this.GetAllData = async function () {
     this.bool_4 = false;
     await this.Initalize();
     return this.AccountModelscan;
   };
-  this.Initalize = async function() {
+  this.Initalize = async function () {
     console.log("Initalize");
     await this.createTableIndex();
     this.InilaizeDataState();
     this.bool_1 = true;
     await this.RefreashUIDatasCan_DoWork();
   };
-  this.RefreashUIDatasCan_DoWork = async function() {
+  this.RefreashUIDatasCan_DoWork = async function () {
     console.log("RefreashUIDatasCan_DoWork");
     this.bool_1 = true;
     await this.addToCollection();
     this.bool_1 = false;
   };
-  this.addToCollection = async function() {
+  this.addToCollection = async function () {
     console.log("addToCollection");
     await this.method_7();
   };
-  this.GetAllEmptyRowCount = async function() {
+  this.GetAllEmptyRowCount = async function () {
     let num = 0;
     let sql = `SELECT COUNT
     ( shard_id ) 
@@ -255,7 +255,7 @@ function DataSupplementWinModel(ajid) {
     }
     return 0;
   };
-  this.GetCanSuppleentRowCount = async function(ismasterdata = false) {
+  this.GetCanSuppleentRowCount = async function (ismasterdata = false) {
     let num = 0;
     let arg = "";
     if (!ismasterdata) {
@@ -319,7 +319,7 @@ function DataSupplementWinModel(ajid) {
     }
   };
 
-  this.GetSupplementAll = async function() {
+  this.GetSupplementAll = async function () {
     let client = await global.pool.connect();
     try {
       return await new Promise(async (resolve, reject) => {
@@ -411,7 +411,7 @@ function DataSupplementWinModel(ajid) {
         });
 
         query.on("end", () => {
-          AccountModelscan1.sort(function(a, b) {
+          AccountModelscan1.sort(function (a, b) {
             return b.int_1 - a.int_1;
           });
           this.AccountModelscan = AccountModelscan1;
@@ -429,7 +429,7 @@ function DataSupplementWinModel(ajid) {
       client.release();
     }
   };
-  this.method_7 = async function() {
+  this.method_7 = async function () {
     try {
       await this.GetCanData();
       await this.GetSupplementAll();
@@ -437,7 +437,7 @@ function DataSupplementWinModel(ajid) {
       console.log(e);
     }
   };
-  this.GetSupplementAllSql = function(isgetmasterdata = false) {
+  this.GetSupplementAllSql = function (isgetmasterdata = false) {
     let arg = "";
     let arg2 = "";
     if (!isgetmasterdata) {
@@ -550,7 +550,7 @@ function DataSupplementWinModel(ajid) {
     // }
     return sql;
   };
-  this.GetCanData = async function() {
+  this.GetCanData = async function () {
     let client = await global.pool.connect();
     try {
       return await new Promise(async (resolve, reject) => {
@@ -618,7 +618,7 @@ function DataSupplementWinModel(ajid) {
       client.release();
     }
   };
-  this.GetSqlForBackDictionary = function(ismasterdata = false) {
+  this.GetSqlForBackDictionary = function (ismasterdata = false) {
     let arg = "";
     if (!ismasterdata) {
       arg = `SELECT
@@ -683,14 +683,14 @@ function DataSupplementWinModel(ajid) {
 
     return res;
   };
-  this.AddStr = function(strs, str) {
+  this.AddStr = function (strs, str) {
     if (!Default.IsNullOrEmpty(str) && !strs.includes(str)) {
       strs.push(str);
     }
     return strs;
   };
 
-  this.UpdataAllData = async function(Modelscan, callbackProcess) {
+  this.UpdataAllData = async function (Modelscan, callbackProcess) {
     console.log(
       "UpdataAllData:",
       Object.keys(this.dictionary_2).length,
@@ -876,7 +876,7 @@ function DataSupplementWinModel(ajid) {
     // console.log(stringBuilder);
     // const fs = require("fs");
   };
-  this.execSqlUpdate = async function() {
+  this.execSqlUpdate = async function () {
     let sql1 = `UPDATE mz_bank_records A 
     SET JYZJHM =
     CASE

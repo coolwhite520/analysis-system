@@ -22,10 +22,12 @@
       <div v-if="licenseInfo" class="activation-info">
         <div><b>授权详情：</b></div>
         <div class="activation-info-content">
-          <div>被授权方：{{licenseInfo.user}}</div>
-          <div>授权有效期：三个月</div>
-          <div>激活日期：{{licenseInfo.activateTime}}</div>
           <div>授权版本：{{licenseInfo.version}}</div>
+          <div>被授权方：{{licenseInfo.user_name}}</div>
+          <div>授权发放日期：{{licenseInfo.created_at}}</div>
+          <div>授权有效期：{{licenseInfo.use_time_span}}</div>
+          <div>授权截止日期：{{licenseInfo.expired_at}}</div>
+          <div>激活日期：{{licenseInfo.activate_at}}</div>
         </div>
 
       </div>
@@ -41,7 +43,6 @@
         </div>
         <div class="activate-area">
           <el-button style="width: 100%;" type="primary" size="medium" @click="clickActivate">激活</el-button>
-          <el-button style="width: 100%;" size="medium" @click="clickTestMake">test make</el-button>
         </div>
       </div>
     </div>
@@ -75,7 +76,7 @@ export default {
   },
   methods: {
     clickCopyMachineID() {
-      let value = this.localMachineId;
+      let value = this.sn;
       if (value) {
         clipboard.writeText(value + "");
         this.$message({
@@ -91,17 +92,6 @@ export default {
         return;
       }
       this.$store.commit("DialogPopWnd/SET_SHOWLICENSEDIALOGVISIBLE", false);
-    },
-    async clickTestMake() {
-      let obj = {
-        user: "panda",
-        sn: this.sn,
-        expireTime: new Date().getTime() + 1000 * 1000
-      }
-      let lic = await license.generateLicense(obj)
-      console.log(lic)
-      const fs = require("fs")
-      fs.writeFileSync(this.inputLicensePath + ".test.txt", lic)
     },
     async clickActivate() {
       if (this.inputLicensePath == "") {
@@ -123,8 +113,7 @@ export default {
           type: "success",
           message: "激活成功"
         })
-        console.log(ret.data)
-        this.licenseInfo = ret.data
+        this.licenseInfo = license.formatLicense(ret.data)
       }
 
     },
@@ -173,7 +162,7 @@ export default {
 }
 
 .activation-info-content {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 
