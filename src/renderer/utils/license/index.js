@@ -75,7 +75,7 @@ async function parseLicenseByPath(filePath) {
 }
 
 /**
- * 本地的授权是否是有效的
+ * 本地的授权是否是有效的,如果有效返回授权对象，否则返回失效原因
  * @returns {Promise<{data: string, success: boolean}>}
  */
 async function validateLicense() {
