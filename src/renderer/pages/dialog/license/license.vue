@@ -52,6 +52,7 @@
 import { mapState } from "vuex";
 import license from "@/utils/license"
 const { clipboard } = require("electron");
+const moment= require("moment");
 
 export default {
   computed: {
@@ -59,6 +60,7 @@ export default {
   },
   data() {
     return {
+      moment,
       title: "License",
       result: null,
       loading: false,
@@ -69,7 +71,7 @@ export default {
   },
   async mounted() {
     this.sn = await license.getLocalMachineSn()
-    let ret = await license.parseLicense()
+    let ret = await license.validateLicense()
     if (ret.success) {
       this.licenseInfo = ret.data
     }
@@ -86,15 +88,30 @@ export default {
       }
     },
     async handleClose() {
-      let ret = await license.parseLicense()
+      let ret = await license.validateLicense()
       if (!ret.success) {
-        this.$message.error(ret.data);
-        return;
+        this.$message({
+          type: "warning",
+          message: ret.data,
+        })
       }
       this.$store.commit("DialogPopWnd/SET_SHOWLICENSEDIALOGVISIBLE", false);
     },
+    formatLicense(data) {
+      const { use_time_span, user_name, created_at, mark, sn } = data;
+      let month = moment.duration(parseInt(use_time_span), "seconds").asMonths().toFixed()
+      if (use_time_span >= 3600 * 24 * 30 * 12) {
+        data.version = '正式版'
+      } else {
+        data.version = '测试版'
+      }
+      data.use_time_span = month > 240 ? `永久` : `${month} 个月`
+      data.created_at = moment(created_at * 1000).format("YYYY-MM-DD HH:mm:ss")
+      data.expired_at = moment((created_at + use_time_span) * 1000).format("YYYY-MM-DD HH:mm:ss")
+      return data;
+    },
     async clickActivate() {
-      if (this.inputLicensePath == "") {
+      if (this.inputLicensePath === "") {
         this.$message({
           type: "warning",
           message: "请选择授权文件，然后点击激活按钮!"
@@ -107,13 +124,13 @@ export default {
           type: "warning",
           message: ret.data,
         })
-        return;
       } else {
         this.$message({
           type: "success",
           message: "激活成功"
         })
-        this.licenseInfo = license.formatLicense(ret.data)
+        await license.writeLicenseToReg(ret.data)
+        this.licenseInfo = this.formatLicense(ret.data)
       }
 
     },

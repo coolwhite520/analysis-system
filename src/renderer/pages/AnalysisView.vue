@@ -159,7 +159,7 @@ export default {
       console.log(e);
     }
 
-    let ret = await license.parseLicense()
+    let ret = await license.validateLicense()
     if (!ret.success) {
       this.$store.commit("DialogPopWnd/SET_SHOWLICENSEDIALOGVISIBLE", true)
     }

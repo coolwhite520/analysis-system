@@ -1,15 +1,22 @@
 import aes from "../aes";
+import {machineId} from 'node-machine-id';
 const path = require("path");
 const fs = require("fs");
 const electron = require("electron");
-import { machineId } from 'node-machine-id';
 const md5 = require("md5-node")
 const moment = require('moment')
+const regedit = require('regedit').promisified
+
+const vbsDirectory = path.join(path.dirname(electron.remote.app.getPath("exe")), "resources/regedit/vbs");
+regedit.setExternalVBSLocation(vbsDirectory);
+
+const regLicensePath = "HKLM\\SOFTWARE\\fund-analysis\\license";
+const regLicenseKeyName = "content"
 
 const AppID = "@My_TrAnSLaTe_sErVeR"
 
 /**
- * 
+ *
  * @returns 获取本机机器码
  */
 async function getLocalMachineSn() {
@@ -17,16 +24,10 @@ async function getLocalMachineSn() {
 }
 
 /**
- * 生成
- * @param {*} obj 
- * @returns 
+ * 解析导入的授权文件
+ * @param filePath
+ * @returns {Promise<{data: null, success: boolean}|{data, success: boolean}>}
  */
-async function generateLicense(obj) {
-    let jsonStr = JSON.stringify(obj)
-    return aes.encrypt(jsonStr)
-}
-
-
 async function parseLicenseByPath(filePath) {
     let ret = { success: true, data: null, }
     try {
@@ -39,7 +40,6 @@ async function parseLicenseByPath(filePath) {
             let key = md5(localSn + AppID)
             let data = aes.decrypt256ByKey(content, key)
             data = JSON.parse(data)
-
             const { use_time_span, user_name, created_at, mark, sn } = data;
             if (
                 typeof use_time_span == 'undefined' ||
@@ -51,8 +51,13 @@ async function parseLicenseByPath(filePath) {
                 ret.success = false;
                 ret.data = "授权文件字段错误，请联系管理员重新授权"
             } else {
-                ret.success = true;
-                ret.data = data;
+                if( isExpiredLicense(data)) {
+                    ret.success = false;
+                    ret.data = "授权已过期";
+                } else {
+                    ret.success = true;
+                    ret.data = data;
+                }
             }
         }
         return ret;
@@ -64,62 +69,94 @@ async function parseLicenseByPath(filePath) {
     }
 }
 
-function formatLicense(data) {
-    const { use_time_span, user_name, created_at, mark, sn } = data;
-    let month = moment.duration(parseInt(use_time_span), "seconds").asMonths().toFixed()
-    if (use_time_span >= 3600 * 24 * 30 * 12) {
-        data.version = '正式版'
-    } else {
-        data.version = '测试版'
-    }
-    data.use_time_span = month > 240 ? `永久` : `${month} 个月`
-    data.activate_at = moment().format("YYYY-MM-DD HH:mm:ss")
-    data.created_at = moment(created_at * 1000).format("YYYY-MM-DD HH:mm:ss")
-    data.expired_at = moment((created_at + use_time_span) * 1000).format("YYYY-MM-DD HH:mm:ss")
-    return data;
+
+ function isExpiredLicense(obj) {
+     return obj.created_at + obj.use_time_span < moment().valueOf() / 1000
 }
 
-async function parseLicense() {
-    let ret = { success: true, data: null, }
-    try {
-        let sn = await getLocalMachineSn()
-        const basePath = path.dirname(electron.remote.app.getPath("exe"))
-        const filename = "license.txt"
-        const licenseFilePath = path.resolve(basePath, filename)
-        console.log(licenseFilePath)
-        if (!fs.existsSync(licenseFilePath)) {
-            ret.success = false;
-            ret.data = "本地授权文件缺失，请导入授权文件."
-        } else {
-            const content = fs.readFileSync(licenseFilePath)
-            let key = md5(sn + AppID)
-            let data = aes.decrypt256ByKey(content, key)
-            // 是否是本机器的授权码
-            if (data.sn != sn) {
-                ret.success = false
-                ret.data = "此授权码不属于本机器."
-            }
-            // 判断授权是否过期
-            else if (data.expireTime < new Date().getTime()) {
-                ret.success = false
-                ret.data = "授权已经过期."
-            } else {
-                ret.data = JSON.parse(data)
-            }
+/**
+ * 本地的授权是否是有效的
+ * @returns {Promise<{data: string, success: boolean}>}
+ */
+async function validateLicense() {
+    if (process.platform === "win32") {
+        let obj = await readLicenseFromReg();
+        if (!obj.success) {
+            return obj;
         }
-        return ret;
+        if(isExpiredLicense(data)) {
+           return {
+               success: true,
+               data: "授权已经过期",
+           }
+        }
+        return obj;
+    } else {
+        return {
+            success: true,
+            data: "not win32 system, do not check."
+        };
+    }
+}
+
+/**
+ * 读取注册表并返回解密的数据对象
+ * @returns {Promise<{data: string, success: boolean}|{data: any, success: boolean}|{data, success: boolean}>}
+ */
+async function readLicenseFromReg() {
+    try {
+        let ret = await regedit.list(regLicensePath);
+        if (ret) {
+            let content = ret[regLicensePath].values[regLicenseKeyName].value;
+            let localSn = await getLocalMachineSn()
+            let key = md5(localSn + AppID)
+            let data = await aes.decrypt256ByKey(content, key)
+            return {
+                success: true,
+                data: JSON.parse(data)
+            }
+        } else {
+            return {
+                success: false,
+                data: "not found."
+            };
+        }
     } catch (e) {
         return {
             success: false,
-            data: "授权文件错误"
-        }
+            data: e.message,
+        };
     }
 }
 
-
-
-async function writeIntoReg(obj) {
+/**
+ * 将授权信息的对象写入注册表
+ * @param obj
+ * @returns {Promise<Object>}
+ */
+async function writeLicenseToReg(obj) {
+    try {
+        obj.activate_at = moment().format("YYYY-MM-DD HH:mm:ss")
+        let data = JSON.stringify(obj);
+        let localSn = await getLocalMachineSn()
+        let key = md5(localSn + AppID)
+        let content = await aes.encrypt256ByKey(data, key)
+        await regedit.createKey([regLicensePath])
+        await regedit.putValue({
+            [regLicensePath]: { [regLicenseKeyName]: { value: content, type: 'REG_SZ'} },
+        })
+        return {
+            success: true,
+            data: "success"
+        };
+    } catch (e) {
+        return {
+            success: false,
+            data: e.message,
+        };
+    }
 
 }
 
-export default { generateLicense, getLocalMachineSn, parseLicense, parseLicenseByPath, formatLicense };
+
+export default { getLocalMachineSn, validateLicense, parseLicenseByPath, writeLicenseToReg };

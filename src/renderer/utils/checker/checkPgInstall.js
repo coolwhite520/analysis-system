@@ -20,18 +20,13 @@ async function listRegPath(regPath) {
 
 async function existServiceBinFile() {
   try {
-    let regPath =
-      "HKLM\\SOFTWARE\\PostgreSQL\\Installations\\postgresql-x64-12";
+    let regPath = "HKLM\\SOFTWARE\\PostgreSQL\\Installations\\postgresql-x64-12";
     let ret = await listRegPath(regPath);
     if (ret) {
       let installPath = ret[regPath].values["Base Directory"].value;
       console.log(installPath);
       let binServicePath = path.join(installPath, "\\bin\\pg_ctl.exe");
-      if (fs.existsSync(binServicePath)) {
-        return true;
-      } else {
-        return false;
-      }
+      return fs.existsSync(binServicePath);
     } else {
       return false;
     }
