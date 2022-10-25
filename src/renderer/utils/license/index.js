@@ -7,8 +7,6 @@ const md5 = require("md5-node")
 const moment = require('moment')
 const regedit = require('regedit').promisified
 
-const vbsDirectory = path.join(path.dirname(electron.remote.app.getPath("exe")), "resources/regedit/vbs");
-regedit.setExternalVBSLocation(vbsDirectory);
 
 const regLicensePath = "HKLM\\SOFTWARE\\fund-analysis\\license";
 const regLicenseKeyName = "content"
@@ -105,8 +103,16 @@ async function validateLicense() {
  */
 async function readLicenseFromReg() {
     try {
-        let ret = await regedit.list(regLicensePath);
+        let ret = await regedit.list([regLicensePath]);
+
         if (ret) {
+            if (!ret[regLicensePath].exists) {
+                console.log("readLicenseFromReg:" + JSON.stringify(ret))
+                return {
+                    success: false,
+                    data: "not found."
+                };
+            }
             let content = ret[regLicensePath].values[regLicenseKeyName].value;
             let localSn = await getLocalMachineSn()
             let key = md5(localSn + AppID)
