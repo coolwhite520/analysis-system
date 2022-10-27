@@ -4903,10 +4903,10 @@ electron@^9.0.5:
     "@types/node" "^12.0.12"
     extract-zip "^1.0.3"
 
-element-resize-detector@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/element-resize-detector/-/element-resize-detector-1.2.1.tgz"
-  integrity sha512-BdFsPepnQr9fznNPF9nF4vQ457U/ZJXQDSNF1zBe7yaga8v9AdZf3/NElYxFdUh7SitSGt040QygiTo6dtatIw==
+element-resize-detector@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/element-resize-detector/-/element-resize-detector-1.2.4.tgz#3e6c5982dd77508b5fa7e6d5c02170e26325c9b1"
+  integrity sha512-Fl5Ftk6WwXE0wqCgNoseKWndjzZlDCwuPTcoVZfCP9R3EHQF8qUtr3YUPNETegRBOKqQKPW3n4kiIWngGi8tKg==
   dependencies:
     batch-processor "1.0.0"
 
@@ -10894,10 +10894,10 @@ reflect-metadata@0.1.13:
   resolved "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.13.tgz"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
 
-regedit@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/regedit/-/regedit-5.1.1.tgz#4ee55c00fc97f1dc365504953ea0570fb6dd8687"
-  integrity sha512-NJ2OZ14czryt3RiQyMM/nptaiu0bF1CT+YVw0PBziMrLJyq8pdmIAvupi9E+NPWJLDJtyHDoKs5g5wcbP8ANIg==
+regedit@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/regedit/-/regedit-5.0.0.tgz#7ec444ef027cc704e104fae00586f84752291116"
+  integrity sha512-4uSqj6Injwy5TPtXlE+1F/v2lOW/bMfCqNIAXyib4aG1ZwacG69oyK/yb6EF8KQRMhz7YINxkD+/HHc6i7YJtA==
   dependencies:
     debug "^4.1.0"
     if-async "^3.7.4"

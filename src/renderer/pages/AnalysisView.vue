@@ -48,7 +48,7 @@ const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
 import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
 
-import License from "./dialog/license/license.vue";
+import License from "./mini/license.vue";
 
 
 // const html2canvas = require("html2canvas");

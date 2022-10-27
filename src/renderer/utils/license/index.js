@@ -5,21 +5,17 @@ const fs = require("fs");
 const electron = require("electron");
 const md5 = require("md5-node")
 const moment = require('moment')
-const regedit = require('regedit').promisified
-
-
-const regLicensePath = "HKLM\\SOFTWARE\\fund-analysis\\license";
-const regLicenseKeyName = "content"
+const regedit = require('regedit')
+const promisifiedRegedit  = regedit.promisified
+const regLicensePath = "HKCU\\SOFTWARE\\fund-analysis";
+const regLicenseKeyName = "license"
 
 const AppID = "@My_TrAnSLaTe_sErVeR"
 
-/**
- *
- * @returns 获取本机机器码
- */
-async function getLocalMachineSn() {
-    return await machineId();
-}
+
+
+const vbsDirectory = path.join(path.dirname(electron.remote.app.getPath('exe')), 'resources/regedit/vbs');
+regedit.setExternalVBSLocation(vbsDirectory);
 
 /**
  * 解析导入的授权文件
@@ -29,11 +25,11 @@ async function getLocalMachineSn() {
 async function parseLicenseByPath(filePath) {
     let ret = { success: true, data: null, }
     try {
-        let localSn = await getLocalMachineSn()
         if (!fs.existsSync(filePath)) {
             ret.success = false;
             ret.data = "找不到授权文件"
         } else {
+            const localSn = await machineId();
             const content = fs.readFileSync(filePath, "utf-8")
             let key = md5(localSn + AppID)
             let data = aes.decrypt256ByKey(content, key)
@@ -82,9 +78,9 @@ async function validateLicense() {
         if (!obj.success) {
             return obj;
         }
-        if(isExpiredLicense(data)) {
+        if(isExpiredLicense(obj.data)) {
            return {
-               success: true,
+               success: false,
                data: "授权已经过期",
            }
         }
@@ -103,28 +99,21 @@ async function validateLicense() {
  */
 async function readLicenseFromReg() {
     try {
-        let ret = await regedit.list([regLicensePath]);
-
-        if (ret) {
-            if (!ret[regLicensePath].exists) {
-                console.log("readLicenseFromReg:" + JSON.stringify(ret))
-                return {
-                    success: false,
-                    data: "not found."
-                };
-            }
-            let content = ret[regLicensePath].values[regLicenseKeyName].value;
-            let localSn = await getLocalMachineSn()
+        let ret = await getRegKeyValueSync(regLicensePath, regLicenseKeyName)
+        if (ret.success) {
+            const localSn = await machineId();
+            let content = ret.data
             let key = md5(localSn + AppID)
             let data = await aes.decrypt256ByKey(content, key)
+            data = JSON.parse(data);
             return {
                 success: true,
-                data: JSON.parse(data)
+                data
             }
         } else {
             return {
                 success: false,
-                data: "not found."
+                data: "当前产品未激活，请发送机器码给授权方，然后导入授权文件进行激活."
             };
         }
     } catch (e) {
@@ -135,6 +124,97 @@ async function readLicenseFromReg() {
     }
 }
 
+async function existRegKeyPath(regKeyPath) {
+    return new Promise((resolve, reject) => {
+        regedit.list([regKeyPath], (err, ret) => {
+            if (err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                if (!ret[regKeyPath].exists) {
+                    resolve({
+                        success: false,
+                        data: 'success'
+                    })
+                } else {
+                    resolve({
+                        success: true,
+                        data: 'success'
+                    })
+                }
+
+            }
+        })
+    })
+}
+
+async function createRegKeySync(regKeyPath) {
+    return new Promise( (resolve, reject) => {
+        regedit.createKey([regKeyPath], (err) => {
+            if (err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                resolve({
+                    success: true,
+                    data: 'success'
+                })
+            }
+        })
+    })
+}
+
+async function createRegKeyValueSync(regKeyPath, regKeyName, content) {
+    return new Promise( (resolve, reject) => {
+        let value = {[regKeyPath]: { [regKeyName]: { value: content, type: 'REG_SZ'} },}
+        regedit.putValue(value, (err) => {
+            if (err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                resolve({
+                    success: true,
+                    data: 'success'
+                })
+            }
+        })
+    })
+}
+
+async function getRegKeyValueSync(regKeyPath, regKeyValueName) {
+    return new Promise((resolve, reject) => {
+        regedit.list([regKeyPath], (err, ret) => {
+            if(err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                if (!ret[regKeyPath].exists || typeof ret[regKeyPath].values[regKeyValueName] === 'undefined') {
+                    resolve({
+                        success: false,
+                        data: 'success'
+                    })
+                } else {
+                    resolve({
+                        success: true,
+                        data: ret[regKeyPath].values[regKeyValueName].value
+                    })
+                }
+
+            }
+        })
+    })
+}
+
+
+
 /**
  * 将授权信息的对象写入注册表
  * @param obj
@@ -142,27 +222,36 @@ async function readLicenseFromReg() {
  */
 async function writeLicenseToReg(obj) {
     try {
-        obj.activate_at = moment().format("YYYY-MM-DD HH:mm:ss")
+        let { data: existLicense,  success: exist} = await validateLicense();
+        if(exist) {
+            if (obj.sn === existLicense.sn && obj.created_at === existLicense.created_at) {
+                return {
+                    success: false,
+                    data: "无法导入相同的授权."
+                }
+            }
+        }
+        let ret = await existRegKeyPath(regLicensePath)
+        if (!ret.success) {
+            await createRegKeySync(regLicensePath)
+        }
+        const localSn = await machineId();
+        obj.activate_at = new Date().getTime() / 1000
         let data = JSON.stringify(obj);
-        let localSn = await getLocalMachineSn()
         let key = md5(localSn + AppID)
-        let content = await aes.encrypt256ByKey(data, key)
-        await regedit.createKey([regLicensePath])
-        await regedit.putValue({
-            [regLicensePath]: { [regLicenseKeyName]: { value: content, type: 'REG_SZ'} },
-        })
-        return {
-            success: true,
-            data: "success"
-        };
+        let content = aes.encrypt256ByKey(data, key)
+        ret = await createRegKeyValueSync(regLicensePath, regLicenseKeyName, content)
+        return ret
     } catch (e) {
         return {
             success: false,
             data: e.message,
         };
     }
-
 }
 
+async function getLocalMachineSn() {
+    return  await machineId();
+}
 
 export default { getLocalMachineSn, validateLicense, parseLicenseByPath, writeLicenseToReg };

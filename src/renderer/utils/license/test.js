@@ -1,27 +1,83 @@
-const crypto = require("crypto")
-const { machineId, machineIdSync } = require('node-machine-id');
-const md5 = require("md5-node")
+const regedit = require('regedit')
 
-const AppID = "@My_TrAnSLaTe_sErVeR"
+async function existRegKeyPath(regKeyPath) {
+    return new Promise((resolve, reject) => {
+        regedit.list([regKeyPath], (err, ret) => {
+            if (err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                if (!ret[regKeyPath].exists) {
+                    resolve({
+                        success: false,
+                        data: 'success'
+                    })
+                } else {
+                    resolve({
+                        success: true,
+                        data: 'success'
+                    })
+                }
 
-
-function decrypt256ByKey(crypted, key) {
-    crypted = Buffer.from(crypted, "base64").toString("binary");
-    let decipher = crypto.createDecipheriv("aes-256-cbc", key, key.substr(0, 16));
-    let decoded = decipher.update(crypted, "binary", "utf8");
-    decoded += decipher.final("utf8");
-    return decoded;
+            }
+        })
+    })
 }
 
+async function createRegKeySync(regKeyPath) {
+    return new Promise( (resolve, reject) => {
+        regedit.createKey([regKeyPath], (err) => {
+            if (err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                resolve({
+                    success: true,
+                    data: 'success'
+                })
+            }
+        })
+    })
+}
 
+async function createRegKeyValueSync(regKeyPath, regKeyName, content) {
+    return new Promise( (resolve, reject) => {
+        let value = {[regKeyPath]: { [regKeyName]: { value: content, type: 'REG_SZ'} },}
+        regedit.putValue(value, (err) => {
+            if (err) {
+                reject({
+                    success: false,
+                    data: err,
+                })
+            } else {
+                resolve({
+                    success: true,
+                    data: 'success'
+                })
+            }
+        })
+    })
+}
 
-let sn = machineIdSync()
-console.log(sn)
+(async () => {
+    try {
+        let regPath = "HKCU\\SOFTWARE\\fund-analysis"
+        let ret = await existRegKeyPath(regPath)
+        if (ret.success) {
+            console.log("exist")
+        } else {
+            console.log("not exist")
+            let ret = await createRegKeySync(regPath)
+            console.log(ret)
+        }
+        ret = await createRegKeyValueSync(regPath, 'license', "hahahaha")
+        console.log(ret)
+    } catch (e) {
+        console.log(e)
+    }
 
-let key = md5(sn + AppID)
-console.log(key)
-
-
-let content = "HVwhRrMXP9agF9vjR+TC/Z9LrIszZPq0mtMZhCG1p5N5m9qh2AeQ22e27taCl06YUMRVFq170FldE/LN76ghpBoZT+vrqvbjyHqScozOkMgPstobIBRTxYidQkJBXybhnn/tIOvVweWhMwNAtEXOKC/3kabqZPl1e2dDxtuuLzuonCVPOqRTZ6L7tAg7UKBtWe7jpatnWUiuYezOC/fFw9VURfrDDBzHJ+p6b+iEOV8="
-let s = decrypt256ByKey(content, key)
-console.log(s)
+})()

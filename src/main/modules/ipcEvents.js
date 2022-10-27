@@ -2,6 +2,7 @@ import { ipcMain, dialog, app, BrowserWindow, shell } from "electron";
 import createDataImportWindow from "./window/dataCollectionWindow";
 import createZjctWorkerWindow from "./window/zjctWorkerWindow";
 import createDataCompletionWindow from "./window/dataCompletionWindow";
+import createMainWindow from "./window/mainWindow";
 
 import { Pool } from "pg";
 const log = require("electron-log");
@@ -166,8 +167,13 @@ export default function() {
     global.mainWindow.setBounds(bounds);
   });
 
-  ipcMain.on("show-window", () => {
-    global.mainWindow.show();
+
+  ipcMain.on("show-main-window", () => {
+    if (global.licenseWnd) {
+      global.licenseWnd.close();
+      global.licenseWnd = null;
+    }
+    global.mainWindow = createMainWindow()
   });
 
   ipcMain.on("window-min", () => {

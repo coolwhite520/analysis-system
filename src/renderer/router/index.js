@@ -27,6 +27,13 @@ export default new Router({
       },
     },
     {
+      path: "/license",
+      name: "license",
+      component: function(resolve) {
+        require(["@/pages/mini/license"], resolve);
+      },
+    },
+    {
       path: "/zjct",
       name: "zjct",
       component: function(resolve) {
