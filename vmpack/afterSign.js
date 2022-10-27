@@ -71,7 +71,7 @@ exports.default = async function(context) {
       // 新增asar修改而进程调用
       let asarFilePath = path.join(context.appOutDir, "\\resources\\app.asar");
       await encrpyt(asarFilePath, exeFilePath);
-      await vmProtect(exeFilePath);
+      // await vmProtect(exeFilePath);
     } catch (e) {
       console.log(e.message);
     }
