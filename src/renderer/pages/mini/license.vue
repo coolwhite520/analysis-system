@@ -46,7 +46,7 @@
 
         </div>
         <div class="activate-area">
-          <el-button style="width: 49%"  @click="clickTryUse" :loading="loading">{{btnContent}}</el-button>
+          <el-button style="width: 49%"   :type="isLicenseValidate ? 'success': 'default'" @click="clickTryUse" >{{ isLicenseValidate ? '开始使用' : '试用' }}</el-button>
           <el-button  style="width: 49%"  type="primary"  @click="clickActivate" :loading="loading">激活</el-button>
         </div>
       </div>
@@ -62,6 +62,9 @@ const elementResizeDetectorMaker = require("element-resize-detector");
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showLicenseDialogVisible"]),
+    isLicenseValidate() {
+      return this.licenseInfo !== null;
+    }
   },
   data() {
     return {
@@ -72,7 +75,6 @@ export default {
       licenseInfo: null,
       inputLicensePath: "",
       sn: "",
-      btnContent: "试用",
     };
   },
   async mounted() {
@@ -80,7 +82,6 @@ export default {
     let ret = await license.validateLicense()
     if (ret.success) {
       this.licenseInfo = this.formatLicense(ret.data)
-      this.btnContent = "开始使用"
     }
   },
   methods: {
@@ -141,7 +142,6 @@ export default {
             type: "success",
             message: "激活成功"
           })
-          this.btnContent = "开始使用"
           this.loading = false;
         }
       }
