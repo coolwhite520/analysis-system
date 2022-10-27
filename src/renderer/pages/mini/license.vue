@@ -31,6 +31,9 @@
             <div><span class="info-title">授权有效期：</span>{{licenseInfo.use_time_span}}</div>
           </div>
         </template>
+        <template v-else>
+          <div class="activation-not">未激活</div>
+        </template>
       </div>
       <div>
         <div class="file-area">
@@ -43,7 +46,7 @@
 
         </div>
         <div class="activate-area">
-          <el-button style="width: 49%"  @click="clickTryUse" :loading="loading">试用</el-button>
+          <el-button style="width: 49%"  @click="clickTryUse" :loading="loading">{{btnContent}}</el-button>
           <el-button  style="width: 49%"  type="primary"  @click="clickActivate" :loading="loading">激活</el-button>
         </div>
       </div>
@@ -69,6 +72,7 @@ export default {
       licenseInfo: null,
       inputLicensePath: "",
       sn: "",
+      btnContent: "试用",
     };
   },
   async mounted() {
@@ -76,6 +80,7 @@ export default {
     let ret = await license.validateLicense()
     if (ret.success) {
       this.licenseInfo = this.formatLicense(ret.data)
+      this.btnContent = "开始使用"
     }
   },
   methods: {
@@ -136,6 +141,7 @@ export default {
             type: "success",
             message: "激活成功"
           })
+          this.btnContent = "开始使用"
           this.loading = false;
         }
       }
@@ -230,7 +236,11 @@ export default {
   flex-direction: column;
   justify-content: center;
 }
-
+.activation-not {
+  font-size: 30px;
+  text-align: center;
+  color: red;
+}
 .activation-info-content {
   font-size: 14px;
 }
