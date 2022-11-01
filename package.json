@@ -53,7 +53,7 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns",
+      "icon": "icons/icon.icns",
       "extraFiles": [
         "vendor/darwin",
         "vendor/base"
@@ -80,10 +80,10 @@
           ]
         }
       ],
-      "icon": "build/icons/icon.ico"
+      "icon": "icons/icon.ico"
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "icons"
     }
   },
   "dependencies": {

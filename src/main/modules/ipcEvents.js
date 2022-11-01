@@ -170,7 +170,7 @@ export default function() {
 
   ipcMain.on("show-main-window", () => {
     if (global.licenseWnd) {
-      global.licenseWnd.close();
+      global.licenseWnd.hide();
       global.licenseWnd = null;
     }
     global.mainWindow = createMainWindow()

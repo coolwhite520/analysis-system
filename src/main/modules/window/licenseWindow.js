@@ -1,4 +1,5 @@
-import { LOAD_URL } from "../../config";
+import {ACHEME, LOAD_URL} from "../../config";
+import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 const miniWinURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#license`
@@ -17,20 +18,19 @@ const createLicenseWindow = function(BrowserWindow) {
     skipTaskbar: false,
     resizable: process.env.NODE_ENV === "development",
     // transparent: process.platform !== "linux",
-    alwaysOnTop: false,
+    alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
-      nodeIntegrationInWorker: true,
-      backgroundThrottling: false,
       webSecurity: false,
+      enableRemoteModule: true,
     },
-
   };
 
   let licenseWindow = new BrowserWindow(obj);
+  // 必须调用创建scheme的协议函数，否则打包后通过路由的子页面会显示空白。
+  createProtocol(ACHEME);
 
   licenseWindow.loadURL(miniWinURL);
-
   licenseWindow.on("closed", () => {
     licenseWindow = null;
   });

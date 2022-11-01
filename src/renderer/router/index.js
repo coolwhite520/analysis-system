@@ -6,8 +6,15 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: "/",
-      name: "AnalysisView",
+      path: "/license",
+      name: "license",
+      component: function(resolve) {
+        require(["@/pages/mini/license"], resolve);
+      },
+    },
+    {
+      path: "/analysisView",
+      name: "analysisView",
       component: function(resolve) {
         require(["@/pages/AnalysisView"], resolve);
       },
@@ -24,13 +31,6 @@ export default new Router({
       name: "export",
       component: function(resolve) {
         require(["@/pages/mini/ExportView"], resolve);
-      },
-    },
-    {
-      path: "/license",
-      name: "license",
-      component: function(resolve) {
-        require(["@/pages/mini/license"], resolve);
       },
     },
     {

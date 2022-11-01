@@ -16,11 +16,13 @@ import fs from "fs";
 import path from "path";
 import { ACHEME } from "./config";
 import log from "electron-log";
+import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 const { URL } = require("url");
 
 protocol.registerSchemesAsPrivileged([
   { scheme: ACHEME, privileges: { secure: true, standard: true } },
 ]);
+
 
 function initEnvParams() {
   if (process.env.NODE_ENV !== "development") {

@@ -28,8 +28,8 @@ let mainWindow;
 
 const winURL =
     process.env.NODE_ENV === "development"
-        ? `http://localhost:9080/#/`
-        : `${LOAD_URL}`;
+        ? `http://localhost:9080/#analysisView`
+        : `${LOAD_URL}#analysisView`;
 
 // 通过main进程发送事件给renderer进程，提示更新信息
 function sendUpdateMessage(text) {

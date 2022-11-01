@@ -54,14 +54,12 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 import license from "@/utils/license"
 const { clipboard } = require("electron");
 const moment= require("moment");
 const elementResizeDetectorMaker = require("element-resize-detector");
 export default {
   computed: {
-    ...mapState("DialogPopWnd", ["showLicenseDialogVisible"]),
     isBtnDisabled() {
       return !!(this.licenseInfo && license.isExpiredLicense(this.licenseInfo));
     },
