@@ -1,7 +1,7 @@
 <template>
   <div class="license-container">
     <div class="title-bar">
-      <div class="title-logo"></div>
+      <div class="title-logo iconfont" style="font-size: 40px;margin-right: 10px;">&#xe66a;</div>
       <div class="title-detail">公安部第一研究所专版</div>
       <div class="title-close">
         <i class="iconfont" @click="clickCloseApp">&#xe634;</i>
@@ -20,15 +20,15 @@
         </div>
       </div>
       <div class="activation-info">
-        <template  v-if="licenseInfo">
+        <template  v-if="licenseFormatInfo">
           <div><b>授权详情：</b></div>
           <div class="activation-info-content">
-            <div><span class="info-title">授权版本：</span>{{licenseInfo.version}}</div>
-            <div><span class="info-title">被授权方：</span>{{licenseInfo.user_name}}</div>
-            <div><span class="info-title">授权发放日期：</span>{{licenseInfo.created_at}}</div>
-            <div><span class="info-title">激活日期：</span>{{licenseInfo.activate_at}}</div>
-            <div><span class="info-title">授权截止日期：</span>{{licenseInfo.expired_at}}</div>
-            <div><span class="info-title">授权有效期：</span>{{licenseInfo.use_time_span}}</div>
+            <div><span class="info-title">授权版本：</span>{{licenseFormatInfo.version}}</div>
+            <div><span class="info-title">被授权方：</span>{{licenseFormatInfo.user_name}}</div>
+            <div><span class="info-title">授权发放日期：</span>{{licenseFormatInfo.created_at}}</div>
+            <div><span class="info-title">激活日期：</span>{{licenseFormatInfo.activate_at}}</div>
+            <div><span class="info-title">授权截止日期：</span>{{licenseFormatInfo.expired_at}}</div>
+            <div><span class="info-title">授权有效期：</span>{{licenseFormatInfo.use_time_span}}</div>
           </div>
         </template>
         <template v-else>
@@ -46,7 +46,7 @@
 
         </div>
         <div class="activate-area">
-          <el-button style="width: 49%"   :type="isLicenseValidate ? 'success': 'default'" @click="clickTryUse" >{{ isLicenseValidate ? '开始使用' : '试用' }}</el-button>
+          <el-button style="width: 49%"   :type="btnType" @click="clickTryUse" :loading="loadingBtn" :disabled="isBtnDisabled">{{ btnContent }}</el-button>
           <el-button  style="width: 49%"  type="primary"  @click="clickActivate" :loading="loading">激活</el-button>
         </div>
       </div>
@@ -62,15 +62,67 @@ const elementResizeDetectorMaker = require("element-resize-detector");
 export default {
   computed: {
     ...mapState("DialogPopWnd", ["showLicenseDialogVisible"]),
-    isLicenseValidate() {
-      return this.licenseInfo !== null;
-    }
+    isBtnDisabled() {
+      return !!(this.licenseInfo && license.isExpiredLicense(this.licenseInfo));
+    },
+    btnType() {
+      if (this.licenseInfo === null) {
+        return "default"
+      } else {
+        if (!license.isExpiredLicense(this.licenseInfo)) {
+          if (license.isTryUseVersion(this.licenseInfo)) {
+            return "warning"
+          } else  {
+            return "success"
+          }
+        } else {
+          return "info"
+        }
+
+      }
+    },
+    btnContent() {
+      if (this.licenseInfo === null) {
+        return "开始试用"
+      } else {
+        if (!license.isExpiredLicense(this.licenseInfo)) {
+          if (license.isTryUseVersion(this.licenseInfo)) {
+            return "继续试用"
+          } else  {
+            return "开始使用"
+          }
+        } else {
+          return "授权到期"
+        }
+
+      }
+    },
+    licenseFormatInfo() {
+      if (!this.licenseInfo) return null;
+      const { use_time_span, user_name, created_at, mark, sn, activate_at } = this.licenseInfo;
+      let data = {}
+      data.user_name = user_name
+      data.mark = mark
+      data.sn = sn
+      let month = moment.duration(parseInt(use_time_span), "seconds").asMonths().toFixed()
+      if (!license.isTryUseVersion(this.licenseInfo)) {
+        data.version = '正式版'
+      } else {
+        data.version = '测试版'
+      }
+      data.use_time_span = month > 240 ? `永久` : `${month} 个月`
+      data.created_at = moment(created_at * 1000).format("YYYY-MM-DD HH:mm:ss")
+      data.activate_at = moment(activate_at * 1000).format("YYYY-MM-DD HH:mm:ss")
+      data.expired_at = moment((created_at + use_time_span) * 1000).format("YYYY-MM-DD HH:mm:ss")
+      return data;
+    },
   },
   data() {
     return {
       moment,
       title: "License",
       result: null,
+      loadingBtn: false,
       loading: false,
       licenseInfo: null,
       inputLicensePath: "",
@@ -79,9 +131,15 @@ export default {
   },
   async mounted() {
     this.sn = await license.getLocalMachineSn()
-    let ret = await license.validateLicense()
+    let ret = await license.getRegLicense()
+    console.log(ret)
     if (ret.success) {
-      this.licenseInfo = this.formatLicense(ret.data)
+      this.licenseInfo = ret.data;
+    } else {
+      this.$message({
+        type: "warning",
+        message: ret.data,
+      })
     }
   },
   methods: {
@@ -95,22 +153,52 @@ export default {
         });
       }
     },
-    formatLicense(data) {
-      const { use_time_span, user_name, created_at, mark, sn, activate_at } = data;
-      let month = moment.duration(parseInt(use_time_span), "seconds").asMonths().toFixed()
-      if (use_time_span >= 3600 * 24 * 30 * 12) {
-        data.version = '正式版'
-      } else {
-        data.version = '测试版'
+
+    async clickTryUse() {
+      // 写入试用授权
+      // 1. 判断是否存授权
+      try {
+        this.loadingBtn = true;
+        if (this.licenseInfo === null) {
+          let obj = {
+            use_time_span: moment.duration(3, "months").asSeconds(),
+            user_name: "试用用户",
+            created_at: new Date().getTime() / 1000,
+            mark: "试用",
+            sn: this.sn,
+          }
+          let ret = await license.writeLicenseToReg(obj)
+          if (!ret.success) {
+            this.$message({
+              type: "warning",
+              message: ret.data,
+            })
+          } else {
+            this.licenseInfo = ret.data
+            // 试用版本进入
+            setTimeout(()=> {
+              this.$electron.ipcRenderer.send("show-main-window")
+            }, 1000 * 2)
+          }
+        } else {
+          if (license.isExpiredLicense(this.licenseInfo)) {
+            this.$message({
+              type: "warning",
+              message: "授权已经过期",
+            })
+            this.loadingBtn = false;
+            return;
+          }
+          this.$electron.ipcRenderer.send("show-main-window")
+        }
+        this.loadingBtn = false;
+      }catch (e) {
+        this.$message({
+          type: "warning",
+          message: e,
+        })
+        this.loadingBtn = false;
       }
-      data.use_time_span = month > 240 ? `永久` : `${month} 个月`
-      data.created_at = moment(created_at * 1000).format("YYYY-MM-DD HH:mm:ss")
-      data.activate_at = moment(activate_at * 1000).format("YYYY-MM-DD HH:mm:ss")
-      data.expired_at = moment((created_at + use_time_span) * 1000).format("YYYY-MM-DD HH:mm:ss")
-      return data;
-    },
-    clickTryUse() {
-      this.$electron.ipcRenderer.send("show-main-window")
     },
     async clickActivate() {
       if (this.inputLicensePath === "") {
@@ -121,30 +209,40 @@ export default {
         return
       }
       this.loading = true;
-      let ret = await license.parseLicenseByPath(this.inputLicensePath)
-      if (!ret.success) {
-        this.$message({
-          type: "warning",
-          message: ret.data,
-        })
-        this.loading = false;
-      } else {
-        let result = await license.writeLicenseToReg(ret.data)
-        if (!result.success) {
+      try {
+        let ret = await license.parseLicenseByPath(this.inputLicensePath)
+        if (!ret.success) {
           this.$message({
             type: "warning",
-            message: result.data,
+            message: ret.data,
           })
           this.loading = false;
         } else {
-          this.licenseInfo = this.formatLicense(ret.data)
-          this.$message({
-            type: "success",
-            message: "激活成功"
-          })
-          this.loading = false;
+          ret = await license.writeLicenseToReg(ret.data)
+          if (!ret.success) {
+            this.$message({
+              type: "warning",
+              message: ret.data,
+            })
+            this.loading = false;
+          } else {
+            this.licenseInfo = ret.data;
+            this.$message({
+              type: "success",
+              message: "激活成功"
+            })
+            this.loading = false;
+          }
         }
+      } catch (e) {
+        this.$message({
+          type: "warning",
+          message: e.message
+        })
+        this.loading = false;
       }
+
+
 
     },
     clickMainPage() {

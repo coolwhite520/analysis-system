@@ -19,7 +19,6 @@
     </div>
     <dbconfig-view v-if="dbConfigVisible"></dbconfig-view>
     <await-task-view v-if="showAwaitTaskDialogVisible"></await-task-view>
-    <License v-if="showLicenseDialogVisible"></License>
   </div>
 </template>
 
@@ -35,7 +34,6 @@ import analysisSkeleton from "./analysisSkeleton.vue";
 // const MainPage = () => import("@/pages/main/MainPage");
 
 import { DbConfig } from "@/utils/config";
-import license from "@/utils/license"
 import SaveProjectView from "@/pages/dialog/save/SaveCurrentProject.vue";
 import levelDb from "../../level/leveldb";
 import { Pool, Client } from "pg";
@@ -47,9 +45,6 @@ const uuid = require("uuid");
 const screenshot = require("screenshot-desktop");
 import dbConfigView from "@/pages/dialog/dbconfig/dbconfigView";
 import awaitTaskView from "@/pages/dialog/awaitTask/awaitTaskDialog";
-
-import License from "./mini/license.vue";
-
 
 // const html2canvas = require("html2canvas");
 export default {
@@ -158,11 +153,6 @@ export default {
       }, 1000);
       console.log(e);
     }
-
-    let ret = await license.validateLicense()
-    if (!ret.success) {
-      this.$store.commit("DialogPopWnd/SET_SHOWLICENSEDIALOGVISIBLE", true)
-    }
   },
   data() {
     return {
@@ -185,7 +175,6 @@ export default {
     "analysis-skeleton": analysisSkeleton,
     "dbconfig-view": dbConfigView,
     "await-task-view": awaitTaskView,
-    License
   },
   computed: {
     ...mapState("AppPageSwitch", ["currentViewName"]),
@@ -195,7 +184,6 @@ export default {
       "showSaveProjectVisible",
       "dbConfigVisible",
       "showAwaitTaskDialogVisible",
-      "showLicenseDialogVisible"
     ]),
   },
   methods: {
