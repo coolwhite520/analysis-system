@@ -11,12 +11,13 @@ app.commandLine.appendSwitch("js-flags", "--max-old-space-size=8192");
 
 import initIpcEvent from "./modules/ipcEvents";
 import createLicenseWindow from "./modules/window/licenseWindow";
+import createMainWindow from "./modules/window/mainWindow";
 
 import fs from "fs";
 import path from "path";
 import { ACHEME } from "./config";
 import log from "electron-log";
-import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
+import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 const { URL } = require("url");
 
 protocol.registerSchemesAsPrivileged([
@@ -27,8 +28,8 @@ protocol.registerSchemesAsPrivileged([
 function initEnvParams() {
   if (process.env.NODE_ENV !== "development") {
     global.__static = require("path")
-        .join(__dirname, "/static")
-        .replace(/\\/g, "\\\\");
+      .join(__dirname, "/static")
+      .replace(/\\/g, "\\\\");
   }
 
   global.softVersion = require("../../package.json").version;
@@ -40,23 +41,23 @@ function initEnvParams() {
     urls: ["http://www.guabu.com/*"],
   };
   const userAgent =
-      "Mozilla/5.0 (X11; Linux x86_64)" +
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36";
+    "Mozilla/5.0 (X11; Linux x86_64)" +
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36";
   session.defaultSession.webRequest.onBeforeSendHeaders(
-      xxx_filter,
-      (details, callback) => {
-        const myURL = new URL(details.url);
-        details.requestHeaders["Referer"] = myURL.origin;
-        details.requestHeaders["User-Agent"] = userAgent;
-        callback({ requestHeaders: details.requestHeaders });
-      }
+    xxx_filter,
+    (details, callback) => {
+      const myURL = new URL(details.url);
+      details.requestHeaders["Referer"] = myURL.origin;
+      details.requestHeaders["User-Agent"] = userAgent;
+      callback({ requestHeaders: details.requestHeaders });
+    }
   );
   global.height = parseInt(screen.getPrimaryDisplay().workAreaSize.height);
 
   app.setName(appName);
   app.setPath(
-      "userData",
-      app.getPath("userData").replace(/Electron/i, appName)
+    "userData",
+    app.getPath("userData").replace(/Electron/i, appName)
   );
   let userDataPath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
   global.userDataPath = userDataPath;
@@ -76,9 +77,9 @@ function initEnvParams() {
   }
   global.resoreDbPath = resoreDbPath;
   global.vendorPath =
-      process.platform === "win32"
-          ? path.join(path.dirname(app.getPath("exe")), `vendor`)
-          : path.join(path.dirname(app.getPath("exe")), `../vendor`);
+    process.platform === "win32"
+      ? path.join(path.dirname(app.getPath("exe")), `vendor`)
+      : path.join(path.dirname(app.getPath("exe")), `../vendor`);
   global.windowSize = screen.getPrimaryDisplay().workAreaSize;
   global.widthDivHeight = global.windowSize.width / global.windowSize.height;
 }
@@ -86,15 +87,24 @@ function initEnvParams() {
 
 app.on("activate", () => {
   // global.mainWindow.show();
-  global.licenseWnd.show();
+  if (process.platform === "win32") {
+    global.licenseWnd.show();
+  } else {
+    global.mainWindow.show();
+  }
+
 });
 
 app.on("ready", () => {
   initEnvParams()
   initIpcEvent()
-  global.height = 500;
-  global.licenseWnd = createLicenseWindow(BrowserWindow);
+  if (process.platform === "win32") {
+    global.height = 500;
+    global.licenseWnd = createLicenseWindow(BrowserWindow);
 
+  } else {
+    global.mainWindow = createMainWindow(BrowserWindow);
+  }
 });
 
 app.on("window-all-closed", () => {
