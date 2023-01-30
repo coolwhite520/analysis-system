@@ -4,6 +4,7 @@ import axios from "axios";
 import App from "./App";
 import router from "./router";
 import store from "./store";
+import 'font-awesome/css/font-awesome.min.css'
 import ElementUI from "element-ui";
 import "./assets/theme/index.css";
 import "./assets/css/iconfont/iconfont.css";

@@ -184,8 +184,7 @@ export default {
     async getVisibleInfoByTid(tid, title) {
       let selectShowTypeValue = this.selectShowTypeValue;
       let selectDataTypeValue = this.selectDataTypeValue;
-      // let imgSrc = this.imgSrc;
-      let imgSrc = "&#xe635;"
+      let imgSrc = this.imgSrc;
       let {
         count,
         offset,

@@ -299,7 +299,7 @@ export default {
       currentRightNode: null,
       tempgraphicMoneySectionStrMd5: "",
       tempAllRowsStrMd5: "",
-      defaultImg: "&#xe635",
+      defaultImg: "/static/images/icons/银行卡.png",
     };
   },
   watch: {
@@ -973,11 +973,13 @@ export default {
             new go.Binding("stroke", "strokeColor").makeTwoWay()
           ),
           $(
-            go.TextBlock,
-            { name: "bkimg", font: 'icon iconfont' },
-            new go.Binding("text", "img", function (val) {
-              return val.trim();
-            }),
+            go.Picture,
+            {
+              width: 32,
+              height: 32,
+              name: "GRAPHPICTURE",
+            },
+            new go.Binding("source", "img").makeTwoWay()
           )
         ),
         $(
@@ -1540,7 +1542,7 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.img = "&#xe635";
+        node.img = "/static/images/icons/银行卡.png";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -1701,7 +1703,7 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.img = "&#xe635";
+        node.img = "/static/images/icons/银行卡.png";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -1787,7 +1789,7 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.img = "&#xe635";
+        node.img = "/static/images/icons/银行卡.png";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -2379,9 +2381,11 @@ export default {
         let { nodes, links } = this.makeData();
         console.log({ nodes, links });
         let gm = new go.GraphLinksModel(nodes, links);
+        console.log("gm is good")
         gm.linkKeyProperty = "panda";
         this.myDiagram.model = gm;
         this.onSwitchLayout({ graphid: this.graphid, layout: "grid" });
+        console.log("onSwitchLayout is good")
       }
       this.initLinkTemplate();
       this.initGroupTemplate();

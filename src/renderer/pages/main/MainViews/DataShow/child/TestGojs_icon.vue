@@ -1,96 +1,48 @@
 <template>
   <div>
-    <el-row
-      style="background-color: #fff; padding: 5px; border: 1px solid #dddfe5"
-    >
+    <el-row style="background-color: #fff; padding: 5px; border: 1px solid #dddfe5">
       <el-col :span="16" v-if="tableData.tableType !== 'emptyGraph'">
         <el-button-group>
-          <el-button
-            size="mini"
-            v-for="(item, index) of tableData.graphicMoneySectionList"
-            :key="item.id"
+          <el-button size="mini" v-for="(item, index) of tableData.graphicMoneySectionList" :key="item.id"
             :style="{ color: item.selected ? item.color : '#1e1e1e' }"
-            :icon="item.selected ? 'el-icon-success' : 'el-icon-error'"
-            @click="handleClickMoneySpan(item.id)"
-            >{{
-              calLabel(
-                item,
-                index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
-              )
-            }}</el-button
-          >
+            :icon="item.selected ? 'el-icon-success' : 'el-icon-error'" @click="handleClickMoneySpan(item.id)">{{
+  calLabel(
+    item,
+    index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
+)
+            }}</el-button>
         </el-button-group>
       </el-col>
       <el-col :span="2" v-if="tableData.tableType !== 'emptyGraph'">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="离散点显示开关(当一个节点没有任何的连接线称为离散节点)"
-          placement="top-start"
-          ><el-switch
-            v-model="bSpreadNodeSwitch"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            inactive-text="离散"
-            @change="handleChangeSpreadNodeValue"
-          >
+        <el-tooltip class="item" effect="dark" content="离散点显示开关(当一个节点没有任何的连接线称为离散节点)" placement="top-start"><el-switch
+            v-model="bSpreadNodeSwitch" active-color="#13ce66" inactive-color="#ff4949" inactive-text="离散"
+            @change="handleChangeSpreadNodeValue">
           </el-switch>
         </el-tooltip>
       </el-col>
       <el-col :span="2" v-if="tableData.tableType !== 'emptyGraph'">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          :content="switchButtonTip"
-          placement="top-start"
-          ><el-switch
-            v-model="bOpenLineWidth"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            inactive-text="线宽"
-          >
+        <el-tooltip class="item" effect="dark" :content="switchButtonTip" placement="top-start"><el-switch
+            v-model="bOpenLineWidth" active-color="#13ce66" inactive-color="#ff4949" inactive-text="线宽">
           </el-switch>
         </el-tooltip>
       </el-col>
       <el-col :span="1" v-if="tableData.tableType !== 'emptyGraph'">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="连接线条过滤设置"
-          placement="top-start"
-        >
-          <el-button
-            size="mini"
-            type="primary"
-            icon="el-icon-s-tools"
-            @click="handleClickSetting"
-            circle
-          ></el-button>
+        <el-tooltip class="item" effect="dark" content="连接线条过滤设置" placement="top-start">
+          <el-button size="mini" type="primary" icon="el-icon-s-tools" @click="handleClickSetting" circle></el-button>
         </el-tooltip>
       </el-col>
       <template v-if="tableData.tableType === 'emptyGraph'">
         <el-col :span="21"> &nbsp; </el-col>
       </template>
       <el-col :span="3">
-        <el-input
-          size="mini"
-          v-model="inputValue"
-          placeholder="关键字查询"
-        ></el-input>
+        <el-input size="mini" v-model="inputValue" placeholder="关键字查询"></el-input>
       </el-col>
     </el-row>
 
     <!-- <div :id="miniMapID" style="width:100px;"></div> -->
-    <div
-      v-loading="loading"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)"
-    >
-      <div
-        :id="graphid"
-        :style="{ height: limitHeight - 26 + 'px', width: '100%' }"
-      ></div>
+    <div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">
+      <div :id="graphid" :style="{ height: limitHeight - 26 + 'px', width: '100%' }"></div>
       <div :id="myOverviewDiv"></div>
       <div>
         <ul :id="contextMenuId" class="ctxmenu">
@@ -98,39 +50,23 @@
       <li id="copy" class="menu-item" onclick="cxcommand(event)">拷贝</li>
       <li id="paste" class="menu-item" onclick="cxcommand(event)">粘贴</li>
       <li id="delete" class="menu-item" onclick="cxcommand(event)">删除</li> -->
-          <li
-            :id="selectRelatedNodesId"
-            class="menu-item"
-            @click="cxcommand('selectRelatedNodes')"
-          >
+          <li :id="selectRelatedNodesId" class="menu-item" @click="cxcommand('selectRelatedNodes')">
             选中关联节点
           </li>
           <li :id="unGroupId" class="menu-item" @click="cxcommand('unGroup')">
             解体当前分组
           </li>
-          <li
-            :id="makeGroupId"
-            class="menu-item"
-            @click="cxcommand('makeGroup')"
-          >
+          <li :id="makeGroupId" class="menu-item" @click="cxcommand('makeGroup')">
             合并选中实体
           </li>
-          <li
-            :id="removeFromGroupId"
-            class="menu-item"
-            @click="cxcommand('removeFromGroup')"
-          >
+          <li :id="removeFromGroupId" class="menu-item" @click="cxcommand('removeFromGroup')">
             从分组移除
           </li>
           <li :id="addToGroupId" class="menu-item">
             添加到分组
             <ul class="ctxmenu">
-              <li
-                v-for="(item, index) in allGroupList"
-                :key="index"
-                class="menu-item"
-                @click="cxcommand('addToGroup', item)"
-              >
+              <li v-for="(item, index) in allGroupList" :key="index" class="menu-item"
+                @click="cxcommand('addToGroup', item)">
                 {{ item.text }}
               </li>
             </ul>
@@ -139,13 +75,11 @@
       </div>
       <!-- <el-button @click="handleClickTest">双向绑定</el-button> -->
     </div>
-    <el-row
-      style="
+    <el-row style="
         background-color: #f5f7fa;
         border: 1px solid #dddfe5;
         font-size: 10px;
-      "
-    >
+      ">
       <el-col :span="3">
         <div class="tips">
           实体数量：
@@ -167,73 +101,30 @@
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5">&nbsp;</el-col>
       <el-col :span="5" style="text-align: right">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          :content="
-            !enableDragCavans
-              ? '点击可拖拽画布(也可双击空白画布进行切换)'
-              : '点击可框选节点(也可双击空白画布进行切换)'
-          "
-          placement="top-start"
-        >
-          <el-button
-            type="text"
-            size="mini"
-            class="iconfont"
-            style="padding-left: 10px; border-left: 1px solid #dddfe5"
-            @click="handleClickSwitchDragCavans"
-            >{{ enableDragCavans ? "&#xe642;" : "&#xe625;" }}</el-button
-          >
+        <el-tooltip class="item" effect="dark" :content="
+          !enableDragCavans
+            ? '点击可拖拽画布(也可双击空白画布进行切换)'
+            : '点击可框选节点(也可双击空白画布进行切换)'
+        " placement="top-start">
+          <el-button type="text" size="mini" class="iconfont" style="padding-left: 10px; border-left: 1px solid #dddfe5"
+            @click="handleClickSwitchDragCavans">{{ enableDragCavans? "&#xe642;": "&#xe625;" }}</el-button>
         </el-tooltip>
-        <el-button
-          type="text"
-          size="mini"
-          class="iconfont"
-          style="padding: 0"
-          @click="handleClickEnlarge"
-          >&#xe622;</el-button
-        >
-        <el-button
-          type="text"
-          size="mini"
-          class="iconfont"
-          style="padding: 0"
-          @click="handleClickReduce"
-          >&#xe623;</el-button
-        >
-        <el-button
-          type="text"
-          size="mini"
-          class="iconfont"
-          style="padding: 0"
-          @click="handleClickLocation"
-          >&#xe649;</el-button
-        >
-        <el-button
-          type="text"
-          size="mini"
-          class="iconfont"
-          style="margin-right: 10px"
-          @click="handleClickFullScreen"
-          >{{ !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button
-        >
+        <el-button type="text" size="mini" class="iconfont" style="padding: 0"
+          @click="handleClickEnlarge">&#xe622;</el-button>
+        <el-button type="text" size="mini" class="iconfont" style="padding: 0"
+          @click="handleClickReduce">&#xe623;</el-button>
+        <el-button type="text" size="mini" class="iconfont" style="padding: 0"
+          @click="handleClickLocation">&#xe649;</el-button>
+        <el-button type="text" size="mini" class="iconfont" style="margin-right: 10px" @click="handleClickFullScreen">{{
+        !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button>
       </el-col>
     </el-row>
     <graphic-setting v-if="graphicSettingVisible"></graphic-setting>
 
     <!-- 连接两个节点 -->
     <div v-if="showLinkNodeDialog">
-      <el-dialog
-        v-dialogDrag
-        :close-on-click-modal="false"
-        class="standard-data-dialog"
-        :append-to-body="true"
-        :visible="showLinkNodeDialog"
-        width="25%"
-        @close="handleClose"
-        :modal="true"
-      >
+      <el-dialog v-dialogDrag :close-on-click-modal="false" class="standard-data-dialog" :append-to-body="true"
+        :visible="showLinkNodeDialog" width="25%" @close="handleClose" :modal="true">
         <div slot="title" class="dialog-title">
           <i class="iconfont" style="color: white; font-size: 30px">&#xe752;</i>
           <span class="title-text" style="color: white">创建连接</span>
@@ -246,50 +137,27 @@
             源节点：<span style="color: green">{{ sourceNodeData.text }}</span>
           </div>
           <div style="text-align: center">
-            <el-button type="text" @click="handleClickSwitch"
-              ><span class="iconfont" style="font-size: 40px"
-                >&#xe648;</span
-              ></el-button
-            >
+            <el-button type="text" @click="handleClickSwitch"><span class="iconfont"
+                style="font-size: 40px">&#xe648;</span></el-button>
           </div>
           <div>
             目标节点：<span style="color: #f29c38">{{ desNodeData.text }}</span>
           </div>
         </div>
         <div>
-          请输入交易金额：&nbsp;&nbsp;&nbsp;<el-input-number
-            :precision="2"
-            :step="0.1"
-            style="margin-top: 10px; width: 50%"
-            ref="inputName"
-            size="mini"
-            v-model="inputNewLinkJe"
-            placeholder="请输入交易金额"
-          ></el-input-number>
+          请输入交易金额：&nbsp;&nbsp;&nbsp;<el-input-number :precision="2" :step="0.1" style="margin-top: 10px; width: 50%"
+            ref="inputName" size="mini" v-model="inputNewLinkJe" placeholder="请输入交易金额"></el-input-number>
         </div>
         <div>
           请输入交易笔数：&nbsp;&nbsp;
-          <el-input-number
-            style="margin-top: 10px; width: 50%"
-            ref="inputName"
-            size="mini"
-            v-model="inputNewLinkBs"
-            placeholder="请输入交易笔数"
-          ></el-input-number>
+          <el-input-number style="margin-top: 10px; width: 50%" ref="inputName" size="mini" v-model="inputNewLinkBs"
+            placeholder="请输入交易笔数"></el-input-number>
         </div>
 
         <el-row style="margin-top: 20px; text-align: center">
-          <el-button @click="handleClose" size="mini" style="width: 30%"
-            >取消</el-button
-          >
+          <el-button @click="handleClose" size="mini" style="width: 30%">取消</el-button>
 
-          <el-button
-            @click="handleClickSureLink"
-            size="mini"
-            style="width: 30%"
-            type="primary"
-            >确定</el-button
-          >
+          <el-button @click="handleClickSureLink" size="mini" style="width: 30%" type="primary">确定</el-button>
         </el-row>
       </el-dialog>
     </div>
@@ -389,7 +257,7 @@ ParallelRouteLink.prototype.computePoints = function () {
 
 export default {
   props: ["tableData", "limitHeight"],
-  created() {},
+  created() { },
   data() {
     return {
       currentGraphData: null,
@@ -431,7 +299,7 @@ export default {
       currentRightNode: null,
       tempgraphicMoneySectionStrMd5: "",
       tempAllRowsStrMd5: "",
-      defaultImg: "/static/images/icons/银行卡.png",
+      defaultImg: "&#xe635",
     };
   },
   watch: {
@@ -678,6 +546,7 @@ export default {
         });
         this.myDiagram.commitTransaction("strokeWidth");
       }
+      console.log("freshLinkWidth")
     },
     handleClickSwitchDragCavans() {
       this.enableDragCavans = !this.enableDragCavans;
@@ -1105,13 +974,11 @@ export default {
             new go.Binding("stroke", "strokeColor").makeTwoWay()
           ),
           $(
-            go.Picture,
-            {
-              width: 32,
-              height: 32,
-              name: "GRAPHPICTURE",
-            },
-            new go.Binding("source", "img").makeTwoWay()
+            go.TextBlock,
+            { text: '\uf09d', font: '14pt FontAwesome', textAlign: "center", margin: 3 }
+            // new go.Binding("text", "img", function (val) {
+            //   return val.trim();
+            // }),
           )
         ),
         $(
@@ -1674,7 +1541,7 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.img = "/static/images/icons/银行卡.png";
+        node.img = "&#xe635";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -1761,11 +1628,11 @@ export default {
       this.tableData.allrows.forEach((row) => {
         let jymc =
           row[
-            `${this.tableData.selectCondition.SelectThType.ThId.toLowerCase()}`
+          `${this.tableData.selectCondition.SelectThType.ThId.toLowerCase()}`
           ];
         let jydfmc =
           row[
-            `${this.tableData.selectCondition.SelectThType.DsThId.toLowerCase()}`
+          `${this.tableData.selectCondition.SelectThType.DsThId.toLowerCase()}`
           ];
         let czje = parseFloat(row["czje"]);
         let czbs = parseInt(row["czbs"]);
@@ -1835,7 +1702,7 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.img = "/static/images/icons/银行卡.png";
+        node.img = "&#xe635";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -1921,7 +1788,7 @@ export default {
         }
       });
       nodes.forEach((node) => {
-        node.img = "/static/images/icons/银行卡.png";
+        node.img = "&#xe635";
         node.bkColor = this.defaultNodeFillColor;
         node.strokeColor = this.defaultNodeStrokeColor;
         node.nodeTextColor = this.defaultNodeTextColor;
@@ -2513,9 +2380,11 @@ export default {
         let { nodes, links } = this.makeData();
         console.log({ nodes, links });
         let gm = new go.GraphLinksModel(nodes, links);
+        console.log("gm is good")
         gm.linkKeyProperty = "panda";
         this.myDiagram.model = gm;
         this.onSwitchLayout({ graphid: this.graphid, layout: "grid" });
+        console.log("onSwitchLayout is good")
       }
       this.initLinkTemplate();
       this.initGroupTemplate();
@@ -3051,6 +2920,7 @@ export default {
   box-shadow: 5px 5px 10px 5px #b6b6bb,
     -5px 5px 5px 5px rgba(255, 255, 255, 0.5);
 }
+
 .menu-item {
   display: block;
   position: relative;
@@ -3060,6 +2930,7 @@ export default {
   font: bold 12px sans-serif;
   color: rgba(0, 0, 0, 0.87);
 }
+
 .menu-item::before {
   position: absolute;
   top: 0;
@@ -3071,18 +2942,22 @@ export default {
   height: 100%;
   background-color: #000000;
 }
+
 .menu-item:hover::before {
   opacity: 0.04;
 }
+
 .menu .menu {
   top: -8px;
   left: 100%;
 }
+
 .show-menu,
 .menu-item:hover .ctxmenu {
   display: block;
   opacity: 1;
 }
+
 .tips {
   font-size: 10px;
   margin-top: 7px;
