@@ -61,7 +61,7 @@ function initEnvParams() {
   );
   let userDataPath = app.getPath("userData"); // 防止覆盖安装的时候丢失数据
   global.userDataPath = userDataPath;
-
+  console.log(userDataPath);
   // 初始化config路径
   let configPath = require("path").join(userDataPath, "config");
   log.info(configPath);

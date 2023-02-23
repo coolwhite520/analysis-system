@@ -13,7 +13,7 @@
 
     <div style="height: 20px"></div>
     <div class="state-bar">
-      <el-row v-if=" exportProcessVisible">
+      <el-row v-if="exportProcessVisible">
         <el-progress v-if="percentage" :percentage="percentage" :color="customColor"></el-progress>
       </el-row>
     </div>

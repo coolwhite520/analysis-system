@@ -6,10 +6,10 @@
           <el-button size="mini" v-for="(item, index) of tableData.graphicMoneySectionList" :key="item.id"
             :style="{ color: item.selected ? item.color : '#1e1e1e' }"
             :icon="item.selected ? 'el-icon-success' : 'el-icon-error'" @click="handleClickMoneySpan(item.id)">{{
-  calLabel(
-    item,
-    index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
-)
+              calLabel(
+                item,
+                index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
+              )
             }}</el-button>
         </el-button-group>
       </el-col>
@@ -76,10 +76,10 @@
       <!-- <el-button @click="handleClickTest">双向绑定</el-button> -->
     </div>
     <el-row style="
-        background-color: #f5f7fa;
-        border: 1px solid #dddfe5;
-        font-size: 10px;
-      ">
+                                                background-color: #f5f7fa;
+                                                border: 1px solid #dddfe5;
+                                                font-size: 10px;
+                                              ">
       <el-col :span="3">
         <div class="tips">
           实体数量：
@@ -107,7 +107,7 @@
             : '点击可框选节点(也可双击空白画布进行切换)'
         " placement="top-start">
           <el-button type="text" size="mini" class="iconfont" style="padding-left: 10px; border-left: 1px solid #dddfe5"
-            @click="handleClickSwitchDragCavans">{{ enableDragCavans? "&#xe642;": "&#xe625;" }}</el-button>
+            @click="handleClickSwitchDragCavans">{{ enableDragCavans ? "&#xe642;" : "&#xe625;" }}</el-button>
         </el-tooltip>
         <el-button type="text" size="mini" class="iconfont" style="padding: 0"
           @click="handleClickEnlarge">&#xe622;</el-button>
@@ -116,7 +116,7 @@
         <el-button type="text" size="mini" class="iconfont" style="padding: 0"
           @click="handleClickLocation">&#xe649;</el-button>
         <el-button type="text" size="mini" class="iconfont" style="margin-right: 10px" @click="handleClickFullScreen">{{
-        !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button>
+          !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button>
       </el-col>
     </el-row>
     <graphic-setting v-if="graphicSettingVisible"></graphic-setting>
@@ -181,6 +181,10 @@ import { mapState } from "vuex";
 import { Decimal } from "decimal.js";
 import Tools from "./findDisTools/tools";
 import GraphicSetting from "@/pages/dialog/graphicsetting/graphicSettingDialog";
+
+var url = 'http://localhost:1234/v1/';
+
+
 const uuid = require("uuid");
 const md5 = require("md5-node");
 const elementResizeDetectorMaker = require("element-resize-detector");
@@ -2366,36 +2370,7 @@ export default {
       this.myDiagram.commandHandler.zoomToFit();
       this.$store.commit("ShowTable/SWITCH_GRAPH_LAYOUT_TYPE", layout);
     },
-    init() {
-      this.tempgraphicMoneySectionStrMd5 = md5(
-        JSON.stringify(this.tableData.graphicMoneySectionList)
-      );
-      this.initDiagram();
-      this.initOverView();
-      this.initNodeTemplate();
-      if (this.tableData.hasOwnProperty("relationGraphData")) {
-        this.myDiagram.model = go.Model.fromJson(
-          this.tableData.relationGraphData
-        );
-      } else {
-        let { nodes, links } = this.makeData();
-        console.log({ nodes, links });
-        let gm = new go.GraphLinksModel(nodes, links);
-        console.log("gm is good")
-        gm.linkKeyProperty = "panda";
-        this.myDiagram.model = gm;
-        this.onSwitchLayout({ graphid: this.graphid, layout: "grid" });
-        console.log("onSwitchLayout is good")
-      }
-      this.initLinkTemplate();
-      this.initGroupTemplate();
-      this.freshSpreadNodes();
-      this.switchAllowScroll();
-      this.myDiagram.commandHandler.zoomToFit();
-      this.allNodesToFront();
-      this.updateEntityList();
-      console.log("init completed...");
-    },
+
 
     makeDataVisible() {
       switch (this.tableData.tid) {
@@ -2428,15 +2403,15 @@ export default {
         let jyzbs = parseInt(row["jyzbs"]);
         let jczce = parseFloat(row["jczce"]);
         let data1 = {
-          key: jymc + "\n" + jyzjhm,
+          key: (jymc + "\n" + jyzjhm).trim(),
           name: jymc,
-          text: jymc + "\n" + jyzjhm,
+          text: (jymc + "\n" + jyzjhm).trim(),
           tid: this.tableData.tid, //tableid
         };
         let data2 = {
-          key: jydfmc + "\n" + jydfzjhm,
+          key: (jydfmc + "\n" + jydfzjhm).trim(),
           name: jydfmc,
-          text: jydfmc + "\n" + jydfzjhm,
+          text: (jydfmc + "\n" + jydfzjhm).trim(),
           tid: this.tableData.tid,
         };
         let bFindData1 = false;
@@ -2463,8 +2438,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(czje);
             let link1 = {
               tid: this.tableData.tid,
-              from: jymc + "\n" + jyzjhm,
-              to: jydfmc + "\n" + jydfzjhm,
+              from: (jymc + "\n" + jyzjhm).trim(),
+              to: (jydfmc + "\n" + jydfzjhm).trim(),
               je: czje,
               bs: czbs,
               text: `${czje}元（${czbs}笔）`,
@@ -2476,8 +2451,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(jzje);
             let link2 = {
               tid: this.tableData.tid,
-              from: jydfmc + "\n" + jydfzjhm,
-              to: jymc + "\n" + jyzjhm,
+              from: (jydfmc + "\n" + jydfzjhm).trim(),
+              to: (jymc + "\n" + jyzjhm).trim(),
               je: jzje,
               bs: jzbs,
               text: `${jzje}元（${jzbs}笔）`,
@@ -2490,8 +2465,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(jczce);
             let link2 = {
               tid: this.tableData.tid,
-              from: jydfmc + "\n" + jydfzjhm,
-              to: jymc + "\n" + jyzjhm,
+              from: (jydfmc + "\n" + jydfzjhm).trim(),
+              to: (jymc + "\n" + jyzjhm).trim(),
               je: jczce,
               bs: jyzbs,
               text: `净${jczce}元（${jyzbs}笔）`,
@@ -2638,17 +2613,17 @@ export default {
         let jczce = parseFloat(row["jczce"]); // 进出帐差额
         let data1 = {
           tid: this.tableData.tid,
-          key: cxkh + "\n" + jymc,
+          key: (cxkh + "\n" + jymc).trim(),
           kh: cxkh,
           name: jymc,
-          text: cxkh + "\n" + jymc,
+          text: (cxkh + "\n" + jymc).trim(),
         };
         let data2 = {
           tid: this.tableData.tid,
-          key: jydfzkh + "\n" + jydfmc,
+          key: (jydfzkh + "\n" + jydfmc).trim(),
           kh: jydfzkh,
           name: jydfmc,
-          text: jydfzkh + "\n" + jydfmc,
+          text: (jydfzkh + "\n" + jydfmc).trim(),
         };
         let bFindData1 = false;
         let bFindData2 = false;
@@ -2677,8 +2652,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(czje);
             let link1 = {
               tid: this.tableData.tid,
-              from: cxkh + "\n" + jymc,
-              to: jydfzkh + "\n" + jydfmc,
+              from: (cxkh + "\n" + jymc).trim(),
+              to: (jydfzkh + "\n" + jydfmc).trim(),
               je: czje,
               bs: czbs,
               text: `${czje}元（${czbs}笔）`,
@@ -2690,8 +2665,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(jzje);
             let link2 = {
               tid: this.tableData.tid,
-              from: jydfzkh + "\n" + jydfmc,
-              to: cxkh + "\n" + jymc,
+              from: (jydfzkh + "\n" + jydfmc).trim(),
+              to: (cxkh + "\n" + jymc).trim(),
               je: jzje,
               bs: jzbs,
               text: `${jzje}元（${jzbs}笔）`,
@@ -2704,8 +2679,8 @@ export default {
             let lineColor = this.calculateLineColorByJinE(jczce);
             let link1 = {
               tid: this.tableData.tid,
-              from: cxkh + "\n" + jymc,
-              to: jydfzkh + "\n" + jydfmc,
+              from: (cxkh + "\n" + jymc).trim(),
+              to: (jydfzkh + "\n" + jydfmc).trim(),
               je: jczce,
               bs: jyzbs,
               text: `净${jczce}元（${jyzbs}笔）`,
@@ -2868,42 +2843,210 @@ export default {
           break;
       }
     },
-  },
-  mounted() {
-    this.init();
-    const erd = elementResizeDetectorMaker();
-    erd.listenTo(document.getElementById(this.graphid), (element) => {
-      if (this.myDiagram) {
-        setTimeout(() => {
-          this.myDiagram.commandHandler.zoomToFit();
-        }, 100);
+    async postNetwork(collection, title, layout, cytoscapeNetwork) {
+      let _this = this;
+      var postNetworkUrl = url + 'fundAnalysis?title=' + title + "&collection=" + collection + "&layout=" + layout;
+      var options = {
+        url: postNetworkUrl,
+        headers: { 'Content-Type': 'application/json' },
+        // json: true,
+        body: JSON.stringify(cytoscapeNetwork)
+      };
+      return await this.$axios.post(postNetworkUrl, cytoscapeNetwork);
+    },
+    async applyLayout(suid, layout) {
+      // Apply layout
+      try {
+        let reqUrl = url + `apply/layouts/${layout}/` + suid;
+        return await this.$axios.get(reqUrl);
+      } catch (error) {
+        console.error(error);
       }
-    });
-    // node节点状态更新监听, 针对entitylist组件中鼠标移动进行图表中node的状态更新
-    this.$bus.$on("updateNodeState", this.onUpdateNodesState);
-    // 监听右侧菜单中点击table中的每个实体消息
-    this.$bus.$on("clickEntityRow", this.onClickNode);
-    // 设置链接信息
-    this.$bus.$on("linkInfoSetting", this.onLinkInfoSetting);
-    this.$bus.$on("nodeStyleSetting", this.onNodeStyleSetting);
-    // 图表导出到图片
-    this.$bus.$on("exportPicture", this.OnSavePicture);
-    //保存当前图表数据
-    this.$bus.$on("saveGraphData", this.onSaveGraphData);
-    this.$bus.$on("findShortLink", this.onFindShortLink);
-    // 基本操作
-    this.$bus.$on("normalOperation", this.normalOperation);
-    // 新建操作
-    this.$bus.$on("newBuildObject", this.onNewBuildObject);
+    },
+    async applyStyle(suid) {
+      let styles = [
+        "default black",
+        "Minimal",
+        "default",
+        "Big Labels",
+        "Ripple",
+        "PSIMI 25 Style",
+        "Nested Network Style",
+        "Universe",
+        "BioPAX",
+        "Directed",
+        "Solid",
+        "Sample1",
+        "BioPAX_SIF"
+      ];
+      try {
+        let reqUrl = url + `apply/styles/${encodeURIComponent(styles[12])}/` + suid;
+        return await this.$axios.get(reqUrl);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getBase64(imgUrl) {
+      return new Promise((resovle, reject) => {
+        if (imgUrl === "") resovle("");
+        window.URL = window.URL || window.webkitURL;
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", imgUrl, true);
+        xhr.responseType = "blob";
+        xhr.onload = function () {
+          if (this.status == 200) {
+            //得到一个blob对象
+            var blob = this.response;
+            console.log("blob", blob)
+            // 至关重要
+            let oFileReader = new FileReader();
+            oFileReader.onloadend = function (e) {
+              // 此处拿到的已经是base64的图片了,可以赋值做相应的处理
+              resovle(e.target.result)
+            }
+            oFileReader.readAsDataURL(blob);
+          }
+        }
+        xhr.send();
+      })
+    },
+    async loadCytoscape() {
+      let { nodes, links } = this.makeData();
+      let layouts = [
+        "attribute-circle",
+        "stacked-node-layout",
+        "attribute-grid",
+        "degree-circle",
+        "circular",
+        "attributes-layout",
+        "kamada-kawai",
+        "force-directed",
+        "cose",
+        "grid",
+        "hierarchical",
+        "fruchterman-rheingold",
+        "isom",
+        "force-directed-cl"
+      ]
+      console.log(nodes)
+      let base64png = ""
+      nodes = nodes.map((item) => {
+        base64png = item.img;
+        return {
+          data: {
+            id: item.key,
+            selected: false,
+            label: item.text
+          }
+        }
+      })
+      links = links.map((item) => {
+        return {
+          data: {
+            source: item.from,
+            target: item.to,
+            je: item.jd,
+            bs: item.bs,
+            label: item.text
+          }
+        }
+      })
+      base64png = await this.getBase64(base64png);
+      console.log(base64png)
+      let netWorkData = {
+        elements: {
+          nodes,
+          edges: links
+        },
+        base64png,
+      }
 
-    // 布局切换监听
-    this.$bus.$on("swichNormalLayout", this.onSwitchLayout);
-    this.myDiagram.addDiagramListener("ClipboardChanged", function (e) {
-      console.log(e);
-    });
-    this.myDiagram.addDiagramListener("LayoutCompleted", (e) => {
-      this.myDiagram.layout.isOngoing = false;
-    });
+      let layout = "force-directed-cl"
+      let ret = await this.postNetwork("资金分析" + uuid.v1(), "资金分析" + uuid.v1(), layout, netWorkData);
+      console.log(ret)
+      let suid = ret.data.networkSUID;
+
+      // for (let layout of layouts) {
+
+      //   let ret = await this.postNetwork("资金分析", layout, layout, netWorkData);
+      //   console.log(ret)
+      //   let suid = ret.data.networkSUID;
+
+      //   // await this.applyStyle(suid, "NDEx default style v2-Style-2")
+      //   // await this.applyLayout(suid, layout)
+      //   // break
+      // }
+
+
+    },
+    init() {
+      this.tempgraphicMoneySectionStrMd5 = md5(
+        JSON.stringify(this.tableData.graphicMoneySectionList)
+      );
+      this.initDiagram();
+      this.initOverView();
+      this.initNodeTemplate();
+      if (this.tableData.hasOwnProperty("relationGraphData")) {
+        this.myDiagram.model = go.Model.fromJson(
+          this.tableData.relationGraphData
+        );
+      } else {
+        let { nodes, links } = this.makeData();
+        console.log({ nodes, links });
+        let gm = new go.GraphLinksModel(nodes, links);
+        console.log("gm is good")
+        gm.linkKeyProperty = "panda";
+        this.myDiagram.model = gm;
+        this.onSwitchLayout({ graphid: this.graphid, layout: "grid" });
+        console.log("onSwitchLayout is good")
+      }
+      this.initLinkTemplate();
+      this.initGroupTemplate();
+      this.freshSpreadNodes();
+      this.switchAllowScroll();
+      this.myDiagram.commandHandler.zoomToFit();
+      this.allNodesToFront();
+      this.updateEntityList();
+      console.log("init completed...");
+
+      const erd = elementResizeDetectorMaker();
+      erd.listenTo(document.getElementById(this.graphid), (element) => {
+        if (this.myDiagram) {
+          setTimeout(() => {
+            this.myDiagram.commandHandler.zoomToFit();
+          }, 100);
+        }
+      });
+      // node节点状态更新监听, 针对entitylist组件中鼠标移动进行图表中node的状态更新
+      this.$bus.$on("updateNodeState", this.onUpdateNodesState);
+      // 监听右侧菜单中点击table中的每个实体消息
+      this.$bus.$on("clickEntityRow", this.onClickNode);
+      // 设置链接信息
+      this.$bus.$on("linkInfoSetting", this.onLinkInfoSetting);
+      this.$bus.$on("nodeStyleSetting", this.onNodeStyleSetting);
+      // 图表导出到图片
+      this.$bus.$on("exportPicture", this.OnSavePicture);
+      //保存当前图表数据
+      this.$bus.$on("saveGraphData", this.onSaveGraphData);
+      this.$bus.$on("findShortLink", this.onFindShortLink);
+      // 基本操作
+      this.$bus.$on("normalOperation", this.normalOperation);
+      // 新建操作
+      this.$bus.$on("newBuildObject", this.onNewBuildObject);
+
+      // 布局切换监听
+      this.$bus.$on("swichNormalLayout", this.onSwitchLayout);
+      this.myDiagram.addDiagramListener("ClipboardChanged", function (e) {
+        console.log(e);
+      });
+      this.myDiagram.addDiagramListener("LayoutCompleted", (e) => {
+        this.myDiagram.layout.isOngoing = false;
+      });
+    },
+  },
+  async mounted() {
+    // this.init();
+    await this.loadCytoscape();
   },
 };
 </script>
