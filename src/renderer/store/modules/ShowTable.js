@@ -18,9 +18,19 @@ const state = {
   loadingShowData: false,
   currentTableData: null,
   pageIndex: "0", //为每个进来的table分配一个id，作为tab的标记
+  showWhichUiDialogVisible: false,
+  graphicTableData: null,
 };
 
 const mutations = {
+
+  SET_SHOWWHICHUIDIALOGVISIBLE(state, showWhichUiDialogVisible) {
+    state.showWhichUiDialogVisible = showWhichUiDialogVisible;
+  },
+  SET_GRAPHICTABLEDATA(state, graphicTableData) {
+    state.graphicTableData = graphicTableData;
+  },
+
   SWITCH_ISSHOWRIGHTSLIDER(state) {
     let newState = !state.currentTableData.isShowRightSlider;
     console.log("isShowRightSlider:", newState);
@@ -765,7 +775,13 @@ const actions = {
             componentName: "model-view",
           });
         }
-        commit("ADD_TABLE_DATA_TO_LIST", obj);
+        if (showType === 3 && allrows.length > 200) {
+          commit("SET_SHOWWHICHUIDIALOGVISIBLE", true);
+          commit("SET_GRAPHICTABLEDATA", obj);
+        } else {
+          obj.showNetwork = true;
+          commit("ADD_TABLE_DATA_TO_LIST", obj);
+        }
       }
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
@@ -848,6 +864,7 @@ const actions = {
       commit("ADD_TABLE_DATA_TO_LIST", obj);
     }
   },
+
   // 点击表格中的link跳转的页面查询, 每次点击link的时候需要传递当前页面的modelFilterStr;
   async showLinkTable(
     { commit, state, dispatch },
@@ -1050,7 +1067,14 @@ const actions = {
           selectDataTypeValue,
           imgSrc,
         };
-        commit("ADD_TABLE_DATA_TO_LIST", obj);
+
+        if (allrows.length > 200) {
+          commit("SET_SHOWWHICHUIDIALOGVISIBLE", true);
+          commit("SET_GRAPHICTABLEDATA", obj);
+        } else {
+          obj.showNetwork = true;
+          commit("ADD_TABLE_DATA_TO_LIST", obj);
+        }
       }
       commit("SET_LOADINGSHOWDATA_STATE", false);
     } else {
@@ -1060,7 +1084,7 @@ const actions = {
   },
 
 
-  
+
   // 资金用途模型表数据
   async showZjYtPieTable(
     { commit },

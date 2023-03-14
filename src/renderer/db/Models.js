@@ -84,7 +84,7 @@ function CA_PageItem() {
 // 获取案件相关的内容
 export default {
   // 查询当前tid对应的模型库model_mids , product_code（不同产品进行区分模型）
-  QueryModelmidsByTid: async function(tid) {
+  QueryModelmidsByTid: async function (tid) {
     const client = await global.pool.connect();
     try {
       let sql = ` SELECT model_mids,product_code FROM icap_base.layout_menu_model where length(model_mids)>0 and menu_tid='${tid}' and product_code='200'`;
@@ -95,7 +95,7 @@ export default {
     }
   },
   // 根据模型库获取模型大列表
-  QueryModelListByMids: async function(mids) {
+  QueryModelListByMids: async function (mids) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
@@ -107,7 +107,7 @@ export default {
     }
   },
   // 根据模型id获取模型的模版
-  QueryModelSqlTemplateByMid: async function(mid) {
+  QueryModelSqlTemplateByMid: async function (mid) {
     const client = await global.pool.connect();
     try {
       await cases.SwitchDefaultCase(client);
@@ -127,7 +127,7 @@ export default {
       client.release();
     }
   },
-  GetChildFromParentId: function(rows, id) {
+  GetChildFromParentId: function (rows, id) {
     let array = [];
     for (let item of rows) {
       if (item["parentid"] == id) {
@@ -138,7 +138,7 @@ export default {
   },
 
   //解析datetable
-  GetPgItem: function(dataRow_0) {
+  GetPgItem: function (dataRow_0) {
     let cA_PageItem = new CA_PageItem();
     let obj = dataRow_0["tid"];
     let obj2 = dataRow_0["parentid"];
@@ -161,7 +161,7 @@ export default {
     cA_PageItem.IsPreview = obj4 == "1";
     return cA_PageItem;
   },
-  GetPgItemChild: function(ca_PageItem_1, rows) {
+  GetPgItemChild: function (ca_PageItem_1, rows) {
     let array = this.GetChildFromParentId(rows, ca_PageItem_1.LABEL_ID);
     if (array.length == 0) {
       return;
@@ -173,7 +173,7 @@ export default {
     }
   },
   // 读取资金用途表
-  GetDataTable: async function(INorOut) {
+  GetDataTable: async function (INorOut) {
     const client = await global.pool.connect();
     try {
       let sql = `select p.*,c.filtercontent from icap_base.layout_purpose p left join icap_base.layout_purpose_child c on p.tid=c.purposeid where p.state in (0,2) and ischecked=1 and p.type = ${INorOut};`;
@@ -401,7 +401,7 @@ export default {
     return text;
   },
 
-  GetSort: function(list_1, value) {
+  GetSort: function (list_1, value) {
     let res = [];
     if (list_1 == undefined || list_1 == null || list_1.length == 0) {
       return res;
@@ -413,7 +413,7 @@ export default {
     }
     return res;
   },
-  GetChildList: function(sort, tid, list_1) {
+  GetChildList: function (sort, tid, list_1) {
     let res = [];
     return res;
     if (list_1 == undefined || list_1 == null || list_1.length == 0) {
@@ -472,7 +472,7 @@ export default {
     return { rows: res, legendData: observableCollection, pieData: picitem };
   },
   //拼接执行sql
-  AnalysisSql: async function(list_1, string_2, caseId, condition = "") {
+  AnalysisSql: async function (list_1, string_2, caseId, condition = "") {
     const client = await global.pool.connect();
     try {
       let text =
@@ -619,7 +619,7 @@ export default {
     }
   },
   // 资金用户模型的tree结构
-  GetNavMenuData: async function() {
+  GetNavMenuData: async function () {
     const client = await global.pool.connect();
     try {
       let observableCollection = [];
@@ -646,14 +646,14 @@ export default {
   },
 
   ////////////////////////////饼状图////////////////////////////////////////
-  Get_observableCollection: function(list_1) {
+  Get_observableCollection: function (list_1) {
     let arg_44_0 = list_1.filter(
       (item) =>
         item.sort == "1" &&
         (item.state == "0" || item.state == "2") &&
         item.ischecked == "1"
     ); //过滤出根节点
-    let list = arg_44_0.sort(function(a1, a2) {
+    let list = arg_44_0.sort(function (a1, a2) {
       return parseInt(a1.tid) - parseInt(a2.tid);
     });
     let observableCollection = [];
@@ -671,7 +671,7 @@ export default {
             (item.state == "0" || item.state == "2") &&
             item.ischecked == "1"
         ); //过滤出子节点
-        let arg_FB_0 = arg_B2_0.sort(function(a1, a2) {
+        let arg_FB_0 = arg_B2_0.sort(function (a1, a2) {
           return parseInt(a1.tid) - parseInt(a2.tid);
         });
         let num2 = 0.0;
@@ -720,7 +720,7 @@ export default {
     }
     return observableCollection;
   },
-  SaveNewChildItemToTable: async function(purposeid, filtercontent) {
+  SaveNewChildItemToTable: async function (purposeid, filtercontent) {
     const client = await global.pool.connect();
     try {
       let sql = ` select count(*)::int count from icap_base.layout_purpose_child where purposeid=${purposeid}`;
@@ -739,7 +739,7 @@ export default {
     }
   },
   //点击进出帐笔数链接
-  OnClick_bs: function(
+  OnClick_bs: function (
     itemtid,
     item,
     list_0,
@@ -918,7 +918,7 @@ export default {
   },
 
   //点击关联XXXX链接
-  OnClick_gl: function(
+  OnClick_gl: function (
     itemtid,
     item,
     list_0,
@@ -1112,7 +1112,7 @@ export default {
     return result;
   },
   // 点击资金用途链接
-  OnClickLink: async function(
+  OnClickLink: async function (
     tid,
     item,
     SelectedColumnName,

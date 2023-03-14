@@ -1,8 +1,7 @@
 <template >
   <div class="view-style" :style="{ height: contentViewHeight + 8 + 'px' }" v-loading="loadingShowData"
     element-loading-text="数据加载中..." element-loading-background="rgba(0, 0, 0, 0)">
-    <ul v-if="contextMenuVisible" :style="{ position: 'fixed', left: left + 'px', top: top + 'px' }"
-      class="contextmenu">
+    <ul v-if="contextMenuVisible" :style="{ position: 'fixed', left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li class="menu__item" @click="closeCurrentTab">关闭当前</li>
       <li class="menu__item" @click="closeAllTabs">关闭所有</li>
       <li class="menu__item" @click="closeOtherTabs('left')" v-if="!isDisabledCloseLeftBtnFlag">
@@ -18,12 +17,17 @@
         重命名标题
       </li>
     </ul>
+
+    <!-- 当节点过多的时候，询问时在本程序展示，还是在附属程序展示 -->
+    <WhichUiShow v-if="showWhichUiDialogVisible"></WhichUiShow>
+
     <el-tabs class="el-tabs" v-model="activeIndex" type="border-card" closable @tab-remove="removeTab"
       @contextmenu.prevent.native="openContextMenu($event)">
       <el-tab-pane :key="item.pageIndex" v-for="item in tableDataList" :label="item.title" :name="item.pageIndex">
         <component :is="item.componentName" :tableData="item"></component>
       </el-tab-pane>
     </el-tabs>
+
 
     <zjyt-link-dialog v-if="showZjytLinkVisible"></zjyt-link-dialog>
     <div v-if="showRename">
@@ -32,7 +36,7 @@
         <div slot="title" class="dialog-title">
           <i class="iconfont" style="color: white; font-size: 30px">&#xe645;</i>
           <span class="title-text" style="color: white">{{
-          "标题重命名"
+            "标题重命名"
           }}</span>
           <div class="button-right">
             <span class="title-close" @click="handleClose"></span>
@@ -52,6 +56,7 @@ import ZjytLinkTable from "@/pages/dialog/zjytLinkTableDialog/zjytLinkTableDialo
 import NoDataView from "./DataShow/NoDataView";
 import TableDataView from "./DataShow/TableDataView";
 import { mapState } from "vuex";
+import WhichUiShow from "../../dialog/whichUiShow/whichUiShow.vue";
 export default {
   computed: {
     ...mapState("AppPageSwitch", ["contentViewHeight"]),
@@ -61,6 +66,7 @@ export default {
       "tableDataList",
       "activeIndex",
       "loadingShowData",
+      "showWhichUiDialogVisible"
     ]),
     activeIndex: {
       get: function () {
@@ -75,6 +81,7 @@ export default {
     "no-data-view": NoDataView,
     "table-data-view": TableDataView,
     "zjyt-link-dialog": ZjytLinkTable,
+    WhichUiShow
   },
   watch: {
     contextMenuVisible(value) {

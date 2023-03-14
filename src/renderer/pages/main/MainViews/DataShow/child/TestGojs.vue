@@ -76,10 +76,10 @@
       <!-- <el-button @click="handleClickTest">双向绑定</el-button> -->
     </div>
     <el-row style="
-                                                background-color: #f5f7fa;
-                                                border: 1px solid #dddfe5;
-                                                font-size: 10px;
-                                              ">
+                                                  background-color: #f5f7fa;
+                                                  border: 1px solid #dddfe5;
+                                                  font-size: 10px;
+                                                ">
       <el-col :span="3">
         <div class="tips">
           实体数量：
@@ -3045,8 +3045,8 @@ export default {
     },
   },
   async mounted() {
-    // this.init();
-    await this.loadCytoscape();
+    this.init();
+    // await this.loadCytoscape();
   },
 };
 </script>
