@@ -1,5 +1,7 @@
 import Default from "@/utils/sql/Default.js";
 
+const swithLineColor = false;
+
 function makeData(tableData) {
     // 数据可视化
     let data;
@@ -16,6 +18,9 @@ function makeData(tableData) {
 }
 
 function calculateLineColorByJinE(tableData, jinE) {
+    if (!swithLineColor) {
+        return "black";
+    }
     let moneyList = Default.graphicMoneySectionList;
     for (let i = 0; i < moneyList.length; i++) {
         let item = moneyList[i];
@@ -42,6 +47,7 @@ function calculateLineColorByJinE(tableData, jinE) {
         }
     }
 }
+
 function makeDataZjCt(tableData) {
     let nodes = tableData.originGraphData.nodes.map((node) => {
         let {
@@ -114,6 +120,8 @@ function makeData218(tableData) {
     let nodes = [];
     let links = [];
     tableData.allrows.forEach((row) => {
+        let jymc = row["jymc"];
+        let jydfmc = row["jydfmc"];
         let acxkh = row["acxkh"];
         let ajyje = parseFloat(row["ajyje"]);
         let ajymc = row["ajymc"];

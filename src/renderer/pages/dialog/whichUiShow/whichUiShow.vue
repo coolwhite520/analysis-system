@@ -10,7 +10,7 @@
         </div>
         <div class="content">
             <div class="tip">
-                运算结果的节点、边数量较多。使用当前程序渲染可能会影响程序性能，建议使用扩展图形化工具进行渲染。
+                计算结果：节点({{ preCalNodeCount }}个)、边({{ preCalLinkCount }}条)。使用当前程序渲染可能会影响程序性能，建议使用扩展图形化工具进行渲染。
             </div>
             <div class="buttons">
                 <el-button @click="clickMainRender" :loading="loadingCur">当前程序渲染</el-button>
@@ -28,6 +28,12 @@ export default {
     computed: {
         ...mapState("ShowTable", ["showWhichUiDialogVisible", "graphicTableData"]),
         ...mapState("CaseDetail", ["caseBase"]),
+        preCalNodeCount() {
+            return this.graphicTableData.preCalNodeCount;
+        },
+        preCalLinkCount() {
+            return this.graphicTableData.preCalLinkCount;
+        },
     },
     data() {
         return {

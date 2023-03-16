@@ -7,6 +7,7 @@ import linkSqlFormat from "@/utils/sql/LinkSqlFormat.js";
 import modelSqlFormat from "@/utils/sql/ModelSqlFormat.js";
 import convertSql from "@/utils/sql/DataFiltrator.js";
 import Base from "@/db/Base.js";
+import maker from "@/utils/makedata";
 
 const uuid = require("uuid");
 const log = require("@/utils/log");
@@ -712,7 +713,6 @@ const actions = {
       modelFilterStr,
       filterChildStr
     );
-    console.log(sql);
     let data = await showTable.QueryModelDataTableBySql(
       ajid,
       tid,
@@ -735,15 +735,31 @@ const actions = {
 
       // 判断是否add，还是update
       if (pageIndex) {
-        // 需要同时更新headers 和 showHeaders ,因为有的模型会修改展示的列名称
-        commit("UPDATE_TABLE_DATA", {
+        let obj = {
+          tid,
+          title,
           pageIndex,
           headers,
           rows,
           sum,
           allrows,
           exportSql,
-        });
+        };
+        if (showType === 3) {
+          let { nodes, links } = maker.makeData(obj);
+          if (nodes.length > 200 && links.length > 200) {
+            obj.preCalNodeCount = nodes.length;
+            obj.preCalLinkCount = links.length;
+            commit("SET_SHOWWHICHUIDIALOGVISIBLE", true);
+            commit("SET_GRAPHICTABLEDATA", obj);
+          } else {
+            obj.showNetwork = true;
+            commit("UPDATE_TABLE_DATA", obj);
+          }
+        } else {
+          obj.showNetwork = true;
+          commit("UPDATE_TABLE_DATA", obj);
+        }
       } else {
         let obj = {
           tid,
@@ -775,10 +791,21 @@ const actions = {
             componentName: "model-view",
           });
         }
-        if (showType === 3 && allrows.length > 200) {
-          commit("SET_SHOWWHICHUIDIALOGVISIBLE", true);
-          commit("SET_GRAPHICTABLEDATA", obj);
-        } else {
+
+        if (showType === 3) {
+          let { nodes, links } = maker.makeData(obj);
+          console.log(`@@pre-calculate##node:${nodes.length} link: ${links.length}`)
+          if (nodes.length > 200 && links.length > 200) {
+            obj.preCalNodeCount = nodes.length;
+            obj.preCalLinkCount = links.length;
+            commit("SET_SHOWWHICHUIDIALOGVISIBLE", true);
+            commit("SET_GRAPHICTABLEDATA", obj);
+          } else {
+            obj.showNetwork = true;
+            commit("ADD_TABLE_DATA_TO_LIST", obj);
+          }
+        }
+        else {
           obj.showNetwork = true;
           commit("ADD_TABLE_DATA_TO_LIST", obj);
         }
@@ -1068,7 +1095,12 @@ const actions = {
           imgSrc,
         };
 
-        if (allrows.length > 200) {
+        let { nodes, links } = maker.makeData(obj);
+        console.log(`@@pre-calculate##node:${nodes.length} link: ${links.length}`)
+
+        if (nodes.length > 200 && links.length > 200) {
+          obj.preCalNodeCount = nodes.length;
+          obj.preCalLinkCount = links.length;
           commit("SET_SHOWWHICHUIDIALOGVISIBLE", true);
           commit("SET_GRAPHICTABLEDATA", obj);
         } else {
