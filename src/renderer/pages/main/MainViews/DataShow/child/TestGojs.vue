@@ -76,10 +76,10 @@
       <!-- <el-button @click="handleClickTest">双向绑定</el-button> -->
     </div>
     <el-row style="
-                                                    background-color: #f5f7fa;
-                                                    border: 1px solid #dddfe5;
-                                                    font-size: 10px;
-                                                  ">
+                                                              background-color: #f5f7fa;
+                                                              border: 1px solid #dddfe5;
+                                                              font-size: 10px;
+                                                            ">
       <el-col :span="3">
         <div class="tips">
           实体数量：
@@ -175,7 +175,7 @@ a.ax = function(){return true;}
 npm引入的话，在node_modules中搜索
 go.js和go-debug.js分别按上面步骤替换代码即可
 */
-import go from "@/gojs_cracked/go.js";
+import go from "gojs";
 import insertCss from "insert-css";
 import { mapState } from "vuex";
 import { Decimal } from "decimal.js";
