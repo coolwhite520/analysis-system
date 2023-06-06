@@ -6,10 +6,10 @@
           <el-button size="mini" v-for="(item, index) of tableData.graphicMoneySectionList" :key="item.id"
             :style="{ color: item.selected ? item.color : '#1e1e1e' }"
             :icon="item.selected ? 'el-icon-success' : 'el-icon-error'" @click="handleClickMoneySpan(item.id)">{{
-  calLabel(
-    item,
-    index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
-)
+              calLabel(
+                item,
+                index > 0 ? tableData.graphicMoneySectionList[index - 1] : null
+              )
             }}</el-button>
         </el-button-group>
       </el-col>
@@ -76,10 +76,10 @@
       <!-- <el-button @click="handleClickTest">双向绑定</el-button> -->
     </div>
     <el-row style="
-        background-color: #f5f7fa;
-        border: 1px solid #dddfe5;
-        font-size: 10px;
-      ">
+                background-color: #f5f7fa;
+                border: 1px solid #dddfe5;
+                font-size: 10px;
+              ">
       <el-col :span="3">
         <div class="tips">
           实体数量：
@@ -107,7 +107,7 @@
             : '点击可框选节点(也可双击空白画布进行切换)'
         " placement="top-start">
           <el-button type="text" size="mini" class="iconfont" style="padding-left: 10px; border-left: 1px solid #dddfe5"
-            @click="handleClickSwitchDragCavans">{{ enableDragCavans? "&#xe642;": "&#xe625;" }}</el-button>
+            @click="handleClickSwitchDragCavans">{{ enableDragCavans ? "&#xe642;" : "&#xe625;" }}</el-button>
         </el-tooltip>
         <el-button type="text" size="mini" class="iconfont" style="padding: 0"
           @click="handleClickEnlarge">&#xe622;</el-button>
@@ -116,7 +116,7 @@
         <el-button type="text" size="mini" class="iconfont" style="padding: 0"
           @click="handleClickLocation">&#xe649;</el-button>
         <el-button type="text" size="mini" class="iconfont" style="margin-right: 10px" @click="handleClickFullScreen">{{
-        !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button>
+          !fullScrrenFlag ? "&#xe6cc;" : "&#xe6db;" }}</el-button>
       </el-col>
     </el-row>
     <graphic-setting v-if="graphicSettingVisible"></graphic-setting>
@@ -175,7 +175,7 @@ a.ax = function(){return true;}
 npm引入的话，在node_modules中搜索
 go.js和go-debug.js分别按上面步骤替换代码即可
 */
-import go from "gojs";
+import go from "@/gojs_cracked/go.js";
 import insertCss from "insert-css";
 import { mapState } from "vuex";
 import { Decimal } from "decimal.js";

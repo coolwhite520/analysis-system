@@ -134,7 +134,7 @@ function createMainWindow() {
     // 必须调用创建scheme的协议函数，否则打包后通过路由的子页面会显示空白。
     createProtocol(ACHEME);
     mainWindow.loadURL(winURL);
-    mainWindow.maximize();
+    mainWindow.maximize(); 
     var template = [
         {
             label: "首页",

@@ -11,7 +11,7 @@ async function listRegPath(regPath) {
       "resources/regedit/vbs"
     );
     regedit.setExternalVBSLocation(vbsDirectory);
-    regedit.list(regPath, function(err, result) {
+    regedit.list(regPath, function (err, result) {
       if (err) reject(err);
       else resolve(result);
     });

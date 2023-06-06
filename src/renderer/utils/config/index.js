@@ -32,6 +32,7 @@ class DbConfig {
       return configObj;
     } else {
       log.error("not find cfg file.");
+      return null;
     }
   }
   // 写入配置
